@@ -1,0 +1,66 @@
+
+The departure hangar is based on the mission type and id:
+if mission type is family
+  if(mission id < 7)
+    hangar = FamilyBase (craft index 128)
+  else
+    hangar = Hangar (craft index 30)
+  endif
+else
+  hangar = Hangar (craft index 30)
+endif
+
+The arrival hangar is based on the craft type:
+if craft is CalamariCruiserNew (craft index 135) or CalamariWinged (craft index 148)
+  hangar = Hangar (craft index 30)
+else
+  hangar = FamilyBase (craft index 128)
+endif
+
+
+To force the exe to always use Hangar (craft index 30):
+TODO (Done): replace this with hooks
+
+:004095B3 - 0x89B3
+74 -> EB
+
+:00457F8D - 0x5738D
+7509 -> 9090
+
+:0057EB95 - 0x17DF95
+75 -> EB
+
+
+To use FamilyBase or Hangar, based on model index:
+TODO (Done): replace this with hooks
+
+:004095B3 - 0x89B3
+740A -> 9090
+:004095B7 - 0x89B7
+9400 -> B300
+:004095B9 - 0x89B9
+0F85 -> 0F84
+
+:00457F7E - 0x5737E
+740F -> 9090
+:00457F82 - 0x57382
+9400 -> B300
+:00457F8D - 0x5738D
+75 -> 74
+
+:0057EB9E - 0x17DF9E
+0F92C2 -> B20190
+
+
+For Hangar:
+Key 0 is the cockpit view.
+Keys 1,2,3,6,9 are fixed views.
+Keys 4 and 5 are related to the hangar droids.
+Key 7 is either the same as key 3, either related to the player model.
+Key 8 is related to the hangar roof crane.
+
+For FamilyBase:
+Key 0 is the cockpit view.
+Keys 1,2,3,6,7,8,9 are fixed views.
+Key 4 is related to the work droid 1.
+Key 5 is related to the player model.

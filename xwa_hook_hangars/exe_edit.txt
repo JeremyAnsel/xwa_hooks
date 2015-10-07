@@ -1,0 +1,123 @@
+
+; from L00456FA0
+; hook for hangar opt loading
+:004579EE - 0x056DEE
+E84D4F0700              call 004CC940
+
+E83D111500  call 005A8B30, 005A8B30 - 004579F3 = 0015113D
+
+; from L00456FA0
+; remove opt filter
+:00456FC3 - 0x563C3
+83FB
+0E0F8FCB
+0000000F84
+
+33C0        xor eax, eax
+89442410    mov dword ptr [esp+10], eax
+E9BF090000  jmp 0045798D, 0045798D - 00456FCE = 000009BF
+
+
+; from L0045FC40
+; hook for hangar camera position
+:0045FCA0 - 0x5F0A0
+81C76A040000            add edi, 0000046A
+81ED10090000            sub ebp, 00000910
+81EE2C010000            sub esi, 0000012C
+
+56          push esi
+55          push ebp
+57          push edi
+E8788E1400  call 005A8B20, 005A8B20 - 0045FCA8 = 00148E78
+5F          pop edi
+5D          pop ebp
+5E          pop esi
+90          nop
+90          nop
+90          nop
+90          nop
+90          nop
+90          nop
+90          nop
+
+0x5F7E0
+:004603E0 D1FF4500
+:004603E4 7EFC4500
+:004603E8 B7FC4500 -> 7EFC4500
+:004603EC CFFE4500 -> 7EFC4500
+:004603F0 F0FC4500
+:004603F4 F7FC4500
+:004603F8 26FD4500 -> 7EFC4500
+:004603FC 5FFD4500 -> 7EFC4500
+:00460400 08FF4500
+:00460404 4DFF4500 -> 7EFC4500
+:00460408 86FF4500
+
+0x5F868
+:00460468 D1FF4500
+:0046046C 08004600 -> 7EFC4500
+:00460470 41004600 -> 7EFC4500
+:00460474 7A004600 -> 7EFC4500
+:00460478 B3004600
+:0046047C E2004600 -> 7EFC4500
+:00460480 CD014600 -> 7EFC4500
+:00460484 06024600 -> 7EFC4500
+:00460488 3C024600 -> 7EFC4500
+:0046048C 6F024600 -> 7EFC4500
+
+
+; from L004554F0
+; hook for hangar map
+:00455F45 - 0x55345
+68C896000068FFFFFF7F68
+
+58          pop eax
+E8D52B1500  call 005A8B20, 005A8B20 - 00455F4B = 00152BD5
+E9BD030000  jmp 0045630D, 0045630D - 00455F50 = 000003BD
+
+
+; from L004554F0
+; hook for fam hangar map
+:00456473 - 0x55873
+688877000068FFFFFF7F68
+
+58          pop eax
+E8A7261500  call 005A8B20, 005A8B20 - 00456479 = 001526A7
+E98E020000  jmp 0045630D, 0045670C - 0045647E = 0000028E
+
+
+; from L0057E8D0
+; hook to select HangarType
+:0057EB97 - 0x17DF97
+390C858E2AAE00          cmp dword ptr [4*eax+00AE2A8E], ecx
+0F92C2                  setb dl
+
+50          push eax
+E8939F0200  call 005A8B30, 005A8B30 - 0057EB9D = 00029F93
+8AD0        mov dl, al
+58          pop eax
+90
+
+
+; from L00408DC0
+; hook to select calamari inside
+:004095AF - 0x89AF
+663D8700740A663D9400
+
+50          push eax
+E87BF51900  call 005A8B30, 005A8B30 - 004095B5 = 0019F57B
+85C0        test eax, eax
+58          pop eax
+90          nop
+
+
+; from L00457C20
+; hook to select hangar model index
+:00457F7A - 0x5737A
+663D8700740F663D9400
+
+50          push eax
+E8B00B1500  call 005A8B30, 005A8B30 - 00457F80 = 00150BB0
+85C0        test eax, eax
+58          pop eax
+90          nop

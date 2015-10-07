@@ -1,0 +1,27 @@
+FamKey1_X = 780
+FamKey1_Y = -6471
+FamKey1_Z = -4977
+
+FamKey2_X = -1970
+FamKey2_Y = -8810
+FamKey2_Z = -4707
+
+FamKey3_X = 2510
+FamKey3_Y = -5391
+FamKey3_Z = -5067
+
+FamKey6_X = 1740
+FamKey6_Y = -8461
+FamKey6_Z = -5047
+
+FamKey7_X = 3180
+FamKey7_Y = 2629
+FamKey7_Z = -3777
+
+FamKey8_X = 8242
+FamKey8_Y = 6600
+FamKey8_Z = 10
+
+FamKey9_X = -13360
+FamKey9_Y = 35019
+FamKey9_Z = -6537

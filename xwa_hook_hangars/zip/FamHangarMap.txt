@@ -1,0 +1,55 @@
+; Must contain at least 4 object line.
+; Format is : model index, position X, position Y, position Z, heading XY, heading Z
+; Numbers can be in decimal or hexadecimal (0x) notation.
+; When position Z is set to 0x7FFFFFFF, this means that the object stands at the ground.
+
+;ModelIndex_315_HangarWorkStand
+315, 821, -6618, 0x7FFFFFFF, 30600, 0
+
+;ModelIndex_314_HangarMonitor
+314, 2431, -5447, 0x7FFFFFFF, 61536, 0
+
+;ModelIndex_309_HangarCrane
+309, 626, -6397, 0x7FFFFFFF, 736, 0
+
+;ModelIndex_313_HangarGenerator
+313, 1577, -6663, 0x7FFFFFFF, 500, 0
+
+;ModelIndex_080_CargoCanister
+80, -1954, -7445, 0x7FFFFFFF, 31236, 0
+
+;ModelIndex_080_CargoCanister
+80, -1938, -7445, -4997, 31236, 0
+
+;ModelIndex_083_ContainerBox
+83, -1231, -8544, -5003, 32736, 16384
+
+;ModelIndex_083_ContainerBox
+83, -1481, -8444, -5003, 45736, 16384
+
+;ModelIndex_083_ContainerBox
+83, -1821, -8464, -5003, 32736, 16384
+
+;ModelIndex_084_ContainerSphere
+84, -1834, -6154, 0x7FFFFFFF, 42736, 0
+
+;ModelIndex_084_ContainerSphere
+84, 1939, -8013, 0x7FFFFFFF, 31800, 0
+
+;ModelIndex_080_CargoCanister
+80, -1954, -7445, -4888, 31236, 0
+
+;ModelIndex_080_CargoCanister
+80, -1978, -7386, -4781, 31736, 0
+
+;ModelIndex_310_HangarCrate
+310, 1484, -8339, -5133, 29700, 20400
+
+;ModelIndex_310_1_32_HangarCrate
+310, 1384, -8339, 0x7FFFFFFF, 32036, 0
+
+;ModelIndex_083_0_65_ContainerBox
+83, -2061, -8344, -5003, 32736, 16384
+
+;ModelIndex_083_0_65_ContainerBox
+83, -1511, -6734, 0x7FFFFFFF, 27736, 32768

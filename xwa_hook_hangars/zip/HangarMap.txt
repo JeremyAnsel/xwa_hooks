@@ -1,0 +1,85 @@
+; Must contain at least 4 object line.
+; Format is : model index, position X, position Y, position Z, heading XY, heading Z
+; Numbers can be in decimal or hexadecimal (0x) notation.
+; When position Z is set to 0x7FFFFFFF, this means that the object stands at the ground.
+
+;ModelIndex_314_HangarMonitor
+314, -1059, 1313, 0x7FFFFFFF, 38600, 0
+
+;ModelIndex_309_HangarCrane
+309, 725, -416, 0x7FFFFFFF, 23500, 0
+
+;ModelIndex_313_HangarGenerator
+313, -1352, 1440, 0x7FFFFFFF, 536, 0
+
+;ModelIndex_315_HangarWorkStand
+315, -1065, -56, 0x7FFFFFFF, 47736, 0
+
+;ModelIndex_315_HangarWorkStand
+315, 2079, 733, 0x7FFFFFFF, 6400, 0
+
+;ModelIndex_315_HangarWorkStand
+315, -2488, 1215, 0x7FFFFFFF, 11864, 0
+
+;ModelIndex_310_HangarCrate
+310, 794, -750, -848, 6800, 12500
+
+;ModelIndex_310_HangarCrate
+310, -803, -1464, 0x7FFFFFFF, 49200, 0
+
+;ModelIndex_310_HangarCrate
+310, -1563, 944, 0x7FFFFFFF, 51436, 0
+
+;ModelIndex_083_ContainerBox
+83, -506, -2136, -722, 32836, 16480
+
+;ModelIndex_083_ContainerBox
+83, -841, -1628, 0x7FFFFFFF, 53100, 0
+
+;ModelIndex_083_ContainerBox
+83, 1240, -2098, -722, 272, 16480
+
+;ModelIndex_084_ContainerSphere
+84, -834, -2034, 0x7FFFFFFF, 32336, 0
+
+;ModelIndex_080_CargoCanister
+80, -3474, -275, 0x7FFFFFFF, 29436, 0
+
+;ModelIndex_002_Ywing
+2, -1038, -798, 0x7FFFFFFF, 7700, 0
+
+;ModelIndex_050_Shuttle
+50, 1146, -1288, -741, 50536, 0
+
+;ModelIndex_315_HangarWorkStand
+315, 820, -665, 0x7FFFFFFF, 49136, 0
+
+;ModelIndex_310_HangarCrate
+310, -873, -1456, -849, 60472, 20400
+
+;ModelIndex_310_HangarCrate
+310, -3095, -592, 0x7FFFFFFF, 51436, 0
+
+;ModelIndex_083_ContainerBox
+83, -1751, -1996, 0x7FFFFFFF, 31172, 0
+
+;ModelIndex_083_ContainerBox
+83, 979, -2103, 0x7FFFFFFF, 37036, 0
+
+;ModelIndex_084_ContainerSphere
+84, -1374, -2068, 0x7FFFFFFF, 40536, 0
+
+;ModelIndex_080_CargoCanister
+80, 2806, 1357, 0x7FFFFFFF, 20536, 0
+
+;ModelIndex_080_CargoCanister
+80, -195, -1910, 0x7FFFFFFF, 54372, 0
+
+;ModelIndex_003_Awing
+3, 2178, 506, -830, 40036, 1500
+
+;ModelIndex_002_Ywing
+2, 1100, -503, 0x7FFFFFFF, 49036, 0
+
+;ModelIndex_001_Xwing
+1, -1003, 280, -825, 16600, 0
