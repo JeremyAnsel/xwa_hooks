@@ -1,0 +1,10 @@
+
+; L00441750 - XwaInitD3DInfos
+:00441750 - 0x40B50
+56                      push esi
+57                      push edi
+BAC3296600              mov edx, 006629C3
+
+E8CB731600  call 005A8B20, 005A8B20 - 00441755 = 001673CB
+C3          ret
+90          nop
