@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfPatch>
+  <Patch Name="To call the hook that reduces CPU usage">
+    <Item Offset="10D810" From="E82BF8FFFF8B" To="E81BA70900C3"/>
+    <Item Offset="10D830" From="E80BF8FFFF8B" To="E8FBA60900C3"/>
+  </Patch>
+</ArrayOfPatch>
