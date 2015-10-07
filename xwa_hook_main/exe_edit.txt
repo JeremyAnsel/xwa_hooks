@@ -1,0 +1,36 @@
+
+; code segment end
+; void Hook()
+:005A8B20 - 0x1A7F20
+00000000000000000000    BYTE 10 DUP(0)
+
+50          push eax
+60          pushad
+33C0        xor eax, eax
+54          push esp
+50          push eax
+50          push eax
+50          push eax
+E8EB42F7FF  call 0051CE18, DirectInputCreateA, 0051CE18 - 005A8B2D = FFF742EB
+61          popad
+58          pop eax
+C3          ret
+
+
+; code segment end
+; int Hook()
+:005A8B30 - 0x1A7F30
+00000000000000000000    BYTE 10 DUP(0)
+
+53          push ebx
+60          pushad
+33C0        xor eax, eax
+54          push esp
+50          push eax
+50          push eax
+50          push eax
+E8DB42F7FF  call 0051CE18, DirectInputCreateA, 0051CE18 - 005A8B3D = FFF742DB
+61          popad
+5B          pop ebx
+C3          ret
+
