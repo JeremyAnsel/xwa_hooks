@@ -1,0 +1,21 @@
+
+:00441B60 - 0x040F60
+8D8BB0D16400            lea ecx, dword ptr [ebx+0064D1B0]
+3BC2                    cmp eax, edx
+89542434                mov dword ptr [esp+34], edx
+7E4B                    jle 00441BB9
+
+50                      push eax
+53                      push ebx
+56                      push esi
+E8C86F1600              call 005A8B30, 005A8B30 - 00441B68 = 00166FC8
+83C40C                  add esp, 0000000C
+90                      nop
+EB4B                    jmp 00441BB9
+
+
+:00441BCD - 0x040FCD
+8D83B0D16400            lea eax, dword ptr [ebx+0064D1B0]
+
+909090909090            nop
+
