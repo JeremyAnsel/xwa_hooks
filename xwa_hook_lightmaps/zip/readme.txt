@@ -1,6 +1,6 @@
 ﻿xwa_hook_lightmaps
 
-This hook replaces a static buffer by a dynamic one in lightmaps loading.
+This hook replaces a static buffer with a dynamic one in lightmaps loading.
 
 
 *** Requirements ***

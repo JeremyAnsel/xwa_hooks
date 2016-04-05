@@ -11,8 +11,8 @@ int LightmapsHook(int* params)
 	int eax = params[2];
 
 	unsigned short* a1C = (unsigned short*)params[711];
-
 	unsigned char esp28 = (unsigned char)params[13];
+	int& esp34 = params[16];
 
 	if ((int)g_buffer.capacity() < ebx + eax)
 	{
@@ -20,6 +20,8 @@ int LightmapsHook(int* params)
 	}
 
 	unsigned char* ecx = (unsigned char*)g_buffer.data() + ebx;
+
+	esp34 = 0;
 
 	for (int i = 0; i < eax; i++)
 	{
@@ -32,8 +34,7 @@ int LightmapsHook(int* params)
 		}
 		else
 		{
-			// esp34
-			params[16] = 1;
+			esp34 = 1;
 
 			if (esp40 == 0)
 			{
