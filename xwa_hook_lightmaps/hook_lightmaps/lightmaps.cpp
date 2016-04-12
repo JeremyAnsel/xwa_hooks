@@ -14,7 +14,7 @@ int LightmapsHook(int* params)
 	unsigned char esp28 = (unsigned char)params[13];
 	int& esp34 = params[16];
 
-	if ((int)g_buffer.capacity() < ebx + eax)
+	if ((int)g_buffer.capacity() < eax * 2)
 	{
 		g_buffer.reserve(eax * 2);
 	}
