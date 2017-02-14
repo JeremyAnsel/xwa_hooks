@@ -22,6 +22,12 @@ See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11197
 
 This hook replaces a static buffer by a dynamic one in lightmaps loading.
 
+## xwa_hook_sfoils
+
+This hook enables S-Foils for any craft.
+
+See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11693
+
 ## xwa_hook_time
 
 This hook reduces the CPU usage of the game. A side effect is that the framerate is a bit reduced.
