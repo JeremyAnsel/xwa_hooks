@@ -1,0 +1,5 @@
+;mesh index, angle, closing speed, opening speed
+0, 64, 2, 2
+3, 64, 2, 2
+5, 64, 2, 2
+6, 64, 2, 2

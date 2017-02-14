@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfPatch>
+  <Patch Name="disable S-Foil model filter">
+    <Item Offset="0FB86E" From="7419" To="EB19"/>
+  </Patch>
+  <Patch Name="To call the hook that defines S-Foils">
+    <Item Offset="000AF3" From="4883F8310F872001000033C98A8840184000" To="50E827741A0083C4045F5E5D5BC390909090"/>
+    <Item Offset="000D14" From="4883F8310F87B101000033D28A90C42C4000" To="50E816721A0083C4048BF8E94E0100009090"/>
+  </Patch>
+</ArrayOfPatch>

@@ -1,0 +1,32 @@
+
+:004016F3 - 0x000AF3
+48                      dec eax
+83F831                  cmp eax, 00000031
+0F8720010000            ja 0040181D
+33C9                    xor ecx, ecx
+8A8840184000            mov cl, byte ptr [eax+00401840]
+
+50                      push eax
+E827741A00              call 005A8B20, 005A8B20 - 004016F9 = 001A7427
+83C404                  add esp, 00000004
+5F                      pop edi
+5E                      pop esi
+5D                      pop ebp
+5B                      pop ebx
+C3                      ret
+90909090                nop
+
+
+:00401914 - 0x000D14
+48                      dec eax
+83F831                  cmp eax, 00000031
+0F87B1010000            ja 00401ACF
+33D2                    xor edx, edx
+8A90C42C4000            mov dl, byte ptr [eax+00402CC4]
+
+50                      push eax
+E816721A00              call 005A8B30, 005A8B30 - 0040191A = 001A7216
+83C404                  add esp, 00000004
+8BF8                    mov edi, eax
+E94E010000              jmp 00401A72, 00401A72 - 00401924 = 0000014E
+9090                    nop
