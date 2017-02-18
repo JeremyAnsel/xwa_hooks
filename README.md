@@ -22,6 +22,12 @@ See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11197
 
 This hook replaces a static buffer by a dynamic one in lightmaps loading.
 
+## xwa_hook_pilot
+
+This hook enables pilot meshes animation for any craft.
+
+See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11695
+
 ## xwa_hook_sfoils
 
 This hook enables S-Foils for any craft.
