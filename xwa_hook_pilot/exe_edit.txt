@@ -1,0 +1,21 @@
+
+:004031FC - 0x0025FC
+48                      dec eax
+3DCB000000              cmp eax, 000000CB
+0F87C5010000            ja 004033CD
+33D2                    xor edx, edx
+8A90F8334000            mov dl, byte ptr [eax+004033F8]
+FF2495D4334000          jmp dword ptr [4*edx+004033D4]
+
+50                      push eax
+8B441E23                mov eax, dword ptr [esi+ebx+23]
+8BA8DD000000            mov ebp, dword ptr [eax+000000DD]
+55                      push ebp
+E813591A00              call 005A8B20, 005A8B20 - 0040320D = 001A5913
+83C408                  add esp, 00000008
+5F                      pop edi
+5E                      pop esi
+5D                      pop ebp
+5B                      pop ebx
+C3                      ret
+9090                    nop

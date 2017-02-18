@@ -1,0 +1,3 @@
+;mesh index, angle, speed, behavior
+6, 32, 2, 1
+9, 32, 2, 2
