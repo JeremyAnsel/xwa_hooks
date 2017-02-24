@@ -12,4 +12,5 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x57EB9D, SelectHangarTypeHook },
 	{ 0x4095B5, SelectHangarInsideAnimation },
 	{ 0x457F80, SelectHangarModelIndex },
+	{ 0x46264F, CraftElevationHook },
 };

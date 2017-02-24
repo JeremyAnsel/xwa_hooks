@@ -886,3 +886,29 @@ int SelectHangarModelIndex(int* params)
 
 	return isFamilyBase ? 1 : 0;
 }
+
+int CraftElevationHook(int* params)
+{
+	const auto ModelGetSizeZ = (int(*)(unsigned int))0x0485820;
+
+	short modelIndex = (short)params[0];
+
+	std::string optSize = GetFlightModelsLstLine(modelIndex);
+	optSize.append("Size.txt");
+
+	if (std::ifstream(optSize))
+	{
+		return GetFileKeyValueInt(optSize, "ClosedSFoilsElevation");
+	}
+	else
+	{
+		if (modelIndex == 4) // BWing
+		{
+			return 0x32;
+		}
+		else
+		{
+			return ModelGetSizeZ(modelIndex) / 2;
+		}
+	}
+}

@@ -11,11 +11,7 @@ http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11197
 
 This dll requires:
 - Windows XP SP2 or superior
-- Visual C++ 2013 Runtime (x86)
 - xwa_hook_main
-
-Visual C++ Redistributable Packages for Visual Studio 2013: vcredist_x86.exe
-http://www.microsoft.com/en-us/download/details.aspx?id=40784
 
 
 *** Setup ***
@@ -64,6 +60,15 @@ At offset 55345, replace 68C896000068FFFFFF7F68 with 58E8D52B1500E9BD030000.
 
 # To call the hook that sets the family hangar map
 At offset 55873, replace 688877000068FFFFFF7F68 with 58E8A7261500E98E020000.
+
+# To call the hook that sets the craft elevation:
+At offset 61A49, replace 83F804740F50E8CC310200 with 50E8E164140083C404C390.
+At offset 55183, replace 83F804741C50E892FA0200 with 50E8B7C8000083C404EB1B.
+At offset 562F4, replace 83F804741050E821E90200 with 50E846B7000083C404EB0F.
+At offset 5AF8C, replace 83F804741650E8899C0200 with 50E8AE6A000083C404EB15.
+At offset 5B203, replace 83F804741650E8129A0200 with 50E83768000083C404EB15.
+At offset 5B350, replace 83F804741650E8C5980200 with 50E8EA66000083C404EB15.
+At offset 5BDA4, replace 83F804741050E8718E0200 with 50E8965C000083C404EB0F.
 
 
 *** Usage ***
@@ -122,6 +127,7 @@ The possible involved files are:
 - "FlightModels\HangarMap.txt"
 - "FlightModels\FamHangarMap.txt"
 - "FlightModels\[Player]Camera.txt"
+- "FlightModels\[Player]Size.txt"
 
 
 To use a custom hangar, name it "FlightModels\[Model]Hangar.opt" or "[MissionDir]\[Mission]_Hangar.opt".
@@ -204,6 +210,13 @@ The format is : model index, position X, position Y, position Z, heading XY, hea
 The numbers can be  written in decimal or hexadecimal (0x) notation.
 When position Z is set to 0x7FFFFFFF, this means that the object stands at the ground.
 See "FamHangarMap.txt".
+
+To set the elevation of the craft with closed S-Foils, create a file named "FlightModels\[Player]Size.txt".
+If a such file file doesn't exist for a model, default values are used:
+if the craft is BWing, elevation = 50, else elevation = model height / 2.
+The format is:
+"ClosedSFoilsElevation = value"
+See "BWingSize.txt".
 
 
 *** Notes ***

@@ -7,3 +7,4 @@ int FamHangarMapHook(int* params);
 int SelectHangarTypeHook(int* params);
 int SelectHangarInsideAnimation(int* params);
 int SelectHangarModelIndex(int* params);
+int CraftElevationHook(int* params);
