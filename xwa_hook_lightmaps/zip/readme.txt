@@ -7,11 +7,7 @@ This hook replaces a static buffer with a dynamic one in lightmaps loading.
 
 This dll requires:
 - Windows XP SP2 or superior
-- Visual C++ 2015 Runtime (x86)
 - xwa_hook_main
-
-Visual C++ Redistributable for Visual Studio 2015: vc_redist.x86.exe
-https://www.microsoft.com/en-us/download/details.aspx?id=48145
 
 
 *** Setup ***
