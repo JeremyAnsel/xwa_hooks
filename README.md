@@ -6,6 +6,10 @@ This repository contains hooks created for X-Wing Alliance.
 
 This is the main dll hook that is used to call other hooks. A hook is a way to inject code into the exe.
 
+## xwa_hook_backdrops
+
+This hook adds starfield backdrops to skirmish mission.
+
 ## xwa_hook_d3dinfos_textures
 
 This hook increases the D3DTextures count limit. When there are more than 1624 textures, the game outputs "Not enough D3DTextures" and uses the last created texture. This hook fixes that.

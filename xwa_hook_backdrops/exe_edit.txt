@@ -1,0 +1,16 @@
+
+:0057AFD9 - 0x17A3D9
+33DB                    xor ebx, ebx
+85C0                    test eax, eax
+8944241C                mov dword ptr [esp+1C], eax
+0F8E4D030000            jle 0057B334
+8B742414                mov esi, dword ptr [esp+14]
+69F63E0E0000            imul esi, 00000E3E
+
+8D5C2414                lea ebx, dword ptr [esp+14]
+53                      push ebx
+50                      push eax
+E83CDB0200              call 005A8B20, 005A8B20 - 0057AFE4 = 0002DB3C
+83C408                  add esp, 00000008
+E948030000              jmp 0057B334, 0057B334 - 0057AFEC = 00000348
+9090909090              nop
