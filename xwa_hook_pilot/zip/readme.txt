@@ -22,6 +22,7 @@ You can manually apply the modifications with an hexadecimal editor, or you can 
 
 # To call the hook that defines pilot meshes animation
 At offset 0025FC, replace 483DCB0000000F87C501000033D28A90F8334000FF2495D4334000 with 508B441E238BA8DD00000055E813591A0083C4085F5E5D5BC39090.
+At offset 0018EB, replace 742A with EB3D.
 
 
 *** Usage ***

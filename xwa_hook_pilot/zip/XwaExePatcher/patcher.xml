@@ -2,5 +2,6 @@
 <ArrayOfPatch>
   <Patch Name="To call the hook that defines pilot meshes animation">
     <Item Offset="0025FC" From="483DCB0000000F87C501000033D28A90F8334000FF2495D4334000" To="508B441E238BA8DD00000055E813591A0083C4085F5E5D5BC39090"/>
+    <Item Offset="0018EB" From="742A" To="EB3D"/>
   </Patch>
 </ArrayOfPatch>
