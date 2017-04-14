@@ -1,6 +1,5 @@
 #include "targetver.h"
 #include "backdrops.h"
-#include <cstdlib>
 #include <cstring>
 #include <cstdio>
 
@@ -56,6 +55,8 @@ static_assert(sizeof(XwaMission) == 1290432, "size of XwaMission must be 1290432
 
 int BackdropsHook(int* params)
 {
+	const auto XwaRand = (int(*)())0x0059BEB0;
+
 	const int regionsCount = params[0];
 	int& flightgroupsCount = *(int*)params[1];
 
@@ -173,12 +174,12 @@ int BackdropsHook(int* params)
 
 		do
 		{
-			mission->FlightGroups[flightgroupsCount].PlanetId = (rand() % 0x3C) + 0x01;
+			mission->FlightGroups[flightgroupsCount].PlanetId = (XwaRand() % 0x3C) + 0x01;
 		} while (mission->FlightGroups[flightgroupsCount].PlanetId == 0x37);
 
-		mission->FlightGroups[flightgroupsCount + 1].PlanetId = (rand() % 0x0A) + 0x54;
+		mission->FlightGroups[flightgroupsCount + 1].PlanetId = (XwaRand() % 0x0A) + 0x54;
 
-		mission->FlightGroups[flightgroupsCount].GlobalCargoIndex = rand() % 0x07;
+		mission->FlightGroups[flightgroupsCount].GlobalCargoIndex = XwaRand() % 0x07;
 		mission->FlightGroups[flightgroupsCount].WavesCount = 0;
 		mission->FlightGroups[flightgroupsCount].CraftsCount = 0x01;
 		mission->FlightGroups[flightgroupsCount].GlobalGroupId = 0x0A;
@@ -192,7 +193,7 @@ int BackdropsHook(int* params)
 		mission->FlightGroups[flightgroupsCount + 1].Iff = 0x02;
 		mission->FlightGroups[flightgroupsCount + 1].Team = 0x09;
 
-		int edx = rand() % 0x06;
+		int edx = XwaRand() % 0x06;
 
 		if (edx < 4)
 		{
@@ -215,7 +216,7 @@ int BackdropsHook(int* params)
 				break;
 			}
 
-			switch (rand() % 0x02)
+			switch (XwaRand() % 0x02)
 			{
 			case 0:
 				mission->FlightGroups[flightgroupsCount + 1].StartPoints[0].Z = 1;
@@ -244,12 +245,12 @@ int BackdropsHook(int* params)
 
 		mission->FlightGroups[flightgroupsCount].StartPointRegions[0] = region;
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Name, "1.0 1.0 1.0");
-		sprintf_s(mission->FlightGroups[flightgroupsCount].Cargo, "%.1f", ((rand() % 0x06) + 0x05) * 0.1);
-		sprintf_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "%.1f", ((rand() % 0x10) + 0x0F) * 0.1);
+		sprintf_s(mission->FlightGroups[flightgroupsCount].Cargo, "%.1f", ((XwaRand() % 0x06) + 0x05) * 0.1);
+		sprintf_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "%.1f", ((XwaRand() % 0x10) + 0x0F) * 0.1);
 
 		mission->FlightGroups[flightgroupsCount + 1].StartPointRegions[0] = region;
 		strcpy_s(mission->FlightGroups[flightgroupsCount + 1].Name, "1.0 1.0 1.0");
-		sprintf_s(mission->FlightGroups[flightgroupsCount + 1].Cargo, "%.1f", ((rand() % 0x06) + 0x05) * 0.1);
+		sprintf_s(mission->FlightGroups[flightgroupsCount + 1].Cargo, "%.1f", ((XwaRand() % 0x06) + 0x05) * 0.1);
 		sprintf_s(mission->FlightGroups[flightgroupsCount + 1].SpecialCargo, "1.0");
 
 		flightgroupsCount += 2;
