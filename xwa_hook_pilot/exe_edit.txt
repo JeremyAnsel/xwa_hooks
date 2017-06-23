@@ -25,3 +25,12 @@ C3                      ret
 742A                    je 00402517
 
 EB3D                    jmp 0040252A
+
+
+:00458C9E - 0x05809E
+66A124168C00            mov ax, word ptr [008C1624]
+663BC3                  cmp ax, bx
+
+E8DD8BFAFF              call 00401880, 00401880 - 00458CA3 = FFFA8BDD
+EB53                    jmp 00458CF8
+9090                    nop
