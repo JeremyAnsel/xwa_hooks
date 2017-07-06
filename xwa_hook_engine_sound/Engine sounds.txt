@@ -1,0 +1,26 @@
+Engine sounds
+
+SFXBLASTNEW.LST
+empty lines are not counted
+
+EngineIntXW.wav			76 2000
+file name, volume, distance
+
+
+Tables:
+
+L0043D090
+:0043D458
+Interior sound
+
+L0043D090
+:0043D4F8
+Stop Interior sound
+
+L0043D7C0
+:0043DCC4
+Flyby sound
+
+L00458DC0
+:00459678
+Launch sound

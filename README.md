@@ -16,6 +16,12 @@ This hook increases the D3DTextures count limit. When there are more than 1624 t
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=10&t=11274
 
+## xwa_hook_engine_sound
+
+This hook enables setting engine sound for any craft.
+
+See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11746
+
 ## xwa_hook_hangars
 
 This hook permits to customize the hangars. The XWA's engine uses two hangar models, Hangar.opt and FamilyBase.opt. If you wanted to use a custom hangar, you had to replace one of them. You can now choose which hangar to use, customize the objects and the camera positions, for a specific craft or for a specific mission.
