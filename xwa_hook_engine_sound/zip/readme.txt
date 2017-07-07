@@ -1,6 +1,6 @@
 xwa_hook_engine_sound
 
-This hook enables setting engine sound for any craft.
+This hook enables setting engine sound and weapon sound behavior for any craft.
 
 
 *** Requirements ***
@@ -29,6 +29,9 @@ At offset 03C74B, replace 4883F840773E33C98A88F8D44300 with 5650E8CEB7160083C404
 At offset 03CDFA, replace 4883F8400F87D500000033DB8A98C4DC4300 with 5650E81FB1160083C4045EE9CF0000009090.
 At offset 05826F, replace 4983F9400F87CF00000033D28A9178964500 with 5051E8AAFC140083C40458E9C90000009090.
 
+# To call the hook that defines weapon sounds
+At offset 03B5DE, replace 8DB8E8FEFFFF83FF190F870801000033D28A972CC34300FF2495FCC24300 with 8B56230FBF929500000050525551E83FC9160083C4105F5E5DC390909090.
+
 
 *** Usage ***
 
@@ -38,7 +41,8 @@ To define which sound is played, create a file named "FlightModels\[Model]Sound.
 The format is:
 EngineSoundInterior = interior sound type
 EngineSoundFlyBy = flyby sound type
-Use a value of 0 to not select a sound.
+WeaponSoundBehavior = behavior value
+Use a value of 0 to not select a sound. For engine sounds, it means that no sound is played. For weapon sounds, it means that a default sound is played (based on weapon type).
 
 Add a line whith "EngineSoundInterior = value". The value is between 0 and 7:
 - 0 means no sound
@@ -60,6 +64,8 @@ Add a line with "EngineSoundFlyBy = value". The value is between 0 and 7:
 - 6 means FlyByCort or FlyByCort3D
 - 7 means FlyByCort or FlyByCort3D
 - 8 means custom (first unused) or custom3D (second unused)
+
+Add a line with "WeaponSoundBehavior = value". The value is 0, CorellianTransport or TieFighter.
 
 If the file does not exist, default values are used:
 
@@ -146,6 +152,9 @@ type 7:
 - ModelIndex_026_0_25_SupaFighter
 - ModelIndex_032_0_31_SlaveTwo
 - ModelIndex_059_0_46_MilleniumFalcon2
+
+For the tie fighters (TieFighter, TieInterceptor, TieBomber, TieAdvanced, TieDefender, TieBizarro, TieBigGun, TieWarheads, TieBomb, TieBooster), laser sounds are replaced with "EmpireLaserChChChhh.wav".
+For the Corellian transports (CorellianTransport2, FamilyTransport, MilleniumFalcon2), "LaserRebel" is replaced with "FalconLaser.wav" and "LaserRebelTurbo" is replaced with "FalconLaserTurbo.wav".
 
 See EmptySound.txt and Examples\*Sound.txt.
 

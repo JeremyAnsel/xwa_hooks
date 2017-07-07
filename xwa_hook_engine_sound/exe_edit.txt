@@ -1,5 +1,5 @@
 
-// Fix potential bug
+// Fix potential bug in engine sound code
 :0043D0F5 - 0x03C4F5
 8A543A02                mov dl, byte ptr [edx+edi+02]
 88542410                mov byte ptr [esp+10], dl
@@ -24,7 +24,7 @@
 9090909090              nop
 
 
-// Interior sound
+// Engine Interior sound
 :0043D107 - 0x03C507
 8D6AFF                  lea ebp, dword ptr [edx-01]
 83FD40                  cmp ebp, 00000040
@@ -45,7 +45,7 @@ E80FBA1600              call 005A8B20, 005A8B20 - 0043D111 = 0016BA0F
 EB50                    jmp 0043D169, 0043D169 - 0043D119 = 50
 9090909090              nop
 
-// Stop Interior sound
+// Engine Stop Interior sound
 :0043D34B - 0x03C74B
 48                      dec eax
 83F840                  cmp eax, 00000040
@@ -61,7 +61,7 @@ E8CEB71600              call 005A8B20, 005A8B20 - 0043D352 = 0016B7CE
 EB37                    jmp 0043D38F, 0043D38F - 0043D358 = 37
 90                      nop
 
-// FlyBy sound
+// Engine FlyBy sound
 :0043D9FA - 0x03CDFA
 48                      dec eax
 83F840                  cmp eax, 00000040
@@ -77,7 +77,7 @@ E81FB11600              call 005A8B20, 005A8B20 - 0043DA01 = 0016B11F
 E9CF000000              jmp 0043DAD9, 0043DAD9 - 0043DA0A = 000000CF
 9090                    nop
 
-// Launch sound
+// Engine Launch sound
 :00458E6F - 0x05826F
 49                      dec ecx
 83F940                  cmp ecx, 00000040
@@ -92,3 +92,27 @@ E8AAFC1400              call 005A8B20, 005A8B20 - 00458E76 = 0014FCAA
 58                      pop eax
 E9C9000000              jmp 00458F48, 00458F48 - 00458E7F = 000000C9
 9090                    nop
+
+
+// Weapon sounds
+:0043C1DE - 0x03B5DE
+8DB8E8FEFFFF            lea edi, dword ptr [eax+FFFFFEE8]
+83FF19                  cmp edi, 00000019
+0F8708010000            ja 0043C2F5
+33D2                    xor edx, edx
+8A972CC34300            mov dl, byte ptr [edi+0043C32C]
+FF2495FCC24300          jmp dword ptr [4*edx+0043C2FC]
+
+8B5623                  mov edx, dword ptr [esi+23]
+0FBF9295000000          movsx edx, word ptr [edx+00000095]
+50                      push eax
+52                      push edx
+55                      push ebp
+51                      push ecx
+E83FC91600              call 005A8B30, 005A8B30 - 0043C1F1 = 0016C93F
+83C410                  add esp, 00000010
+5F                      pop edi
+5E                      pop esi
+5D                      pop ebp
+C3                      ret
+90909090                nop

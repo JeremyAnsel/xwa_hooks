@@ -1,3 +1,5 @@
 
 EngineSoundInterior = 7
 EngineSoundFlyBy = 7
+
+WeaponSoundBehavior = CorellianTransport

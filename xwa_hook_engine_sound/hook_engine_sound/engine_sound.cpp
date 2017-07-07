@@ -570,3 +570,123 @@ int LaunchSoundHook(int* params)
 
 	return 0;
 }
+
+int WeaponSoundHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+	const int modelIndex = params[2];
+	const int weaponIndex = params[3];
+
+	const auto playSound = (int(*)(int, int, int))0x0043BF90;
+
+	switch (weaponIndex)
+	{
+	case 280: // ModelIndex_280_1_17_LaserRebel
+	case 281: // ModelIndex_281_1_18_LaserRebelTurbo
+	case 282: // ModelIndex_282_1_19_LaserImp
+	case 283: // ModelIndex_283_1_20_LaserImpTurbo
+	case 284: // ModelIndex_284_1_22_LaserIon
+	case 285: // ModelIndex_285_1_23_LaserIonTurbo
+	{
+		std::string path = GetFlightModelsLstLine(modelIndex);
+
+		if (!path.empty())
+		{
+			path.append("Sound.txt");
+		}
+
+		std::string behavior;
+
+		if (!path.empty() && std::ifstream(path))
+		{
+			behavior = GetFileKeyValue(path, "WeaponSoundBehavior");
+		}
+		else
+		{
+			switch (modelIndex)
+			{
+			case 58: // ModelIndex_058_0_45_CorellianTransport2
+			case 59: // ModelIndex_059_0_46_MilleniumFalcon2
+			case 65: // ModelIndex_065_0_52_FamilyTransport
+				behavior = "CorellianTransport";
+				break;
+
+			case 5: // ModelIndex_005_0_4_TieFighter
+			case 6: // ModelIndex_006_0_5_TieInterceptor
+			case 7: // ModelIndex_007_0_6_TieBomber
+			case 8: // ModelIndex_008_0_7_TieAdvanced
+			case 9: // ModelIndex_009_0_8_TieDefender
+			case 18: // ModelIndex_018_0_17_TieBizarro
+			case 19: // ModelIndex_019_0_18_TieBigGun
+			case 20: // ModelIndex_020_0_19_TieWarheads
+			case 21: // ModelIndex_021_0_20_TieBomb
+			case 22: //ModelIndex_022_0_21_TieBooster
+				behavior = "TieFighter";
+				break;
+
+			default:
+				behavior = std::string();
+			}
+		}
+
+		if (behavior == "CorellianTransport")
+		{
+			switch (weaponIndex)
+			{
+			case 280: // ModelIndex_280_1_17_LaserRebel
+			case 282: // ModelIndex_282_1_19_LaserImp
+			case 284: // ModelIndex_284_1_22_LaserIon
+				return playSound(15, A4, A8); // FalconLaser
+
+			case 281: // ModelIndex_281_1_18_LaserRebelTurbo
+			case 283: // ModelIndex_283_1_20_LaserImpTurbo
+			case 285: // ModelIndex_285_1_23_LaserIonTurbo
+				return playSound(16, A4, A8); // FalconLaserTurbo
+			}
+		}
+		else if (behavior == "TieFighter")
+		{
+			return playSound(20, A4, A8); // EmpireLaserChChChhh
+		}
+
+		return playSound(4 + weaponIndex - 280, A4, A8);
+	}
+
+	case 286: // ModelIndex_286_1_24_ProtonTorpedo
+	case 291: // ModelIndex_291_1_24_ProtonTorpedo
+		return playSound(10, A4, A8); // TorpedoFire
+
+	case 287: // ModelIndex_287_1_25_ConcussionMissile
+	case 292: // ModelIndex_292_1_25_ConcussionMissile
+		return playSound(11, A4, A8); // MissileFire
+
+	case 288: // ModelIndex_288_1_18_LaserRebelTurbo
+	case 297: // ModelIndex_297_1_18_LaserRebelTurbo
+	case 301: //ModelIndex_301_1_18_LaserRebelTurbo
+	case 302: // ModelIndex_302_1_18_LaserRebelTurbo
+		return playSound(12, A4, A8); // RebelLaserStarship
+
+	case 289: // ModelIndex_289_1_20_LaserImpTurbo
+	case 303: // ModelIndex_303_1_20_LaserImpTurbo
+	case 304: // ModelIndex_304_1_20_LaserImpTurbo
+	case 305: // ModelIndex_305_1_20_LaserImpTurbo
+		return playSound(13, A4, A8); // EmpireLaserStarship
+
+	case 290: // ModelIndex_290_1_23_LaserIonTurbo
+		return playSound(14, A4, A8); // IonCannonStarship
+
+	case 293: // ModelIndex_293_1_26_SpaceBomb
+		return playSound(17, A4, A8); // BombFire
+
+	case 294: // ModelIndex_294_1_27_HeavyRocket
+		return playSound(18, A4, A8); // RocketFire
+
+	case 295: // ModelIndex_295_1_28_MagPulse
+	case 296: // ModelIndex_296_1_28_MagPulse
+	case 298: // ModelIndex_298_1_29_Flare
+		return playSound(19, A4, A8); // MagPulseFire
+	}
+
+	return 0;
+}
