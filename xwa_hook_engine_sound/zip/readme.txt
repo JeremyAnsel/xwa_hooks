@@ -65,7 +65,14 @@ Add a line with "EngineSoundFlyBy = value". The value is between 0 and 7:
 - 7 means FlyByCort or FlyByCort3D
 - 8 means custom (first unused) or custom3D (second unused)
 
-Add a line with "WeaponSoundBehavior = value". The value is 0, CorellianTransport or TieFighter.
+Add a line with "WeaponSoundBehavior = value". The value is 0, CorellianTransport, TieFighter, Rebel, RebelTurbo, Empire or EmpireTurbo.
+0 means that a default sound is played.
+CorellianTransport means that Laser and LaserTurbo are replaced with FalconLaser or FalconLaserTurbo.
+TieFighter means that laser sounds (RebelLaser, RebelLaserTurbo, EmpireLaser, EmpireLaserTurbo, IonCannon, IonCannonTurbo) are replaced with EmpireLaserChChChhh.
+Rebel means that the open weapon (307) sound is RebelLaser.
+RebelTurbo means that the open weapon (307) sound is RebelLaserTurbo.
+Empire means that the open weapon (307) sound is EmpireLaser.
+EmpireTurbo means that the open weapon (307) sound is EmpireLaserTurbo.
 
 If the file does not exist, default values are used:
 

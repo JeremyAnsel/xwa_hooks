@@ -635,13 +635,9 @@ int WeaponSoundHook(int* params)
 			switch (weaponIndex)
 			{
 			case 280: // ModelIndex_280_1_17_LaserRebel
-			case 282: // ModelIndex_282_1_19_LaserImp
-			case 284: // ModelIndex_284_1_22_LaserIon
 				return playSound(15, A4, A8); // FalconLaser
 
 			case 281: // ModelIndex_281_1_18_LaserRebelTurbo
-			case 283: // ModelIndex_283_1_20_LaserImpTurbo
-			case 285: // ModelIndex_285_1_23_LaserIonTurbo
 				return playSound(16, A4, A8); // FalconLaserTurbo
 			}
 		}
@@ -686,6 +682,46 @@ int WeaponSoundHook(int* params)
 	case 296: // ModelIndex_296_1_28_MagPulse
 	case 298: // ModelIndex_298_1_29_Flare
 		return playSound(19, A4, A8); // MagPulseFire
+
+	case 307: // ModelIndex_307__1_0, open weapon
+	{
+		std::string path = GetFlightModelsLstLine(modelIndex);
+
+		if (!path.empty())
+		{
+			path.append("Sound.txt");
+		}
+
+		std::string behavior;
+
+		if (!path.empty() && std::ifstream(path))
+		{
+			behavior = GetFileKeyValue(path, "WeaponSoundBehavior");
+		}
+		else
+		{
+			behavior = std::string();
+		}
+
+		if (behavior == "Rebel")
+		{
+			return playSound(4, A4, A8); // RebelLaser
+		}
+		else if (behavior == "RebelTurbo")
+		{
+			return playSound(5, A4, A8); // RebelLaserTurbo
+		}
+		else if (behavior == "Empire")
+		{
+			return playSound(6, A4, A8); // EmpireLaser
+		}
+		else if (behavior == "EmpireTurbo")
+		{
+			return playSound(7, A4, A8); // EmpireLaserTurbo
+		}
+
+		break;
+	}
 	}
 
 	return 0;
