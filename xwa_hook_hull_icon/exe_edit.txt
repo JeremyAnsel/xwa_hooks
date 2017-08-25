@@ -1,0 +1,54 @@
+
+:00467C89 - 0x067089
+663D4700                cmp ax, 0047
+7719                    ja 00467CA8
+25FFFF0000              and eax, 0000FFFF
+668B0C4508965A00        mov cx, word ptr [2*eax+005A9608]
+
+25FFFF0000              and eax, 0000FFFF
+50                      push eax
+E89C0E1400              call 005A8B30, 005A8B30 - 00467C94 = 00140E9C
+83C404                  add esp, 00000004
+8BC8                    mov ecx, eax
+909090                  nop
+
+
+:0046ADC0 - 0x06A1C0
+663D4700                cmp ax, 0047
+770E                    ja 0046ADD4
+25FFFF0000              and eax, 0000FFFF
+668B044508965A00        mov ax, word ptr [2*eax+005A9608]
+
+25FFFF0000              and eax, 0000FFFF
+50                      push eax
+E865DD1300              call 005A8B30, 005A8B30 - 0046ADCB = 0013DD65
+83C404                  add esp, 00000004
+9090909090              nop
+
+
+:0046B070 - 0x06A470
+663D4700                cmp ax, 0047
+7719                    ja 0046B08F
+25FFFF0000              and eax, 0000FFFF
+668B0C4508965A00        mov cx, word ptr [2*eax+005A9608]
+
+25FFFF0000              and eax, 0000FFFF
+50                      push eax
+E8B5DA1300              call 005A8B30, 005A8B30 - 0046B07B = 0013DAB5
+83C404                  add esp, 00000004
+8BC8                    mov ecx, eax
+909090                  nop
+
+
+:0046B441 - 0x06A841
+663D4700                cmp ax, 0047
+7719                    ja 0046B460
+25FFFF0000              and eax, 0000FFFF
+668B0C4508965A00        mov cx, word ptr [2*eax+005A9608]
+
+25FFFF0000              and eax, 0000FFFF
+50                      push eax
+E8E4D61300              call 005A8B30, 005A8B30 - 0046B44C = 0013D6E4
+83C404                  add esp, 00000004
+8BC8                    mov ecx, eax
+909090                  nop

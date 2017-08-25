@@ -28,6 +28,12 @@ This hook permits to customize the hangars. The XWA's engine uses two hangar mod
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11197
 
+## xwa_hook_hull_icon
+
+This hook enables setting hull icon for any craft.
+
+See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11761
+
 ## xwa_hook_lightmaps
 
 This hook replaces a static buffer by a dynamic one in lightmaps loading.
