@@ -55,26 +55,26 @@ public:
 	{
 		if (std::ifstream("HullIconList.txt"))
 		{
-			hullIcons = GetFileListUnsignedShortValues("HullIconList.txt");
+			this->_hullIcons = GetFileListUnsignedShortValues("HullIconList.txt");
 		}
 		else
 		{
-			hullIcons = GetDefaultHullIconValues();
+			this->_hullIcons = GetDefaultHullIconValues();
 		}
 	}
 
-	std::vector<unsigned short> hullIcons;
+	std::vector<unsigned short> _hullIcons;
 };
 
-HullIconValues g_HullIconValues;
+HullIconValues g_hullIconValues;
 
 int HullIconHook(int* params)
 {
 	const unsigned short modelIndex = (unsigned short)params[0];
 
-	if (modelIndex < g_HullIconValues.hullIcons.size())
+	if (modelIndex < g_hullIconValues._hullIcons.size())
 	{
-		return g_HullIconValues.hullIcons[modelIndex];
+		return g_hullIconValues._hullIcons[modelIndex];
 	}
 
 	return 0;
