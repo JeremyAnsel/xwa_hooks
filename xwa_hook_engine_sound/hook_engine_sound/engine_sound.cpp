@@ -75,7 +75,7 @@ int GetFileKeyValueInt(const std::string& path, const std::string& key)
 	return std::stoi(value, 0, 0);
 }
 
-std::vector<std::string> GetFileListValues(const std::string& path)
+std::vector<std::string> GetFileLines(const std::string& path)
 {
 	std::vector<std::string> values;
 
@@ -109,12 +109,12 @@ class FlightModelsList
 public:
 	FlightModelsList()
 	{
-		for (auto& line : GetFileListValues("FlightModels\\Spacecraft0.LST"))
+		for (auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
 		{
 			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
 		}
 
-		for (auto& line : GetFileListValues("FlightModels\\Equipment0.LST"))
+		for (auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
 		{
 			this->_equipmentList.push_back(GetStringWithoutExtension(line));
 		}
