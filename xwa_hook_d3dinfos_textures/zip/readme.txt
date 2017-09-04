@@ -1,4 +1,4 @@
-﻿xwa_hook_d3dinfos_textures
+xwa_hook_d3dinfos_textures
 
 This hook increases the D3DTextures count limit.
 When there are more than 1624 textures, the game outputs "Not enough D3DTextures" and uses the last created texture. This hook fixes that.
@@ -8,11 +8,7 @@ When there are more than 1624 textures, the game outputs "Not enough D3DTextures
 
 This dll requires:
 - Windows XP SP2 or superior
-- Visual C++ 2013 Runtime (x86)
 - xwa_hook_main
-
-Visual C++ Redistributable Packages for Visual Studio 2013: vcredist_x86.exe
-http://www.microsoft.com/en-us/download/details.aspx?id=40784
 
 
 *** Setup ***

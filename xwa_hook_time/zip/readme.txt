@@ -7,11 +7,7 @@ This hook reduces the CPU usage. The side effect is that the framerate is reduce
 
 This dll requires:
 - Windows XP SP2 or superior
-- Visual C++ 2013 Runtime (x86)
 - xwa_hook_main
-
-Visual C++ Redistributable Packages for Visual Studio 2013: vcredist_x86.exe
-http://www.microsoft.com/en-us/download/details.aspx?id=40784
 
 
 *** Setup ***

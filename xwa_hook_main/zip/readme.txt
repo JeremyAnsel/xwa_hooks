@@ -7,10 +7,6 @@ This is the main dll hook that is used to call other hooks. A hook is a way to i
 
 This dll requires:
 - Windows XP SP2 or superior
-- Visual C++ 2013 Runtime (x86)
-
-Visual C++ Redistributable Packages for Visual Studio 2013: vcredist_x86.exe
-http://www.microsoft.com/en-us/download/details.aspx?id=40784
 
 
 *** Setup ***
