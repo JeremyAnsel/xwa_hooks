@@ -2,6 +2,9 @@ xwa_hook_time
 
 This hook reduces the CPU usage. The side effect is that the framerate is reduced.
 
+For more informations, please see the following thread at xwaupgrade.com:
+http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=10&t=11338
+
 
 *** Requirements ***
 

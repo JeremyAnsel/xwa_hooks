@@ -2,6 +2,9 @@ xwa_hook_hull_icon
 
 This hook enables setting hull icon for any craft.
 
+For more informations, please see the following thread at xwaupgrade.com:
+http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11761
+
 
 *** Requirements ***
 

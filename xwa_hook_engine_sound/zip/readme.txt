@@ -2,6 +2,9 @@ xwa_hook_engine_sound
 
 This hook enables setting engine sound and weapon sound behavior for any craft.
 
+For more informations, please see the following thread at xwaupgrade.com:
+http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11746
+
 
 *** Requirements ***
 

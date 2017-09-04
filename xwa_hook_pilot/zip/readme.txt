@@ -2,6 +2,9 @@ xwa_hook_pilot
 
 This hook enables pilot meshes animation for any craft.
 
+For more informations, please see the following thread at xwaupgrade.com:
+http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11695
+
 
 *** Requirements ***
 

@@ -1,6 +1,9 @@
-﻿xwa_hook_sfoils
+xwa_hook_sfoils
 
 This hook enables S-Foils for any craft.
+
+For more informations, please see the following thread at xwaupgrade.com:
+http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11693
 
 
 *** Requirements ***
