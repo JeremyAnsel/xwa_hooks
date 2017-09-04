@@ -361,7 +361,7 @@ std::string GetWeaponSoundBehavior(int modelIndex)
 class ModelIndexSound
 {
 public:
-	int GetEngineSoundTypeInterior(int modelIndex)
+	int GetEngineTypeInterior(int modelIndex)
 	{
 		auto it = this->_typeInterior.find(modelIndex);
 
@@ -377,7 +377,7 @@ public:
 		}
 	}
 
-	int GetEngineSoundTypeFlyBy(int modelIndex)
+	int GetEngineTypeFlyBy(int modelIndex)
 	{
 		auto it = this->_typeFlyBy.find(modelIndex);
 
@@ -393,18 +393,18 @@ public:
 		}
 	}
 
-	std::string GetWeaponSoundBehavior(int modelIndex)
+	std::string GetWeaponBehavior(int modelIndex)
 	{
-		auto it = this->_weaponSoundBehavior.find(modelIndex);
+		auto it = this->_weaponBehavior.find(modelIndex);
 
-		if (it != this->_weaponSoundBehavior.end())
+		if (it != this->_weaponBehavior.end())
 		{
 			return it->second;
 		}
 		else
 		{
 			std::string value = GetWeaponSoundBehavior(modelIndex);
-			this->_weaponSoundBehavior.insert(std::make_pair(modelIndex, value));
+			this->_weaponBehavior.insert(std::make_pair(modelIndex, value));
 			return value;
 		}
 	}
@@ -412,7 +412,7 @@ public:
 private:
 	std::map<int, int> _typeInterior;
 	std::map<int, int> _typeFlyBy;
-	std::map<int, std::string> _weaponSoundBehavior;
+	std::map<int, std::string> _weaponBehavior;
 };
 
 ModelIndexSound g_modelIndexSound;
@@ -426,7 +426,7 @@ int InteriorSoundHook(int* params)
 
 	const char sfx_quality = *(char*)0xB0C890;
 
-	const int type = g_modelIndexSound.GetEngineSoundTypeInterior(modelIndex);
+	const int type = g_modelIndexSound.GetEngineTypeInterior(modelIndex);
 
 	switch (type)
 	{
@@ -482,7 +482,7 @@ int StopInteriorSoundHook(int* params)
 	const int modelIndex = params[0];
 	int& esi = params[1];
 
-	const int type = g_modelIndexSound.GetEngineSoundTypeInterior(modelIndex);
+	const int type = g_modelIndexSound.GetEngineTypeInterior(modelIndex);
 
 	switch (type)
 	{
@@ -526,7 +526,7 @@ int FlyBySoundHook(int* params)
 	const char xwaSound3dEnabled = *(char*)0x5BA990;
 	const int* xwaSoundEffectsBufferId = (int*)0x917E80;
 
-	const int type = g_modelIndexSound.GetEngineSoundTypeFlyBy(modelIndex);
+	const int type = g_modelIndexSound.GetEngineTypeFlyBy(modelIndex);
 
 	switch (type)
 	{
@@ -627,7 +627,7 @@ int LaunchSoundHook(int* params)
 	const char xwaSound3dEnabled = *(char*)0x5BA990;
 	const int* xwaSoundEffectsBufferId = (int*)0x917E80;
 
-	const int type = g_modelIndexSound.GetEngineSoundTypeFlyBy(modelIndex);
+	const int type = g_modelIndexSound.GetEngineTypeFlyBy(modelIndex);
 
 	switch (type)
 	{
@@ -738,7 +738,7 @@ int WeaponSoundHook(int* params)
 	case 284: // ModelIndex_284_1_22_LaserIon
 	case 285: // ModelIndex_285_1_23_LaserIonTurbo
 	{
-		std::string behavior = g_modelIndexSound.GetWeaponSoundBehavior(modelIndex);
+		std::string behavior = g_modelIndexSound.GetWeaponBehavior(modelIndex);
 
 		if (!behavior.empty())
 		{
@@ -798,7 +798,7 @@ int WeaponSoundHook(int* params)
 
 	case 307: // ModelIndex_307__1_0, open weapon
 	{
-		std::string behavior = g_modelIndexSound.GetWeaponSoundBehavior(modelIndex);
+		std::string behavior = g_modelIndexSound.GetWeaponBehavior(modelIndex);
 
 		if (!behavior.empty())
 		{
