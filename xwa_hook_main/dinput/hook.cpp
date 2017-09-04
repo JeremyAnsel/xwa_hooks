@@ -5,6 +5,8 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <map>
+#include <utility>
 
 class HookWrapper
 {
@@ -94,19 +96,19 @@ public:
 				{
 					auto function = getHook(i);
 
-					if (function.from == 0 && function.function == nullptr)
+					if (function.from == 0 || function.function == nullptr)
 					{
 						continue;
 					}
 
-					this->_functions.push_back(function);
+					this->_functions.insert(std::make_pair(function.from, function.function));
 				}
 			}
 		}
 	}
 
 	std::vector<HookWrapper> _wrappers;
-	std::vector<HookFunction> _functions;
+	std::map<int, int(*)(int*)> _functions;
 };
 
 HookList g_hookList;
@@ -120,12 +122,11 @@ int HookError(int* params)
 
 int Hook(int call, int* params)
 {
-	for (auto& function : g_hookList._functions)
+	auto it = g_hookList._functions.find(call);
+
+	if (it != g_hookList._functions.end())
 	{
-		if (call == function.from)
-		{
-			return function.function(params);
-		}
+		return it->second(params);
 	}
 
 	return HookError(params);
