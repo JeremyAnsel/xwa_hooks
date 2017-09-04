@@ -4,6 +4,9 @@
 #include <fstream>
 #include <algorithm>
 #include <cctype>
+#include <vector>
+#include <map>
+#include <utility>
 
 std::string GetStringWithoutExtension(const std::string& str)
 {
@@ -72,48 +75,89 @@ int GetFileKeyValueInt(const std::string& path, const std::string& key)
 	return std::stoi(value, 0, 0);
 }
 
-std::string GetFlightModelsLstLine(int modelIndex)
+std::vector<std::string> GetFileListValues(const std::string& path)
 {
-	const int xwaObjectStats = 0x05FB240;
-	const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
-	const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
+	std::vector<std::string> values;
 
-	if (dataIndex1 != 0 && dataIndex1 != 1)
-	{
-		return std::string();
-	}
+	std::ifstream file(path);
 
-	std::string lstPath;
-	lstPath.append("FlightModels\\");
-
-	std::string lstFilesNames[] =
-	{
-		"Spacecraft0.LST",
-		"Equipment0.LST",
-	};
-
-	lstPath.append(lstFilesNames[dataIndex1]);
-
-	std::ifstream lstFile(lstPath);
-
-	if (lstFile)
+	if (file)
 	{
 		std::string line;
 
-		for (int i = 0; i <= dataIndex2; i++)
+		while (std::getline(file, line))
 		{
-			std::getline(lstFile, line);
-		}
+			if (!line.length())
+			{
+				continue;
+			}
 
-		return GetStringWithoutExtension(line);
+			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
+			{
+				continue;
+			}
+
+			values.push_back(line);
+		}
 	}
 
-	return std::string();
+	return values;
 }
+
+class FlightModelsList
+{
+public:
+	FlightModelsList()
+	{
+		for (auto& line : GetFileListValues("FlightModels\\Spacecraft0.LST"))
+		{
+			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
+		}
+
+		for (auto& line : GetFileListValues("FlightModels\\Equipment0.LST"))
+		{
+			this->_equipmentList.push_back(GetStringWithoutExtension(line));
+		}
+	}
+
+	std::string GetLstLine(int modelIndex)
+	{
+		const int xwaObjectStats = 0x05FB240;
+		const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
+		const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
+
+		switch (dataIndex1)
+		{
+		case 0:
+			if ((unsigned int)dataIndex2 < this->_spacecraftList.size())
+			{
+				return this->_spacecraftList[dataIndex2];
+			}
+
+			break;
+
+		case 1:
+			if ((unsigned int)dataIndex2 < this->_equipmentList.size())
+			{
+				return this->_equipmentList[dataIndex2];
+			}
+
+			break;
+		}
+
+		return std::string();
+	}
+
+private:
+	std::vector<std::string> _spacecraftList;
+	std::vector<std::string> _equipmentList;
+};
+
+FlightModelsList g_flightModelsList;
 
 int GetEngineSoundTypeInterior(int modelIndex)
 {
-	std::string pilotPath = GetFlightModelsLstLine(modelIndex);
+	std::string pilotPath = g_flightModelsList.GetLstLine(modelIndex);
 
 	if (!pilotPath.empty())
 	{
@@ -186,7 +230,7 @@ int GetEngineSoundTypeInterior(int modelIndex)
 
 int GetEngineSoundTypeFlyBy(int modelIndex)
 {
-	std::string pilotPath = GetFlightModelsLstLine(modelIndex);
+	std::string pilotPath = g_flightModelsList.GetLstLine(modelIndex);
 
 	if (!pilotPath.empty())
 	{
@@ -268,6 +312,111 @@ int GetEngineSoundTypeFlyBy(int modelIndex)
 	return type;
 }
 
+std::string GetWeaponSoundBehavior(int modelIndex)
+{
+	std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	if (!path.empty())
+	{
+		path.append("Sound.txt");
+	}
+
+	std::string behavior;
+
+	if (!path.empty() && std::ifstream(path))
+	{
+		behavior = GetFileKeyValue(path, "WeaponSoundBehavior");
+	}
+	else
+	{
+		switch (modelIndex)
+		{
+		case 58: // ModelIndex_058_0_45_CorellianTransport2
+		case 59: // ModelIndex_059_0_46_MilleniumFalcon2
+		case 65: // ModelIndex_065_0_52_FamilyTransport
+			behavior = "CorellianTransport";
+			break;
+
+		case 5: // ModelIndex_005_0_4_TieFighter
+		case 6: // ModelIndex_006_0_5_TieInterceptor
+		case 7: // ModelIndex_007_0_6_TieBomber
+		case 8: // ModelIndex_008_0_7_TieAdvanced
+		case 9: // ModelIndex_009_0_8_TieDefender
+		case 18: // ModelIndex_018_0_17_TieBizarro
+		case 19: // ModelIndex_019_0_18_TieBigGun
+		case 20: // ModelIndex_020_0_19_TieWarheads
+		case 21: // ModelIndex_021_0_20_TieBomb
+		case 22: //ModelIndex_022_0_21_TieBooster
+			behavior = "TieFighter";
+			break;
+
+		default:
+			behavior = std::string();
+		}
+	}
+
+	return behavior;
+}
+
+class ModelIndexSound
+{
+public:
+	int GetEngineSoundTypeInterior(int modelIndex)
+	{
+		auto it = this->_typeInterior.find(modelIndex);
+
+		if (it != this->_typeInterior.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetEngineSoundTypeInterior(modelIndex);
+			this->_typeInterior.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+	int GetEngineSoundTypeFlyBy(int modelIndex)
+	{
+		auto it = this->_typeFlyBy.find(modelIndex);
+
+		if (it != this->_typeFlyBy.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetEngineSoundTypeFlyBy(modelIndex);
+			this->_typeFlyBy.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+	std::string GetWeaponSoundBehavior(int modelIndex)
+	{
+		auto it = this->_weaponSoundBehavior.find(modelIndex);
+
+		if (it != this->_weaponSoundBehavior.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			std::string value = GetWeaponSoundBehavior(modelIndex);
+			this->_weaponSoundBehavior.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+private:
+	std::map<int, int> _typeInterior;
+	std::map<int, int> _typeFlyBy;
+	std::map<int, std::string> _weaponSoundBehavior;
+};
+
+ModelIndexSound g_modelIndexSound;
+
 int InteriorSoundHook(int* params)
 {
 	const int modelIndex = params[0];
@@ -277,7 +426,7 @@ int InteriorSoundHook(int* params)
 
 	const char sfx_quality = *(char*)0xB0C890;
 
-	const int type = GetEngineSoundTypeInterior(modelIndex);
+	const int type = g_modelIndexSound.GetEngineSoundTypeInterior(modelIndex);
 
 	switch (type)
 	{
@@ -333,7 +482,7 @@ int StopInteriorSoundHook(int* params)
 	const int modelIndex = params[0];
 	int& esi = params[1];
 
-	const int type = GetEngineSoundTypeInterior(modelIndex);
+	const int type = g_modelIndexSound.GetEngineSoundTypeInterior(modelIndex);
 
 	switch (type)
 	{
@@ -377,7 +526,7 @@ int FlyBySoundHook(int* params)
 	const char xwaSound3dEnabled = *(char*)0x5BA990;
 	const int* xwaSoundEffectsBufferId = (int*)0x917E80;
 
-	const int type = GetEngineSoundTypeFlyBy(modelIndex);
+	const int type = g_modelIndexSound.GetEngineSoundTypeFlyBy(modelIndex);
 
 	switch (type)
 	{
@@ -478,7 +627,7 @@ int LaunchSoundHook(int* params)
 	const char xwaSound3dEnabled = *(char*)0x5BA990;
 	const int* xwaSoundEffectsBufferId = (int*)0x917E80;
 
-	const int type = GetEngineSoundTypeFlyBy(modelIndex);
+	const int type = g_modelIndexSound.GetEngineSoundTypeFlyBy(modelIndex);
 
 	switch (type)
 	{
@@ -589,61 +738,25 @@ int WeaponSoundHook(int* params)
 	case 284: // ModelIndex_284_1_22_LaserIon
 	case 285: // ModelIndex_285_1_23_LaserIonTurbo
 	{
-		std::string path = GetFlightModelsLstLine(modelIndex);
+		std::string behavior = g_modelIndexSound.GetWeaponSoundBehavior(modelIndex);
 
-		if (!path.empty())
+		if (!behavior.empty())
 		{
-			path.append("Sound.txt");
-		}
-
-		std::string behavior;
-
-		if (!path.empty() && std::ifstream(path))
-		{
-			behavior = GetFileKeyValue(path, "WeaponSoundBehavior");
-		}
-		else
-		{
-			switch (modelIndex)
+			if (behavior == "CorellianTransport")
 			{
-			case 58: // ModelIndex_058_0_45_CorellianTransport2
-			case 59: // ModelIndex_059_0_46_MilleniumFalcon2
-			case 65: // ModelIndex_065_0_52_FamilyTransport
-				behavior = "CorellianTransport";
-				break;
+				switch (weaponIndex)
+				{
+				case 280: // ModelIndex_280_1_17_LaserRebel
+					return playSound(15, A4, A8); // FalconLaser
 
-			case 5: // ModelIndex_005_0_4_TieFighter
-			case 6: // ModelIndex_006_0_5_TieInterceptor
-			case 7: // ModelIndex_007_0_6_TieBomber
-			case 8: // ModelIndex_008_0_7_TieAdvanced
-			case 9: // ModelIndex_009_0_8_TieDefender
-			case 18: // ModelIndex_018_0_17_TieBizarro
-			case 19: // ModelIndex_019_0_18_TieBigGun
-			case 20: // ModelIndex_020_0_19_TieWarheads
-			case 21: // ModelIndex_021_0_20_TieBomb
-			case 22: //ModelIndex_022_0_21_TieBooster
-				behavior = "TieFighter";
-				break;
-
-			default:
-				behavior = std::string();
+				case 281: // ModelIndex_281_1_18_LaserRebelTurbo
+					return playSound(16, A4, A8); // FalconLaserTurbo
+				}
 			}
-		}
-
-		if (behavior == "CorellianTransport")
-		{
-			switch (weaponIndex)
+			else if (behavior == "TieFighter")
 			{
-			case 280: // ModelIndex_280_1_17_LaserRebel
-				return playSound(15, A4, A8); // FalconLaser
-
-			case 281: // ModelIndex_281_1_18_LaserRebelTurbo
-				return playSound(16, A4, A8); // FalconLaserTurbo
+				return playSound(20, A4, A8); // EmpireLaserChChChhh
 			}
-		}
-		else if (behavior == "TieFighter")
-		{
-			return playSound(20, A4, A8); // EmpireLaserChChChhh
 		}
 
 		return playSound(4 + weaponIndex - 280, A4, A8);
@@ -685,39 +798,26 @@ int WeaponSoundHook(int* params)
 
 	case 307: // ModelIndex_307__1_0, open weapon
 	{
-		std::string path = GetFlightModelsLstLine(modelIndex);
+		std::string behavior = g_modelIndexSound.GetWeaponSoundBehavior(modelIndex);
 
-		if (!path.empty())
+		if (!behavior.empty())
 		{
-			path.append("Sound.txt");
-		}
-
-		std::string behavior;
-
-		if (!path.empty() && std::ifstream(path))
-		{
-			behavior = GetFileKeyValue(path, "WeaponSoundBehavior");
-		}
-		else
-		{
-			behavior = std::string();
-		}
-
-		if (behavior == "Rebel")
-		{
-			return playSound(4, A4, A8); // RebelLaser
-		}
-		else if (behavior == "RebelTurbo")
-		{
-			return playSound(5, A4, A8); // RebelLaserTurbo
-		}
-		else if (behavior == "Empire")
-		{
-			return playSound(6, A4, A8); // EmpireLaser
-		}
-		else if (behavior == "EmpireTurbo")
-		{
-			return playSound(7, A4, A8); // EmpireLaserTurbo
+			if (behavior == "Rebel")
+			{
+				return playSound(4, A4, A8); // RebelLaser
+			}
+			else if (behavior == "RebelTurbo")
+			{
+				return playSound(5, A4, A8); // RebelLaserTurbo
+			}
+			else if (behavior == "Empire")
+			{
+				return playSound(6, A4, A8); // EmpireLaser
+			}
+			else if (behavior == "EmpireTurbo")
+			{
+				return playSound(7, A4, A8); // EmpireLaserTurbo
+			}
 		}
 
 		break;
