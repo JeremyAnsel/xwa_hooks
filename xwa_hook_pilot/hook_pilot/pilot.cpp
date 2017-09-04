@@ -5,12 +5,43 @@
 #include <algorithm>
 #include <cctype>
 #include <vector>
+#include <map>
+#include <utility>
 
 std::string GetStringWithoutExtension(const std::string& str)
 {
 	auto b = str.find_last_of('.');
 
 	return str.substr(0, b);
+}
+
+std::vector<std::string> GetFileLines(const std::string& path)
+{
+	std::vector<std::string> values;
+
+	std::ifstream file(path);
+
+	if (file)
+	{
+		std::string line;
+
+		while (std::getline(file, line))
+		{
+			if (!line.length())
+			{
+				continue;
+			}
+
+			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
+			{
+				continue;
+			}
+
+			values.push_back(line);
+		}
+	}
+
+	return values;
 }
 
 std::vector<std::string> Tokennize(const std::string& str)
@@ -66,44 +97,56 @@ std::vector<std::vector<std::string>> GetFileListValues(const std::string& path)
 	return values;
 }
 
-std::string GetFlightModelsLstLine(int modelIndex)
+class FlightModelsList
 {
-	const int xwaObjectStats = 0x05FB240;
-	const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
-	const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
-
-	if (dataIndex1 != 0 && dataIndex1 != 1)
+public:
+	FlightModelsList()
 	{
+		for (auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		{
+			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
+		}
+
+		for (auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		{
+			this->_equipmentList.push_back(GetStringWithoutExtension(line));
+		}
+	}
+
+	std::string GetLstLine(int modelIndex)
+	{
+		const int xwaObjectStats = 0x05FB240;
+		const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
+		const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
+
+		switch (dataIndex1)
+		{
+		case 0:
+			if ((unsigned int)dataIndex2 < this->_spacecraftList.size())
+			{
+				return this->_spacecraftList[dataIndex2];
+			}
+
+			break;
+
+		case 1:
+			if ((unsigned int)dataIndex2 < this->_equipmentList.size())
+			{
+				return this->_equipmentList[dataIndex2];
+			}
+
+			break;
+		}
+
 		return std::string();
 	}
 
-	std::string lstPath;
-	lstPath.append("FlightModels\\");
+private:
+	std::vector<std::string> _spacecraftList;
+	std::vector<std::string> _equipmentList;
+};
 
-	std::string lstFilesNames[] =
-	{
-		"Spacecraft0.LST",
-		"Equipment0.LST",
-	};
-
-	lstPath.append(lstFilesNames[dataIndex1]);
-
-	std::ifstream lstFile(lstPath);
-
-	if (lstFile)
-	{
-		std::string line;
-
-		for (int i = 0; i <= dataIndex2; i++)
-		{
-			std::getline(lstFile, line);
-		}
-
-		return GetStringWithoutExtension(line);
-	}
-
-	return std::string();
-}
+FlightModelsList g_flightModelsList;
 
 #pragma pack(push, 1)
 
@@ -208,7 +251,7 @@ std::vector<PilotMesh> GetPilotMeshes(int modelIndex)
 {
 	std::vector<PilotMesh> pilotMeshes;
 
-	std::string pilotPath = GetFlightModelsLstLine(modelIndex);
+	std::string pilotPath = g_flightModelsList.GetLstLine(modelIndex);
 
 	if (pilotPath.empty())
 	{
@@ -229,6 +272,31 @@ std::vector<PilotMesh> GetPilotMeshes(int modelIndex)
 	return pilotMeshes;
 }
 
+class ModelIndexPilotMeshes
+{
+public:
+	std::vector<PilotMesh> GetMeshes(int modelIndex)
+	{
+		auto it = this->_meshes.find(modelIndex);
+
+		if (it != this->_meshes.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			std::vector<PilotMesh> value = GetPilotMeshes(modelIndex);
+			this->_meshes.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+private:
+	std::map<int, std::vector<PilotMesh>> _meshes;
+};
+
+ModelIndexPilotMeshes g_modelIndexPilotMeshes;
+
 int PilotHook(int* params)
 {
 	const auto XwaRandom = (unsigned short(*)())0x00494E10;
@@ -237,7 +305,7 @@ int PilotHook(int* params)
 	const int modelIndex = params[1];
 	const int A8 = params[8];
 
-	auto pilotMeshes = GetPilotMeshes(modelIndex);
+	auto pilotMeshes = g_modelIndexPilotMeshes.GetMeshes(modelIndex);
 
 	if (pilotMeshes.empty())
 	{
