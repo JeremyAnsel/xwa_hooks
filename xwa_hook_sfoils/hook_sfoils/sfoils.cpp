@@ -5,12 +5,43 @@
 #include <algorithm>
 #include <cctype>
 #include <vector>
+#include <map>
+#include <utility>
 
 std::string GetStringWithoutExtension(const std::string& str)
 {
 	auto b = str.find_last_of('.');
 
 	return str.substr(0, b);
+}
+
+std::vector<std::string> GetFileLines(const std::string& path)
+{
+	std::vector<std::string> values;
+
+	std::ifstream file(path);
+
+	if (file)
+	{
+		std::string line;
+
+		while (std::getline(file, line))
+		{
+			if (!line.length())
+			{
+				continue;
+			}
+
+			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
+			{
+				continue;
+			}
+
+			values.push_back(line);
+		}
+	}
+
+	return values;
 }
 
 std::vector<std::string> Tokennize(const std::string& str)
@@ -66,44 +97,56 @@ std::vector<std::vector<std::string>> GetFileListValues(const std::string& path)
 	return values;
 }
 
-std::string GetFlightModelsLstLine(int modelIndex)
+class FlightModelsList
 {
-	const int xwaObjectStats = 0x05FB240;
-	const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
-	const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
-
-	if (dataIndex1 != 0 && dataIndex1 != 1)
+public:
+	FlightModelsList()
 	{
+		for (auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		{
+			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
+		}
+
+		for (auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		{
+			this->_equipmentList.push_back(GetStringWithoutExtension(line));
+		}
+	}
+
+	std::string GetLstLine(int modelIndex)
+	{
+		const int xwaObjectStats = 0x05FB240;
+		const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
+		const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
+
+		switch (dataIndex1)
+		{
+		case 0:
+			if ((unsigned int)dataIndex2 < this->_spacecraftList.size())
+			{
+				return this->_spacecraftList[dataIndex2];
+			}
+
+			break;
+
+		case 1:
+			if ((unsigned int)dataIndex2 < this->_equipmentList.size())
+			{
+				return this->_equipmentList[dataIndex2];
+			}
+
+			break;
+		}
+
 		return std::string();
 	}
 
-	std::string lstPath;
-	lstPath.append("FlightModels\\");
+private:
+	std::vector<std::string> _spacecraftList;
+	std::vector<std::string> _equipmentList;
+};
 
-	std::string lstFilesNames[] =
-	{
-		"Spacecraft0.LST",
-		"Equipment0.LST",
-	};
-
-	lstPath.append(lstFilesNames[dataIndex1]);
-
-	std::ifstream lstFile(lstPath);
-
-	if (lstFile)
-	{
-		std::string line;
-
-		for (int i = 0; i <= dataIndex2; i++)
-		{
-			std::getline(lstFile, line);
-		}
-
-		return GetStringWithoutExtension(line);
-	}
-
-	return std::string();
-}
+FlightModelsList g_flightModelsList;
 
 #pragma pack(push, 1)
 
@@ -188,7 +231,7 @@ std::vector<SFoil> GetSFoils(int modelIndex)
 {
 	std::vector<SFoil> sfoils;
 
-	std::string sfoilsPath = GetFlightModelsLstLine(modelIndex);
+	std::string sfoilsPath = g_flightModelsList.GetLstLine(modelIndex);
 
 	if (sfoilsPath.empty())
 	{
@@ -209,13 +252,38 @@ std::vector<SFoil> GetSFoils(int modelIndex)
 	return sfoils;
 }
 
+class ModelIndexSFoils
+{
+public:
+	std::vector<SFoil> Get(int modelIndex)
+	{
+		auto it = this->_sfoils.find(modelIndex);
+
+		if (it != this->_sfoils.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			std::vector<SFoil> value = GetSFoils(modelIndex);
+			this->_sfoils.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+private:
+	std::map<int, std::vector<SFoil>> _sfoils;
+};
+
+ModelIndexSFoils g_modelIndexSFoils;
+
 int SFoilsHook1(int* params)
 {
 	const int modelIndex = params[0];
 
 	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
 
-	auto sfoils = GetSFoils(modelIndex);
+	auto sfoils = g_modelIndexSFoils.Get(modelIndex);
 
 	if (sfoils.empty())
 	{
@@ -241,7 +309,7 @@ int SFoilsHook2(int* params)
 
 	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
 
-	auto sfoils = GetSFoils(modelIndex);
+	auto sfoils = g_modelIndexSFoils.Get(modelIndex);
 
 	if (sfoils.empty())
 	{
