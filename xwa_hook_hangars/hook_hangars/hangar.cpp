@@ -74,6 +74,34 @@ int GetFileKeyValueInt(const std::string& path, const std::string& key)
 	return std::stoi(value, 0, 0);
 }
 
+std::vector<std::string> GetFileLines(const std::string& path)
+{
+	std::vector<std::string> values;
+
+	std::ifstream file(path);
+
+	if (file)
+	{
+		std::string line;
+
+		while (std::getline(file, line))
+		{
+			if (!line.length())
+			{
+				continue;
+			}
+
+			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
+			{
+				continue;
+			}
+
+			values.push_back(line);
+		}
+	}
+
+	return values;
+}
 
 std::vector<std::string> Tokennize(const std::string& str)
 {
@@ -128,44 +156,56 @@ std::vector<std::vector<std::string>> GetFileListValues(const std::string& path)
 	return values;
 }
 
-std::string GetFlightModelsLstLine(int modelIndex)
+class FlightModelsList
 {
-	const int xwaObjectStats = 0x05FB240;
-	const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
-	const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
-
-	if (dataIndex1 != 0 && dataIndex1 != 1)
+public:
+	FlightModelsList()
 	{
+		for (auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		{
+			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
+		}
+
+		for (auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		{
+			this->_equipmentList.push_back(GetStringWithoutExtension(line));
+		}
+	}
+
+	std::string GetLstLine(int modelIndex)
+	{
+		const int xwaObjectStats = 0x05FB240;
+		const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
+		const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
+
+		switch (dataIndex1)
+		{
+		case 0:
+			if ((unsigned int)dataIndex2 < this->_spacecraftList.size())
+			{
+				return this->_spacecraftList[dataIndex2];
+			}
+
+			break;
+
+		case 1:
+			if ((unsigned int)dataIndex2 < this->_equipmentList.size())
+			{
+				return this->_equipmentList[dataIndex2];
+			}
+
+			break;
+		}
+
 		return std::string();
 	}
 
-	std::string lstPath;
-	lstPath.append("FlightModels\\");
+private:
+	std::vector<std::string> _spacecraftList;
+	std::vector<std::string> _equipmentList;
+};
 
-	std::string lstFilesNames[] =
-	{
-		"Spacecraft0.LST",
-		"Equipment0.LST",
-	};
-
-	lstPath.append(lstFilesNames[dataIndex1]);
-
-	std::ifstream lstFile(lstPath);
-
-	if (lstFile)
-	{
-		std::string line;
-
-		for (int i = 0; i <= dataIndex2; i++)
-		{
-			std::getline(lstFile, line);
-		}
-
-		return GetStringWithoutExtension(line);
-	}
-
-	return std::string();
-}
+FlightModelsList g_flightModelsList;
 
 std::string GetCommandShipLstLine()
 {
@@ -185,7 +225,7 @@ std::string GetCommandShipLstLine()
 			const int commandShipCraftId = *(unsigned char*)(xwaTieFlightGroups + commandShipFlightGroupIndex * 0xE42 + 0x06B);
 			const int commandShipModelIndex = exeSpecies[commandShipCraftId];
 
-			return GetFlightModelsLstLine(commandShipModelIndex);
+			return g_flightModelsList.GetLstLine(commandShipModelIndex);
 		}
 	}
 
@@ -238,7 +278,7 @@ int HangarOptLoadHook(int* params)
 
 	if (strcmp(argOpt, "FlightModels\\") == 0)
 	{
-		opt = GetFlightModelsLstLine(argModelIndex);
+		opt = g_flightModelsList.GetLstLine(argModelIndex);
 		opt.append(".opt");
 	}
 	else
@@ -395,7 +435,7 @@ int HangarCameraPositionHook(int* params)
 				const int playerPositionY = *(int*)(xwaObjects + playerObjectIndex * 0x27 + 0x0B);
 				const int playerPositionZ = *(int*)(xwaObjects + playerObjectIndex * 0x27 + 0x0F);
 
-				std::string optCamera = GetFlightModelsLstLine(playerModelIndex);
+				std::string optCamera = g_flightModelsList.GetLstLine(playerModelIndex);
 				optCamera.append("Camera.txt");
 
 				if (std::ifstream(optCamera))
@@ -609,7 +649,7 @@ int HangarCameraPositionHook(int* params)
 				const int playerPositionY = *(int*)(xwaObjects + playerObjectIndex * 0x27 + 0x0B);
 				const int playerPositionZ = *(int*)(xwaObjects + playerObjectIndex * 0x27 + 0x0F);
 
-				std::string optCamera = GetFlightModelsLstLine(playerModelIndex);
+				std::string optCamera = g_flightModelsList.GetLstLine(playerModelIndex);
 				optCamera.append("Camera.txt");
 
 				if (std::ifstream(optCamera))
@@ -893,7 +933,7 @@ int CraftElevationHook(int* params)
 
 	short modelIndex = (short)params[0];
 
-	std::string optSize = GetFlightModelsLstLine(modelIndex);
+	std::string optSize = g_flightModelsList.GetLstLine(modelIndex);
 	optSize.append("Size.txt");
 
 	if (std::ifstream(optSize))
