@@ -104,6 +104,29 @@ public:
 					this->_functions.insert(std::make_pair(function.from, function.function));
 				}
 			}
+
+			auto getPatch = (const HookPatch *(*)(int))GetProcAddress(wrapper._module, "GetHookPatch");
+			if (getPatch != nullptr)
+			{
+				const HookPatch *patch = nullptr;
+				for (int i = 0; patch = getPatch(i); i++)
+				{
+					if (memcmp((const void *)patch->offset, patch->original, patch->size) == 0 ||
+						(patch->original_alternative && memcmp((const void *)patch->offset, patch->original_alternative, patch->size) == 0))
+					{
+						DWORD old, dummy;
+						VirtualProtect((void *)patch->offset, patch->size, PAGE_READWRITE, &old);
+						memcpy((void *)patch->offset, patch->patched, patch->size);
+						if (patch->calladdr_pos >= 0)
+						{
+							*(unsigned *)(patch->offset + patch->calladdr_pos) = patch->calladdr;
+						}
+						VirtualProtect((void *)patch->offset, patch->size, old, &dummy);
+					}
+					else
+						MessageBoxA(nullptr, "Unexpected code found when patching hook", "DInput.dll", MB_OK | MB_ICONERROR);
+				}
+			}
 		}
 	}
 
