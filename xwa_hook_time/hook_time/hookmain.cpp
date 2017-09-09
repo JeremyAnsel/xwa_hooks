@@ -21,3 +21,11 @@ extern "C" __declspec(dllexport) HookFunction GetHookFunction(int index)
 
 	return hook;
 }
+
+static const int g_hookPatchesCount = sizeof(g_hookPatches) / sizeof(HookPatch);
+
+extern "C" __declspec(dllexport) const HookPatch *GetHookPatch(int index)
+{
+	if (index < 0 || index >= g_hookPatchesCount) return nullptr;
+	return g_hookPatches + index;
+}
