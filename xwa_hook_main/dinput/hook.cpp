@@ -7,6 +7,7 @@
 #include <vector>
 #include <map>
 #include <utility>
+#include <filesystem>
 
 class HookWrapper
 {
@@ -56,26 +57,26 @@ public:
 
 	void LoadHooksLst()
 	{
-		std::ifstream file("dinput_hooks.lst");
-
-		if (file)
+		for (const auto& file : std::experimental::filesystem::directory_iterator("."))
 		{
-			std::string line;
-
-			while (std::getline(file, line))
+			if (!std::experimental::filesystem::is_regular_file(file))
 			{
-				if (!line.length())
-				{
-					continue;
-				}
-
-				if (!std::ifstream(line))
-				{
-					continue;
-				}
-
-				this->_wrappers.push_back(HookWrapper{ line });
+				continue;
 			}
+
+			if (file.path().extension().string() != ".dll")
+			{
+				continue;
+			}
+
+			const auto& filename = file.path().filename().string();
+
+			if (filename.find("hook_") != 0 && filename.find("Hook_") != 0)
+			{
+				continue;
+			}
+
+			this->_wrappers.push_back(HookWrapper{ filename });
 		}
 	}
 
@@ -113,9 +114,14 @@ public:
 
 HookList g_hookList;
 
+void LoadHooks()
+{
+	g_hookList;
+}
+
 int HookError(int* params)
 {
-	MessageBoxA(nullptr, "The called hook was not correctly installed or initialized.", "DInput.dll", MB_OK | MB_ICONERROR);
+	MessageBoxA(nullptr, "The called hook was not correctly installed or initialized.", "xwa_hook_main (DInput.dll)", MB_OK | MB_ICONERROR);
 
 	return 0;
 }
