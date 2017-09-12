@@ -81,6 +81,16 @@ bool PatchMemory(const HookPatch& patch)
 	{
 		const auto& item = patch.Items[itemIndex];
 
+		size_t fromLength = strlen(item.From);
+		size_t toLength = strlen(item.To);
+
+		if ((fromLength % 2 != 0) || (toLength % 2 != 0) || (fromLength != toLength))
+		{
+			error = true;
+			error_patch = patch.Name;
+			break;
+		}
+
 		if (!IsPatchMemoryEqual((char*)item.Offset, item.From) && !IsPatchMemoryEqual((char*)item.Offset, item.To))
 		{
 			error = true;
