@@ -15,13 +15,12 @@ This dll requires:
 
 *** Setup ***
 
-1) add hook_time.dll to dinput_hooks.lst
+Place hook_time.dll next to xwingalliance.exe
 
-2) place hook_time.dll next to xwingalliance.exe
 
-3) edit xwingalliance.exe:
+*** Patch ***
 
-You can manually apply the modifications with an hexadecimal editor, or you can use XwaExePatcher to have a GUI.
+The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that reduces CPU usage
 At offset 10D810, replace E82BF8FFFF8B with E81BA70900C3.

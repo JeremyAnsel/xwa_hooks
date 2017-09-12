@@ -11,11 +11,12 @@ This dll requires:
 
 *** Setup ***
 
-1) place dinput.dll and dinput_hooks.lst next to xwingalliance.exe
+Place dinput.dll next to xwingalliance.exe
 
-2) edit xwingalliance.exe:
 
-You can manually apply the modifications with an hexadecimal editor, or you can use XwaExePatcher to have a GUI.
+*** Patch ***
+
+The following modifications are applied at runtime to xwingalliance.exe:
 
 # To setup the dinput hook:
 At offset 1A7F20, replace 00000000000000000000000000000000 with 506033C054505050E8EB42F7FF6158C3.
@@ -27,9 +28,8 @@ The second modification calls a hook and preserves the return value.
 
 *** Usage ***
 
-dinput_hooks.lst is a text file that lists the hooks.
-Each hook is implemented in a separate dll.
-See "dinput_hooks.lst" for an example.
+Each hook is implemented in a separate dll. The name of the dll must begin with "hook_" or "Hook_".
+
 
 *** Credits ***
 

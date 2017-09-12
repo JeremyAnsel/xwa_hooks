@@ -16,13 +16,12 @@ This dll requires:
 
 *** Setup ***
 
-1) add hook_hangars.dll to dinput_hooks.lst
+Place hook_hangars.dll and hook_hangars.cfg next to xwingalliance.exe
 
-2) place hook_hangars.dll and hook_hangars.cfg next to xwingalliance.exe
 
-3) edit xwingalliance.exe:
+*** Patch ***
 
-You can manually apply the modifications with an hexadecimal editor, or you can use XwaExePatcher to have a GUI.
+The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that selects the hangar type
 At offset 17DF97, replace 390C858E2AAE000F92C2 with 50E8939F02008AD05890.
@@ -39,7 +38,7 @@ At offset 056DEE, replace E84D4F0700 with E83D111500.
 # To remove the opt filter
 At offset 563C3, replace 83FB0E0F8FCB0000000F84 with 33C089442410E9BF090000.
 
-# To call the hook that sets the hangar camera:
+# To call the hook that sets the hangar camera
 At offset 5F0A0, replace 81C76A04000081ED1009000081EE2C010000 with 565557E8788E14005F5D5E90909090909090.
 At offset 5F7E8, replace B7FC4500 with 7EFC4500.
 At offset 5F7EC, replace CFFE4500 with 7EFC4500.
@@ -61,7 +60,7 @@ At offset 55345, replace 68C896000068FFFFFF7F68 with 58E8D52B1500E9BD030000.
 # To call the hook that sets the family hangar map
 At offset 55873, replace 688877000068FFFFFF7F68 with 58E8A7261500E98E020000.
 
-# To call the hook that sets the craft elevation:
+# To call the hook that sets the craft elevation
 At offset 61A49, replace 83F804740F50E8CC310200 with 50E8E164140083C404C390.
 At offset 55183, replace 83F804741C50E892FA0200 with 50E8B7C8000083C404EB1B.
 At offset 562F4, replace 83F804741050E821E90200 with 50E846B7000083C404EB0F.

@@ -15,13 +15,12 @@ This dll requires:
 
 *** Setup ***
 
-1) add hook_hull_icon.dll to dinput_hooks.lst
+Place hook_hull_icon.dll and HullIconList.txt next to xwingalliance.exe
 
-2) place hook_hull_icon.dll and HullIconList.txt next to xwingalliance.exe
 
-3) edit xwingalliance.exe:
+*** Patch ***
 
-You can manually apply the modifications with an hexadecimal editor, or you can use XwaExePatcher to have a GUI.
+The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that defines hull icons
 At offset 067089, replace 663D4700771925FFFF0000668B0C4508965A00 with 25FFFF000050E89C0E140083C4048BC8909090.

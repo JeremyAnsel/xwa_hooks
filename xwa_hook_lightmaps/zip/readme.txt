@@ -1,4 +1,4 @@
-﻿xwa_hook_lightmaps
+xwa_hook_lightmaps
 
 This hook replaces a static buffer with a dynamic one in lightmaps loading.
 
@@ -12,13 +12,12 @@ This dll requires:
 
 *** Setup ***
 
-1) add hook_lightmaps.dll to dinput_hooks.lst
+Place hook_lightmaps.dll next to xwingalliance.exe
 
-2) place hook_lightmaps.dll next to xwingalliance.exe
 
-3) edit xwingalliance.exe:
+*** Patch ***
 
-You can manually apply the modifications with an hexadecimal editor, or you can use XwaExePatcher to have a GUI.
+The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that creates lightmaps
 At offset 040F60, replace 8D8BB0D164003BC2895424347E4B with 505356E8C86F160083C40C90EB4B.
