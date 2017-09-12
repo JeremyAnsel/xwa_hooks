@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ArrayOfPatch>
-  <Patch Name="To call the hook that creates lightmaps">
-    <Item Offset="040F60" From="8D8BB0D164003BC2895424347E4B" To="505356E8C86F160083C40C90EB4B"/>
-    <Item Offset="040FCD" From="8D83B0D16400" To="909090909090"/>
-  </Patch>
-</ArrayOfPatch>
