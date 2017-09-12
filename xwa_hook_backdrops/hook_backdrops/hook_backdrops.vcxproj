@@ -160,7 +160,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="backdrops.cpp" />
-    <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="hookmain.cpp" />
   </ItemGroup>
   <ItemGroup>
