@@ -16,13 +16,12 @@ This dll requires:
 
 *** Setup ***
 
-1) add hook_d3dinfos_textures.dll to dinput_hooks.lst
+Place hook_d3dinfos_textures.dll and hook_d3dinfos_textures.cfg next to xwingalliance.exe
 
-2) place hook_d3dinfos_textures.dll and hook_d3dinfos_textures.cfg next to xwingalliance.exe
 
-3) edit xwingalliance.exe:
+*** Patch ***
 
-You can manually apply the modifications with an hexadecimal editor, or you can use XwaExePatcher to have a GUI.
+The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that removes D3DInfos count limit
 At offset 040B50, replace 5657BAC3296600 with E8CB731600C390.

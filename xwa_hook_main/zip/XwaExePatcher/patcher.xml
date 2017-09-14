@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ArrayOfPatch>
-  <Patch Name="To setup the dinput hook">
-    <Item Offset="1A7F20" From="00000000000000000000000000000000" To="506033C054505050E8EB42F7FF6158C3"/>
-    <Item Offset="1A7F30" From="00000000000000000000000000000000" To="536033C054505050E8DB42F7FF615BC3"/>
-  </Patch>
-</ArrayOfPatch>

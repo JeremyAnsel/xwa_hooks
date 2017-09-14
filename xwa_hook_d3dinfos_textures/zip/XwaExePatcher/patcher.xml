@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ArrayOfPatch>
-  <Patch Name="To call the hook that removes D3DInfos count limit">
-    <Item Offset="040B50" From="5657BAC3296600" To="E8CB731600C390"/>
-  </Patch>
-</ArrayOfPatch>

@@ -15,15 +15,14 @@ This dll requires:
 
 *** Setup ***
 
-1) add hook_sfoils.dll to dinput_hooks.lst
+Place hook_sfoils.dll next to xwingalliance.exe
 
-2) place hook_sfoils.dll next to xwingalliance.exe
 
-3) edit xwingalliance.exe:
+*** Patch ***
 
-You can manually apply the modifications with an hexadecimal editor, or you can use XwaExePatcher to have a GUI.
+The following modifications are applied at runtime to xwingalliance.exe:
 
-# disable S-Foil model filter
+# Disable S-Foil model filter
 At offset 0FB86E, replace 7419 with EB19.
 
 # To call the hook that defines S-Foils

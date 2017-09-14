@@ -15,13 +15,12 @@ This dll requires:
 
 *** Setup ***
 
-1) add hook_engine_sound.dll to dinput_hooks.lst
+Place hook_engine_sound.dll next to xwingalliance.exe
 
-2) place hook_engine_sound.dll next to xwingalliance.exe
 
-3) edit xwingalliance.exe:
+*** Patch ***
 
-You can manually apply the modifications with an hexadecimal editor, or you can use XwaExePatcher to have a GUI.
+The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that defines engine sounds
 At offset 03C4F5, replace 8A543A02885424108B54241081E2FF000000 with 668B543A0281E2FFFF000089542410909090.
