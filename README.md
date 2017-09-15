@@ -2,6 +2,8 @@
 
 This repository contains hooks created for X-Wing Alliance.
 
+See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11772
+
 ## xwa_hook_main
 
 This is the main dll hook that is used to call other hooks. A hook is a way to inject code into the exe.
