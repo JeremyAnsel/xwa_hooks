@@ -57,3 +57,9 @@ See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11693
 This hook reduces the CPU usage of the game. A side effect is that the framerate is a bit reduced.
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=10&t=11338
+
+## xwa_hook_wingmen_voices
+
+This hook enables setting wingmen voices for imperial IFF.
+
+See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11770

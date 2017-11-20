@@ -1,0 +1,21 @@
+
+:0043B824 - 0x03AC24
+8B0D78405B00            mov ecx, dword ptr [005B4078]
+8B157C405B00            mov edx, dword ptr [005B407C]
+
+53                      push ebx
+E8F6D21600              call 005A8B20, 005A8B20 - 0043B82A = 0016D2F6
+83C404                  add esp, 00000004
+EB7B                    jmp 0043B8AA
+90                      nop
+
+
+:0043BA4C - 0x03AE4C
+8B0D78405B00            mov ecx, dword ptr [005B4078]
+8B157C405B00            mov edx, dword ptr [005B407C]
+
+53                      push ebx
+E8CED01600              call 005A8B20, 005A8B20 - 0043BA52 = 0016D0CE
+83C404                  add esp, 00000004
+EB79                    jmp 0043BAD0
+90                      nop
