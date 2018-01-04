@@ -3,6 +3,25 @@
 #include "hook_function.h"
 #include "hooks.h"
 
+bool IsXwaExe()
+{
+	char filename[4096];
+
+	if (GetModuleFileName(nullptr, filename, sizeof(filename)) == 0)
+	{
+		return false;
+	}
+
+	int length = strlen(filename);
+
+	if (length < 17)
+	{
+		return false;
+	}
+
+	return _stricmp(filename + length - 17, "xwingalliance.exe") == 0;
+}
+
 bool MainPatchMemory()
 {
 	for (const auto& patch : g_patches)
@@ -22,9 +41,12 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 	{
 	case DLL_PROCESS_ATTACH:
 	{
-		if (MainPatchMemory())
+		if (IsXwaExe())
 		{
-			LoadAndPatchHooks();
+			if (MainPatchMemory())
+			{
+				LoadAndPatchHooks();
+			}
 		}
 
 		break;
