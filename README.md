@@ -40,6 +40,10 @@ See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11761
 
 This hook replaces a static buffer by a dynamic one in lightmaps loading.
 
+## xwa_hook_mission_objects
+
+This hook permits to replace mission objects and to enable crafts turrets.
+
 ## xwa_hook_pilot
 
 This hook enables pilot meshes animation for any craft.

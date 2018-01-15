@@ -1,0 +1,51 @@
+
+; from L00431B70
+:00431D7C - 0x03117C
+E8BFAB0900              call 004CC940
+
+E8AF6D1700              call 005A8B30, 005A8B30 - 00431D81 = 00176DAF
+
+
+; from L0050E5C0
+:0050E7DD - 0x10DBDD
+E85EE1FBFF              call 004CC940
+
+E84EA30900              call 005A8B30, 005A8B30 - 0050E7E2 = 0009A34E
+
+
+; from L004314B0
+:0043161A - 0x030A1A
+E821B30900              call 004CC940
+
+E811751700              call 005A8B30, 005A8B30 - 0043161F = 00177511
+
+
+:00431859 - 0x030C59
+E8E2B00900              call 004CC940
+
+E8D2721700              call 005A8B30, 005A8B30 - 0043185E = 001772D2
+
+
+:00431905 - 0x030D05
+E836B00900              call 004CC940
+
+E826721700              call 005A8B30, 005A8B30 - 0043190A = 00177226
+
+
+:00431AA8 - 0x030EA8
+E893AE0900              call 004CC940
+
+E883701700              call 005A8B30, 005A8B30 - 00431AAD = 00177083
+
+
+; from L00501D90
+:00501D90 - 0x101190
+53                      push ebx
+55                      push ebp
+56                      push esi
+57                      push edi
+8B7C2414                mov edi, dword ptr [esp+14]
+
+E88B6D0A00              call 005A8B20, 005A8B20 - 00501D95 = 000A6D8B
+C3                      ret
+9090                    nop
