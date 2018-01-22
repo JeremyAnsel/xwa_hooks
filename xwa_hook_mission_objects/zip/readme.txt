@@ -55,7 +55,7 @@ Suppose that the player craft is "FlightModels\[Player].opt".
 
 The possible involved files are:
 - "FlightModels\[Player]Gunner.opt"
-- "FlightModels\\CorellianTransportGunner.opt"
+- "FlightModels\CorellianTransportGunner.opt"
 
 To define a custom gunner opt, you can either use the "Objects.txt" file to replace the "CorellianTransportGunner.opt" file or use a "[Player]Gunner.opt" file.
 
