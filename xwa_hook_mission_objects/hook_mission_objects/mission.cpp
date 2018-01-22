@@ -5,6 +5,7 @@
 #include <fstream>
 #include <algorithm>
 #include <cctype>
+#include <vector>
 
 std::string GetStringWithoutExtension(const std::string& str)
 {
@@ -60,6 +61,84 @@ std::string GetFileKeyValue(const std::string& path, const std::string& key)
 
 	return std::string();
 }
+
+std::vector<std::string> GetFileLines(const std::string& path)
+{
+	std::vector<std::string> values;
+
+	std::ifstream file(path);
+
+	if (file)
+	{
+		std::string line;
+
+		while (std::getline(file, line))
+		{
+			if (!line.length())
+			{
+				continue;
+			}
+
+			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
+			{
+				continue;
+			}
+
+			values.push_back(line);
+		}
+	}
+
+	return values;
+}
+
+class FlightModelsList
+{
+public:
+	FlightModelsList()
+	{
+		for (auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		{
+			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
+		}
+
+		for (auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		{
+			this->_equipmentList.push_back(GetStringWithoutExtension(line));
+		}
+	}
+
+	std::string GetLstLine(int modelIndex)
+	{
+		const int xwaObjectStats = 0x05FB240;
+		const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
+		const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
+
+		switch (dataIndex1)
+		{
+		case 0:
+			if ((unsigned int)dataIndex2 < this->_spacecraftList.size())
+			{
+				return this->_spacecraftList[dataIndex2];
+			}
+
+			break;
+
+		case 1:
+			if ((unsigned int)dataIndex2 < this->_equipmentList.size())
+			{
+				return this->_equipmentList[dataIndex2];
+			}
+
+			break;
+		}
+
+		return std::string();
+	}
+
+private:
+	std::vector<std::string> _spacecraftList;
+	std::vector<std::string> _equipmentList;
+};
 
 std::string GetCustomFilePath(const std::string& name)
 {
@@ -161,7 +240,43 @@ struct XwaPlayer
 
 static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
+struct TieFlightGroupEx
+{
+	char Unk0000[107];
+	unsigned char CraftId;
+	char Unk006C[3538];
+	int PlayerIndex;
+};
+
+static_assert(sizeof(TieFlightGroupEx) == 3650, "size of TieFlightGroupEx must be 3650");
+
 #pragma pack(pop)
+
+int GetPlayerModelIndex(int playerId)
+{
+	const unsigned short* exeSpecies = (unsigned short*)0x05B0F70;
+	TieFlightGroupEx* XwaTieFlightGroups = (TieFlightGroupEx*)0x0080DC80;
+	int XwaTieFlightGroupsCount = *(short*)0x007B4C00;
+
+	int playerFlightGroupIndex = -1;
+	for (int index = 0; index < XwaTieFlightGroupsCount; index++)
+	{
+		if (XwaTieFlightGroups[playerFlightGroupIndex].PlayerIndex == playerId)
+		{
+			playerFlightGroupIndex = index;
+			break;
+		}
+	}
+
+	if (playerFlightGroupIndex == -1)
+	{
+		return -1;
+	}
+
+	int playerCraftId = XwaTieFlightGroups[playerFlightGroupIndex].CraftId;
+	int playerModelIndex = exeSpecies[playerCraftId];
+	return playerModelIndex;
+}
 
 int MissionObjectsHook(int* params)
 {
@@ -175,6 +290,24 @@ int MissionObjectsHook(int* params)
 	if (!value.empty() && std::ifstream(value))
 	{
 		return OptLoad(value.c_str());
+	}
+
+	if (_stricmp(argOpt, "FlightModels\\CorellianTransportGunner.opt") == 0)
+	{
+		int XwaCurrentPlayerId = *(int*)0x008C1CC8;
+		int playerModelIndex = GetPlayerModelIndex(XwaCurrentPlayerId);
+
+		if (playerModelIndex != -1)
+		{
+			FlightModelsList g_flightModelsList;
+			std::string ship = GetStringWithoutExtension(g_flightModelsList.GetLstLine(playerModelIndex));
+			ship.append("Gunner.opt");
+
+			if (std::ifstream(ship))
+			{
+				return OptLoad(ship.c_str());
+			}
+		}
 	}
 
 	return OptLoad(argOpt);
