@@ -1,0 +1,61 @@
+
+:0059484A - 0x193C4A
+750C                    jne 00594858
+9090
+
+:00594852 - 0x193C52
+0002
+0080
+
+
+:004E8215 B968D37600              mov ecx, 0076D368
+:004E8216 - 0x0E7616
+hitDataArray8
+
+:004E8486 8A8768D37600            mov al, byte ptr [edi+0076D368]
+:004E8488 - 0x0E7888
+hitDataArray8
+
+:004E8496 8A8F68D37600            mov cl, byte ptr [edi+0076D368]
+:004E8498 - 0x0E7898
+hitDataArray8
+
+:004E84A4 8A8F68D37600            mov cl, byte ptr [edi+0076D368]
+:004E84A6 - 0x0E78A6
+hitDataArray8
+
+:004E84B6 8A8CFF68D37600          mov cl, byte ptr [edi+8*edi+0076D368]
+:004E84B9 - 0x0E78B9
+hitDataArray8
+
+:004E84DC D98060D37600            fld dword ptr [eax+0076D360]
+:004E84DE - 0x0E78DE
+hitDataArray0
+
+:004E84F3 D98160D37600            fld dword ptr [ecx+0076D360]
+:004E84F5 - 0x0E78F5
+hitDataArray0
+
+:004E850A D98060D37600            fld dword ptr [eax+0076D360]
+:004E850C - 0x0E790C
+hitDataArray0
+
+:004E8529 D984C060D37600          fld dword ptr [eax+8*eax+0076D360]
+:004E852C - 0x0E792C
+hitDataArray0
+
+:004E85D7 D984C060D37600          fld dword ptr [eax+8*eax+0076D360]
+:004E85DA - 0x0E79DA
+hitDataArray0
+
+:004E85DE D88CC064D37600          fmul dword ptr [eax+8*eax+0076D364]
+:004E85E1 - 0x0E79E1
+hitDataArray4
+
+:004E8600 D98260D37600            fld dword ptr [edx+0076D360]
+:004E8602 - 0x0E7A02
+hitDataArray0
+
+:004E8606 D88A64D37600            fmul dword ptr [edx+0076D364]
+:004E8608 - 0x0E7A08
+hitDataArray4
