@@ -66,6 +66,10 @@ This hook reduces the CPU usage of the game. A side effect is that the framerate
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=10&t=11338
 
+## xwa_hook_weapon_rate
+
+This hook permits to define weapon decharge and recharge rates for any craft.
+
 ## xwa_hook_wingmen_voices
 
 This hook enables setting wingmen voices for imperial IFF.

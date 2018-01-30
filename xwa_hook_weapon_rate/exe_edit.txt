@@ -1,0 +1,23 @@
+
+:00491651 - 0x090A51
+A1C4337B00              mov eax, dword ptr [007B33C4]
+8A540804                mov dl, byte ptr [eax+ecx+04]
+84D2                    test dl, dl
+
+E8CA741100              call 005A8B20, 005A8B20 - 00491656 = 001174CA
+E980000000              jmp 004916DB
+90                      nop
+
+
+:004908CE - 0x08FCCE
+6683FA05                cmp dx, 0005
+7409                    je 004908DD
+6683FA07                cmp dx, 0007
+8D1436                  lea edx, dword ptr [esi+esi]
+
+52                      push edx
+E84C821100              call 005A8B20, 005A8B20 - 004908D4 = 0011824C
+5A                      pop edx
+0FAFD6                  imul edx, esi
+EB06                    jmp 004908E0
+90                      nop
