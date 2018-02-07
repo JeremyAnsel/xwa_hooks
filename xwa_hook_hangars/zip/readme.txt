@@ -2,6 +2,7 @@ xwa_hook_hangars
 
 This hook permits to customize the hangars.
 The XWA's engine uses two hangar models, Hangar.opt and FamilyBase.opt. If you wanted to use a custom hangar, you had to replace one of them. You can now choose which hangar to use, customize the objects and the camera positions, for a specific craft or for a specific mission.
+You can also define which crafts appear in the craft selection menu.
 
 For more informations, please see the following thread at xwaupgrade.com:
 http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11197
@@ -68,6 +69,10 @@ At offset 5AF8C, replace 83F804741650E8899C0200 with 50E8AE6A000083C404EB15.
 At offset 5B203, replace 83F804741650E8129A0200 with 50E83768000083C404EB15.
 At offset 5B350, replace 83F804741650E8C5980200 with 50E8EA66000083C404EB15.
 At offset 5BDA4, replace 83F804741050E8718E0200 with 50E8965C000083C404EB0F.
+
+# To call the hook that sets the craft selection
+At offset 54A69, replace 6683F93A0F84400100006683F941 with 5150E8B03415005859E9EA010000.
+At offset 54B39, replace 80FA02BE02000000755A6683F901740B with 525150E8DF33150058595AE918010000.
 
 
 *** Usage ***
@@ -216,6 +221,18 @@ if the craft is BWing, elevation = 50, else elevation = model height / 2.
 The format is:
 "ClosedSFoilsElevation = value"
 See "BWingSize.txt".
+
+# craft selection:
+
+To define the list of crafts that appear in the hangar crafts selection menu, create the following files (next to XWingAlliance.exe):
+- "CraftSelectionTransports.txt"
+- "CraftSelectionFighters.txt"
+- "CraftSelectionCrafts.txt"
+If the files don't exist, default values are used.
+CraftSelectionTransports define the crafts that appear when the mission player craft is a transport.
+CraftSelectionFighters define the crafts that appear when the mission player craft is a fighter.
+CraftSelectionCrafts define the crafts that appear in the Proving Ground.
+See "CraftSelectionTransports.txt", "CraftSelectionFighters.txt", "CraftSelectionCrafts.txt"
 
 
 *** Notes ***

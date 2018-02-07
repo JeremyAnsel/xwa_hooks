@@ -26,7 +26,9 @@ See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11746
 
 ## xwa_hook_hangars
 
-This hook permits to customize the hangars. The XWA's engine uses two hangar models, Hangar.opt and FamilyBase.opt. If you wanted to use a custom hangar, you had to replace one of them. You can now choose which hangar to use, customize the objects and the camera positions, for a specific craft or for a specific mission.
+This hook permits to customize the hangars.
+The XWA's engine uses two hangar models, Hangar.opt and FamilyBase.opt. If you wanted to use a custom hangar, you had to replace one of them. You can now choose which hangar to use, customize the objects and the camera positions, for a specific craft or for a specific mission.
+You can also define which crafts appear in the craft selection menu.
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11197
 

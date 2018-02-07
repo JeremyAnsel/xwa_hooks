@@ -181,3 +181,37 @@ EB15                    jmp 0045BF70, 0045BF70 - 0045BF5B =  00000015
 E8965C0000              call 00462640, 00462640 - 0045C9AA = 00005C96
 83C404                  add esp, 00000004
 EB0F                    jmp 0045C9BE, 0045C9BE - 0045C9AF =  0000000F
+
+
+; from L004554F0
+; hook for hangar craft selection: mission
+:00455669 - 0x54A69
+6683F93A                cmp cx, 003A
+0F8440010000            je 004557B3
+6683F941                cmp cx, 0041
+
+51                      push ecx
+50                      push eax
+E8B0341500              call 005A8B20, 005A8B20 - 00455670 = 001534B0
+58                      pop eax
+59                      pop ecx
+E9EA010000              jmp 00455861, 00455861 - 00455677 = 000001EA
+
+
+; from L004554F0
+; hook for hangar craft selection: melee
+:00455739 - 0x54B39
+80FA02                  cmp dl, 02
+BE02000000              mov esi, 00000002
+755A                    jne 0045579D
+6683F901                cmp cx, 0001
+740B                    je 00455754
+
+52                      push edx
+51                      push ecx
+50                      push eax
+E8DF331500              call 005A8B20, 005A8B20 - 00455741 = 001533DF
+58                      pop eax
+59                      pop ecx
+5A                      pop edx
+E918010000              jmp 00455861, 00455861 - 00455749 = 00000118

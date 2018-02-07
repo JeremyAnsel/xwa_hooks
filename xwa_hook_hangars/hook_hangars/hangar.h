@@ -8,3 +8,5 @@ int SelectHangarTypeHook(int* params);
 int SelectHangarInsideAnimation(int* params);
 int SelectHangarModelIndex(int* params);
 int CraftElevationHook(int* params);
+int CraftSelectionMissionHook(int* params);
+int CraftSelectionMeleeHook(int* params);

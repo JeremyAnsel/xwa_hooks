@@ -156,6 +156,36 @@ std::vector<std::vector<std::string>> GetFileListValues(const std::string& path)
 	return values;
 }
 
+std::vector<unsigned short> GetFileListUnsignedShortValues(const std::string& path)
+{
+	std::vector<unsigned short> values;
+
+	std::ifstream file(path);
+
+	if (file)
+	{
+		std::string line;
+
+		while (std::getline(file, line))
+		{
+			if (!line.length())
+			{
+				continue;
+			}
+
+			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
+			{
+				continue;
+			}
+
+			unsigned short value = (unsigned short)std::stoi(line);
+			values.push_back(value);
+		}
+	}
+
+	return values;
+}
+
 class FlightModelsList
 {
 public:
@@ -206,6 +236,115 @@ private:
 };
 
 FlightModelsList g_flightModelsList;
+
+std::vector<unsigned short> GetDefaultCraftSelectionTransports()
+{
+	std::vector<unsigned short> selection;
+
+	// ModelIndex_058_0_45_CorellianTransport2
+	selection.push_back(58);
+
+	// ModelIndex_065_0_52_FamilyTransport
+	selection.push_back(65);
+
+	// ModelIndex_059_0_46_MilleniumFalcon2
+	selection.push_back(59);
+
+	return selection;
+}
+
+std::vector<unsigned short> GetDefaultCraftSelectionFighters()
+{
+	std::vector<unsigned short> selection;
+
+	// ModelIndex_001_0_0_Xwing
+	selection.push_back(1);
+
+	// ModelIndex_002_0_1_Ywing
+	selection.push_back(2);
+
+	// ModelIndex_003_0_2_Awing
+	selection.push_back(3);
+
+	// ModelIndex_004_0_3_Bwing
+	selection.push_back(4);
+
+	// ModelIndex_014_0_13_Z_95
+	selection.push_back(14);
+
+	return selection;
+}
+
+std::vector<unsigned short> GetDefaultCraftSelectionCrafts()
+{
+	std::vector<unsigned short> selection;
+
+	// ModelIndex_001_0_0_Xwing
+	selection.push_back(1);
+
+	// ModelIndex_002_0_1_Ywing
+	selection.push_back(2);
+
+	// ModelIndex_003_0_2_Awing
+	selection.push_back(3);
+
+	// ModelIndex_004_0_3_Bwing
+	selection.push_back(4);
+
+	// ModelIndex_014_0_13_Z_95
+	selection.push_back(14);
+
+	// ModelIndex_058_0_45_CorellianTransport2
+	selection.push_back(58);
+
+	// ModelIndex_065_0_52_FamilyTransport
+	selection.push_back(65);
+
+	// ModelIndex_059_0_46_MilleniumFalcon2
+	selection.push_back(59);
+
+	return selection;
+}
+
+class CraftSelectionValues
+{
+public:
+	CraftSelectionValues()
+	{
+		if (std::ifstream("CraftSelectionTransports.txt"))
+		{
+			this->_transportsSelection = GetFileListUnsignedShortValues("CraftSelectionTransports.txt");
+		}
+		else
+		{
+			this->_transportsSelection = GetDefaultCraftSelectionTransports();
+		}
+
+		if (std::ifstream("CraftSelectionFighters.txt"))
+		{
+			this->_fightersSelection = GetFileListUnsignedShortValues("CraftSelectionFighters.txt");
+		}
+		else
+		{
+			this->_fightersSelection = GetDefaultCraftSelectionFighters();
+		}
+
+		if (std::ifstream("CraftSelectionCrafts.txt"))
+		{
+			this->_craftsSelection = GetFileListUnsignedShortValues("CraftSelectionCrafts.txt");
+		}
+		else
+		{
+			this->_craftsSelection = GetDefaultCraftSelectionCrafts();
+		}
+	}
+
+	std::vector<unsigned short> _transportsSelection;
+	std::vector<unsigned short> _fightersSelection;
+	std::vector<unsigned short> _craftsSelection;
+};
+
+CraftSelectionValues g_craftSelectionValues;
 
 std::string GetCommandShipLstLine()
 {
@@ -951,4 +1090,90 @@ int CraftElevationHook(int* params)
 			return ModelGetSizeZ(modelIndex) / 2;
 		}
 	}
+}
+
+int CraftSelectionMissionHook(int* params)
+{
+	unsigned short* craftSelection = (unsigned short*)0x09C6960;
+	int& craftSelectionCount = params[0];
+	unsigned short playerModelIndex = params[1] & 0xFFFF;
+
+	bool isTransport = false;
+	for (const auto modelIndex : g_craftSelectionValues._transportsSelection)
+	{
+		if (playerModelIndex == modelIndex)
+		{
+			isTransport = true;
+			break;
+		}
+	}
+
+	if (isTransport)
+	{
+		for (const auto modelIndex : g_craftSelectionValues._transportsSelection)
+		{
+			if (modelIndex != playerModelIndex)
+			{
+				craftSelection[craftSelectionCount] = modelIndex;
+				craftSelectionCount++;
+			}
+		}
+	}
+	else
+	{
+		for (const auto modelIndex : g_craftSelectionValues._fightersSelection)
+		{
+			if (modelIndex != playerModelIndex)
+			{
+				craftSelection[craftSelectionCount] = modelIndex;
+				craftSelectionCount++;
+			}
+		}
+	}
+
+	return 0;
+}
+
+int CraftSelectionMeleeHook(int* params)
+{
+	unsigned short* craftSelection = (unsigned short*)0x09C6960;
+	int& craftSelectionCount = params[0];
+	unsigned short playerModelIndex = params[1] & 0xFFFF;
+	unsigned char type = params[2] & 0xFF;
+
+	if (type == 2)
+	{
+		for (const auto modelIndex : g_craftSelectionValues._fightersSelection)
+		{
+			if (modelIndex != playerModelIndex)
+			{
+				craftSelection[craftSelectionCount] = modelIndex;
+				craftSelectionCount++;
+			}
+		}
+	}
+	else if (type == 3)
+	{
+		for (const auto modelIndex : g_craftSelectionValues._transportsSelection)
+		{
+			if (modelIndex != playerModelIndex)
+			{
+				craftSelection[craftSelectionCount] = modelIndex;
+				craftSelectionCount++;
+			}
+		}
+	}
+	else if (type == 1)
+	{
+		for (const auto modelIndex : g_craftSelectionValues._craftsSelection)
+		{
+			if (modelIndex != playerModelIndex)
+			{
+				craftSelection[craftSelectionCount] = modelIndex;
+				craftSelectionCount++;
+			}
+		}
+	}
+
+	return 0;
 }

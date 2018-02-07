@@ -13,6 +13,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4095B5, SelectHangarInsideAnimation },
 	{ 0x457F80, SelectHangarModelIndex },
 	{ 0x46264F, CraftElevationHook },
+	{ 0x455670, CraftSelectionMissionHook },
+	{ 0x455741, CraftSelectionMeleeHook },
 };
 
 static const HookPatchItem g_selectHangarTypePatch[] =
@@ -79,6 +81,12 @@ static const HookPatchItem g_setCraftElevationPatch[] =
 	{ 0x5BDA4, "83F804741050E8718E0200", "50E8965C000083C404EB0F" },
 };
 
+static const HookPatchItem g_setCraftSelectionPatch[] =
+{
+	{ 0x54A69, "6683F93A0F84400100006683F941", "5150E8B03415005859E9EA010000" },
+	{ 0x54B39, "80FA02BE02000000755A6683F901740B", "525150E8DF33150058595AE918010000" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that selects the hangar type", g_selectHangarTypePatch),
@@ -90,4 +98,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar map", g_setHangarMapPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the family hangar map", g_setFamilyHangarMapPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the craft elevation", g_setCraftElevationPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the craft selection", g_setCraftSelectionPatch),
 };
