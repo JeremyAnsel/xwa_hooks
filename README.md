@@ -46,6 +46,10 @@ This hook replaces a static buffer by a dynamic one in lightmaps loading.
 
 This hook permits to replace mission objects and to enable crafts turrets.
 
+## xwa_hook_mission_tie
+
+This hook permits to override the data of mission files.
+
 ## xwa_hook_opt_limit
 
 This hook removes the opt limit of 512 vertices per mesh.
