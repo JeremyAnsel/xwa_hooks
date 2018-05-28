@@ -757,6 +757,82 @@ int WeaponSoundHook(int* params)
 			{
 				return playSound(20, A4, A8); // EmpireLaserChChChhh
 			}
+			else if (behavior == "Rebel")
+			{
+				switch (weaponIndex)
+				{
+				case 280: // ModelIndex_280_1_17_LaserRebel
+				case 281: // ModelIndex_281_1_18_LaserRebelTurbo
+					return playSound(4, A4, A8); // RebelLaser
+				}
+			}
+			else if (behavior == "RebelTurbo")
+			{
+				switch (weaponIndex)
+				{
+				case 280: // ModelIndex_280_1_17_LaserRebel
+				case 281: // ModelIndex_281_1_18_LaserRebelTurbo
+					return playSound(5, A4, A8); // RebelLaserTurbo
+				}
+			}
+			else if (behavior == "Empire")
+			{
+				switch (weaponIndex)
+				{
+				case 282: // ModelIndex_282_1_19_LaserImp
+				case 283: // ModelIndex_283_1_20_LaserImpTurbo
+					return playSound(6, A4, A8); // EmpireLaser
+				}
+			}
+			else if (behavior == "EmpireTurbo")
+			{
+				switch (weaponIndex)
+				{
+				case 282: // ModelIndex_282_1_19_LaserImp
+				case 283: // ModelIndex_283_1_20_LaserImpTurbo
+					return playSound(7, A4, A8); // EmpireLaserTurbo
+				}
+			}
+			else if (behavior == "Falcon")
+			{
+				switch (weaponIndex)
+				{
+				case 280: // ModelIndex_280_1_17_LaserRebel
+				case 281: // ModelIndex_281_1_18_LaserRebelTurbo
+				case 282: // ModelIndex_282_1_19_LaserImp
+				case 283: // ModelIndex_283_1_20_LaserImpTurbo
+					return playSound(15, A4, A8); // FalconLaser
+				}
+			}
+			else if (behavior == "FalconTurbo")
+			{
+				switch (weaponIndex)
+				{
+				case 280: // ModelIndex_280_1_17_LaserRebel
+				case 281: // ModelIndex_281_1_18_LaserRebelTurbo
+				case 282: // ModelIndex_282_1_19_LaserImp
+				case 283: // ModelIndex_283_1_20_LaserImpTurbo
+					return playSound(16, A4, A8); // FalconLaserTurbo
+				}
+			}
+			else if (behavior == "Ion")
+			{
+				switch (weaponIndex)
+				{
+				case 284: // ModelIndex_284_1_22_LaserIon
+				case 285: // ModelIndex_285_1_23_LaserIonTurbo
+					return playSound(8, A4, A8); // IonCannon
+				}
+			}
+			else if (behavior == "IonTurbo")
+			{
+				switch (weaponIndex)
+				{
+				case 284: // ModelIndex_284_1_22_LaserIon
+				case 285: // ModelIndex_285_1_23_LaserIonTurbo
+					return playSound(9, A4, A8); // IonCannonTurbo
+				}
+			}
 		}
 
 		return playSound(4 + weaponIndex - 280, A4, A8);
@@ -817,6 +893,26 @@ int WeaponSoundHook(int* params)
 			else if (behavior == "EmpireTurbo")
 			{
 				return playSound(7, A4, A8); // EmpireLaserTurbo
+			}
+			else if (behavior == "Falcon")
+			{
+				return playSound(15, A4, A8); // FalconLaser
+			}
+			else if (behavior == "FalconTurbo")
+			{
+				return playSound(16, A4, A8); // FalconLaserTurbo
+			}
+			else if (behavior == "Ion")
+			{
+				return playSound(8, A4, A8); // IonCannon
+			}
+			else if (behavior == "IonTurbo")
+			{
+				return playSound(9, A4, A8); // IonCannonTurbo
+			}
+			else if (behavior == "TieFighter")
+			{
+				return playSound(20, A4, A8); // EmpireLaserChChChhh
 			}
 		}
 
