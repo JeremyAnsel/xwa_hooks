@@ -32,6 +32,7 @@ static const HookPatchItem g_optLimitPatch[] =
 	//{ 0x193C4A, "750C", "9090" },
 	//{ 0x193C52, "0002", "0080" },
 	{ 0x193C52, "0008", "0080" },
+	{ 0x193BFE, "01", "20" },
 	{ 0x0E7616, "68D37600", g_hitDataArray8.c_str() },
 	{ 0x0E7888, "68D37600", g_hitDataArray8.c_str() },
 	{ 0x0E7898, "68D37600", g_hitDataArray8.c_str() },

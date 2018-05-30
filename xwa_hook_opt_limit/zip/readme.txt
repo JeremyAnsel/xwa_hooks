@@ -23,6 +23,7 @@ The following modifications are applied at runtime to xwingalliance.exe:
 # To call the hook that removes the opt limit of 512 vertices per mesh
 ;At offset 193C4A, replace 750C with 9090.
 At offset 193C52, replace 0008 with 0080.
+At offset 193BFE, replace 01 with 20.
 At offset 0E7616, replace 68D37600 with hitDataArray8.
 At offset 0E7888, replace 68D37600 with hitDataArray8.
 At offset 0E7898, replace 68D37600 with hitDataArray8.
@@ -44,6 +45,7 @@ The original vertices count limit is 512 per mesh.
 By default, the dll will use a value of 4096.
 You can modify this value in hook_opt_limit.cfg (Size = value).
 
+The size of the execute buffer is increased from 0x10000 to 0x200000.
 
 *** Credits ***
 
