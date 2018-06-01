@@ -13,45 +13,49 @@ struct TieFlightGroup
 
 static_assert(sizeof(TieFlightGroup) == 3650, "size of TieFlightGroup must be 3650");
 
+struct XwaPlayer
+{
+	char Unk0000[10];
+	short Iff;
+	char Unk000C[3011];
+};
+
+static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
+
+
 #pragma pack(pop)
 
 int WingmenVoicesHook(int* params)
 {
 	const TieFlightGroup* flightGroups = (TieFlightGroup*)0x080DC80;
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x08B94E0;
+	int XwaCurrentPlayerId = *(int*)0x08C1CC8;
 	int ebx = params[0];
 	const char* pilotVoice = flightGroups[ebx].PilotVoice;
 
 	char* fileName = (char*)(params + 52);
 	const int fileNameSize = 48;
 
-	if (_stricmp(pilotVoice, "IP1") == 0)
+	for (int i = 1; i <= 12; i++)
 	{
-		strcpy_s(fileName, fileNameSize, "ISP1.LST");
+		char temp[9];
+		sprintf_s(temp, "IP%d", i);
+
+		if (_stricmp(pilotVoice, temp) == 0)
+		{
+			sprintf_s(fileName, fileNameSize, "ISP%d.LST", i);
+			return 0;
+		}
 	}
-	else if (_stricmp(pilotVoice, "IP2") == 0)
+
+	if (XwaPlayers[XwaCurrentPlayerId].Iff == 1)
 	{
-		strcpy_s(fileName, fileNameSize, "ISP2.LST");
-	}
-	else if (_stricmp(pilotVoice, "IP3") == 0)
-	{
-		strcpy_s(fileName, fileNameSize, "ISP3.LST");
-	}
-	else if (_stricmp(pilotVoice, "IP4") == 0)
-	{
-		strcpy_s(fileName, fileNameSize, "ISP4.LST");
-	}
-	else if (_stricmp(pilotVoice, "IP5") == 0)
-	{
-		strcpy_s(fileName, fileNameSize, "ISP5.LST");
-	}
-	else if (_stricmp(pilotVoice, "IP6") == 0)
-	{
-		strcpy_s(fileName, fileNameSize, "ISP6.LST");
+		strcpy_s((char*)0x05B4068, 13, "ISP%d.LST");
 	}
 	else
 	{
-		strcpy_s(fileName, fileNameSize, "ISP1.LST");
+		strcpy_s((char*)0x05B4068, 13, "RSPXWA%d.LST");
 	}
 
-	return 0;
+	return 1;
 }
