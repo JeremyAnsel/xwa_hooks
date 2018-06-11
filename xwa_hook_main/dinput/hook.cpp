@@ -30,6 +30,12 @@ private:
 	SIZE_T size;
 };
 
+void VirtualProtectHookMemory()
+{
+	DWORD oldProtection;
+	VirtualProtect((void*)0x401000, 0x1A7B40, PAGE_EXECUTE_READWRITE, &oldProtection);
+}
+
 bool IsPatchMemoryEqual(const char* offset, const char* item)
 {
 	offset += 0x400C00;

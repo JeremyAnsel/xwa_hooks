@@ -46,6 +46,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 			if (MainPatchMemory())
 			{
 				LoadAndPatchHooks();
+				VirtualProtectHookMemory();
 			}
 		}
 
