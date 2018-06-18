@@ -30,6 +30,8 @@ At offset 03C507, replace 8D6AFF83FD40775633D28A9558D44300FF2495FCD34300 with 53
 At offset 03C74B, replace 4883F840773E33C98A88F8D44300 with 5650E8CEB7160083C4045EEB3790.
 At offset 03CDFA, replace 4883F8400F87D500000033DB8A98C4DC4300 with 5650E81FB1160083C4045EE9CF0000009090.
 At offset 05826F, replace 4983F9400F87CF00000033D28A9178964500 with 5051E8AAFC140083C40458E9C90000009090.
+At offset 039725, replace 7515 with 9090.
+At offset 039733, replace 7726 with EB26.
 
 # To call the hook that defines weapon sounds
 At offset 03B5DE, replace 8DB8E8FEFFFF83FF190F870801000033D28A972CC34300FF2495FCC24300 with 8B56230FBF929500000050525551E83FC9160083C4105F5E5DC390909090.
@@ -56,7 +58,7 @@ Add a line whith "EngineSoundInterior = value". The value is between 0 and 7:
 - 6 means EngineIntCort
 - 7 means EngineIntFalc
 
-Add a line with "EngineSoundFlyBy = value". The value is between 0 and 7:
+Add a line with "EngineSoundFlyBy = value". The value is between 0 and 8, 11 and 18, 21 and 28:
 - 0 means no sound
 - 1 means FlyByXW or FlyByXW3D
 - 2 means FlyByYW or FlyByYW3D
@@ -65,7 +67,23 @@ Add a line with "EngineSoundFlyBy = value". The value is between 0 and 7:
 - 5 means FlyByAG or FlyByAG3D
 - 6 means FlyByCort or FlyByCort3D
 - 7 means FlyByCort or FlyByCort3D
-- 8 means custom (first unused) or custom3D (second unused)
+- 8 means custom (first unused/FlyBySlave) or custom3D (second unused/FlyBySlave3D)
+- 11 means FlyByXW
+- 12 means FlyByYW
+- 13 means FlyByAW
+- 14 means FlyByTI
+- 15 means FlyByAG
+- 16 means FlyByCort
+- 17 means FlyByCort
+- 18 means custom (first unused/FlyBySlave)
+- 21 means FlyByXW3D
+- 22 means FlyByYW3D
+- 23 means FlyByAW3D
+- 24 means FlyByTI3D
+- 25 means FlyByAG3D
+- 26 means FlyByCort3D
+- 27 means FlyByCort3D
+- 28 means custom3D (second unused/FlyBySlave3D)
 
 Add a line with "WeaponSoundBehavior = value". The value is 0, CorellianTransport, TieFighter, Rebel, RebelTurbo, Empire, EmpireTurbo, Falcon, FalconTurbo, Ion or IonTurbo.
 0 means that a default sound is played.

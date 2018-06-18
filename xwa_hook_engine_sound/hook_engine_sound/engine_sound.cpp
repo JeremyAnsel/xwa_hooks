@@ -611,6 +611,64 @@ void SetFlyBySound(int& slot, int modelIndex)
 		}
 
 		break;
+
+	case 11:
+		slot = 0x69; // FlyByXW
+		break;
+
+	case 12:
+		slot = 0x6B; // FlyByYW
+		break;
+
+	case 13:
+		slot = 0x6D; // FlyByAW
+		break;
+
+	case 14:
+		slot = 0x65; // FlyByTI
+		break;
+
+	case 15:
+		slot = 0x67; // FlyByAG
+		break;
+
+	case 16:
+	case 17:
+		slot = 0x6F; // FlyByCort
+		break;
+
+	case 18:
+		slot = 0x81; // unused
+		break;
+
+	case 21:
+		slot = 0x6A; // FlyByXW3D
+		break;
+
+	case 22:
+		slot = 0x6C; // FlyByYW3D
+		break;
+
+	case 23:
+		slot = 0x6E; // FlyByAW3D
+		break;
+
+	case 24:
+		slot = 0x66; // FlyByTI3D
+		break;
+
+	case 25:
+		slot = 0x68; // FlyByAG3D
+		break;
+
+	case 26:
+	case 27:
+		slot = 0x70; // FlyByCort3D
+		break;
+
+	case 28:
+		slot = 0x82; // unused3D
+		break;
 	}
 }
 

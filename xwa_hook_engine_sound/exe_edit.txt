@@ -93,6 +93,17 @@ E8AAFC1400              call 005A8B20, 005A8B20 - 00458E76 = 0014FCAA
 E9C9000000              jmp 00458F48, 00458F48 - 00458E7F = 000000C9
 9090                    nop
 
+// Load 3D and non-3D engine sound
+:0043A325 - 0x039725
+7515                    jne 0043A33C
+
+9090                    nop
+
+:0043A333 - 0x039733
+7726                    ja 0043A35B
+
+EB26                    jmp 0043A35B
+
 
 // Weapon sounds
 :0043C1DE - 0x03B5DE
