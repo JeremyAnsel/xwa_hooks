@@ -518,11 +518,8 @@ int StopInteriorSoundHook(int* params)
 	return 0;
 }
 
-int FlyBySoundHook(int* params)
+void SetFlyBySound(int& slot, int modelIndex)
 {
-	const int modelIndex = params[0];
-	int& esi = params[1];
-
 	const char xwaSound3dEnabled = *(char*)0x5BA990;
 	const int* xwaSoundEffectsBufferId = (int*)0x917E80;
 
@@ -533,11 +530,11 @@ int FlyBySoundHook(int* params)
 	case 1:
 		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x6A] == -1)
 		{
-			esi = 0x69; // FlyByXW
+			slot = 0x69; // FlyByXW
 		}
 		else
 		{
-			esi = 0x6A; // FlyByXW3D
+			slot = 0x6A; // FlyByXW3D
 		}
 
 		break;
@@ -545,11 +542,11 @@ int FlyBySoundHook(int* params)
 	case 2:
 		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x6C] == -1)
 		{
-			esi = 0x6B; // FlyByYW
+			slot = 0x6B; // FlyByYW
 		}
 		else
 		{
-			esi = 0x6C; // FlyByYW3D
+			slot = 0x6C; // FlyByYW3D
 		}
 
 		break;
@@ -557,11 +554,11 @@ int FlyBySoundHook(int* params)
 	case 3:
 		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x6E] == -1)
 		{
-			esi = 0x6D; // FlyByAW
+			slot = 0x6D; // FlyByAW
 		}
 		else
 		{
-			esi = 0x6E; // FlyByAW3D
+			slot = 0x6E; // FlyByAW3D
 		}
 
 		break;
@@ -569,11 +566,11 @@ int FlyBySoundHook(int* params)
 	case 4:
 		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x66] == -1)
 		{
-			esi = 0x65; // FlyByTI
+			slot = 0x65; // FlyByTI
 		}
 		else
 		{
-			esi = 0x66; // FlyByTI3D
+			slot = 0x66; // FlyByTI3D
 		}
 
 		break;
@@ -581,11 +578,11 @@ int FlyBySoundHook(int* params)
 	case 5:
 		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x68] == -1)
 		{
-			esi = 0x67; // FlyByAG
+			slot = 0x67; // FlyByAG
 		}
 		else
 		{
-			esi = 0x68; // FlyByAG3D
+			slot = 0x68; // FlyByAG3D
 		}
 
 		break;
@@ -594,11 +591,11 @@ int FlyBySoundHook(int* params)
 	case 7:
 		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x70] == -1)
 		{
-			esi = 0x6F; // FlyByCort
+			slot = 0x6F; // FlyByCort
 		}
 		else
 		{
-			esi = 0x70; // FlyByCort3D
+			slot = 0x70; // FlyByCort3D
 		}
 
 		break;
@@ -606,15 +603,23 @@ int FlyBySoundHook(int* params)
 	case 8:
 		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x82] == -1)
 		{
-			esi = 0x81; // unused
+			slot = 0x81; // unused
 		}
 		else
 		{
-			esi = 0x82; // unused3D
+			slot = 0x82; // unused3D
 		}
 
 		break;
 	}
+}
+
+int FlyBySoundHook(int* params)
+{
+	const int modelIndex = params[0];
+	int& esi = params[1];
+
+	SetFlyBySound(esi, modelIndex);
 
 	return 0;
 }
@@ -624,98 +629,7 @@ int LaunchSoundHook(int* params)
 	const int modelIndex = params[0];
 	int& eax = params[1];
 
-	const char xwaSound3dEnabled = *(char*)0x5BA990;
-	const int* xwaSoundEffectsBufferId = (int*)0x917E80;
-
-	const int type = g_modelIndexSound.GetEngineTypeFlyBy(modelIndex);
-
-	switch (type)
-	{
-	case 1:
-		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x6A] == -1)
-		{
-			eax = 0x69; // FlyByXW
-		}
-		else
-		{
-			eax = 0x6A; // FlyByXW3D
-		}
-
-		break;
-
-	case 2:
-		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x6C] == -1)
-		{
-			eax = 0x6B; // FlyByYW
-		}
-		else
-		{
-			eax = 0x6C; // FlyByYW3D
-		}
-
-		break;
-
-	case 3:
-		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x6E] == -1)
-		{
-			eax = 0x6D; // FlyByAW
-		}
-		else
-		{
-			eax = 0x6E; // FlyByAW3D
-		}
-
-		break;
-
-	case 4:
-		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x66] == -1)
-		{
-			eax = 0x65; // FlyByTI
-		}
-		else
-		{
-			eax = 0x66; // FlyByTI3D
-		}
-
-		break;
-
-	case 5:
-		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x68] == -1)
-		{
-			eax = 0x67; // FlyByAG
-		}
-		else
-		{
-			eax = 0x68; // FlyByAG3D
-		}
-
-		break;
-
-	case 6:
-	case 7:
-		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x70] == -1)
-		{
-			eax = 0x6F; // FlyByCort
-		}
-		else
-		{
-			eax = 0x70; // FlyByCort3D
-		}
-
-		break;
-
-	case 8:
-		if (xwaSound3dEnabled == 0 || xwaSoundEffectsBufferId[0x82] == -1)
-		{
-			eax = 0x81; // unused
-		}
-		else
-		{
-			eax = 0x82; // unused3D
-		}
-
-		break;
-	}
+	SetFlyBySound(eax, modelIndex);
 
 	return 0;
 }
