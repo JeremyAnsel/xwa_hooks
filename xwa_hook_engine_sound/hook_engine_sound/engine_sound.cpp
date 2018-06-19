@@ -417,6 +417,35 @@ private:
 
 ModelIndexSound g_modelIndexSound;
 
+int ReplaceMissionSoundsHook(int* params)
+{
+	const char* A4 = (const char*)params[1];
+	const char* A8 = (const char*)params[2];
+	int AC = params[3];
+
+	const auto LoadSfx2 = (int(*)(const char*, const char*, int, int))0x004DAD40;
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+
+	if (!mission.empty())
+	{
+		mission.append("_Sounds.txt");
+
+		if (std::ifstream(mission))
+		{
+			std::string value = GetFileKeyValue(mission, A4);
+
+			if (!value.empty() && std::ifstream(value))
+			{
+				return LoadSfx2(value.c_str(), A8, 0, AC);
+			}
+		}
+	}
+
+	return LoadSfx2(A4, A8, 0, AC);
+}
+
 int InteriorSoundHook(int* params)
 {
 	const int modelIndex = params[0];

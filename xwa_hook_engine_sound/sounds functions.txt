@@ -5,6 +5,10 @@ empty lines are not counted
 EngineIntXW.wav			76 2000
 file name, volume, distance
 
+# Load sound effect
+
+L004DAD20
+
 # Engine sounds tables
 
 L0043D090

@@ -5,12 +5,19 @@
 
 static const HookFunction g_hookFunctions[] =
 {
+	{ 0x4DAD25, ReplaceMissionSoundsHook },
+
 	{ 0x43D111, InteriorSoundHook },
 	{ 0x43D352, StopInteriorSoundHook },
 	{ 0x43DA01, FlyBySoundHook },
 	{ 0x458E76, LaunchSoundHook },
 
 	{ 0x43C1F1, WeaponSoundHook },
+};
+
+static const HookPatchItem g_replaceMissionSoundsPatch[] =
+{
+	{ 0x0DA120, "8B44240C8B4C2408", "E80BDE0C00C39090" },
 };
 
 static const HookPatchItem g_defineEngineSoundsPatch[] =
@@ -33,6 +40,7 @@ static const HookPatchItem g_defineWeaponSoundsPatch[] =
 
 static const HookPatch g_patches[] =
 {
+	MAKE_HOOK_PATCH("To call the hook that replaces mission sounds", g_replaceMissionSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines engine sounds", g_defineEngineSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines weapon sounds", g_defineWeaponSoundsPatch),
 };

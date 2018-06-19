@@ -22,6 +22,9 @@ Place hook_engine_sound.dll next to xwingalliance.exe
 
 The following modifications are applied at runtime to xwingalliance.exe:
 
+# To call the hook that replaces mission sounds
+At offset 0DA120, replace 8B44240C8B4C2408 with E80BDE0C00C39090.
+
 # To call the hook that defines engine sounds
 At offset 03C4F5, replace 8A543A02885424108B54241081E2FF000000 with 668B543A0281E2FFFF000089542410909090.
 At offset 03C572, replace 8A5424108815B0D06300 with 8B5424108915B0D06300.
@@ -39,9 +42,19 @@ At offset 03B5DE, replace 8DB8E8FEFFFF83FF190F870801000033D28A972CC34300FF2495FC
 
 *** Usage ***
 
+# mission sounds
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+
+To replace sounds for a given mission, create a file named "[MissionDir]\[Mission]_Sounds.txt".
+
+If a "Sounds.txt" file doesn't exist, no sound is replaced.
+The format is a line per sound: "Wave\SoundA.wav = Wave\NewSoundA.wav"
+See "Sounds.txt".
+
+# craft and weapon sounds
 Suppose that the craft is "FlightModels\[Model].opt".
 
-To define which sound is played, create a file named "FlightModels\[Model]Sound.txt";
+To define which sound is played, create a file named "FlightModels\[Model]Sound.txt".
 The format is:
 EngineSoundInterior = interior sound type
 EngineSoundFlyBy = flyby sound type

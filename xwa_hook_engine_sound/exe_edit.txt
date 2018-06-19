@@ -1,4 +1,14 @@
 
+// Replace mission sounds
+:004DAD20 - 0x0DA120
+8B44240C                mov eax, dword ptr [esp+0C]
+8B4C2408                mov ecx, dword ptr [esp+08]
+
+E80BDE0C00              call 005A8B30, 005A8B30 - 004DAD25 = 000CDE0B
+C3                      ret
+9090                    nop
+
+
 // Fix potential bug in engine sound code
 :0043D0F5 - 0x03C4F5
 8A543A02                mov dl, byte ptr [edx+edi+02]
