@@ -1,4 +1,14 @@
 
+# Disable S-Foil model filter
+
+:004FC46E - 0xFB86E
+7419                    je 004FC489
+
+EB19                    jmp
+
+
+# To call the hook that defines S-Foils
+
 :004016F3 - 0x000AF3
 48                      dec eax
 83F831                  cmp eax, 00000031
@@ -30,3 +40,26 @@ E816721A00              call 005A8B30, 005A8B30 - 0040191A = 001A7216
 8BF8                    mov edi, eax
 E94E010000              jmp 00401A72, 00401A72 - 00401924 = 0000014E
 9090                    nop
+
+
+# Align the camera with the bridge
+
+L00480A80
+:0048118C - 0x08058C
+0F85F5000000            jne 00481287
+
+909090909090
+
+
+L00481640
+:0048197C - 0x080D7C
+0F85E0000000            jne 00481A62
+
+909090909090
+
+
+L004836F0
+:00483C4B - 0x08304B
+0F85E9000000            jne 00483D3A
+
+909090909090
