@@ -341,7 +341,7 @@ int SFoilsHook2(int* params)
 			}
 			else
 			{
-				if (currentCraft->MeshRotationAngles[sfoil.meshIndex] > sfoil.openingSpeed)
+				if (currentCraft->MeshRotationAngles[sfoil.meshIndex] >= sfoil.openingSpeed)
 				{
 					currentCraft->MeshRotationAngles[sfoil.meshIndex] -= sfoil.openingSpeed;
 
