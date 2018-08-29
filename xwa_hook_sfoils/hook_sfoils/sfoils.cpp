@@ -155,7 +155,7 @@ struct XwaCraft
 	char unk000[39];
 	char SFoilsState;
 	char unk028[568];
-	char MeshRotationAngles[50];
+	unsigned char MeshRotationAngles[50];
 	char unk292[359];
 };
 
@@ -341,11 +341,11 @@ int SFoilsHook2(int* params)
 			}
 			else
 			{
-				if (currentCraft->MeshRotationAngles[sfoil.meshIndex] > 0)
+				if (currentCraft->MeshRotationAngles[sfoil.meshIndex] > sfoil.openingSpeed)
 				{
 					currentCraft->MeshRotationAngles[sfoil.meshIndex] -= sfoil.openingSpeed;
 
-					if (currentCraft->MeshRotationAngles[sfoil.meshIndex] < 0)
+					if (currentCraft->MeshRotationAngles[sfoil.meshIndex] < sfoil.openingSpeed)
 					{
 						currentCraft->MeshRotationAngles[sfoil.meshIndex] = 0;
 					}
