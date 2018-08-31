@@ -23,8 +23,11 @@ static const HookPatchItem g_defineSFoilsPatch[] =
 static const HookPatchItem g_alignCameraBridgePatch[] =
 {
 	{ 0x08058C, "0F85F5000000", "909090909090" },
+	{ 0x08059B, "7519", "9090" },
 	{ 0x080D7C, "0F85E0000000", "909090909090" },
+	{ 0x080D8A, "7517", "9090" },
 	{ 0x08304B, "0F85E9000000", "909090909090" },
+	{ 0x083059, "7517", "9090" },
 };
 
 static const HookPatch g_patches[] =

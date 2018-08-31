@@ -31,8 +31,11 @@ At offset 000D14, replace 4883F8310F87B101000033D28A90C42C4000 with 50E816721A00
 
 # Align the camera with the bridge
 At offset 08058C, replace 0F85F5000000 with 909090909090.
+At offset 08059B, replace 7519 with 9090.
 At offset 080D7C, replace 0F85E0000000 with 909090909090.
+At offset 080D8A, replace 7517 with 9090.
 At offset 08304B, replace 0F85E9000000 with 909090909090.
+At offset 083059, replace 7517 with 9090.
 
 
 *** Usage ***
