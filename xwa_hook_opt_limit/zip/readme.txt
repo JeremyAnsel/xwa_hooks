@@ -8,7 +8,6 @@ This hook removes the opt limit of 512 vertices per mesh.
 This dll requires:
 - Windows XP SP2 or superior
 - xwa_hook_main
-- 'triangling to infinity' patch
 
 
 *** Setup ***
@@ -20,9 +19,11 @@ Place hook_opt_limit.dll and hook_opt_limit.cfg next to xwingalliance.exe
 
 The following modifications are applied at runtime to xwingalliance.exe:
 
+# 'triangling to infinity' patch
+At offset 193C4A, replace 750C with 9090.
+At offset 193C52, replace 0002 with 0080.
+
 # To call the hook that removes the opt limit of 512 vertices per mesh
-;At offset 193C4A, replace 750C with 9090.
-At offset 193C52, replace 0008 with 0080.
 At offset 193BFE, replace 01 with 20.
 At offset 0E7616, replace 68D37600 with hitDataArray8.
 At offset 0E7888, replace 68D37600 with hitDataArray8.

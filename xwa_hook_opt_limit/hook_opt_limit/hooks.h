@@ -27,11 +27,14 @@ static const std::string g_hitDataArray0 = int_to_hex(GetHitDataArrayPtr());
 static const std::string g_hitDataArray4 = int_to_hex(GetHitDataArrayPtr() + 4);
 static const std::string g_hitDataArray8 = int_to_hex(GetHitDataArrayPtr() + 8);
 
+static const HookPatchItem g_trianglingPatch[] =
+{
+	{ 0x193C4A, "750C", "9090" },
+	{ 0x193C52, "0002", "0080" },
+};
+
 static const HookPatchItem g_optLimitPatch[] =
 {
-	//{ 0x193C4A, "750C", "9090" },
-	//{ 0x193C52, "0002", "0080" },
-	{ 0x193C52, "0008", "0080" },
 	{ 0x193BFE, "01", "20" },
 	{ 0x0E7616, "68D37600", g_hitDataArray8.c_str() },
 	{ 0x0E7888, "68D37600", g_hitDataArray8.c_str() },
@@ -50,5 +53,6 @@ static const HookPatchItem g_optLimitPatch[] =
 
 static const HookPatch g_patches[] =
 {
+	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
 	MAKE_HOOK_PATCH("To call the hook that removes the opt limit of 512 vertices per mesh", g_optLimitPatch),
 };
