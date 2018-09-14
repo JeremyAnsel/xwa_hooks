@@ -237,6 +237,23 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+#pragma pack(push, 1)
+
+struct S0x09C6780
+{
+	int ObjectIndex;
+	int m04;
+	int m08;
+	char unk0C[22];
+	float m22;
+	int m26;
+	char unk2A[4];
+};
+
+static_assert(sizeof(S0x09C6780) == 46, "size of S0x09C6780 must be 46");
+
+#pragma pack(pop)
+
 std::vector<unsigned short> GetDefaultCraftSelectionTransports()
 {
 	std::vector<unsigned short> selection;
@@ -520,6 +537,46 @@ int HangarCameraPositionHook(int* params)
 				positionZ += -0x316;
 			}
 			break;
+
+		case 4:
+		{
+			S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
+			int& V0x068BCC0 = *(int*)0x068BCC0;
+
+			std::string txtPath = GetCustomFilePath("HangarObjects.txt");
+			std::string value = GetFileKeyValue(txtPath, "LoadDroids");
+
+			if (value.empty() || value == "1")
+			{
+				V0x068BCC0 = V0x09C6780[0].ObjectIndex;
+
+				positionX = *(int*)(xwaObjects + V0x068BCC0 * 0x27 + 0x07);
+				positionY = *(int*)(xwaObjects + V0x068BCC0 * 0x27 + 0x0B);
+				positionZ = *(int*)(xwaObjects + V0x068BCC0 * 0x27 + 0x0F) + 0x1E;
+			}
+
+			break;
+		}
+
+		case 5:
+		{
+			S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
+			int& V0x068BCC0 = *(int*)0x068BCC0;
+
+			std::string txtPath = GetCustomFilePath("HangarObjects.txt");
+			std::string value = GetFileKeyValue(txtPath, "LoadDroids");
+
+			if (value.empty() || value == "1")
+			{
+				V0x068BCC0 = V0x09C6780[1].ObjectIndex;
+
+				positionX = *(int*)(xwaObjects + V0x068BCC0 * 0x27 + 0x07);
+				positionY = *(int*)(xwaObjects + V0x068BCC0 * 0x27 + 0x0B);
+				positionZ = *(int*)(xwaObjects + V0x068BCC0 * 0x27 + 0x0F) + 0x1E;
+			}
+
+			break;
+		}
 
 		case 6:
 			if (std::ifstream(txtPath))
@@ -833,6 +890,60 @@ int HangarCameraPositionHook(int* params)
 
 			break;
 		}
+	}
+
+	return 0;
+}
+
+int HangarLoadShuttleHook(int* params)
+{
+	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
+
+	unsigned short a0 = (unsigned short)params[0];
+	int a1 = params[1];
+	int a2 = params[2];
+	int a3 = params[3];
+	unsigned short a4 = (unsigned short)params[4];
+	unsigned short a5 = (unsigned short)params[5];
+
+	std::string txtPath = GetCustomFilePath("HangarObjects.txt");
+	std::string value = GetFileKeyValue(txtPath, "LoadShuttle");
+
+	if (value.empty() || value == "1")
+	{
+		return AddObject(a0, a1, a2, a3, a4, a5);
+	}
+
+	return 0;
+}
+
+int HangarLoadDroidsHook(int* params)
+{
+	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
+
+	int& V0x068BC10 = *(int*)0x068BC10;
+	S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
+
+	std::string txtPath = GetCustomFilePath("HangarObjects.txt");
+	std::string value = GetFileKeyValue(txtPath, "LoadDroids");
+
+	if (value.empty() || value == "1")
+	{
+		// ModelIndex_311_1_33_HangarDroid
+		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(311, 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
+		V0x09C6780[V0x068BC10].m04 = 0;
+		V0x09C6780[V0x068BC10].m26 = 0;
+		V0x09C6780[V0x068BC10].m22 = 0;
+		V0x09C6780[V0x068BC10].m08 = 0;
+		V0x068BC10++;
+
+		// ModelIndex_312_1_34_HangarDroid2
+		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(312, 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
+		V0x09C6780[V0x068BC10].m04 = 0;
+		V0x09C6780[V0x068BC10].m26 = 0;
+		V0x09C6780[V0x068BC10].m22 = 0;
+		V0x09C6780[V0x068BC10].m08 = 0;
+		V0x068BC10++;
 	}
 
 	return 0;

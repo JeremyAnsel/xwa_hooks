@@ -7,6 +7,8 @@ static const HookFunction g_hookFunctions[] =
 {
 	{ 0x4579F3, HangarOptLoadHook },
 	{ 0x45FCA8, HangarCameraPositionHook },
+	{ 0x4563DD, HangarLoadShuttleHook },
+	{ 0x456312, HangarLoadDroidsHook },
 	{ 0x455F4B, HangarMapHook },
 	{ 0x456479, FamHangarMapHook },
 	{ 0x57EB9D, SelectHangarTypeHook },
@@ -47,6 +49,8 @@ static const HookPatchItem g_setHangarCameraPatch[] =
 	{ 0x5F0A0, "81C76A04000081ED1009000081EE2C010000", "565557E8788E14005F5D5E90909090909090" },
 	{ 0x5F7E8, "B7FC4500", "7EFC4500" },
 	{ 0x5F7EC, "CFFE4500", "7EFC4500" },
+	{ 0x5F7F0, "F0FC4500", "7EFC4500" },
+	{ 0x5F7F4, "F7FC4500", "7EFC4500" },
 	{ 0x5F7F8, "26FD4500", "7EFC4500" },
 	{ 0x5F7FC, "5FFD4500", "7EFC4500" },
 	{ 0x5F804, "4DFF4500", "7EFC4500" },
@@ -58,6 +62,21 @@ static const HookPatchItem g_setHangarCameraPatch[] =
 	{ 0x5F884, "06024600", "7EFC4500" },
 	{ 0x5F888, "3C024600", "7EFC4500" },
 	{ 0x5F88C, "6F024600", "7EFC4500" },
+};
+
+static const HookPatchItem g_loadShuttlePatch[] =
+{
+	{ 0x557D8, "E803070000", "E853271500" },
+};
+
+static const HookPatchItem g_loadDroidsPatch[] =
+{
+	{ 0x05570D, "A110BC6800536870E50000", "E80E281500E98600000090" },
+	{ 0x0557A3, "898680679C00", "909090909090" },
+	{ 0x0557AE, "899E84679C00", "909090909090" },
+	{ 0x0557B9, "899EA6679C00", "909090909090" },
+	{ 0x0557C4, "899EA2679C00", "909090909090" },
+	{ 0x0557CC, "899E88679C00891510BC6800", "909090909090909090909090" },
 };
 
 static const HookPatchItem g_setHangarMapPatch[] =
@@ -95,6 +114,8 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that loads hangar opt", g_loadHangarOptPatch),
 	MAKE_HOOK_PATCH("To remove the opt filter", g_removeOptFilterPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar camera", g_setHangarCameraPatch),
+	MAKE_HOOK_PATCH("To call the hook that loads the shuttle", g_loadShuttlePatch),
+	MAKE_HOOK_PATCH("To call the hook that loads the droids", g_loadDroidsPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar map", g_setHangarMapPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the family hangar map", g_setFamilyHangarMapPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the craft elevation", g_setCraftElevationPatch),

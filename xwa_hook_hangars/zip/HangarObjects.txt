@@ -1,1 +1,3 @@
+LoadShuttle = 1
+LoadDroids = 1
 FlightModels\YWing.opt = FlightModels\TieFighter.opt

@@ -43,6 +43,8 @@ At offset 563C3, replace 83FB0E0F8FCB0000000F84 with 33C089442410E9BF090000.
 At offset 5F0A0, replace 81C76A04000081ED1009000081EE2C010000 with 565557E8788E14005F5D5E90909090909090.
 At offset 5F7E8, replace B7FC4500 with 7EFC4500.
 At offset 5F7EC, replace CFFE4500 with 7EFC4500.
+At offset 5F7F0, replace F0FC4500 with 7EFC4500.
+At offset 5F7F4, replace F7FC4500 with 7EFC4500.
 At offset 5F7F8, replace 26FD4500 with 7EFC4500.
 At offset 5F7FC, replace 5FFD4500 with 7EFC4500.
 At offset 5F804, replace 4DFF4500 with 7EFC4500.
@@ -54,6 +56,17 @@ At offset 5F880, replace CD014600 with 7EFC4500.
 At offset 5F884, replace 06024600 with 7EFC4500.
 At offset 5F888, replace 3C024600 with 7EFC4500.
 At offset 5F88C, replace 6F024600 with 7EFC4500.
+
+# To call the hook that loads the shuttle
+At offset 557D8, replace E803070000 with E853271500.
+
+# To call the hook that loads the droids
+At offset 5570D, replace A110BC6800536870E50000 with E80E281500E98600000090.
+At offset 557A3, replace 898680679C00 with 909090909090.
+At offset 557AE, replace 899E84679C00 with 909090909090.
+At offset 557B9, replace 899EA6679C00 with 909090909090.
+At offset 557C4, replace 899EA2679C00 with 909090909090.
+At offset 557CC, replace 899E88679C00891510BC6800 with 909090909090909090909090.
 
 # To call the hook that sets the hangar map
 At offset 55345, replace 68C896000068FFFFFF7F68 with 58E8D52B1500E9BD030000.
@@ -148,6 +161,8 @@ The dll searches a "HangarObjects.txt" file in this order (from first to last):
 If a "HangarObjects.txt" file doesn't exist, no model is replaced.
 The format is a line per object: "FlightModels\ObjectA = FlightModels\NewObjA"
 To remove an object, use an empty invisible opt.
+To not load the shuttle, set "LoadShuttle = 0".
+To not load the droids, set "LoadDroids = 0".
 See "HangarObjects.txt".
 
 Apply to hangar:
