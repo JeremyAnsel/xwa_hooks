@@ -9,6 +9,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x45FCA8, HangarCameraPositionHook },
 	{ 0x4563DD, HangarLoadShuttleHook },
 	{ 0x45C1AA, HangarShuttleUpdateHook },
+	{ 0x45860A, HangarShuttleOptReadInfosHook },
 	{ 0x456312, HangarLoadDroidsHook },
 	{ 0x455F4B, HangarMapHook },
 	{ 0x456479, FamHangarMapHook },
@@ -75,6 +76,11 @@ static const HookPatchItem g_updateShuttlePatch[] =
 	{ 0x5B5A5, "E8C62A0000", "E876C91400" },
 };
 
+static const HookPatchItem g_readShuttleOptInfosPatch[] =
+{
+	{ 0x57A05, "E8A68EFDFFE85193FDFF", "E8160515009090909090" },
+};
+
 static const HookPatchItem g_loadDroidsPatch[] =
 {
 	{ 0x05570D, "A110BC6800536870E50000", "E80E281500E98600000090" },
@@ -122,6 +128,7 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar camera", g_setHangarCameraPatch),
 	MAKE_HOOK_PATCH("To call the hook that loads the shuttle", g_loadShuttlePatch),
 	MAKE_HOOK_PATCH("To call the hook that updates the shuttle", g_updateShuttlePatch),
+	MAKE_HOOK_PATCH("To call the hook that reads the shuttle opt infos", g_readShuttleOptInfosPatch),
 	MAKE_HOOK_PATCH("To call the hook that loads the droids", g_loadDroidsPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar map", g_setHangarMapPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the family hangar map", g_setFamilyHangarMapPatch),

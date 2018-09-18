@@ -4,6 +4,7 @@ int HangarOptLoadHook(int* params);
 int HangarCameraPositionHook(int* params);
 int HangarLoadShuttleHook(int* params);
 int HangarShuttleUpdateHook(int* params);
+int HangarShuttleOptReadInfosHook(int* params);
 int HangarLoadDroidsHook(int* params);
 int HangarMapHook(int* params);
 int FamHangarMapHook(int* params);

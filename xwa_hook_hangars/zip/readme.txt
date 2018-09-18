@@ -63,6 +63,9 @@ At offset 557D8, replace E803070000 with E853271500.
 # To call the hook that updates the shuttle
 At offset 5B5A5, replace E8C62A0000 with E876C91400.
 
+# To call the hook that reads the shuttle opt infos
+At offset 57A05, replace E8A68EFDFFE85193FDFF with E8160515009090909090.
+
 # To call the hook that loads the droids
 At offset 5570D, replace A110BC6800536870E50000 with E80E281500E98600000090.
 At offset 557A3, replace 898680679C00 with 909090909090.

@@ -934,6 +934,23 @@ int HangarShuttleUpdateHook(int* params)
 	return 0;
 }
 
+int HangarShuttleOptReadInfosHook(int* params)
+{
+	const auto CockpitOptReadInfos = (void(*)())0x004314B0;
+	const auto ExteriorOptReadInfos = (void(*)())0x00431960;
+
+	std::string txtPath = GetCustomFilePath("HangarObjects.txt");
+	std::string value = GetFileKeyValue(txtPath, "LoadShuttle");
+
+	if (value.empty() || value == "1")
+	{
+		CockpitOptReadInfos();
+		ExteriorOptReadInfos();
+	}
+
+	return 0;
+}
+
 int HangarLoadDroidsHook(int* params)
 {
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
