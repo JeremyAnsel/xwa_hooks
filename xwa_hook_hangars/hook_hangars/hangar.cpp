@@ -908,6 +908,12 @@ int HangarLoadShuttleHook(int* params)
 
 	std::string txtPath = GetCustomFilePath("HangarObjects.txt");
 	std::string value = GetFileKeyValue(txtPath, "LoadShuttle");
+	int shuttleModelIndex = GetFileKeyValueInt(txtPath, "ShuttleModelIndex");
+
+	if (shuttleModelIndex != 0)
+	{
+		a0 = shuttleModelIndex;
+	}
 
 	if (value.empty() || value == "1")
 	{

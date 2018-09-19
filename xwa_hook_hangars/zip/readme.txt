@@ -171,6 +171,7 @@ If a "HangarObjects.txt" file doesn't exist, no model is replaced.
 The format is a line per object: "FlightModels\ObjectA = FlightModels\NewObjA"
 To remove an object, use an empty invisible opt.
 To not load the shuttle, set "LoadShuttle = 0".
+To set the shuttle model index, set "ShuttleModelIndex = value". value is an integer. The default value is 50 (Shuttle).
 To not load the droids, set "LoadDroids = 0".
 See "HangarObjects.txt".
 

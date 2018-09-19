@@ -1,3 +1,4 @@
 LoadShuttle = 1
+ShuttleModelIndex = 50
 LoadDroids = 1
 FlightModels\YWing.opt = FlightModels\TieFighter.opt
