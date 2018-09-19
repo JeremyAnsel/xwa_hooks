@@ -82,6 +82,19 @@ E8C62A0000  call 0045EC70
 E876C91400  call 005A8B20, 005A8B20 - 0045C1AA = 0014C976
 
 
+; from L0045B0D0
+; hook for shuttle camera
+:004586DB - 0x57ADB
+8D1480      lea edx, dword ptr [eax+4*eax]
+C1E203      shl edx, 03
+2BD0        sub edx, eax
+A108BC6800  mov eax, dword ptr [0068BC08]
+
+E840041500  call 005A8B20, 005A8B20 - 004586E0 = 00150440
+E9B4000000  jmp 00458799, 00458799 - 004586E5 = 000000B4
+909090
+
+
 ; from L00457C20
 ; hook for shuttle opt read infos
 :00458605 - 0x57A05

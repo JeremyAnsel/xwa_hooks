@@ -934,6 +934,41 @@ int HangarShuttleUpdateHook(int* params)
 	return 0;
 }
 
+int HangarShuttleCameraHook(int* params)
+{
+	const int xwaObjects = *(int*)0x07B33C4;
+	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	int& positionX = *(int*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x07);
+	int& positionY = *(int*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x0B);
+	int& positionZ = *(int*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x0F);
+	const int hangarObjectIndex = *(int*)0x068BCC4;
+	const int V0x068BC38 = *(int*)0x068BC38;
+
+	positionX = *(int*)(xwaObjects + hangarObjectIndex * 0x27 + 0x07);
+	positionY = *(int*)(xwaObjects + hangarObjectIndex * 0x27 + 0x0B);
+	positionZ = V0x068BC38;
+
+	*(short*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x13) = 0;
+	*(short*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x15) = 0;
+	*(short*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x17) = 0;
+
+	std::string txtPath = GetCustomFilePath("HangarObjects.txt");
+	std::string value = GetFileKeyValue(txtPath, "LoadShuttle");
+
+	if (value.empty() || value == "1")
+	{
+		positionX += 0x467;
+		positionY += 0x2328;
+		positionZ += 0x161;
+
+		*(short*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x13) = -0x8000;
+		*(short*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x15) = 0x4000;
+		*(short*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x17) = 0;
+	}
+
+	return 0;
+}
+
 int HangarShuttleOptReadInfosHook(int* params)
 {
 	const auto CockpitOptReadInfos = (void(*)())0x004314B0;
