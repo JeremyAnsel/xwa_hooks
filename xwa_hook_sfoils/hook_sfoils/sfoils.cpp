@@ -150,6 +150,15 @@ FlightModelsList g_flightModelsList;
 
 #pragma pack(push, 1)
 
+struct XwaObject
+{
+	char unk000[2];
+	unsigned short ModelIndex;
+	char unk004[35];
+};
+
+static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
+
 struct XwaCraft
 {
 	char unk000[39];
@@ -357,4 +366,61 @@ int SFoilsHook2(int* params)
 	}
 
 	return ret;
+}
+
+int SFoilsHangarShuttleHook(int* params)
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+
+	int time = params[12];
+	int objectIndex = params[9];
+	int modelIndex = xwaObjects[objectIndex].ModelIndex;
+	XwaCraft* currentCraft = (XwaCraft*)params[0];
+	bool closing = params[1] != 0;
+
+	auto sfoils = g_modelIndexSFoils.Get(modelIndex);
+
+	if (sfoils.empty())
+	{
+		return 0;
+	}
+
+	if (closing)
+	{
+		for (unsigned int i = 0; i < sfoils.size(); i++)
+		{
+			const auto& sfoil = sfoils[i];
+			int speed = (sfoil.closingSpeed * time + 1) / 2;
+
+			if (currentCraft->MeshRotationAngles[sfoil.meshIndex] < sfoil.angle)
+			{
+				currentCraft->MeshRotationAngles[sfoil.meshIndex] += speed;
+
+				if (currentCraft->MeshRotationAngles[sfoil.meshIndex] > sfoil.angle)
+				{
+					currentCraft->MeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+				}
+			}
+		}
+	}
+	else
+	{
+		for (unsigned int i = 0; i < sfoils.size(); i++)
+		{
+			const auto& sfoil = sfoils[i];
+			int speed = (sfoil.openingSpeed * time + 1) / 2;
+
+			if (currentCraft->MeshRotationAngles[sfoil.meshIndex] >= speed)
+			{
+				currentCraft->MeshRotationAngles[sfoil.meshIndex] -= speed;
+
+				if (currentCraft->MeshRotationAngles[sfoil.meshIndex] < speed)
+				{
+					currentCraft->MeshRotationAngles[sfoil.meshIndex] = 0;
+				}
+			}
+		}
+	}
+
+	return 0;
 }

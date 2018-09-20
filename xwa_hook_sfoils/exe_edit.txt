@@ -42,6 +42,75 @@ E94E010000              jmp 00401A72, 00401A72 - 00401924 = 0000014E
 9090                    nop
 
 
+# To call the hook that defines hangar shuttle S-Foils
+
+// 2
+:0045EEC4 - 0x05E2C4
+8B15C4337B00            mov edx, dword ptr [007B33C4]
+668B4C3202              mov cx, word ptr [edx+esi+02]
+51                      push ecx
+E88B9A0200              call 00488960
+
+6A00                    push 00
+57                      push edi
+E8549C1400              call 005A8B20, 005A8B20 - 0045EECC = 00149C54
+83C408                  add esp, 00000008
+EB6B                    jmp 0045EF3C, 0045EF3C - 0045EED1 = 0000006B
+90909090                nop
+
+// 4
+:0045F1C0 - 0x05E5C0
+8B0DC4337B00            mov ecx, dword ptr [007B33C4]
+668B443102              mov ax, word ptr [ecx+esi+02]
+50                      push eax
+E88F970200              call 00488960
+
+6A00                    push 00
+57                      push edi
+E858991400              call 005A8B20, 005A8B20 - 0045F1C8 = 00149958
+83C408                  add esp, 00000008
+EB60                    jmp 0045F22D, 0045F22D - 0045F1CD = 00000060
+90909090                nop
+
+// 6
+:0045F3FF - 0x05E7FF
+8B15C4337B00            mov edx, dword ptr [007B33C4]
+33C9                    xor ecx, ecx
+668B4C3202              mov cx, word ptr [edx+esi+02]
+
+6A01                    push 01
+57                      push edi
+E819971400              call 005A8B20, 005A8B20 - 0045F407 = 00149719
+83C408                  add esp, 00000008
+EB6D                    jmp 0045F479, 0045F479 - 0045F40C = 0000006D
+
+// 8
+:0045F6F4 - 0x05EAF4
+8B0DC4337B00            mov ecx, dword ptr [007B33C4]
+668B443102              mov ax, word ptr [ecx+esi+02]
+50                      push eax
+E85B920200              call 00488960
+
+6A01                    push 01
+57                      push edi
+E824941400              call 005A8B20, 005A8B20 - 0045F6FC = 00149424
+83C408                  add esp, 00000008
+EB6A                    jmp 0045F76B, 0045F76B - 0045F701 = 0000006A
+90909090                nop
+
+// 10
+:0045F9BF - 0x05EDBF
+8B15C4337B00            mov edx, dword ptr [007B33C4]
+33C9                    xor ecx, ecx
+668B4C3202              mov cx, word ptr [edx+esi+02]
+
+6A01                    push 01
+57                      push edi
+E859911400              call 005A8B20, 005A8B20 - 0045F9C7 = 00149159
+83C408                  add esp, 00000008
+EB5F                    jmp 0045FA2B, 0045FA2B - 0045F9CC = 0000005F
+
+
 # Align the camera with the bridge
 
 L00480A80
