@@ -24,6 +24,8 @@ The following modifications are applied at runtime to xwingalliance.exe:
 
 # Disable S-Foil model filter
 At offset 0FB86E, replace 7419 with EB19.
+At offset 002EF0, replace 740A with EB0A.
+At offset 058920, replace 7406 with EB06.
 
 # To call the hook that defines S-Foils
 At offset 000AF3, replace 4883F8310F872001000033C98A8840184000 with 50E827741A0083C4045F5E5D5BC390909090.
