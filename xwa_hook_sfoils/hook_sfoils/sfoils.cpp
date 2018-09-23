@@ -370,13 +370,18 @@ int SFoilsHook2(int* params)
 
 int SFoilsHangarShuttleHook(int* params)
 {
+	if (params[2] == -1)
+	{
+		return 0;
+	}
+
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 
-	int time = params[12];
-	int objectIndex = params[9];
+	int objectIndex = params[10];
 	int modelIndex = xwaObjects[objectIndex].ModelIndex;
 	XwaCraft* currentCraft = (XwaCraft*)params[0];
-	bool closing = params[1] != 0;
+	int time = params[1];
+	bool closing = params[2] != 0;
 
 	auto sfoils = g_modelIndexSFoils.Get(modelIndex);
 

@@ -63,12 +63,13 @@ E94E010000              jmp 00401A72, 00401A72 - 00401924 = 0000014E
 51                      push ecx
 E88B9A0200              call 00488960
 
-6A00                    push 00
+6AFF                    push FFFFFFFF
 57                      push edi
-E8549C1400              call 005A8B20, 005A8B20 - 0045EECC = 00149C54
-83C408                  add esp, 00000008
-EB6B                    jmp 0045EF3C, 0045EF3C - 0045EED1 = 0000006B
-90909090                nop
+57                      push edi
+E8539C1400              call 005A8B20, 005A8B20 - 0045EECD = 0149C53
+83C40C                  add esp, 0000000C
+EB6A                    jmp 0045EF3C, 0045EF3C - 0045EED2 = 0000006A
+909090                  nop
 
 // 4
 :0045F1C0 - 0x05E5C0
@@ -78,23 +79,26 @@ EB6B                    jmp 0045EF3C, 0045EF3C - 0045EED1 = 0000006B
 E88F970200              call 00488960
 
 6A00                    push 00
+53                      push ebx
 57                      push edi
-E858991400              call 005A8B20, 005A8B20 - 0045F1C8 = 00149958
-83C408                  add esp, 00000008
-EB60                    jmp 0045F22D, 0045F22D - 0045F1CD = 00000060
-90909090                nop
+E857991400              call 005A8B20, 005A8B20 - 0045F1C9 = 00149957
+83C40C                  add esp, 0000000C
+EB5F                    jmp 0045F22D, 0045F22D - 0045F1CE = 0000005F
+909090                  nop
 
 // 6
 :0045F3FF - 0x05E7FF
 8B15C4337B00            mov edx, dword ptr [007B33C4]
 33C9                    xor ecx, ecx
 668B4C3202              mov cx, word ptr [edx+esi+02]
+51                      push ecx
 
 6A01                    push 01
+53                      push ebx
 57                      push edi
-E819971400              call 005A8B20, 005A8B20 - 0045F407 = 00149719
-83C408                  add esp, 00000008
-EB6D                    jmp 0045F479, 0045F479 - 0045F40C = 0000006D
+E818971400              call 005A8B20, 005A8B20 - 0045F408 = 00149718
+83C40C                  add esp, 0000000C
+EB6C                    jmp 0045F479, 0045F479 - 0045F40D = 0000006C
 
 // 8
 :0045F6F4 - 0x05EAF4
@@ -103,24 +107,30 @@ EB6D                    jmp 0045F479, 0045F479 - 0045F40C = 0000006D
 50                      push eax
 E85B920200              call 00488960
 
-6A01                    push 01
+6AFF                    push FFFFFFFF
 57                      push edi
-E824941400              call 005A8B20, 005A8B20 - 0045F6FC = 00149424
-83C408                  add esp, 00000008
-EB6A                    jmp 0045F76B, 0045F76B - 0045F701 = 0000006A
-90909090                nop
+57                      push edi
+E823941400              call 005A8B20, 005A8B20 - 0045F6FD = 00149423
+83C40C                  add esp, 0000000C
+EB69                    jmp 0045F76B, 0045F76B - 0045F702 = 00000069
+909090                  nop
 
 // 10
 :0045F9BF - 0x05EDBF
 8B15C4337B00            mov edx, dword ptr [007B33C4]
 33C9                    xor ecx, ecx
 668B4C3202              mov cx, word ptr [edx+esi+02]
+51                      push ecx
+E88E8F0200              call 00488960
 
+8B442428                mov eax, dword ptr [esp+28]
 6A01                    push 01
+50                      push eax
 57                      push edi
-E859911400              call 005A8B20, 005A8B20 - 0045F9C7 = 00149159
-83C408                  add esp, 00000008
-EB5F                    jmp 0045FA2B, 0045FA2B - 0045F9CC = 0000005F
+E854911400              call 005A8B20, 005A8B20 - 0045F9CC = 00149154
+83C40C                  add esp, 0000000C
+EB5A                    jmp 0045FA2B, 0045FA2B - 0045F9D1 = 0000005A
+90                      nop
 
 
 # Align the camera with the bridge
