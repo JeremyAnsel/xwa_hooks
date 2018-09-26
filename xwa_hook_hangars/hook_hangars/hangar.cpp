@@ -239,6 +239,44 @@ FlightModelsList g_flightModelsList;
 
 #pragma pack(push, 1)
 
+struct XwaCraft
+{
+	char unk000[395];
+	unsigned char m18B;
+	char unk18C[621];
+};
+
+static_assert(sizeof(XwaCraft) == 1017, "size of XwaCraft must be 1017");
+
+struct XwaMobileObject
+{
+	char unk00[221];
+	XwaCraft* pCraft;
+	char unkE1[4];
+};
+
+static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 229");
+
+struct XwaObject
+{
+	char unk00[2];
+	unsigned short ModelIndex;
+	unsigned char ShipCategory;
+	unsigned char TieFlightGroupIndex;
+	unsigned char Region;
+	int PositionX;
+	int PositionY;
+	int PositionZ;
+	short m13;
+	short m15;
+	short m17;
+	char unk19[6];
+	int PlayerIndex;
+	XwaMobileObject* pMobileObject;
+};
+
+static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
+
 struct S0x09C6780
 {
 	int ObjectIndex;
@@ -366,13 +404,13 @@ CraftSelectionValues g_craftSelectionValues;
 std::string GetCommandShipLstLine()
 {
 	const unsigned short* exeSpecies = (unsigned short*)0x05B0F70;
-	const int xwaObjects = *(int*)0x07B33C4;
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int xwaTieFlightGroups = 0x080DC80;
 	const int playerObjectIndex = *(int*)0x068BC08;
 
 	if (playerObjectIndex != 0xffff)
 	{
-		const int playerFlightGroupIndex = *(unsigned char*)(xwaObjects + playerObjectIndex * 0x27 + 0x05);
+		const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
 		const int commandShipFlightGroupIndex = *(unsigned char*)(xwaTieFlightGroups + playerFlightGroupIndex * 0xE42 + 0x0C4);
 		const int commandShipEnabled = *(unsigned char*)(xwaTieFlightGroups + playerFlightGroupIndex * 0xE42 + 0x0C5);
 
@@ -471,7 +509,7 @@ int HangarCameraPositionHook(int* params)
 	int& positionY = params[1];
 	int& positionZ = params[2];
 
-	const int xwaObjects = *(int*)0x07B33C4;
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const unsigned short hangarModelIndex = *(unsigned short*)0x09C6754;
 	const int playerObjectIndex = *(int*)0x068BC08;
 	const int V0x0686B94 = *(int*)0x0686B94;
@@ -550,9 +588,9 @@ int HangarCameraPositionHook(int* params)
 			{
 				V0x068BCC0 = V0x09C6780[0].ObjectIndex;
 
-				positionX = *(int*)(xwaObjects + V0x068BCC0 * 0x27 + 0x07);
-				positionY = *(int*)(xwaObjects + V0x068BCC0 * 0x27 + 0x0B);
-				positionZ = *(int*)(xwaObjects + V0x068BCC0 * 0x27 + 0x0F) + 0x1E;
+				positionX = xwaObjects[V0x068BCC0].PositionX;
+				positionY = xwaObjects[V0x068BCC0].PositionY;
+				positionZ = xwaObjects[V0x068BCC0].PositionZ + 0x1E;
 			}
 
 			break;
@@ -570,9 +608,9 @@ int HangarCameraPositionHook(int* params)
 			{
 				V0x068BCC0 = V0x09C6780[1].ObjectIndex;
 
-				positionX = *(int*)(xwaObjects + V0x068BCC0 * 0x27 + 0x07);
-				positionY = *(int*)(xwaObjects + V0x068BCC0 * 0x27 + 0x0B);
-				positionZ = *(int*)(xwaObjects + V0x068BCC0 * 0x27 + 0x0F) + 0x1E;
+				positionX = xwaObjects[V0x068BCC0].PositionX;
+				positionY = xwaObjects[V0x068BCC0].PositionY;
+				positionZ = xwaObjects[V0x068BCC0].PositionZ + 0x1E;
 			}
 
 			break;
@@ -626,10 +664,10 @@ int HangarCameraPositionHook(int* params)
 			}
 			else
 			{
-				const unsigned short playerModelIndex = *(unsigned short*)(xwaObjects + playerObjectIndex * 0x27 + 0x02);
-				const int playerPositionX = *(int*)(xwaObjects + playerObjectIndex * 0x27 + 0x07);
-				const int playerPositionY = *(int*)(xwaObjects + playerObjectIndex * 0x27 + 0x0B);
-				const int playerPositionZ = *(int*)(xwaObjects + playerObjectIndex * 0x27 + 0x0F);
+				const unsigned short playerModelIndex = xwaObjects[playerObjectIndex].ModelIndex;
+				const int playerPositionX = xwaObjects[playerObjectIndex].PositionX;
+				const int playerPositionY = xwaObjects[playerObjectIndex].PositionY;
+				const int playerPositionZ = xwaObjects[playerObjectIndex].PositionZ;
 
 				std::string optCamera = g_flightModelsList.GetLstLine(playerModelIndex);
 				optCamera.append("Camera.txt");
@@ -840,10 +878,10 @@ int HangarCameraPositionHook(int* params)
 			}
 			else
 			{
-				const unsigned short playerModelIndex = *(unsigned short*)(xwaObjects + playerObjectIndex * 0x27 + 0x02);
-				const int playerPositionX = *(int*)(xwaObjects + playerObjectIndex * 0x27 + 0x07);
-				const int playerPositionY = *(int*)(xwaObjects + playerObjectIndex * 0x27 + 0x0B);
-				const int playerPositionZ = *(int*)(xwaObjects + playerObjectIndex * 0x27 + 0x0F);
+				const unsigned short playerModelIndex = xwaObjects[playerObjectIndex].ModelIndex;
+				const int playerPositionX = xwaObjects[playerObjectIndex].PositionX;
+				const int playerPositionY = xwaObjects[playerObjectIndex].PositionY;
+				const int playerPositionZ = xwaObjects[playerObjectIndex].PositionZ;
 
 				std::string optCamera = g_flightModelsList.GetLstLine(playerModelIndex);
 				optCamera.append("Camera.txt");
@@ -942,21 +980,21 @@ int HangarShuttleUpdateHook(int* params)
 
 int HangarShuttleCameraHook(int* params)
 {
-	const int xwaObjects = *(int*)0x07B33C4;
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
-	int& positionX = *(int*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x07);
-	int& positionY = *(int*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x0B);
-	int& positionZ = *(int*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x0F);
+	int& positionX = xwaObjects[hangarPlayerObjectIndex].PositionX;
+	int& positionY = xwaObjects[hangarPlayerObjectIndex].PositionY;
+	int& positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	const int hangarObjectIndex = *(int*)0x068BCC4;
 	const int V0x068BC38 = *(int*)0x068BC38;
 
-	positionX = *(int*)(xwaObjects + hangarObjectIndex * 0x27 + 0x07);
-	positionY = *(int*)(xwaObjects + hangarObjectIndex * 0x27 + 0x0B);
+	positionX = xwaObjects[hangarObjectIndex].PositionX;
+	positionY = xwaObjects[hangarObjectIndex].PositionY;
 	positionZ = V0x068BC38;
 
-	*(short*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x13) = 0;
-	*(short*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x15) = 0;
-	*(short*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x17) = 0;
+	xwaObjects[hangarPlayerObjectIndex].m13 = 0;
+	xwaObjects[hangarPlayerObjectIndex].m15 = 0;
+	xwaObjects[hangarPlayerObjectIndex].m17 = 0;
 
 	std::string txtPath = GetCustomFilePath("HangarObjects.txt");
 	std::string value = GetFileKeyValue(txtPath, "LoadShuttle");
@@ -967,9 +1005,9 @@ int HangarShuttleCameraHook(int* params)
 		positionY += 0x2328;
 		positionZ += 0x161;
 
-		*(short*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x13) = -0x8000;
-		*(short*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x15) = 0x4000;
-		*(short*)(xwaObjects + hangarPlayerObjectIndex * 0x27 + 0x17) = 0;
+		xwaObjects[hangarPlayerObjectIndex].m13 = -0x8000;
+		xwaObjects[hangarPlayerObjectIndex].m15 = 0x4000;
+		xwaObjects[hangarPlayerObjectIndex].m17 = 0;
 	}
 
 	return 0;
