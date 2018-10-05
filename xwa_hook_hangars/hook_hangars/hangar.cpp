@@ -277,6 +277,25 @@ struct XwaObject
 
 static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 
+struct TieFlightGroupEx
+{
+	char unk000[107];
+	unsigned char CraftId;
+	char unk06C[86];
+	unsigned char m0C2;
+	unsigned char m0C3;
+	unsigned char m0C4;
+	unsigned char m0C5;
+	unsigned char m0C6;
+	unsigned char m0C7;
+	unsigned char m0C8;
+	unsigned char m0C9;
+	char unk0CA[3444];
+	int PlayerIndex;
+};
+
+static_assert(sizeof(TieFlightGroupEx) == 3650, "size of TieFlightGroupEx must be 3650");
+
 struct S0x09C6780
 {
 	int ObjectIndex;
@@ -405,18 +424,18 @@ std::string GetCommandShipLstLine()
 {
 	const unsigned short* exeSpecies = (unsigned short*)0x05B0F70;
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
-	const int xwaTieFlightGroups = 0x080DC80;
+	const TieFlightGroupEx* xwaTieFlightGroups = (TieFlightGroupEx*)0x080DC80;
 	const int playerObjectIndex = *(int*)0x068BC08;
 
 	if (playerObjectIndex != 0xffff)
 	{
 		const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
-		const int commandShipFlightGroupIndex = *(unsigned char*)(xwaTieFlightGroups + playerFlightGroupIndex * 0xE42 + 0x0C4);
-		const int commandShipEnabled = *(unsigned char*)(xwaTieFlightGroups + playerFlightGroupIndex * 0xE42 + 0x0C5);
+		const int commandShipFlightGroupIndex = xwaTieFlightGroups[playerFlightGroupIndex].m0C4;
+		const int commandShipEnabled = xwaTieFlightGroups[playerFlightGroupIndex].m0C5;
 
 		if (commandShipEnabled)
 		{
-			const int commandShipCraftId = *(unsigned char*)(xwaTieFlightGroups + commandShipFlightGroupIndex * 0xE42 + 0x06B);
+			const int commandShipCraftId = xwaTieFlightGroups[commandShipFlightGroupIndex].CraftId;
 			const int commandShipModelIndex = exeSpecies[commandShipCraftId];
 
 			return g_flightModelsList.GetLstLine(commandShipModelIndex);
