@@ -10,7 +10,7 @@ This is the main dll hook that is used to call other hooks. A hook is a way to i
 
 ## xwa_hook_backdrops
 
-This hook adds starfield backdrops to skirmish mission.
+This hook adds starfield backdrops to skirmish mission and permits to replace .dat files for a given mission.
 
 ## xwa_hook_d3dinfos_textures
 
