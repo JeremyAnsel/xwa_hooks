@@ -239,27 +239,29 @@ FlightModelsList g_flightModelsList;
 
 #pragma pack(push, 1)
 
-struct XwaCraft
+struct XwaPlayer
 {
-	char unk000[395];
-	unsigned char m18B;
-	char unk18C[621];
+	int ObjectIndex;
+	char m004[79];
+	short m053;
+	char m055[2938];
 };
 
-static_assert(sizeof(XwaCraft) == 1017, "size of XwaCraft must be 1017");
+static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
-struct XwaMobileObject
+struct ExeEnableEntry
 {
-	char unk00[221];
-	XwaCraft* pCraft;
-	char unkE1[4];
+	char unk00[8];
+	void* pData1;
+	void* pData2;
+	char unk10[8];
 };
 
-static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 229");
+static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24");
 
 struct XwaObject
 {
-	char unk00[2];
+	short m00;
 	unsigned short ModelIndex;
 	unsigned char ShipCategory;
 	unsigned char TieFlightGroupIndex;
@@ -272,7 +274,7 @@ struct XwaObject
 	short m17;
 	char unk19[6];
 	int PlayerIndex;
-	XwaMobileObject* pMobileObject;
+	char unk1D[4];
 };
 
 static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
@@ -301,10 +303,15 @@ struct S0x09C6780
 	int ObjectIndex;
 	int m04;
 	int m08;
-	char unk0C[22];
+	int m0C;
+	int m10;
+	int m14;
+	int m18;
+	int m1C;
+	short m20;
 	float m22;
 	int m26;
-	char unk2A[4];
+	int m2A;
 };
 
 static_assert(sizeof(S0x09C6780) == 46, "size of S0x09C6780 must be 46");
@@ -425,9 +432,23 @@ std::string GetCommandShipLstLine()
 	const unsigned short* exeSpecies = (unsigned short*)0x05B0F70;
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const TieFlightGroupEx* xwaTieFlightGroups = (TieFlightGroupEx*)0x080DC80;
+	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
 	const int playerObjectIndex = *(int*)0x068BC08;
+	const int currentPlayerId = *(int*)0x08C1CC8;
 
-	if (playerObjectIndex != 0xffff)
+	if (playerObjectIndex == 0xffff)
+	{
+		return std::string();
+	}
+
+	short mothershipObjectIndex = xwaPlayers[currentPlayerId].m053;
+
+	if (mothershipObjectIndex == -1)
+	{
+		return std::string();
+	}
+
+	if (mothershipObjectIndex == 0)
 	{
 		const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
 		const int commandShipFlightGroupIndex = xwaTieFlightGroups[playerFlightGroupIndex].m0C4;
@@ -438,11 +459,17 @@ std::string GetCommandShipLstLine()
 			const int commandShipCraftId = xwaTieFlightGroups[commandShipFlightGroupIndex].CraftId;
 			const int commandShipModelIndex = exeSpecies[commandShipCraftId];
 
-			return g_flightModelsList.GetLstLine(commandShipModelIndex);
+			std::string lstLine = g_flightModelsList.GetLstLine(commandShipModelIndex);
+			return lstLine;
 		}
+
+		return std::string();
 	}
 
-	return std::string();
+	const int mothershipModelIndex = xwaObjects[mothershipObjectIndex].ModelIndex;
+
+	std::string lstLine = g_flightModelsList.GetLstLine(mothershipModelIndex);
+	return lstLine;
 }
 
 std::string GetCustomFilePath(const std::string& name)
@@ -519,6 +546,159 @@ int HangarOptLoadHook(int* params)
 	}
 
 	return OptLoad(opt.c_str());
+}
+
+int HangarOptReloadHook(int* params)
+{
+	const unsigned short modelIndex = (unsigned short)params[0];
+
+	const auto HangarOptLoad = (int(*)(unsigned short))0x00456FA0;
+	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
+
+	unsigned short* OptModelFileMemHandles = (unsigned short*)0x007CA6E0;
+	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+
+	if (OptModelFileMemHandles[modelIndex] != 0)
+	{
+		OptUnload(OptModelFileMemHandles[modelIndex]);
+
+		OptModelFileMemHandles[modelIndex] = 0;
+		ExeEnableTable[modelIndex].pData1 = nullptr;
+		ExeEnableTable[modelIndex].pData2 = nullptr;
+	}
+
+	HangarOptLoad(modelIndex);
+	return 0;
+}
+
+int HangarObjectCreateHook(int* params)
+{
+	const unsigned short modelIndex = (unsigned short)params[0];
+
+	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
+
+	unsigned short* OptModelFileMemHandles = (unsigned short*)0x007CA6E0;
+	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+
+	if (OptModelFileMemHandles[modelIndex] != 0)
+	{
+		OptUnload(OptModelFileMemHandles[modelIndex]);
+
+		OptModelFileMemHandles[modelIndex] = 0;
+		ExeEnableTable[modelIndex].pData1 = nullptr;
+		ExeEnableTable[modelIndex].pData2 = nullptr;
+	}
+
+	return 0;
+}
+
+void HangarReloadHookReleaseObjects()
+{
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarObjectIndex = *(int*)0x068BCC4;
+	const unsigned char hangarTieFlightGroupIndex = xwaObjects[hangarObjectIndex].TieFlightGroupIndex;
+
+	const auto ReleaseObject = (void(*)(int))0x0041E7F0;
+
+	for (int eax = 0; eax < *(int*)0x07FFD80; eax++)
+	{
+		XwaObject* object = &xwaObjects[eax];
+
+		if (object->ModelIndex == 0)
+			continue;
+
+		if (object->TieFlightGroupIndex != hangarTieFlightGroupIndex)
+			continue;
+
+		// Hangar or FamilyBase
+		if (object->ModelIndex == 0x134 || object->ModelIndex == 0xB3)
+			continue;
+
+		if (object->m00 != 0)
+		{
+			ReleaseObject(eax);
+			object->m00 = 0;
+		}
+	}
+}
+
+int HangarReloadHook(int* params)
+{
+	short objectIndex = (short)params[0];
+
+	const auto HangarReload = (int(*)(short))0x00457C20;
+	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
+	const auto XwaRandom = (unsigned short(*)())0x00494E10;
+	const auto SetSFoils = (void(*)(int))0x004016B0;
+	const auto SetShipCategoryObjectsRanges = (void(*)(int))0x004154A0;
+
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarObjectIndex = *(int*)0x068BCC4;
+	unsigned short& hangarModelIndex = *(unsigned short*)0x009C6754;
+	int& V0x068BC10 = *(int*)0x068BC10;
+	S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
+
+	if (objectIndex == -1)
+	{
+		return HangarReload(objectIndex);
+	}
+
+	unsigned short modelIndex = xwaObjects[objectIndex].ModelIndex;
+
+	int xwaMission = *(int*)0x09EB8E0;
+	unsigned char missionType = *(unsigned char*)(xwaMission + 0xAF7DC + 0x23A6);
+	hangarModelIndex = (missionType == 7 && SelectHangarTypeHook(nullptr) == 1) ? 0xB3 : 0x134;
+	xwaObjects[hangarObjectIndex].ModelIndex = hangarModelIndex;
+
+	if (hangarModelIndex == 0x134)
+	{
+		int HangarOptReloadHookParams[] = { 0x134 };
+		HangarOptReloadHook(HangarOptReloadHookParams);
+	}
+
+	HangarReloadHookReleaseObjects();
+
+	SetShipCategoryObjectsRanges(xwaObjects[hangarObjectIndex].Region);
+
+	if (hangarModelIndex == 0x134)
+	{
+		HangarMapHook(nullptr);
+		HangarLoadDroidsHook(nullptr);
+
+		S0x09C6780* s_V0x068BBC8 = (S0x09C6780*)0x068BBC8;
+		int HangarLoadShuttleHookParams[] = { 0x32, 0x467, 0x3BF, -0x2E5, 0xA880, 0 }; //ModelIndex_050_0_37_Shuttle
+		s_V0x068BBC8->ObjectIndex = HangarLoadShuttleHook(HangarLoadShuttleHookParams);
+		SetSFoils(s_V0x068BBC8->ObjectIndex);
+		s_V0x068BBC8->m04 = 0;
+		s_V0x068BBC8->m26 = XwaRandom() / 2 + 0x2710;
+		s_V0x068BBC8->m22 = 0;
+		s_V0x068BBC8->m08 = 0;
+
+		S0x09C6780* s_V0x0686D38 = (S0x09C6780*)0x0686D38;
+		s_V0x0686D38->ObjectIndex = AddObject(0x13C, -0x578, 0x312, -0x11A, 0, 0); // ModelIndex_316_1_38_HangarRoofCrane
+		s_V0x0686D38->m04 = 0;
+		s_V0x0686D38->m26 = XwaRandom() / 2;
+		s_V0x0686D38->m22 = 0;
+		s_V0x0686D38->m08 = 0;
+	}
+	else
+	{
+		FamHangarMapHook(nullptr);
+
+		V0x068BC10 = 0;
+
+		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(0x1E9, 0x4B8, -0x1B47, -0x12DF, 0, 0); // ModelIndex_489_1_157_WorkDroid1
+		V0x09C6780[V0x068BC10].m04 = 0;
+		V0x09C6780[V0x068BC10].m26 = 0;
+		V0x09C6780[V0x068BC10].m22 = 0;
+		V0x09C6780[V0x068BC10].m08 = 0;
+		V0x09C6780[V0x068BC10].m0C = 0;
+		V0x09C6780[V0x068BC10].m10 = 0;
+		V0x09C6780[V0x068BC10].m2A = 0;
+		V0x068BC10++;
+	}
+
+	return HangarReload(objectIndex);
 }
 
 int HangarCameraPositionHook(int* params)

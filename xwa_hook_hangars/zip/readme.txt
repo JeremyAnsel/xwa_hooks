@@ -36,6 +36,15 @@ At offset 5737A, replace 663D8700740F663D9400 with 50E8B00B150085C05890.
 # To call the hook that loads hangar opt
 At offset 056DEE, replace E84D4F0700 with E83D111500.
 
+# To call the hook that reloads hangar opt
+At offset 054EA4, replace 750E50E8F4140000 with 909050E874301500.
+
+# To call the hook that creates hangar object
+At offset 055EF7, replace 66391C7DE0A67C007522 with 57E82320150083C40490.
+
+# To call the hook that reloads the hangar
+At offset 0FD859, replace E8C297F5FF with E8D2A60A00.
+
 # To remove the opt filter
 At offset 563C3, replace 83FB0E0F8FCB0000000F84 with 33C089442410E9BF090000.
 

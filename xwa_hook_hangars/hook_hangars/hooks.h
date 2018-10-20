@@ -6,6 +6,9 @@
 static const HookFunction g_hookFunctions[] =
 {
 	{ 0x4579F3, HangarOptLoadHook },
+	{ 0x455AAC, HangarOptReloadHook },
+	{ 0x456AFD, HangarObjectCreateHook },
+	{ 0x4FE45E, HangarReloadHook },
 	{ 0x45FCA8, HangarCameraPositionHook },
 	{ 0x4563DD, HangarLoadShuttleHook },
 	{ 0x45C1AA, HangarShuttleUpdateHook },
@@ -40,6 +43,21 @@ static const HookPatchItem g_selectHangarModelIndexPatch[] =
 static const HookPatchItem g_loadHangarOptPatch[] =
 {
 	{ 0x056DEE, "E84D4F0700", "E83D111500" },
+};
+
+static const HookPatchItem g_reloadHangarOptPatch[] =
+{
+	{ 0x054EA4, "750E50E8F4140000", "909050E874301500" },
+};
+
+static const HookPatchItem g_createHangarObjectPatch[] =
+{
+	{ 0x055EF7, "66391C7DE0A67C007522", "57E82320150083C40490" },
+};
+
+static const HookPatchItem g_reloadHangarPatch[] =
+{
+	{ 0x0FD859, "E8C297F5FF", "E8D2A60A00" },
 };
 
 static const HookPatchItem g_removeOptFilterPatch[] =
@@ -130,6 +148,9 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that selects the inside animation", g_selectInsideAnimationPatch),
 	MAKE_HOOK_PATCH("To call the hook that selects the hangar model index", g_selectHangarModelIndexPatch),
 	MAKE_HOOK_PATCH("To call the hook that loads hangar opt", g_loadHangarOptPatch),
+	MAKE_HOOK_PATCH("To call the hook that reloads hangar opt", g_reloadHangarOptPatch),
+	MAKE_HOOK_PATCH("To call the hook that creates hangar object", g_createHangarObjectPatch),
+	MAKE_HOOK_PATCH("To call the hook that reloads the hangar", g_reloadHangarPatch),
 	MAKE_HOOK_PATCH("To remove the opt filter", g_removeOptFilterPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar camera", g_setHangarCameraPatch),
 	MAKE_HOOK_PATCH("To call the hook that loads the shuttle", g_loadShuttlePatch),

@@ -6,6 +6,39 @@ E84D4F0700              call 004CC940
 
 E83D111500  call 005A8B30, 005A8B30 - 004579F3 = 0015113D
 
+
+; from L004554F0
+; hook for hangar opt reloading
+:00455AA4 - 0x054EA4
+750E                    jne 00455AB4
+50                      push eax
+E8F4140000              call 00456FA0
+
+9090                    nop
+50                      push eax
+E874301500              call 005A8B20, 005A8B20 - 00455AAC = 00153074
+
+
+; from L00456AE0
+; hook for hangar object creation
+:00456AF7 - 0x055EF7
+66391C7DE0A67C00        cmp word ptr [2*edi+007CA6E0], bx
+7522                    jne 00456B23
+
+57                      push edi
+E823201500              call 005A8B20, 005A8B20 - 00456AFD = 00152023
+83C404                  add esp, 00000004
+90                      nop
+
+
+; from L004FBA80
+; hook for hangar reloading
+:004FE459 - 0x0FD859
+E8C297F5FF              call 00457C20
+
+E8D2A60A00              call 005A8B30, 005A8B30 - 004FE45E = 000AA6D2
+
+
 ; from L00456FA0
 ; remove opt filter
 :00456FC3 - 0x563C3
@@ -103,7 +136,6 @@ E85193FDFF  call 00431960
 
 E816051500  call 005A8B20, 005A8B20 - 0045860A = 00150516
 9090909090
-
 
 
 ; from L004554F0
