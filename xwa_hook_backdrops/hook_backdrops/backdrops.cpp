@@ -2,6 +2,19 @@
 #include "backdrops.h"
 #include <cstring>
 #include <cstdio>
+#include <string>
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <cctype>
+#include <vector>
+
+std::string GetStringWithoutExtension(const std::string& str)
+{
+	auto b = str.find_last_of('.');
+
+	return str.substr(0, b);
+}
 
 #pragma pack(push, 1)
 
@@ -257,4 +270,49 @@ int BackdropsHook(int* params)
 	}
 
 	return 0;
+}
+
+void CopyFileContent(std::string out, std::string in, bool append)
+{
+	auto ofile = std::ofstream(out, append ? std::ofstream::app : std::ofstream::trunc);
+	auto ifile = std::ifstream(in);
+	std::string line;
+
+	while (std::getline(ifile, line))
+	{
+		if (!line.length())
+		{
+			continue;
+		}
+
+		ofile << line << std::endl;
+	}
+}
+
+int LoadMissionHook(int* params)
+{
+	const char* fileName = (const char*)params[0];
+	const auto LoadMission = (int(*)(const char*))0x00415760;
+
+	const auto FreeResDataItems = (void(*)())0x004CD680;
+	const auto ReadResdataDat = (short(*)(const char*))0x004CD390;
+
+	std::string path = GetStringWithoutExtension(fileName);
+	path.append("_Resdata.txt");
+
+	if (std::ifstream(path))
+	{
+		CopyFileContent("Resdata_Temp.txt", path, false);
+		CopyFileContent("Resdata_Temp.txt", "Resdata.txt", true);
+
+		FreeResDataItems();
+		ReadResdataDat("Resdata_Temp.txt");
+	}
+	else
+	{
+		FreeResDataItems();
+		ReadResdataDat("Resdata.txt");
+	}
+
+	return LoadMission(fileName);
 }
