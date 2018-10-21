@@ -165,6 +165,18 @@ std::string GetCustomFilePath(const std::string& name)
 
 #pragma pack(push, 1)
 
+struct ExeEnableEntry
+{
+	char unk00[8];
+	void* pData1;
+	void* pData2;
+	char unk10[2];
+	short CraftIndex;
+	char unk14[4];
+};
+
+static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24");
+
 struct ExeCraftEntry
 {
 	char Unk0000[594];
@@ -173,6 +185,14 @@ struct ExeCraftEntry
 };
 
 static_assert(sizeof(ExeCraftEntry) == 987, "size of ExeCraftEntry must be 987");
+
+struct OptModelMeshesInfo
+{
+	int NumOfMeshes;
+	int MeshesType[50];
+	void* MeshesDescriptor[50];
+};
+static_assert(sizeof(OptModelMeshesInfo) == 404, "size of S0x08D9760 must be 404");
 
 struct XwaCraftWeaponRack
 {
@@ -240,43 +260,7 @@ struct XwaPlayer
 
 static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
-struct TieFlightGroupEx
-{
-	char Unk0000[107];
-	unsigned char CraftId;
-	char Unk006C[3538];
-	int PlayerIndex;
-};
-
-static_assert(sizeof(TieFlightGroupEx) == 3650, "size of TieFlightGroupEx must be 3650");
-
 #pragma pack(pop)
-
-int GetPlayerModelIndex(int playerId)
-{
-	const unsigned short* exeSpecies = (unsigned short*)0x05B0F70;
-	TieFlightGroupEx* XwaTieFlightGroups = (TieFlightGroupEx*)0x0080DC80;
-	int XwaTieFlightGroupsCount = *(short*)0x007B4C00;
-
-	int playerFlightGroupIndex = -1;
-	for (int index = 0; index < XwaTieFlightGroupsCount; index++)
-	{
-		if (XwaTieFlightGroups[playerFlightGroupIndex].PlayerIndex == playerId)
-		{
-			playerFlightGroupIndex = index;
-			break;
-		}
-	}
-
-	if (playerFlightGroupIndex == -1)
-	{
-		return -1;
-	}
-
-	int playerCraftId = XwaTieFlightGroups[playerFlightGroupIndex].CraftId;
-	int playerModelIndex = exeSpecies[playerCraftId];
-	return playerModelIndex;
-}
 
 int MissionObjectsHook(int* params)
 {
@@ -292,25 +276,60 @@ int MissionObjectsHook(int* params)
 		return OptLoad(value.c_str());
 	}
 
-	if (_stricmp(argOpt, "FlightModels\\CorellianTransportGunner.opt") == 0)
+	return OptLoad(argOpt);
+}
+
+void TurretOptReload(int gunnerModelIndex, int playerModelIndex)
+{
+	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
+	const auto OptLoad = (short(*)(const char*))0x004CC940;
+	const auto Lock_Handle = (void*(*)(short))0x0050E2F0;
+	const auto L004328B0 = (void(*)(int, int))0x004328B0;
+	const auto OptGetNumOfMeshes = (int(*)(int))0x00485190;
+	const auto OptGetMeshType = (int(*)(int, int))0x00485A70;
+	const auto OptGetMeshDescriptor = (void*(*)(int, int))0x004859B0;
+
+	int& s_V0x077333C = *(int*)0x0077333C;
+	unsigned short* OptModelFileMemHandles = (unsigned short*)0x007CA6E0;
+	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+	OptModelMeshesInfo* OptModelMeshesInfos = (OptModelMeshesInfo*)0x008D9760;
+
+	if (OptModelFileMemHandles[gunnerModelIndex] != 0)
 	{
-		int XwaCurrentPlayerId = *(int*)0x008C1CC8;
-		int playerModelIndex = GetPlayerModelIndex(XwaCurrentPlayerId);
+		OptUnload(OptModelFileMemHandles[gunnerModelIndex]);
 
-		if (playerModelIndex != -1)
-		{
-			FlightModelsList g_flightModelsList;
-			std::string ship = GetStringWithoutExtension(g_flightModelsList.GetLstLine(playerModelIndex));
-			ship.append("Gunner.opt");
-
-			if (std::ifstream(ship))
-			{
-				return OptLoad(ship.c_str());
-			}
-		}
+		OptModelFileMemHandles[gunnerModelIndex] = 0;
+		ExeEnableTable[gunnerModelIndex].pData1 = nullptr;
+		ExeEnableTable[gunnerModelIndex].pData2 = nullptr;
 	}
 
-	return OptLoad(argOpt);
+	FlightModelsList g_flightModelsList;
+	std::string ship = GetStringWithoutExtension(g_flightModelsList.GetLstLine(playerModelIndex));
+	ship.append("Gunner.opt");
+
+	if (!std::ifstream(ship))
+	{
+		ship = "FlightModels\\CorellianTransportGunner.opt";
+	}
+
+	s_V0x077333C = 1;
+
+	short handle = OptLoad(ship.c_str());
+	ExeEnableTable[gunnerModelIndex].pData1 = Lock_Handle(handle);
+	OptModelFileMemHandles[gunnerModelIndex] = handle;
+
+	L004328B0(ExeEnableTable[gunnerModelIndex].CraftIndex, gunnerModelIndex);
+
+	int numMeshes = OptGetNumOfMeshes(gunnerModelIndex);
+	OptModelMeshesInfos[gunnerModelIndex].NumOfMeshes = numMeshes;
+
+	for (int i = 0; i < numMeshes; i++)
+	{
+		OptModelMeshesInfos[gunnerModelIndex].MeshesType[i] = OptGetMeshType(gunnerModelIndex, i);
+		OptModelMeshesInfos[gunnerModelIndex].MeshesDescriptor[i] = OptGetMeshDescriptor(gunnerModelIndex, i);
+	}
+
+	s_V0x077333C = 0;
 }
 
 int CraftTurretHook(int* params)
@@ -332,11 +351,13 @@ int CraftTurretHook(int* params)
 
 	XwaCraft* playerCraft = nullptr;
 	short playerCraftIndex = 0;
+	int playerModelIndex = 0;
 
 	if (playerObjectIndex != 0xFFFF)
 	{
 		playerCraft = XwaObjects[playerObjectIndex].pMobileObject->pCraft;
 		playerCraftIndex = playerCraft->CraftIndex;
+		playerModelIndex = XwaObjects[playerObjectIndex].ModelIndex;
 	}
 
 	if (V0x07827E4 == 0 && playerObjectIndex != 0xFFFF)
@@ -360,6 +381,8 @@ int CraftTurretHook(int* params)
 
 		if (turretsCount != 0)
 		{
+			TurretOptReload(ExeCraftTable[playerCraftIndex].TurretOptModelId[0], playerModelIndex);
+
 			if (XwaPlayers[arg4].XwaPlayer_mBCE != 0)
 			{
 				XwaPlayers[arg4].TurretIndex++;
