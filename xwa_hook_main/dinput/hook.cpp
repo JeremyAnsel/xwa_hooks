@@ -4,10 +4,19 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <sstream>
+#include <iomanip>
 #include <vector>
 #include <map>
 #include <utility>
 #include <filesystem>
+
+std::string int_to_hex(int i)
+{
+	std::stringstream stream;
+	stream << std::setfill('0') << std::setw(8) << std::hex << i;
+	return stream.str();
+}
 
 class VirtualProtectMemory
 {
@@ -262,9 +271,14 @@ bool LoadAndPatchHooks()
 	return true;
 }
 
-int HookError(int* params)
+int HookError(int call, int* params)
 {
-	MessageBoxA(nullptr, "The called hook was not correctly installed or initialized.", "xwa_hook_main (DInput.dll)", MB_OK | MB_ICONERROR);
+	std::string text;
+	text.append("The called hook (");
+	text.append(int_to_hex(call));
+	text.append(") was not correctly installed or initialized.");
+
+	MessageBoxA(nullptr, text.c_str(), "xwa_hook_main (DInput.dll)", MB_OK | MB_ICONERROR);
 
 	return 0;
 }
@@ -278,5 +292,5 @@ int Hook(int call, int* params)
 		return it->second(params);
 	}
 
-	return HookError(params);
+	return HookError(call, params);
 }
