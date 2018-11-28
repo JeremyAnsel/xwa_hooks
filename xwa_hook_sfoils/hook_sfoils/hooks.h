@@ -11,7 +11,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x45F1C9, SFoilsHangarShuttleHook },
 	{ 0x45F408, SFoilsHangarShuttleHook },
 	{ 0x45F6FD, SFoilsHangarShuttleHook },
-	{ 0x45F9C8, SFoilsHangarShuttleHook },
+	{ 0x45F9CC, SFoilsHangarShuttleHook },
 };
 
 static const HookPatchItem g_disableSFoilModelFilterPatch[] =
