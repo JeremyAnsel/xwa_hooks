@@ -43,7 +43,7 @@ At offset 0E7A08, replace 64D37600 with hitDataArray4.
 *** Usage ***
 
 The original vertices count limit is 512 per mesh.
-By default, the dll will use a value of 4096.
+By default, the dll will use a value of 65536.
 You can modify this value in hook_opt_limit.cfg (Size = value).
 
 The size of the execute buffer is increased from 0x10000 to 0x200000.

@@ -23,7 +23,7 @@ public:
 
 		if (count == 0)
 		{
-			count = 4096;
+			count = 65536;
 		}
 
 		this->_hitData.reserve(count);
