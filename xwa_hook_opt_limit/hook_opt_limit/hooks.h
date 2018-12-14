@@ -51,8 +51,15 @@ static const HookPatchItem g_optLimitPatch[] =
 	{ 0x0E7A08, "64D37600", g_hitDataArray4.c_str() },
 };
 
+static const HookPatchItem g_glowMarkUVArrayPatch[] =
+{
+	{ 0x0E758F, "A148D37600", "A1066D9B00" },
+	{ 0x0E75B8, "A148D37600", "A1066D9B00" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
 	MAKE_HOOK_PATCH("To call the hook that removes the opt limit of 512 vertices per mesh", g_optLimitPatch),
+	MAKE_HOOK_PATCH("'GlowMarkUVArray vertices count' patch", g_glowMarkUVArrayPatch),
 };

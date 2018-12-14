@@ -63,3 +63,19 @@ hitDataArray0
 :004E8606 D88A64D37600            fmul dword ptr [edx+0076D364]
 :004E8608 - 0x0E7A08
 hitDataArray4
+
+
+;GlowMarkUVArray vertices count
+L004E8180
+V0x009B6D06
+s_XwaSceneVerticesCount
+
+:004E818F - 0x0E758F
+A148D37600              mov eax, dword ptr [0076D348]
+
+A1066D9B00
+
+:004E81B8 - 0x0E75B8
+A148D37600              mov eax, dword ptr [0076D348]
+
+A1066D9B00
