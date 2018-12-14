@@ -1,6 +1,6 @@
 xwa_hook_time
 
-This hook reduces the CPU usage. The side effect is that the framerate is reduced.
+This hook reduces the CPU usage and enables 60 FPS inflight.
 
 For more informations, please see the following thread at xwaupgrade.com:
 http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=10&t=11338
@@ -25,6 +25,18 @@ The following modifications are applied at runtime to xwingalliance.exe:
 # To call the hook that reduces CPU usage
 At offset 10D810, replace E82BF8FFFF8B with E81BA70900C3.
 At offset 10D830, replace E80BF8FFFF8B with E8FBA60900C3.
+
+# To call the hook that sets full FPS
+At offset 10FBD2, replace 83FA08 with 83FA02.
+At offset 10FBF6, replace 83F808 with 83F802.
+At offset 10FC8A, replace 83FA08 with 83FA02.
+At offset 10FCB2, replace 83F808 with 83F802.
+At offset 58005, replace 83FA08 with 83FA02.
+At offset 58027, replace 83F908 with 83F902.
+
+# To call the hook that disables flush texture cache inflight
+At offset 499E0, replace E808D21400 with 9090909090.
+At offset 196B96, replace 8B5508 with EB5190.
 
 
 *** Credits ***
