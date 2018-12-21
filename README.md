@@ -72,6 +72,12 @@ This hook reduces the CPU usage and enables 60 FPS inflight.
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=10&t=11338 and http://www.xwaupgrade.com/phpBB3/viewtopic.php?f=9&t=12016
 
+## xwa_hook_weapon_color
+
+This hook permits to define weapon color for any craft.
+
+See http://www.xwaupgrade.com/phpBB3/viewtopic.php?p=156215#p156215
+
 ## xwa_hook_weapon_rate
 
 This hook permits to define weapon decharge and recharge rates for any craft.
