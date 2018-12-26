@@ -19,6 +19,12 @@ EB0A                    jmp
 EB06                    jmp
 
 
+:00508DE4 - 0x1081E4
+7405                    je 00508DEB
+
+EB05                    jmp
+
+
 # To call the hook that defines S-Foils
 
 :004016F3 - 0x000AF3

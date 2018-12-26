@@ -19,6 +19,7 @@ static const HookPatchItem g_disableSFoilModelFilterPatch[] =
 	{ 0x0FB86E, "7419", "EB19" },
 	{ 0x002EF0, "740A", "EB0A" },
 	{ 0x058920, "7406", "EB06" },
+	{ 0x1081E4, "7405", "EB05" },
 };
 
 static const HookPatchItem g_defineSFoilsPatch[] =
