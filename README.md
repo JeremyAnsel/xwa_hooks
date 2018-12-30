@@ -38,6 +38,10 @@ This hook enables setting hull icon for any craft.
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11761
 
+## xwa_hook_interdictor
+
+This hook permits to enable interdictor feature for any craft.
+
 ## xwa_hook_lightmaps
 
 This hook replaces a static buffer by a dynamic one in lightmaps loading.

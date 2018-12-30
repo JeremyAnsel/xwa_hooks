@@ -1,0 +1,16 @@
+
+L00508AF0
+:00508BA4 - 0x107FA4
+6681F98900              cmp cx, 0089
+7407                    je 00508BB2
+6681F98D00              cmp cx, 008D
+7533                    jne 00508BE5
+
+50                      push eax
+51                      push ecx
+E885FF0900              call 005A8B30, 005A8B30 - 00508BAB = 0009FF85
+59                      pop ecx
+85C0                    test eax, eax
+58                      pop eax
+7434                    je 00508BE5, 00508BE5 - 00508BB1 = 34
+90                      nop
