@@ -27,7 +27,7 @@ At offset 107FA4, replace 6681F9890074076681F98D007533 with 5051E885FF09005985C0
 
 Suppose that the craft is "FlightModels\[Model].opt".
 
-To enable the interdictor feature, create a file named "FlightModels\[Model]Interdictor.txt".
+To enable the interdictor feature, create a file named "FlightModels\[Model]Interdictor.txt" or create a section named "[Interdictor]" in "FlightModels\[Model].ini".
 The format is:
 IsInterdictor = 1
 or
