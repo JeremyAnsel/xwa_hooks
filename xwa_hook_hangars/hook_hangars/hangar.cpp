@@ -1,202 +1,19 @@
 #include "targetver.h"
 #include "hangar.h"
-#include <string>
-#include <iostream>
+#include "config.h"
 #include <fstream>
-#include <algorithm>
-#include <cctype>
-#include <vector>
-
-std::string GetStringWithoutExtension(const std::string& str)
-{
-	auto b = str.find_last_of('.');
-
-	return str.substr(0, b);
-}
-
-std::string GetFileKeyValue(const std::string& path, const std::string& key)
-{
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			int pos = line.find("=");
-
-			if (pos == -1)
-			{
-				continue;
-			}
-
-			std::string name = line.substr(0, pos);
-			name.erase(std::remove_if(name.begin(), name.end(), std::isspace), name.end());
-
-			std::string value = line.substr(pos + 1);
-			value.erase(std::remove_if(value.begin(), value.end(), std::isspace), value.end());
-
-			if (!name.length() || !value.length())
-			{
-				continue;
-			}
-
-			if (_stricmp(name.c_str(), key.c_str()) == 0)
-			{
-				return value;
-			}
-		}
-	}
-
-	return std::string();
-}
-
-int GetFileKeyValueInt(const std::string& path, const std::string& key)
-{
-	std::string value = GetFileKeyValue(path, key);
-
-	if (value.empty())
-	{
-		return 0;
-	}
-
-	return std::stoi(value, 0, 0);
-}
-
-std::vector<std::string> GetFileLines(const std::string& path)
-{
-	std::vector<std::string> values;
-
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			values.push_back(line);
-		}
-	}
-
-	return values;
-}
-
-std::vector<std::string> Tokennize(const std::string& str)
-{
-	const std::string delimiters = ",;";
-	std::vector<std::string> tokens;
-
-	std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
-
-	std::string::size_type pos = str.find_first_of(delimiters, lastPos);
-
-	while (std::string::npos != pos || std::string::npos != lastPos)
-	{
-		std::string value = str.substr(lastPos, pos - lastPos);
-		value.erase(std::remove_if(value.begin(), value.end(), std::isspace), value.end());
-
-		tokens.push_back(value);
-
-		lastPos = str.find_first_not_of(delimiters, pos);
-
-		pos = str.find_first_of(delimiters, lastPos);
-	}
-
-	return tokens;
-}
-
-std::vector<std::vector<std::string>> GetFileListValues(const std::string& path)
-{
-	std::vector<std::vector<std::string>> values;
-
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			values.push_back(Tokennize(line));
-		}
-	}
-
-	return values;
-}
-
-std::vector<unsigned short> GetFileListUnsignedShortValues(const std::string& path)
-{
-	std::vector<unsigned short> values;
-
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			unsigned short value = (unsigned short)std::stoi(line);
-			values.push_back(value);
-		}
-	}
-
-	return values;
-}
 
 class FlightModelsList
 {
 public:
 	FlightModelsList()
 	{
-		for (auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		for (const auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
 		{
 			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
 		}
 
-		for (auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		for (const auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
 		{
 			this->_equipmentList.push_back(GetStringWithoutExtension(line));
 		}
@@ -394,7 +211,8 @@ public:
 	{
 		if (std::ifstream("CraftSelectionTransports.txt"))
 		{
-			this->_transportsSelection = GetFileListUnsignedShortValues("CraftSelectionTransports.txt");
+			const auto lines = GetFileLines("CraftSelectionTransports.txt");
+			this->_transportsSelection = GetFileListUnsignedShortValues(lines);
 		}
 		else
 		{
@@ -403,7 +221,8 @@ public:
 
 		if (std::ifstream("CraftSelectionFighters.txt"))
 		{
-			this->_fightersSelection = GetFileListUnsignedShortValues("CraftSelectionFighters.txt");
+			const auto lines = GetFileLines("CraftSelectionFighters.txt");
+			this->_fightersSelection = GetFileListUnsignedShortValues(lines);
 		}
 		else
 		{
@@ -412,7 +231,8 @@ public:
 
 		if (std::ifstream("CraftSelectionCrafts.txt"))
 		{
-			this->_craftsSelection = GetFileListUnsignedShortValues("CraftSelectionCrafts.txt");
+			const auto lines = GetFileLines("CraftSelectionCrafts.txt");
+			this->_craftsSelection = GetFileListUnsignedShortValues(lines);
 		}
 		else
 		{
@@ -441,7 +261,7 @@ std::string GetCommandShipLstLine()
 		return std::string();
 	}
 
-	short mothershipObjectIndex = xwaPlayers[currentPlayerId].m053;
+	const short mothershipObjectIndex = xwaPlayers[currentPlayerId].m053;
 
 	if (mothershipObjectIndex == -1)
 	{
@@ -507,6 +327,43 @@ std::string GetCustomFilePath(const std::string& name)
 	return path;
 }
 
+std::vector<std::string> GetCustomFileLines(const std::string& name)
+{
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+	std::vector<std::string> lines;
+
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	lines = GetFileLines(mission + "_" + name + ".txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", name);
+	}
+
+	if (lines.size())
+	{
+		return lines;
+	}
+
+	const std::string ship = GetCommandShipLstLine();
+	lines = GetFileLines(ship + name + ".txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", name);
+	}
+
+	if (lines.size())
+	{
+		return lines;
+	}
+
+	const std::string path = "FlightModels\\";
+	lines = GetFileLines(path + name + ".txt");
+
+	return lines;
+}
+
 int HangarOptLoadHook(int* params)
 {
 	const char* argOpt = (char*)params[0];
@@ -526,9 +383,8 @@ int HangarOptLoadHook(int* params)
 		opt = argOpt;
 	}
 
-	std::string txtPath = GetCustomFilePath("HangarObjects.txt");
-
-	std::string value = GetFileKeyValue(txtPath, opt);
+	const auto lines = GetCustomFileLines("HangarObjects");
+	const std::string value = GetFileKeyValue(lines, opt);
 
 	if (!value.empty() && std::ifstream(value))
 	{
@@ -537,7 +393,7 @@ int HangarOptLoadHook(int* params)
 
 	if (_stricmp(opt.c_str(), "FlightModels\\Hangar.opt") == 0)
 	{
-		std::string hangar = GetCustomFilePath("Hangar.opt");
+		const std::string hangar = GetCustomFilePath("Hangar.opt");
 
 		if (std::ifstream(hangar))
 		{
@@ -624,7 +480,7 @@ void HangarReloadHookReleaseObjects()
 
 int HangarReloadHook(int* params)
 {
-	short objectIndex = (short)params[0];
+	const short objectIndex = (short)params[0];
 
 	const auto HangarReload = (int(*)(short))0x00457C20;
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
@@ -703,7 +559,7 @@ int HangarReloadHook(int* params)
 
 int HangarCameraPositionHook(int* params)
 {
-	short A4 = (short)params[8];
+	const short A4 = (short)params[8];
 	int& positionX = params[0];
 	int& positionY = params[1];
 	int& positionZ = params[2];
@@ -726,16 +582,16 @@ int HangarCameraPositionHook(int* params)
 		// Key 7 is either the same as key 3, either related to the player model.
 		// Key 8 is related to the hangar roof crane.
 
-		std::string txtPath = GetCustomFilePath("HangarCamera.txt");
+		const auto cameraLines = GetCustomFileLines("HangarCamera");
 
 		switch (A4)
 		{
 		case 1:
-			if (std::ifstream(txtPath))
+			if (cameraLines.size())
 			{
-				positionX += GetFileKeyValueInt(txtPath, "Key1_X");
-				positionY += GetFileKeyValueInt(txtPath, "Key1_Y");
-				positionZ += GetFileKeyValueInt(txtPath, "Key1_Z");
+				positionX += GetFileKeyValueInt(cameraLines, "Key1_X");
+				positionY += GetFileKeyValueInt(cameraLines, "Key1_Y");
+				positionZ += GetFileKeyValueInt(cameraLines, "Key1_Z");
 			}
 			else
 			{
@@ -746,11 +602,11 @@ int HangarCameraPositionHook(int* params)
 			break;
 
 		case 2:
-			if (std::ifstream(txtPath))
+			if (cameraLines.size())
 			{
-				positionX += GetFileKeyValueInt(txtPath, "Key2_X");
-				positionY += GetFileKeyValueInt(txtPath, "Key2_Y");
-				positionZ += GetFileKeyValueInt(txtPath, "Key2_Z");
+				positionX += GetFileKeyValueInt(cameraLines, "Key2_X");
+				positionY += GetFileKeyValueInt(cameraLines, "Key2_Y");
+				positionZ += GetFileKeyValueInt(cameraLines, "Key2_Z");
 			}
 			else
 			{
@@ -761,11 +617,11 @@ int HangarCameraPositionHook(int* params)
 			break;
 
 		case 3:
-			if (std::ifstream(txtPath))
+			if (cameraLines.size())
 			{
-				positionX += GetFileKeyValueInt(txtPath, "Key3_X");
-				positionY += GetFileKeyValueInt(txtPath, "Key3_Y");
-				positionZ += GetFileKeyValueInt(txtPath, "Key3_Z");
+				positionX += GetFileKeyValueInt(cameraLines, "Key3_X");
+				positionY += GetFileKeyValueInt(cameraLines, "Key3_Y");
+				positionZ += GetFileKeyValueInt(cameraLines, "Key3_Z");
 			}
 			else
 			{
@@ -777,13 +633,13 @@ int HangarCameraPositionHook(int* params)
 
 		case 4:
 		{
-			S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
+			const S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
 			int& V0x068BCC0 = *(int*)0x068BCC0;
 
-			std::string txtPath = GetCustomFilePath("HangarObjects.txt");
-			std::string value = GetFileKeyValue(txtPath, "LoadDroids");
+			const auto lines = GetCustomFileLines("HangarObjects");
+			int value = GetFileKeyValueInt(lines, "LoadDroids", 1);
 
-			if (value.empty() || value == "1")
+			if (value == 1)
 			{
 				V0x068BCC0 = V0x09C6780[0].ObjectIndex;
 
@@ -797,13 +653,13 @@ int HangarCameraPositionHook(int* params)
 
 		case 5:
 		{
-			S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
+			const S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
 			int& V0x068BCC0 = *(int*)0x068BCC0;
 
-			std::string txtPath = GetCustomFilePath("HangarObjects.txt");
-			std::string value = GetFileKeyValue(txtPath, "LoadDroids");
+			const auto lines = GetCustomFileLines("HangarObjects");
+			int value = GetFileKeyValueInt(lines, "LoadDroids", 1);
 
-			if (value.empty() || value == "1")
+			if (value == 1)
 			{
 				V0x068BCC0 = V0x09C6780[1].ObjectIndex;
 
@@ -816,11 +672,11 @@ int HangarCameraPositionHook(int* params)
 		}
 
 		case 6:
-			if (std::ifstream(txtPath))
+			if (cameraLines.size())
 			{
-				positionX += GetFileKeyValueInt(txtPath, "Key6_X");
-				positionY += GetFileKeyValueInt(txtPath, "Key6_Y");
-				positionZ += GetFileKeyValueInt(txtPath, "Key6_Z");
+				positionX += GetFileKeyValueInt(cameraLines, "Key6_X");
+				positionY += GetFileKeyValueInt(cameraLines, "Key6_Y");
+				positionZ += GetFileKeyValueInt(cameraLines, "Key6_Z");
 			}
 			else
 			{
@@ -831,11 +687,11 @@ int HangarCameraPositionHook(int* params)
 			break;
 
 		case 9:
-			if (std::ifstream(txtPath))
+			if (cameraLines.size())
 			{
-				positionX += GetFileKeyValueInt(txtPath, "Key9_X");
-				positionY += GetFileKeyValueInt(txtPath, "Key9_Y");
-				positionZ += GetFileKeyValueInt(txtPath, "Key9_Z");
+				positionX += GetFileKeyValueInt(cameraLines, "Key9_X");
+				positionY += GetFileKeyValueInt(cameraLines, "Key9_Y");
+				positionZ += GetFileKeyValueInt(cameraLines, "Key9_Z");
 			}
 			else
 			{
@@ -848,11 +704,11 @@ int HangarCameraPositionHook(int* params)
 		case 7:
 			if (playerObjectIndex == 0xffff || V0x0686B94 != 0)
 			{
-				if (std::ifstream(txtPath))
+				if (cameraLines.size())
 				{
-					positionX += GetFileKeyValueInt(txtPath, "Key3_X");
-					positionY += GetFileKeyValueInt(txtPath, "Key3_Y");
-					positionZ += GetFileKeyValueInt(txtPath, "Key3_Z");
+					positionX += GetFileKeyValueInt(cameraLines, "Key3_X");
+					positionY += GetFileKeyValueInt(cameraLines, "Key3_Y");
+					positionZ += GetFileKeyValueInt(cameraLines, "Key3_Z");
 				}
 				else
 				{
@@ -868,14 +724,19 @@ int HangarCameraPositionHook(int* params)
 				const int playerPositionY = xwaObjects[playerObjectIndex].PositionY;
 				const int playerPositionZ = xwaObjects[playerObjectIndex].PositionZ;
 
-				std::string optCamera = g_flightModelsList.GetLstLine(playerModelIndex);
-				optCamera.append("Camera.txt");
+				const std::string optCamera = g_flightModelsList.GetLstLine(playerModelIndex);
+				auto optCameraLines = GetFileLines(optCamera + "Camera.txt");
 
-				if (std::ifstream(optCamera))
+				if (!optCameraLines.size())
 				{
-					positionX = playerPositionX + GetFileKeyValueInt(optCamera, "X");
-					positionY = playerPositionY + GetFileKeyValueInt(optCamera, "Y");
-					positionZ = playerPositionZ + GetFileKeyValueInt(optCamera, "Z");
+					optCameraLines = GetFileLines(optCamera + ".ini", "Camera");
+				}
+
+				if (optCameraLines.size())
+				{
+					positionX = playerPositionX + GetFileKeyValueInt(optCameraLines, "X");
+					positionY = playerPositionY + GetFileKeyValueInt(optCameraLines, "Y");
+					positionZ = playerPositionZ + GetFileKeyValueInt(optCameraLines, "Z");
 				}
 				else
 				{
@@ -950,16 +811,16 @@ int HangarCameraPositionHook(int* params)
 		// Key 4 is related to the work droid 1.
 		// Key 5 is related to the player model.
 
-		std::string txtPath = GetCustomFilePath("FamHangarCamera.txt");
+		const auto cameraLines = GetCustomFileLines("FamHangarCamera");
 
 		switch (A4)
 		{
 		case 1:
-			if (std::ifstream(txtPath))
+			if (cameraLines.size())
 			{
-				positionX += GetFileKeyValueInt(txtPath, "FamKey1_X");
-				positionY += GetFileKeyValueInt(txtPath, "FamKey1_Y");
-				positionZ += GetFileKeyValueInt(txtPath, "FamKey1_Z");
+				positionX += GetFileKeyValueInt(cameraLines, "FamKey1_X");
+				positionY += GetFileKeyValueInt(cameraLines, "FamKey1_Y");
+				positionZ += GetFileKeyValueInt(cameraLines, "FamKey1_Z");
 			}
 			else
 			{
@@ -970,11 +831,11 @@ int HangarCameraPositionHook(int* params)
 			break;
 
 		case 2:
-			if (std::ifstream(txtPath))
+			if (cameraLines.size())
 			{
-				positionX += GetFileKeyValueInt(txtPath, "FamKey2_X");
-				positionY += GetFileKeyValueInt(txtPath, "FamKey2_Y");
-				positionZ += GetFileKeyValueInt(txtPath, "FamKey2_Z");
+				positionX += GetFileKeyValueInt(cameraLines, "FamKey2_X");
+				positionY += GetFileKeyValueInt(cameraLines, "FamKey2_Y");
+				positionZ += GetFileKeyValueInt(cameraLines, "FamKey2_Z");
 			}
 			else
 			{
@@ -985,11 +846,11 @@ int HangarCameraPositionHook(int* params)
 			break;
 
 		case 3:
-			if (std::ifstream(txtPath))
+			if (cameraLines.size())
 			{
-				positionX += GetFileKeyValueInt(txtPath, "FamKey3_X");
-				positionY += GetFileKeyValueInt(txtPath, "FamKey3_Y");
-				positionZ += GetFileKeyValueInt(txtPath, "FamKey3_Z");
+				positionX += GetFileKeyValueInt(cameraLines, "FamKey3_X");
+				positionY += GetFileKeyValueInt(cameraLines, "FamKey3_Y");
+				positionZ += GetFileKeyValueInt(cameraLines, "FamKey3_Z");
 			}
 			else
 			{
@@ -1000,11 +861,11 @@ int HangarCameraPositionHook(int* params)
 			break;
 
 		case 6:
-			if (std::ifstream(txtPath))
+			if (cameraLines.size())
 			{
-				positionX += GetFileKeyValueInt(txtPath, "FamKey6_X");
-				positionY += GetFileKeyValueInt(txtPath, "FamKey6_Y");
-				positionZ += GetFileKeyValueInt(txtPath, "FamKey6_Z");
+				positionX += GetFileKeyValueInt(cameraLines, "FamKey6_X");
+				positionY += GetFileKeyValueInt(cameraLines, "FamKey6_Y");
+				positionZ += GetFileKeyValueInt(cameraLines, "FamKey6_Z");
 			}
 			else
 			{
@@ -1015,11 +876,11 @@ int HangarCameraPositionHook(int* params)
 			break;
 
 		case 7:
-			if (std::ifstream(txtPath))
+			if (cameraLines.size())
 			{
-				positionX += GetFileKeyValueInt(txtPath, "FamKey7_X");
-				positionY += GetFileKeyValueInt(txtPath, "FamKey7_Y");
-				positionZ += GetFileKeyValueInt(txtPath, "FamKey7_Z");
+				positionX += GetFileKeyValueInt(cameraLines, "FamKey7_X");
+				positionY += GetFileKeyValueInt(cameraLines, "FamKey7_Y");
+				positionZ += GetFileKeyValueInt(cameraLines, "FamKey7_Z");
 			}
 			else
 			{
@@ -1030,11 +891,11 @@ int HangarCameraPositionHook(int* params)
 			break;
 
 		case 8:
-			if (std::ifstream(txtPath))
+			if (cameraLines.size())
 			{
-				positionX += GetFileKeyValueInt(txtPath, "FamKey8_X");
-				positionY += GetFileKeyValueInt(txtPath, "FamKey8_Y");
-				positionZ += GetFileKeyValueInt(txtPath, "FamKey8_Z");
+				positionX += GetFileKeyValueInt(cameraLines, "FamKey8_X");
+				positionY += GetFileKeyValueInt(cameraLines, "FamKey8_Y");
+				positionZ += GetFileKeyValueInt(cameraLines, "FamKey8_Z");
 			}
 			else
 			{
@@ -1045,11 +906,11 @@ int HangarCameraPositionHook(int* params)
 			break;
 
 		case 9:
-			if (std::ifstream(txtPath))
+			if (cameraLines.size())
 			{
-				positionX += GetFileKeyValueInt(txtPath, "FamKey9_X");
-				positionY += GetFileKeyValueInt(txtPath, "FamKey9_Y");
-				positionZ += GetFileKeyValueInt(txtPath, "FamKey9_Z");
+				positionX += GetFileKeyValueInt(cameraLines, "FamKey9_X");
+				positionY += GetFileKeyValueInt(cameraLines, "FamKey9_Y");
+				positionZ += GetFileKeyValueInt(cameraLines, "FamKey9_Z");
 			}
 			else
 			{
@@ -1062,11 +923,11 @@ int HangarCameraPositionHook(int* params)
 		case 5:
 			if (playerObjectIndex == 0xffff)
 			{
-				if (std::ifstream(txtPath))
+				if (cameraLines.size())
 				{
-					positionX += GetFileKeyValueInt(txtPath, "FamKey3_X");
-					positionY += GetFileKeyValueInt(txtPath, "FamKey3_Y");
-					positionZ += GetFileKeyValueInt(txtPath, "FamKey3_Z");
+					positionX += GetFileKeyValueInt(cameraLines, "FamKey3_X");
+					positionY += GetFileKeyValueInt(cameraLines, "FamKey3_Y");
+					positionZ += GetFileKeyValueInt(cameraLines, "FamKey3_Z");
 				}
 				else
 				{
@@ -1082,14 +943,30 @@ int HangarCameraPositionHook(int* params)
 				const int playerPositionY = xwaObjects[playerObjectIndex].PositionY;
 				const int playerPositionZ = xwaObjects[playerObjectIndex].PositionZ;
 
-				std::string optCamera = g_flightModelsList.GetLstLine(playerModelIndex);
-				optCamera.append("Camera.txt");
+				const std::string optCamera = g_flightModelsList.GetLstLine(playerModelIndex);
+				auto optCameraLines = GetFileLines(optCamera + "Camera.txt");
 
-				if (std::ifstream(optCamera))
+				if (!optCameraLines.size())
 				{
-					positionX = playerPositionX + GetFileKeyValueInt(optCamera, "X");
-					positionY = playerPositionY + GetFileKeyValueInt(optCamera, "Y");
-					positionZ = playerPositionZ + GetFileKeyValueInt(optCamera, "Z");
+					optCameraLines = GetFileLines(optCamera + ".ini", "Camera");
+				}
+
+				if (optCameraLines.size())
+				{
+					int x = GetFileKeyValueInt(optCameraLines, "FamX");
+					int y = GetFileKeyValueInt(optCameraLines, "FamY");
+					int z = GetFileKeyValueInt(optCameraLines, "FamZ");
+
+					if (x == 0 && y == 0 && z == 0)
+					{
+						x = GetFileKeyValueInt(optCameraLines, "X");
+						y = GetFileKeyValueInt(optCameraLines, "Y");
+						z = GetFileKeyValueInt(optCameraLines, "Z");
+					}
+
+					positionX = playerPositionX + x;
+					positionY = playerPositionY + y;
+					positionZ = playerPositionZ + z;
 				}
 				else
 				{
@@ -1137,22 +1014,22 @@ int HangarLoadShuttleHook(int* params)
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 
 	unsigned short a0 = (unsigned short)params[0];
-	int a1 = params[1];
-	int a2 = params[2];
-	int a3 = params[3];
-	unsigned short a4 = (unsigned short)params[4];
-	unsigned short a5 = (unsigned short)params[5];
+	const int a1 = params[1];
+	const int a2 = params[2];
+	const int a3 = params[3];
+	const unsigned short a4 = (unsigned short)params[4];
+	const unsigned short a5 = (unsigned short)params[5];
 
-	std::string txtPath = GetCustomFilePath("HangarObjects.txt");
-	std::string value = GetFileKeyValue(txtPath, "LoadShuttle");
-	int shuttleModelIndex = GetFileKeyValueInt(txtPath, "ShuttleModelIndex");
+	const auto lines = GetCustomFileLines("HangarObjects");
+	const int value = GetFileKeyValueInt(lines, "LoadShuttle", 1);
+	const unsigned short shuttleModelIndex = (unsigned short)GetFileKeyValueInt(lines, "ShuttleModelIndex");
 
 	if (shuttleModelIndex != 0)
 	{
 		a0 = shuttleModelIndex;
 	}
 
-	if (value.empty() || value == "1")
+	if (value == 1)
 	{
 		return AddObject(a0, a1, a2, a3, a4, a5);
 	}
@@ -1164,12 +1041,12 @@ int HangarShuttleUpdateHook(int* params)
 {
 	const auto UpdateShuttle = (void(*)(int))0x0045EC70;
 
-	int a0 = params[0];
+	const int a0 = params[0];
 
-	std::string txtPath = GetCustomFilePath("HangarObjects.txt");
-	std::string value = GetFileKeyValue(txtPath, "LoadShuttle");
+	const auto lines = GetCustomFileLines("HangarObjects");
+	const int value = GetFileKeyValueInt(lines, "LoadShuttle", 1);
 
-	if (value.empty() || value == "1")
+	if (value == 1)
 	{
 		UpdateShuttle(a0);
 	}
@@ -1195,10 +1072,10 @@ int HangarShuttleCameraHook(int* params)
 	xwaObjects[hangarPlayerObjectIndex].m15 = 0;
 	xwaObjects[hangarPlayerObjectIndex].m17 = 0;
 
-	std::string txtPath = GetCustomFilePath("HangarObjects.txt");
-	std::string value = GetFileKeyValue(txtPath, "LoadShuttle");
+	const auto lines = GetCustomFileLines("HangarObjects");
+	const int value = GetFileKeyValueInt(lines, "LoadShuttle", 1);
 
-	if (value.empty() || value == "1")
+	if (value == 1)
 	{
 		positionX += 0x467;
 		positionY += 0x2328;
@@ -1217,10 +1094,10 @@ int HangarShuttleOptReadInfosHook(int* params)
 	const auto CockpitOptReadInfos = (void(*)())0x004314B0;
 	const auto ExteriorOptReadInfos = (void(*)())0x00431960;
 
-	std::string txtPath = GetCustomFilePath("HangarObjects.txt");
-	std::string value = GetFileKeyValue(txtPath, "LoadShuttle");
+	const auto lines = GetCustomFileLines("HangarObjects");
+	const int value = GetFileKeyValueInt(lines, "LoadShuttle", 1);
 
-	if (value.empty() || value == "1")
+	if (value == 1)
 	{
 		CockpitOptReadInfos();
 		ExteriorOptReadInfos();
@@ -1236,10 +1113,10 @@ int HangarLoadDroidsHook(int* params)
 	int& V0x068BC10 = *(int*)0x068BC10;
 	S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
 
-	std::string txtPath = GetCustomFilePath("HangarObjects.txt");
-	std::string value = GetFileKeyValue(txtPath, "LoadDroids");
+	const auto lines = GetCustomFileLines("HangarObjects");
+	const int value = GetFileKeyValueInt(lines, "LoadDroids");
 
-	if (value.empty() || value == "1")
+	if (value == 1)
 	{
 		// ModelIndex_311_1_33_HangarDroid
 		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(311, 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
@@ -1265,15 +1142,15 @@ int HangarMapHook(int* params)
 {
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 
-	std::string txtPath = GetCustomFilePath("HangarMap.txt");
+	const auto lines = GetCustomFileLines("HangarMap");
 
-	if (std::ifstream(txtPath))
+	if (lines.size())
 	{
-		auto values = GetFileListValues(txtPath);
+		const auto values = GetFileListValues(lines);
 
 		for (unsigned int i = 0; i < values.size(); i++)
 		{
-			auto& value = values[i];
+			const auto& value = values[i];
 
 			if (value.size() < 6)
 			{
@@ -1350,15 +1227,15 @@ int FamHangarMapHook(int* params)
 {
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 
-	std::string txtPath = GetCustomFilePath("FamHangarMap.txt");
+	const auto lines = GetCustomFileLines("FamHangarMap");
 
-	if (std::ifstream(txtPath))
+	if (lines.size())
 	{
-		auto values = GetFileListValues(txtPath);
+		const auto values = GetFileListValues(lines);
 
 		for (unsigned int i = 0; i < values.size(); i++)
 		{
-			auto& value = values[i];
+			const auto& value = values[i];
 
 			if (value.size() < 6)
 			{
@@ -1425,7 +1302,8 @@ int SelectHangarTypeHook(int* params)
 {
 	// apply to family mission type
 
-	const auto mode = GetFileKeyValue("hook_hangars.cfg", "SelectionMode");
+	const auto lines = GetFileLines("hook_hangars.cfg");
+	const auto mode = GetFileKeyValue(lines, "SelectionMode");
 	const auto missionDirectoryId = *(int*)0x0AE2A8A;
 	const auto missionDescriptionId = ((int*)0x0AE2A8E)[missionDirectoryId];
 
@@ -1449,9 +1327,10 @@ int SelectHangarTypeHook(int* params)
 
 int SelectHangarInsideAnimation(int* params)
 {
-	short modelIndex = (short)params[0];
+	const unsigned short modelIndex = (unsigned short)params[0];
 
-	const auto mode = GetFileKeyValue("hook_hangars.cfg", "SelectionMode");
+	const auto lines = GetFileLines("hook_hangars.cfg");
+	const auto mode = GetFileKeyValue(lines, "SelectionMode");
 
 	bool inside;
 
@@ -1470,9 +1349,10 @@ int SelectHangarInsideAnimation(int* params)
 
 int SelectHangarModelIndex(int* params)
 {
-	short modelIndex = (short)params[0];
+	const unsigned short modelIndex = (unsigned short)params[0];
 
-	const auto mode = GetFileKeyValue("hook_hangars.cfg", "SelectionMode");
+	const auto lines = GetFileLines("hook_hangars.cfg");
+	const auto mode = GetFileKeyValue(lines, "SelectionMode");
 
 	bool isFamilyBase;
 
@@ -1493,14 +1373,19 @@ int CraftElevationHook(int* params)
 {
 	const auto ModelGetSizeZ = (int(*)(unsigned int))0x0485820;
 
-	short modelIndex = (short)params[0];
+	const unsigned short modelIndex = (unsigned short)params[0];
 
-	std::string optSize = g_flightModelsList.GetLstLine(modelIndex);
-	optSize.append("Size.txt");
+	const std::string optSize = g_flightModelsList.GetLstLine(modelIndex);
+	auto optSizeLines = GetFileLines(optSize + "Size.txt");
 
-	if (std::ifstream(optSize))
+	if (!optSizeLines.size())
 	{
-		return GetFileKeyValueInt(optSize, "ClosedSFoilsElevation");
+		optSizeLines = GetFileLines(optSize + ".ini", "Size");
+	}
+
+	if (optSizeLines.size())
+	{
+		return GetFileKeyValueInt(optSizeLines, "ClosedSFoilsElevation");
 	}
 	else
 	{
@@ -1519,7 +1404,7 @@ int CraftSelectionMissionHook(int* params)
 {
 	unsigned short* craftSelection = (unsigned short*)0x09C6960;
 	int& craftSelectionCount = params[0];
-	unsigned short playerModelIndex = params[1] & 0xFFFF;
+	const unsigned short playerModelIndex = (unsigned short)params[1];
 
 	bool isTransport = false;
 	for (const auto modelIndex : g_craftSelectionValues._transportsSelection)
@@ -1561,33 +1446,12 @@ int CraftSelectionMeleeHook(int* params)
 {
 	unsigned short* craftSelection = (unsigned short*)0x09C6960;
 	int& craftSelectionCount = params[0];
-	unsigned short playerModelIndex = params[1] & 0xFFFF;
-	unsigned char type = params[2] & 0xFF;
+	const unsigned short playerModelIndex = (unsigned short)params[1];
+	const unsigned char type = (unsigned char)params[2];
 
-	if (type == 2)
+	switch (type)
 	{
-		for (const auto modelIndex : g_craftSelectionValues._fightersSelection)
-		{
-			if (modelIndex != playerModelIndex)
-			{
-				craftSelection[craftSelectionCount] = modelIndex;
-				craftSelectionCount++;
-			}
-		}
-	}
-	else if (type == 3)
-	{
-		for (const auto modelIndex : g_craftSelectionValues._transportsSelection)
-		{
-			if (modelIndex != playerModelIndex)
-			{
-				craftSelection[craftSelectionCount] = modelIndex;
-				craftSelectionCount++;
-			}
-		}
-	}
-	else if (type == 1)
-	{
+	case 1:
 		for (const auto modelIndex : g_craftSelectionValues._craftsSelection)
 		{
 			if (modelIndex != playerModelIndex)
@@ -1596,6 +1460,32 @@ int CraftSelectionMeleeHook(int* params)
 				craftSelectionCount++;
 			}
 		}
+
+		break;
+
+	case 2:
+		for (const auto modelIndex : g_craftSelectionValues._fightersSelection)
+		{
+			if (modelIndex != playerModelIndex)
+			{
+				craftSelection[craftSelectionCount] = modelIndex;
+				craftSelectionCount++;
+			}
+		}
+
+		break;
+
+	case 3:
+		for (const auto modelIndex : g_craftSelectionValues._transportsSelection)
+		{
+			if (modelIndex != playerModelIndex)
+			{
+				craftSelection[craftSelectionCount] = modelIndex;
+				craftSelectionCount++;
+			}
+		}
+
+		break;
 	}
 
 	return 0;

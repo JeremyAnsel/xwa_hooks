@@ -1,4 +1,4 @@
-xwa_hook_hangars
+﻿xwa_hook_hangars
 
 This hook permits to customize the hangars.
 The XWA's engine uses two hangar models, Hangar.opt and FamilyBase.opt. If you wanted to use a custom hangar, you had to replace one of them. You can now choose which hangar to use, customize the objects and the camera positions, for a specific craft or for a specific mission.
@@ -143,12 +143,14 @@ Suppose that the arrival craft is "FlightModels\[Model].opt".
 Suppose that the player craft is "FlightModels\[Player].opt".
 
 The possible involved files are:
+- "[MissionDir]\[Mission].ini"
 - "[MissionDir]\[Mission]_Hangar.opt"
 - "[MissionDir]\[Mission]_HangarObjects.txt"
 - "[MissionDir]\[Mission]_HangarCamera.txt"
 - "[MissionDir]\[Mission]_FamHangarCamera.txt"
 - "[MissionDir]\[Mission]_HangarMap.txt"
 - "[MissionDir]\[Mission]_FamHangarMap.txt"
+- "FlightModels\[Model].ini"
 - "FlightModels\[Model]Hangar.opt"
 - "FlightModels\[Model]HangarObjects.txt"
 - "FlightModels\[Model]HangarCamera.txt"
@@ -161,6 +163,7 @@ The possible involved files are:
 - "FlightModels\FamHangarCamera.txt"
 - "FlightModels\HangarMap.txt"
 - "FlightModels\FamHangarMap.txt"
+- "FlightModels\[Player].ini"
 - "FlightModels\[Player]Camera.txt"
 - "FlightModels\[Player]Size.txt"
 
@@ -172,9 +175,12 @@ The dll searches a "Hangar.opt" file in this order (from first to last):
 - "FlightModels\Hangar.opt"
 
 To replace the objects, create a file named "FlightModels\[Model]HangarObjects.txt" or "[MissionDir]\[Mission]_HangarObjects.txt".
+Or create a section named "[HangarObjects]" in "FlightModels\[Model].ini" or "[MissionDir]\[Mission].ini".
 The dll searches a "HangarObjects.txt" file in this order (from first to last):
 - "[MissionDir]\[Mission]_HangarObjects.txt"
+- "[MissionDir]\[Mission].ini", section "[HangarObjects]"
 - "FlightModels\[Model]HangarObjects.txt"
+- "FlightModels\[Model].ini", section "[HangarObjects]"
 - "FlightModels\HangarObjects.txt"
 If a "HangarObjects.txt" file doesn't exist, no model is replaced.
 The format is a line per object: "FlightModels\ObjectA = FlightModels\NewObjA"
@@ -186,9 +192,12 @@ See "HangarObjects.txt".
 
 Apply to hangar:
 To set the position of the camera, create a file named "FlightModels\[Model]HangarCamera.txt" or "[MissionDir]\[Mission]_HangarCamera.txt".
+Or create a section named "[HangarCamera]" in "FlightModels\[Model].ini" or "[MissionDir]\[Mission].ini".
 The dll searches a "HangarCamera.txt" file in this order (from first to last):
 - "[MissionDir]\[Mission]_HangarCamera.txt"
+- "[MissionDir]\[Mission].ini", section "[HangarCamera]"
 - "FlightModels\[Model]HangarCamera.txt"
+- "FlightModels\[Model].ini", section "[HangarCamera]"
 - "FlightModels\HangarCamera.txt"
 If a "HangarCamera.txt" file doesn't exist, default values are used.
 Only the position for keys 1,2,3,6,9 can be set with a "HangarCamera.txt" file.
@@ -200,9 +209,12 @@ See "HangarCamera.txt".
 
 Apply to family base:
 To set the position of the camera, create a file named "FlightModels\[Model]FamHangarCamera.txt" or "[MissionDir]\[Mission]_FamHangarCamera.txt".
+Or create a section named "[FamHangarCamera]" in "FlightModels\[Model].ini" or "[MissionDir]\[Mission].ini".
 The dll searches a "FamHangarCamera.txt" file in this order (from first to last):
 - "[MissionDir]\[Mission]_FamHangarCamera.txt"
+- "[MissionDir]\[Mission].ini", section "[FamHangarCamera]"
 - "FlightModels\[Model]FamHangarCamera.txt"
+- "FlightModels\[Model].ini", section "[FamHangarCamera]"
 - "FlightModels\FamHangarCamera.txt"
 If a "FamHangarCamera.txt" file doesn't exist, default values are used.
 Only the position for keys 1,2,3,6,7,8,9 can be set with a "FamHangarCamera.txt" file.
@@ -213,6 +225,7 @@ The format is:
 See "FamHangarCamera.txt".
 
 To set the position of the camera for key 7 (hangar) or key 5 (family base), create a file named "FlightModels\[Player]Camera.txt".
+Or create a section named "[Camera]" in "FlightModels\[Player].ini".
 If a such file file doesn't exist for a model, default values are used.
 The format is:
 "X = value"
@@ -225,9 +238,12 @@ See "PlayerCamera.txt".
 
 Apply to hangar:
 To set the hangar map, create a file named "FlightModels\[Model]HangarMap.txt" or "[MissionDir]\[Mission]_HangarMap.txt".
+Or create a section named "[HangarMap]" in "FlightModels\[Model].ini" or "[MissionDir]\[Mission].ini".
 The dll searches a "HangarMap.txt" file in this order (from first to last):
 - "[MissionDir]\[Mission]_HangarMap.txt"
+- "[MissionDir]\[Mission].ini", section "[HangarMap]"
 - "FlightModels\[Model]HangarMap.txt"
+- "FlightModels\[Model].ini", section "[HangarMap]"
 - "FlightModels\HangarMap.txt"
 If a "HangarMap.txt" file doesn't exist, default values are used.
 The file must contain at least 4 object line.
@@ -238,9 +254,12 @@ See "HangarMap.txt".
 
 Apply to family base:
 To set the family hangar map, create a file named "FlightModels\[Model]FamHangarMap.txt" or "[MissionDir]\[Mission]_FamHangarMap.txt".
+Or create a section named "[FamHangarMap]" in "FlightModels\[Model].ini" or "[MissionDir]\[Mission].ini".
 The dll searches a "FamHangarMap.txt" file in this order (from first to last):
 - "[MissionDir]\[Mission]_FamHangarMap.txt"
+- "[MissionDir]\[Mission].ini", section "[FamHangarMap]"
 - "FlightModels\[Model]FamHangarMap.txt"
+- "FlightModels\[Model].ini", section "[FamHangarMap]"
 - "FlightModels\FamHangarMap.txt"
 If a "FamHangarMap.txt" file doesn't exist, default values are used.
 The file must contain at least 4 object line.
@@ -250,6 +269,7 @@ When position Z is set to 0x7FFFFFFF, this means that the object stands at the g
 See "FamHangarMap.txt".
 
 To set the elevation of the craft with closed S-Foils, create a file named "FlightModels\[Player]Size.txt".
+Or create a section named "[Size]" in "FlightModels\[Player].ini".
 If a such file file doesn't exist for a model, default values are used:
 if the craft is BWing, elevation = 50, else elevation = model height / 2.
 The format is:

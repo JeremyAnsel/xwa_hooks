@@ -84,10 +84,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="config.cpp" />
     <ClCompile Include="hangar.cpp" />
     <ClCompile Include="hookmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config.h" />
     <ClInclude Include="hangar.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="hook_function.h" />
