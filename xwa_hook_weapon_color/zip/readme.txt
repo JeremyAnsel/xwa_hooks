@@ -1,4 +1,4 @@
-xwa_hook_weapon_color
+﻿xwa_hook_weapon_color
 
 This hook permits to define weapon color for any craft.
 
@@ -27,7 +27,7 @@ At offset 091449, replace A1C4337B00 with E8E26A1100.
 
 Suppose that the craft is "FlightModels\[Model].opt".
 
-To define the color, create a file named "FlightModels\[Model]WeaponColor.txt".
+To define the color, create a file named "FlightModels\[Model]WeaponColor.txt" or create a section named "[WeaponColor]" in "FlightModels\[Model].ini".
 The format is:
 WeaponColor = color value
 WeaponColorXXX = color value

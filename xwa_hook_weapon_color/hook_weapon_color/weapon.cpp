@@ -1,121 +1,21 @@
 #include "targetver.h"
 #include "weapon.h"
-#include <string>
-#include <fstream>
-#include <algorithm>
-#include <cctype>
-#include <vector>
+#include "config.h"
 #include <array>
 #include <map>
 #include <utility>
-
-std::string GetStringWithoutExtension(const std::string& str)
-{
-	auto b = str.find_last_of('.');
-
-	return str.substr(0, b);
-}
-
-std::string GetFileKeyValue(const std::string& path, const std::string& key)
-{
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			int pos = line.find("=");
-
-			if (pos == -1)
-			{
-				continue;
-			}
-
-			std::string name = line.substr(0, pos);
-			name.erase(std::remove_if(name.begin(), name.end(), std::isspace), name.end());
-
-			std::string value = line.substr(pos + 1);
-			value.erase(std::remove_if(value.begin(), value.end(), std::isspace), value.end());
-
-			if (!name.length() || !value.length())
-			{
-				continue;
-			}
-
-			if (_stricmp(name.c_str(), key.c_str()) == 0)
-			{
-				return value;
-			}
-		}
-	}
-
-	return std::string();
-}
-
-int GetFileKeyValueInt(const std::string& path, const std::string& key)
-{
-	std::string value = GetFileKeyValue(path, key);
-
-	if (value.empty())
-	{
-		return -1;
-	}
-
-	return std::stoi(value, 0, 0);
-}
-
-std::vector<std::string> GetFileLines(const std::string& path)
-{
-	std::vector<std::string> values;
-
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			values.push_back(line);
-		}
-	}
-
-	return values;
-}
 
 class FlightModelsList
 {
 public:
 	FlightModelsList()
 	{
-		for (auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		for (const auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
 		{
 			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
 		}
 
-		for (auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		for (const auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
 		{
 			this->_equipmentList.push_back(GetStringWithoutExtension(line));
 		}
@@ -156,20 +56,45 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+#pragma pack(push, 1)
+
+struct XwaMobileObject
+{
+	char Unk0000[153];
+	unsigned char Markings;
+	char Unk009A[75];
+};
+
+static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 229");
+
+struct XwaObject
+{
+	char Unk0000[2];
+	unsigned short ModelIndex;
+	char Unk0004[31];
+	XwaMobileObject* pMobileObject;
+};
+
+static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
+
+#pragma pack(pop)
+
 std::array<int, 28> GetWeaponColor(int modelIndex)
 {
-	std::string pilotPath = g_flightModelsList.GetLstLine(modelIndex);
+	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
 
-	if (!pilotPath.empty())
+	auto lines = GetFileLines(ship + "WeaponColor.txt");
+
+	if (!lines.size())
 	{
-		pilotPath.append("WeaponColor.txt");
+		lines = GetFileLines(ship + ".ini", "WeaponColor");
 	}
 
 	std::array<int, 28> color;
 
-	if (!pilotPath.empty() && std::ifstream(pilotPath))
+	if (lines.size())
 	{
-		int defaultValue = GetFileKeyValueInt(pilotPath, "WeaponColor");
+		int defaultValue = GetFileKeyValueInt(lines, "WeaponColor", -1);
 
 		if (defaultValue != -1)
 		{
@@ -183,7 +108,7 @@ std::array<int, 28> GetWeaponColor(int modelIndex)
 		for (int i = 0; i < 28; i++)
 		{
 			const std::string key = std::string("WeaponColor") + std::to_string(280 + i);
-			int value = GetFileKeyValueInt(pilotPath, key);
+			int value = GetFileKeyValueInt(lines, key, -1);
 
 			if (value != -1)
 			{
@@ -209,7 +134,7 @@ public:
 			return 0;
 		}
 
-		const auto it = this->_weaponColor.find(modelIndex);
+		auto it = this->_weaponColor.find(modelIndex);
 
 		if (it != this->_weaponColor.end())
 		{
@@ -217,7 +142,7 @@ public:
 		}
 		else
 		{
-			const auto value = GetWeaponColor(modelIndex);
+			auto value = GetWeaponColor(modelIndex);
 			this->_weaponColor.insert(std::make_pair(modelIndex, value));
 			return value[weaponModelIndex - 280];
 		}
@@ -229,38 +154,15 @@ private:
 
 ModelIndexWeapon g_modelIndexWeapon;
 
-#pragma pack(push, 1)
-
-struct XwaMobileObject
-{
-	char Unk0000[153];
-	unsigned char Markings;
-	char Unk009A[75];
-};
-
-static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 229");
-
-struct XwaObject
-{
-	char Unk0000[2];
-	short ModelIndex;
-	char Unk0004[31];
-	XwaMobileObject* pMobileObject;
-};
-
-static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
-
-#pragma pack(pop)
-
 int WeaponColorHook(int* params)
 {
-	int objectIndex = params[54];
-	short weaponModelIndex = params[56] & 0xFFFF;
-	int weaponObjectIndex = params[28];
+	const int objectIndex = params[54];
+	const unsigned short weaponModelIndex = (unsigned short)params[56];
+	const int weaponObjectIndex = params[28];
 
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 
-	short objectModelIndex = XwaObjects[objectIndex].ModelIndex;
+	unsigned short objectModelIndex = XwaObjects[objectIndex].ModelIndex;
 	int color = g_modelIndexWeapon.GetColor(objectModelIndex, weaponModelIndex);
 
 	XwaObjects[weaponObjectIndex].pMobileObject->Markings = color;
