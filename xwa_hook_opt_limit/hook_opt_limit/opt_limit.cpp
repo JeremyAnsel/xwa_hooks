@@ -1,7 +1,6 @@
 #include "targetver.h"
 #include "opt_limit.h"
 #include "config.h"
-#include <vector>
 
 #pragma pack(push, 1)
 
@@ -12,6 +11,8 @@ struct HitData
 	char m08;
 };
 
+static_assert(sizeof(HitData) == 9, "size of HitData must be 9");
+
 #pragma pack(pop)
 
 class HitDataArray
@@ -19,7 +20,8 @@ class HitDataArray
 public:
 	HitDataArray()
 	{
-		int count = abs(GetFileKeyValueInt("hook_opt_limit.cfg", "Size"));
+		const auto lines = GetFileLines("hook_opt_limit.cfg");
+		int count = abs(GetFileKeyValueInt(lines, "Size"));
 
 		if (count == 0)
 		{
