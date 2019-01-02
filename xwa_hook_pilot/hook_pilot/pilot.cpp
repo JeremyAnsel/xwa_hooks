@@ -1,113 +1,20 @@
 #include "targetver.h"
 #include "pilot.h"
-#include <string>
-#include <fstream>
-#include <algorithm>
-#include <cctype>
-#include <vector>
+#include "config.h"
 #include <map>
 #include <utility>
-
-std::string GetStringWithoutExtension(const std::string& str)
-{
-	auto b = str.find_last_of('.');
-
-	return str.substr(0, b);
-}
-
-std::vector<std::string> GetFileLines(const std::string& path)
-{
-	std::vector<std::string> values;
-
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			values.push_back(line);
-		}
-	}
-
-	return values;
-}
-
-std::vector<std::string> Tokennize(const std::string& str)
-{
-	const std::string delimiters = ",;";
-	std::vector<std::string> tokens;
-
-	std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
-
-	std::string::size_type pos = str.find_first_of(delimiters, lastPos);
-
-	while (std::string::npos != pos || std::string::npos != lastPos)
-	{
-		std::string value = str.substr(lastPos, pos - lastPos);
-		value.erase(std::remove_if(value.begin(), value.end(), std::isspace), value.end());
-
-		tokens.push_back(value);
-
-		lastPos = str.find_first_not_of(delimiters, pos);
-
-		pos = str.find_first_of(delimiters, lastPos);
-	}
-
-	return tokens;
-}
-
-std::vector<std::vector<std::string>> GetFileListValues(const std::string& path)
-{
-	std::vector<std::vector<std::string>> values;
-
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			values.push_back(Tokennize(line));
-		}
-	}
-
-	return values;
-}
 
 class FlightModelsList
 {
 public:
 	FlightModelsList()
 	{
-		for (auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		for (const auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
 		{
 			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
 		}
 
-		for (auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		for (const auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
 		{
 			this->_equipmentList.push_back(GetStringWithoutExtension(line));
 		}
@@ -169,9 +76,9 @@ struct PilotMesh
 	int behavior;
 };
 
-std::vector<PilotMesh> GetFileListPilotMeshes(const std::string& path)
+std::vector<PilotMesh> GetFileListPilotMeshes(const std::vector<std::string>& lines)
 {
-	auto pilotMeshes = GetFileListValues(path);
+	const auto pilotMeshes = GetFileListValues(lines);
 
 	std::vector<PilotMesh> values;
 
@@ -249,20 +156,20 @@ std::vector<PilotMesh> GetDefaultPilotMeshes(int modelIndex)
 
 std::vector<PilotMesh> GetPilotMeshes(int modelIndex)
 {
-	std::vector<PilotMesh> pilotMeshes;
+	const std::string pilot = g_flightModelsList.GetLstLine(modelIndex);
 
-	std::string pilotPath = g_flightModelsList.GetLstLine(modelIndex);
+	auto lines = GetFileLines(pilot + "Pilot.txt");
 
-	if (pilotPath.empty())
+	if (!lines.size())
 	{
-		return pilotMeshes;
+		lines = GetFileLines(pilot + ".ini", "Pilot");
 	}
 
-	pilotPath.append("Pilot.txt");
+	std::vector<PilotMesh> pilotMeshes;
 
-	if (std::ifstream(pilotPath))
+	if (lines.size())
 	{
-		pilotMeshes = GetFileListPilotMeshes(pilotPath);
+		pilotMeshes = GetFileListPilotMeshes(lines);
 	}
 	else
 	{
@@ -285,7 +192,7 @@ public:
 		}
 		else
 		{
-			std::vector<PilotMesh> value = GetPilotMeshes(modelIndex);
+			auto value = GetPilotMeshes(modelIndex);
 			this->_meshes.insert(std::make_pair(modelIndex, value));
 			return value;
 		}
@@ -305,9 +212,9 @@ int PilotHook(int* params)
 	const int modelIndex = params[1];
 	const int A8 = params[8];
 
-	auto pilotMeshes = g_modelIndexPilotMeshes.GetMeshes(modelIndex);
+	const auto pilotMeshes = g_modelIndexPilotMeshes.GetMeshes(modelIndex);
 
-	if (pilotMeshes.empty())
+	if (!pilotMeshes.size())
 	{
 		return 0;
 	}
