@@ -1,4 +1,4 @@
-xwa_hook_mission_tie
+﻿xwa_hook_mission_tie
 
 This hook permits to override the data of mission files.
 
@@ -27,7 +27,7 @@ At offset 1521A, replace E8E1A40000 with E8112D1900.
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 
-To override the mission data, create a file named "[MissionDir]\[Mission].txt".
+To override the mission data, create a file named "[MissionDir]\[Mission].txt" or create a section named "[mission_tie]" in "[MissionDir]\[Mission].ini".
 The format is a line per replacement.
 To replace the flight group markings, the format is: "fg", fg number, "markings", value.
 See "mission.txt".
