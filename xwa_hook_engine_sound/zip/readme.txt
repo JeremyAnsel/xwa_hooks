@@ -1,4 +1,4 @@
-xwa_hook_engine_sound
+﻿xwa_hook_engine_sound
 
 This hook enables setting engine sound and weapon sound behavior for any craft.
 
@@ -45,7 +45,7 @@ At offset 03B5DE, replace 8DB8E8FEFFFF83FF190F870801000033D28A972CC34300FF2495FC
 # mission sounds
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 
-To replace sounds for a given mission, create a file named "[MissionDir]\[Mission]_Sounds.txt".
+To replace sounds for a given mission, create a file named "[MissionDir]\[Mission]_Sounds.txt" or create a section named "[Sounds]" in "[MissionDir]\[Mission].ini".
 
 If a "Sounds.txt" file doesn't exist, no sound is replaced.
 The format is a line per sound: "Wave\SoundA.wav = Wave\NewSoundA.wav"
@@ -54,7 +54,7 @@ See "Sounds.txt".
 # craft and weapon sounds
 Suppose that the craft is "FlightModels\[Model].opt".
 
-To define which sound is played, create a file named "FlightModels\[Model]Sound.txt".
+To define which sound is played, create a file named "FlightModels\[Model]Sound.txt" or create a section named "[Sound]" in "FlightModels\[Model].ini".
 The format is:
 EngineSoundInterior = interior sound type
 EngineSoundFlyBy = flyby sound type

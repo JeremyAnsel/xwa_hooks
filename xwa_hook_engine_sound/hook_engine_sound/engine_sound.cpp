@@ -1,120 +1,20 @@
 #include "targetver.h"
 #include "engine_sound.h"
-#include <string>
-#include <fstream>
-#include <algorithm>
-#include <cctype>
-#include <vector>
+#include "config.h"
 #include <map>
-#include <utility>
-
-std::string GetStringWithoutExtension(const std::string& str)
-{
-	auto b = str.find_last_of('.');
-
-	return str.substr(0, b);
-}
-
-std::string GetFileKeyValue(const std::string& path, const std::string& key)
-{
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			int pos = line.find("=");
-
-			if (pos == -1)
-			{
-				continue;
-			}
-
-			std::string name = line.substr(0, pos);
-			name.erase(std::remove_if(name.begin(), name.end(), std::isspace), name.end());
-
-			std::string value = line.substr(pos + 1);
-			value.erase(std::remove_if(value.begin(), value.end(), std::isspace), value.end());
-
-			if (!name.length() || !value.length())
-			{
-				continue;
-			}
-
-			if (_stricmp(name.c_str(), key.c_str()) == 0)
-			{
-				return value;
-			}
-		}
-	}
-
-	return std::string();
-}
-
-int GetFileKeyValueInt(const std::string& path, const std::string& key)
-{
-	std::string value = GetFileKeyValue(path, key);
-
-	if (value.empty())
-	{
-		return 0;
-	}
-
-	return std::stoi(value, 0, 0);
-}
-
-std::vector<std::string> GetFileLines(const std::string& path)
-{
-	std::vector<std::string> values;
-
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			values.push_back(line);
-		}
-	}
-
-	return values;
-}
+#include <fstream>
 
 class FlightModelsList
 {
 public:
 	FlightModelsList()
 	{
-		for (auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		for (const auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
 		{
 			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
 		}
 
-		for (auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		for (const auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
 		{
 			this->_equipmentList.push_back(GetStringWithoutExtension(line));
 		}
@@ -157,18 +57,20 @@ FlightModelsList g_flightModelsList;
 
 int GetEngineSoundTypeInterior(int modelIndex)
 {
-	std::string pilotPath = g_flightModelsList.GetLstLine(modelIndex);
+	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
 
-	if (!pilotPath.empty())
+	auto lines = GetFileLines(path + "Sound.txt");
+
+	if (!lines.size())
 	{
-		pilotPath.append("Sound.txt");
+		lines = GetFileLines(path + ".ini", "Sound");
 	}
 
 	int type = 0;
 
-	if (!pilotPath.empty() && std::ifstream(pilotPath))
+	if (lines.size())
 	{
-		type = GetFileKeyValueInt(pilotPath, "EngineSoundInterior");
+		type = GetFileKeyValueInt(lines, "EngineSoundInterior");
 	}
 	else
 	{
@@ -230,18 +132,20 @@ int GetEngineSoundTypeInterior(int modelIndex)
 
 int GetEngineSoundTypeFlyBy(int modelIndex)
 {
-	std::string pilotPath = g_flightModelsList.GetLstLine(modelIndex);
+	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
 
-	if (!pilotPath.empty())
+	auto lines = GetFileLines(path + "Sound.txt");
+
+	if (!lines.size())
 	{
-		pilotPath.append("Sound.txt");
+		lines = GetFileLines(path + ".ini", "Sound");
 	}
 
 	int type = 0;
 
-	if (!pilotPath.empty() && std::ifstream(pilotPath))
+	if (lines.size())
 	{
-		type = GetFileKeyValueInt(pilotPath, "EngineSoundFlyBy");
+		type = GetFileKeyValueInt(lines, "EngineSoundFlyBy");
 	}
 	else
 	{
@@ -314,18 +218,20 @@ int GetEngineSoundTypeFlyBy(int modelIndex)
 
 std::string GetWeaponSoundBehavior(int modelIndex)
 {
-	std::string path = g_flightModelsList.GetLstLine(modelIndex);
+	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
 
-	if (!path.empty())
+	auto lines = GetFileLines(path + "Sound.txt");
+
+	if (!lines.size())
 	{
-		path.append("Sound.txt");
+		lines = GetFileLines(path + ".ini", "Sound");
 	}
 
 	std::string behavior;
 
-	if (!path.empty() && std::ifstream(path))
+	if (lines.size())
 	{
-		behavior = GetFileKeyValue(path, "WeaponSoundBehavior");
+		behavior = GetFileKeyValue(lines, "WeaponSoundBehavior");
 	}
 	else
 	{
@@ -426,20 +332,22 @@ int ReplaceMissionSoundsHook(int* params)
 	const auto LoadSfx2 = (int(*)(const char*, const char*, int, int))0x004DAD40;
 	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
 
-	if (!mission.empty())
+	auto lines = GetFileLines(mission + "_Sounds.txt");
+
+	if (!lines.size())
 	{
-		mission.append("_Sounds.txt");
+		lines = GetFileLines(mission + ".ini", "Sounds");
+	}
 
-		if (std::ifstream(mission))
+	if (lines.size())
+	{
+		const std::string value = GetFileKeyValue(lines, A4);
+
+		if (!value.empty() && std::ifstream(value))
 		{
-			std::string value = GetFileKeyValue(mission, A4);
-
-			if (!value.empty() && std::ifstream(value))
-			{
-				return LoadSfx2(value.c_str(), A8, 0, AC);
-			}
+			return LoadSfx2(value.c_str(), A8, 0, AC);
 		}
 	}
 
