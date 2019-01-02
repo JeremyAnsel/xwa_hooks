@@ -1,7 +1,6 @@
 #include "targetver.h"
 #include "d3dinfos.h"
 #include "config.h"
-#include <vector>
 
 #pragma pack(push, 1)
 
@@ -12,6 +11,8 @@ struct XwaD3DInfo
 	XwaD3DInfo* pPrevious;
 };
 
+static_assert(sizeof(XwaD3DInfo) == 91, "size of XwaD3DInfo must be 91");
+
 #pragma pack(pop)
 
 class D3DInfoArray
@@ -19,7 +20,8 @@ class D3DInfoArray
 public:
 	D3DInfoArray()
 	{
-		int count = abs(GetFileKeyValueInt("hook_d3dinfos_textures.cfg", "Size"));
+		const auto lines = GetFileLines("hook_d3dinfos_textures.cfg");
+		int count = abs(GetFileKeyValueInt(lines, "Size"));
 
 		if (count == 0)
 		{
