@@ -1,4 +1,4 @@
-xwa_hook_weapon_rate
+﻿xwa_hook_weapon_rate
 
 This hook permits to define weapon decharge and recharge rates for any craft.
 
@@ -28,7 +28,7 @@ At offset 08FCCE, replace 6683FA0574096683FA078D1436 with 52E84C8211005A0FAFD6EB
 
 Suppose that the craft is "FlightModels\[Model].opt".
 
-To define the decharge and recharge rates, create a file named "FlightModels\[Model]WeaponRate.txt".
+To define the decharge and recharge rates, create a file named "FlightModels\[Model]WeaponRate.txt" or create a section named "[WeaponRate]" in "FlightModels\[Model].ini".
 The format is:
 DechargeRate = decharge value
 RechargeRate = recharge value
