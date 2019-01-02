@@ -1,20 +1,8 @@
 #include "targetver.h"
 #include "backdrops.h"
-#include <cstring>
-#include <cstdio>
-#include <string>
+#include "config.h"
 #include <iostream>
 #include <fstream>
-#include <algorithm>
-#include <cctype>
-#include <vector>
-
-std::string GetStringWithoutExtension(const std::string& str)
-{
-	auto b = str.find_last_of('.');
-
-	return str.substr(0, b);
-}
 
 #pragma pack(push, 1)
 
@@ -47,7 +35,7 @@ struct TieFlightGroup
 	char unk079[1];
 	unsigned char WavesCount;
 	char unk07B[3343];
-	TieFlightGroupWaypoint StartPoints [4];
+	TieFlightGroupWaypoint StartPoints[4];
 	char StartPointRegions[4];
 	char unkDAE[100];
 	int PlanetId;
@@ -272,19 +260,17 @@ int BackdropsHook(int* params)
 	return 0;
 }
 
-void CopyFileContent(std::string out, std::string in, bool append)
+void CopyFileContent(const std::string& out, const std::vector<std::string>& lines, bool append)
 {
 	auto ofile = std::ofstream(out, append ? std::ofstream::app : std::ofstream::trunc);
-	auto ifile = std::ifstream(in);
-	std::string line;
 
-	while (std::getline(ifile, line))
+	if (!ofile)
 	{
-		if (!line.length())
-		{
-			continue;
-		}
+		return;
+	}
 
+	for (const std::string& line : lines)
+	{
 		ofile << line << std::endl;
 	}
 }
@@ -297,13 +283,19 @@ int LoadMissionHook(int* params)
 	const auto FreeResDataItems = (void(*)())0x004CD680;
 	const auto ReadResdataDat = (short(*)(const char*))0x004CD390;
 
-	std::string path = GetStringWithoutExtension(fileName);
-	path.append("_Resdata.txt");
+	const std::string fileNameBase = GetStringWithoutExtension(fileName);
 
-	if (std::ifstream(path))
+	auto lines = GetFileLines(fileNameBase + "_Resdata.txt");
+
+	if (!lines.size())
 	{
-		CopyFileContent("Resdata_Temp.txt", path, false);
-		CopyFileContent("Resdata_Temp.txt", "Resdata.txt", true);
+		lines = GetFileLines(fileNameBase + ".ini", "Resdata");
+	}
+
+	if (lines.size())
+	{
+		CopyFileContent("Resdata_Temp.txt", lines, false);
+		CopyFileContent("Resdata_Temp.txt", GetFileLines("Resdata.txt"), true);
 
 		FreeResDataItems();
 		ReadResdataDat("Resdata_Temp.txt");

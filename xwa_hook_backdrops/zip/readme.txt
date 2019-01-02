@@ -1,4 +1,4 @@
-xwa_hook_backdrops
+﻿xwa_hook_backdrops
 
 This hook adds starfield backdrops to skirmish mission and permits to replace .dat files for a given mission.
 
@@ -30,7 +30,7 @@ At offset 11091F, replace E83C42F0FF with E80C760900.
 *** Usage ***
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".
-To replace dat images, create a file named "[MissionDir]\[Mission]_Resdata.txt" and list your new dat files.
+To replace dat images, create a file named "[MissionDir]\[Mission]_Resdata.txt" or create a section named "[Resdata]" in "[MissionDir]\[Mission].ini" and list your new dat files.
 The format of this file is the same as "Resdata.txt".
 
 

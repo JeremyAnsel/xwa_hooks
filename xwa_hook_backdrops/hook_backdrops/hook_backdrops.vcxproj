@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="backdrops.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="hook_function.h" />
     <ClInclude Include="resource.h" />
@@ -160,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="backdrops.cpp" />
+    <ClCompile Include="config.cpp" />
     <ClCompile Include="hookmain.cpp" />
   </ItemGroup>
   <ItemGroup>
