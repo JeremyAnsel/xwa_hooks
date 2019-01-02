@@ -1,4 +1,4 @@
-xwa_hook_hull_icon
+﻿xwa_hook_hull_icon
 
 This hook enables setting hull icon for any craft.
 

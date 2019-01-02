@@ -1,38 +1,7 @@
 #include "targetver.h"
 #include "hull_icon.h"
-#include <string>
+#include "config.h"
 #include <fstream>
-#include <vector>
-
-std::vector<unsigned short> GetFileListUnsignedShortValues(const std::string& path)
-{
-	std::vector<unsigned short> values;
-
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			unsigned short value = (unsigned short)std::stoi(line);
-			values.push_back(value);
-		}
-	}
-
-	return values;
-}
 
 std::vector<unsigned short> GetDefaultHullIconValues()
 {
@@ -55,7 +24,8 @@ public:
 	{
 		if (std::ifstream("HullIconList.txt"))
 		{
-			this->_hullIcons = GetFileListUnsignedShortValues("HullIconList.txt");
+			const auto lines = GetFileLines("HullIconList.txt");
+			this->_hullIcons = GetFileListUnsignedShortValues(lines);
 		}
 		else
 		{
