@@ -1,4 +1,4 @@
-xwa_hook_sfoils
+﻿xwa_hook_sfoils
 
 This hook enables S-Foils for any craft.
 
@@ -51,7 +51,7 @@ At offset 083059, replace 7517 with 9090.
 *** Usage ***
 
 Suppose that the craft is "FlightModels\[Model].opt".
-To create s-foils, create a file named "FlightModels\[Model]SFoils.txt".
+To create s-foils, create a file named "FlightModels\[Model]SFoils.txt" or create a section named "[SFoils]" in "FlightModels\[Model].ini".
 If the file does not exist, default values are used (S-Foils for XWing, BWing, and Shuttle).
 The format is a line per mesh:
 mesh index, angle, closing speed, opening speed.
