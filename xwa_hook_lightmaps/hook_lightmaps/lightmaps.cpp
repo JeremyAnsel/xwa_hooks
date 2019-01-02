@@ -6,12 +6,12 @@ std::vector<char> g_buffer;
 
 int LightmapsHook(int* params)
 {
-	unsigned char* esi = (unsigned char*)params[0];
-	int ebx = params[1];
-	int eax = params[2];
+	const unsigned char* esi = (unsigned char*)params[0];
+	const int ebx = params[1];
+	const int eax = params[2];
 
-	unsigned short* a1C = (unsigned short*)params[711];
-	unsigned char esp28 = (unsigned char)params[13];
+	const unsigned short* a1C = (unsigned short*)params[711];
+	const unsigned char esp28 = (unsigned char)params[13];
 	int& esp34 = params[16];
 
 	if ((int)g_buffer.capacity() < eax * 2)
