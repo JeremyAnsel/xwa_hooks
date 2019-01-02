@@ -4,14 +4,14 @@
 
 #pragma pack(push, 1)
 
-struct TieFlightGroup
+struct TieFlightGroupEx
 {
 	char Unk000[3581];
 	char PilotVoice[20];
 	char UnkE11[49];
 };
 
-static_assert(sizeof(TieFlightGroup) == 3650, "size of TieFlightGroup must be 3650");
+static_assert(sizeof(TieFlightGroupEx) == 3650, "size of TieFlightGroupEx must be 3650");
 
 struct XwaPlayer
 {
@@ -22,12 +22,11 @@ struct XwaPlayer
 
 static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
-
 #pragma pack(pop)
 
 int WingmenVoicesHook(int* params)
 {
-	const TieFlightGroup* flightGroups = (TieFlightGroup*)0x080DC80;
+	const TieFlightGroupEx* flightGroups = (TieFlightGroupEx*)0x080DC80;
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x08B94E0;
 	int XwaCurrentPlayerId = *(int*)0x08C1CC8;
 	int ebx = params[0];
