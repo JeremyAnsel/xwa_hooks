@@ -1,4 +1,4 @@
-xwa_hook_mission_objects
+﻿xwa_hook_mission_objects
 
 This hook permits to replace mission objects and to enable crafts turrets.
 
@@ -37,12 +37,14 @@ At offset 101190, replace 535556578B7C2414 with E88B6D0A00C39090.
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 
 The possible involved files are:
+- "[MissionDir]\[Mission].ini"
 - "[MissionDir]\[Mission]_Objects.txt"
 - "FlightModels\Objects.txt"
 
-To replace the objects, create a file named "[MissionDir]\[Mission]_Objects.txt".
+To replace the objects, create a file named "[MissionDir]\[Mission]_Objects.txt" or create a section named "[Objects]" in "[MissionDir]\[Mission].ini".
 The dll searches a "Objects.txt" file in this order (from first to last):
 - "[MissionDir]\[Mission]_Objects.txt"
+- "[MissionDir]\[Mission].ini", section "[Objects]"
 - "FlightModels\Objects.txt"
 If a "Objects.txt" file doesn't exist, no model is replaced.
 The format is a line per object: "FlightModels\ObjectA = FlightModels\NewObjA"

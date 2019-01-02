@@ -1,107 +1,19 @@
 #include "targetver.h"
 #include "mission.h"
-#include <string>
-#include <iostream>
+#include "config.h"
 #include <fstream>
-#include <algorithm>
-#include <cctype>
-#include <vector>
-
-std::string GetStringWithoutExtension(const std::string& str)
-{
-	auto b = str.find_last_of('.');
-
-	return str.substr(0, b);
-}
-
-std::string GetFileKeyValue(const std::string& path, const std::string& key)
-{
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			int pos = line.find("=");
-
-			if (pos == -1)
-			{
-				continue;
-			}
-
-			std::string name = line.substr(0, pos);
-			name.erase(std::remove_if(name.begin(), name.end(), std::isspace), name.end());
-
-			std::string value = line.substr(pos + 1);
-			value.erase(std::remove_if(value.begin(), value.end(), std::isspace), value.end());
-
-			if (!name.length() || !value.length())
-			{
-				continue;
-			}
-
-			if (_stricmp(name.c_str(), key.c_str()) == 0)
-			{
-				return value;
-			}
-		}
-	}
-
-	return std::string();
-}
-
-std::vector<std::string> GetFileLines(const std::string& path)
-{
-	std::vector<std::string> values;
-
-	std::ifstream file(path);
-
-	if (file)
-	{
-		std::string line;
-
-		while (std::getline(file, line))
-		{
-			if (!line.length())
-			{
-				continue;
-			}
-
-			if (line[0] == '#' || line[0] == ';' || (line[0] == '/' && line[1] == '/'))
-			{
-				continue;
-			}
-
-			values.push_back(line);
-		}
-	}
-
-	return values;
-}
 
 class FlightModelsList
 {
 public:
 	FlightModelsList()
 	{
-		for (auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		for (const auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
 		{
 			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
 		}
 
-		for (auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		for (const auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
 		{
 			this->_equipmentList.push_back(GetStringWithoutExtension(line));
 		}
@@ -139,29 +51,6 @@ private:
 	std::vector<std::string> _spacecraftList;
 	std::vector<std::string> _equipmentList;
 };
-
-std::string GetCustomFilePath(const std::string& name)
-{
-	const char* xwaMissionFileName = (const char*)0x06002E8;
-
-	std::string mission = GetStringWithoutExtension(xwaMissionFileName);
-
-	if (!mission.empty())
-	{
-		mission.append("_");
-		mission.append(name);
-
-		if (std::ifstream(mission))
-		{
-			return mission;
-		}
-	}
-
-	std::string path = "FlightModels\\";
-	path.append(name);
-
-	return path;
-}
 
 #pragma pack(push, 1)
 
@@ -262,14 +151,38 @@ static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 #pragma pack(pop)
 
+std::vector<std::string> GetCustomFileLines(const std::string& name)
+{
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+	std::vector<std::string> lines;
+
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	lines = GetFileLines(mission + "_" + name + ".txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", name);
+	}
+
+	if (lines.size())
+	{
+		return lines;
+	}
+
+	const std::string path = "FlightModels\\";
+	lines = GetFileLines(path + name + ".txt");
+
+	return lines;
+}
+
 int MissionObjectsHook(int* params)
 {
 	const char* argOpt = (char*)params[0];
 
 	const auto OptLoad = (int(*)(const char*))0x004CC940;
 
-	std::string txtPath = GetCustomFilePath("Objects.txt");
-	std::string value = GetFileKeyValue(txtPath, argOpt);
+	const auto lines = GetCustomFileLines("Objects");
+	const std::string value = GetFileKeyValue(lines, argOpt);
 
 	if (!value.empty() && std::ifstream(value))
 	{
@@ -304,7 +217,7 @@ void TurretOptReload(int gunnerModelIndex, int playerModelIndex)
 	}
 
 	FlightModelsList g_flightModelsList;
-	std::string ship = GetStringWithoutExtension(g_flightModelsList.GetLstLine(playerModelIndex));
+	std::string ship = g_flightModelsList.GetLstLine(playerModelIndex);
 	ship.append("Gunner.opt");
 
 	if (!std::ifstream(ship))
@@ -340,12 +253,12 @@ int CraftTurretHook(int* params)
 	const auto L004201E0 = (int(*)(int, int, int))0x004201E0;
 	const auto L00497D40 = (void(*)(int, int))0x00497D40;
 
-	ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+	const ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
 	XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
-	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-	int XwaCurrentPlayerId = *(int*)0x008C1CC8;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const int XwaCurrentPlayerId = *(int*)0x008C1CC8;
 	char& V0x077129C = *(char*)0x0077129C;
-	int V0x07827E4 = *(int*)0x007827E4;
+	const int V0x07827E4 = *(int*)0x007827E4;
 
 	int playerObjectIndex = XwaPlayers[arg4].ObjectIndex;
 
