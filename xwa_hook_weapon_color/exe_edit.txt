@@ -4,3 +4,10 @@ L00491EB0
 A1C4337B00              mov eax, dword ptr [007B33C4]
 
 E8E26A1100              call 005A8B30, 005A8B30 - 0049204E = 00116AE2
+
+
+L004E1760
+:004E25E1 - 0x0E19E1
+A1C4337B00              mov eax, dword ptr [007B33C4]
+
+E84A650C00              call 005A8B30, 005A8B30 - 004E25E6 = 000C654A

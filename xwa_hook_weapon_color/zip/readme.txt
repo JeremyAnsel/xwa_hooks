@@ -21,6 +21,7 @@ The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that defines weapon color
 At offset 091449, replace A1C4337B00 with E8E26A1100.
+At offset 0E19E1, replace A1C4337B00 with E84A650C00.
 
 
 *** Usage ***

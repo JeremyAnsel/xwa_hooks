@@ -169,3 +169,19 @@ int WeaponColorHook(int* params)
 
 	return *(int*)0x007B33C4;
 }
+
+int WeaponColorCapitalShipHook(int* params)
+{
+	const int objectIndex = (unsigned short)params[278];
+	const int weaponObjectIndex = params[272];
+
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	unsigned short weaponModelIndex = XwaObjects[weaponObjectIndex].ModelIndex;
+	unsigned short objectModelIndex = XwaObjects[objectIndex].ModelIndex;
+	int color = g_modelIndexWeapon.GetColor(objectModelIndex, weaponModelIndex);
+
+	XwaObjects[weaponObjectIndex].pMobileObject->Markings = color;
+
+	return *(int*)0x007B33C4;
+}
