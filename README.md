@@ -64,6 +64,10 @@ This hook enables pilot meshes animation for any craft.
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11695
 
+## xwa_hook_res1200
+
+This hook replaces a static buffer with a dynamic one in initializing 2d buffer. It fixes a crash when resolution height > 1200 is used.
+
 ## xwa_hook_sfoils
 
 This hook enables S-Foils for any craft.

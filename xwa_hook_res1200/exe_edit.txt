@@ -1,0 +1,30 @@
+
+L004D3DE0
+:004D3DE0 - 0x0D31E0
+8B156C4B7D00            mov edx, dword ptr [007D4B6C]
+
+E83B4D0D00              call 005A8B20, 005A8B20 - 004D3DE5 = 000D4D3B
+C3                      ret
+
+
+L004D3ED0
+:004D3EF0 - 0x0D32F0
+C705A0D57400A0907F00    mov dword ptr [0074D5A0], 007F90A0
+
+E82B4C0D00              call 005A8B20, 005A8B20 - 004D3EF5 = 000D4C2B
+9090909090
+
+
+L004D3ED0
+:004D3F0D - 0x0D330D
+8B54241C                mov edx, dword ptr [esp+1C]
+33C9                    xor ecx, ecx
+85D2                    test edx, edx
+7620                    jbe 004D3F37
+
+E80E4C0D00              call 005A8B20, 005A8B20 - 004D3F12 = 000D4C0E
+5F                      pop edi
+5E                      pop esi
+5D                      pop ebp
+5B                      pop ebx
+C3                      ret
