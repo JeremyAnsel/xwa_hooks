@@ -1,4 +1,4 @@
-﻿xwa_hook_mission_tie
+xwa_hook_mission_tie
 
 This hook permits to override the data of mission files.
 
@@ -21,6 +21,9 @@ The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that override tie mission
 At offset 1521A, replace E8E1A40000 with E8112D1900.
+
+# 'crafts count per region' patch
+At offset 14C2E, replace 60000000C1E305 with C0000000C1E306.
 
 
 *** Usage ***
