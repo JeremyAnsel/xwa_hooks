@@ -1,4 +1,4 @@
-﻿xwa_hook_opt_limit
+xwa_hook_opt_limit
 
 This hook removes the opt limit of 512 vertices per mesh.
 
@@ -22,6 +22,26 @@ The following modifications are applied at runtime to xwingalliance.exe:
 # 'triangling to infinity' patch
 At offset 193C4A, replace 750C with 9090.
 At offset 193C52, replace 0002 with 0080.
+
+# 'disable briefing wireframe overlay' patch
+At offset 07E09C, replace 7D with EB.
+At offset 07E12E, replace 7D with EB.
+At offset 07E1B9, replace 47 with 90.
+
+# 'remove textures size limit' patch
+At offset 19564A, replace 81790C000100007717 with 909090909090909090.
+At offset 1956C2, replace 817A10000100007717 with 909090909090909090.
+
+# 'opt textures count limit' patch
+At offset 0CC432, replace 2003 with 0010.
+At offset 0CC43A, replace 2803 with 0810.
+At offset 0CC445, replace 2C03 with 0C10.
+At offset 0CC44C, replace 2003 with 0010.
+At offset 0CC466, replace C800 with 0004.
+At offset 0CC497, replace 3003 with 1010.
+At offset 0CC4C9, replace 3003 with 1010.
+At offset 0CC4E6, replace 3003 with 1010.
+At offset 0CC4EE, replace 2003 with 0010.
 
 # To call the hook that removes the opt limit of 512 vertices per mesh
 At offset 193BFE, replace 01 with 20.

@@ -33,6 +33,32 @@ static const HookPatchItem g_trianglingPatch[] =
 	{ 0x193C52, "0002", "0080" },
 };
 
+static const HookPatchItem g_briefingWireframeOverlayPatch[] =
+{
+	{ 0x07E09C, "7D", "EB" },
+	{ 0x07E12E, "7D", "EB" },
+	{ 0x07E1B9, "47", "90" },
+};
+
+static const HookPatchItem g_texturesSizePatch[] =
+{
+	{ 0x19564A, "81790C000100007717", "909090909090909090" },
+	{ 0x1956C2, "817A10000100007717", "909090909090909090" },
+};
+
+static const HookPatchItem g_texturesCountPatch[] =
+{
+	{ 0x0CC432, "2003", "0010" },
+	{ 0x0CC43A, "2803", "0810" },
+	{ 0x0CC445, "2C03", "0C10" },
+	{ 0x0CC44C, "2003", "0010" },
+	{ 0x0CC466, "C800", "0004" },
+	{ 0x0CC497, "3003", "1010" },
+	{ 0x0CC4C9, "3003", "1010" },
+	{ 0x0CC4E6, "3003", "1010" },
+	{ 0x0CC4EE, "2003", "0010" },
+};
+
 static const HookPatchItem g_optLimitPatch[] =
 {
 	{ 0x193BFE, "01", "20" },
@@ -60,6 +86,9 @@ static const HookPatchItem g_glowMarkUVArrayPatch[] =
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
+	MAKE_HOOK_PATCH("'disable briefing wireframe overlay' patch", g_briefingWireframeOverlayPatch),
+	MAKE_HOOK_PATCH("'remove textures size limit' patch", g_texturesSizePatch),
+	MAKE_HOOK_PATCH("'opt textures count limit' patch", g_texturesCountPatch),
 	MAKE_HOOK_PATCH("To call the hook that removes the opt limit of 512 vertices per mesh", g_optLimitPatch),
 	MAKE_HOOK_PATCH("'GlowMarkUVArray vertices count' patch", g_glowMarkUVArrayPatch),
 };
