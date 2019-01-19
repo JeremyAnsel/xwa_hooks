@@ -74,6 +74,12 @@ This hook enables S-Foils for any craft.
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11693
 
+## xwa_hook_slam
+
+This hook enables the SLAM system when the K key pressed.
+
+See http://www.xwaupgrade.com/phpBB3/viewtopic.php?f=9&t=12050
+
 ## xwa_hook_time
 
 This hook reduces the CPU usage and enables 60 FPS inflight.

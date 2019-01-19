@@ -1,0 +1,35 @@
+
+Key_K = 107
+
+
+:005019B3 - 0x100DB3
+19
+
+00
+
+:0050195E - 0x100D5E
+26
+
+19
+
+:005018F8 - 0x100CF8
+AEC14F00
+
+74185000
+
+
+:00501872 - 0x100C72
+5F                      pop edi
+5E                      pop esi
+5B                      pop ebx
+8BE5                    mov esp, ebp
+5D                      pop ebp
+C3                      ret
+
+EB10                    jmp 00501884
+E8A7720A00              call 005A8B20, 005A8B20 - 00501879 = 000A72A7
+
+
+:004FDBFF 33C9                    xor ecx, ecx
+
+:00501884 5F                      pop edi
