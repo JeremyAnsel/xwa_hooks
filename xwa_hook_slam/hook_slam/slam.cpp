@@ -152,17 +152,29 @@ int SlamHook(int* params)
 	const unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
 	int hasSlam = modelIndex == 0 ? 0 : g_modelIndexSlam.HasSlam(modelIndex);
 
-	XwaObjects[objectIndex].pMobileObject->pCraft->IsSlamEnabled = hasSlam == 0 ? 0 : 1;
-
 	if (hasSlam == 0)
 	{
+		XwaObjects[objectIndex].pMobileObject->pCraft->IsSlamEnabled = 0;
+
 		// MSG_NOT_EQUIPPED_SLAM
 		ShowMessage(294, playerIndex);
 	}
 	else
 	{
-		// MSG_OVERDRIVE_ON
-		ShowMessage(371, playerIndex);
+		if (XwaObjects[objectIndex].pMobileObject->pCraft->IsSlamEnabled)
+		{
+			XwaObjects[objectIndex].pMobileObject->pCraft->IsSlamEnabled = 0;
+
+			// MSG_OVERDRIVE_OFF
+			ShowMessage(372, playerIndex);
+		}
+		else
+		{
+			XwaObjects[objectIndex].pMobileObject->pCraft->IsSlamEnabled = 1;
+
+			// MSG_OVERDRIVE_ON
+			ShowMessage(371, playerIndex);
+		}
 	}
 
 	return 0;
