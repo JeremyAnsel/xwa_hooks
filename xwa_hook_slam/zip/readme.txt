@@ -44,3 +44,4 @@ See MissileBoatSlam.txt.
 *** Credits ***
 
 - Jérémy Ansel (JeremyaFr)
+- Justagai for the idea and the SLAM field offset finding
