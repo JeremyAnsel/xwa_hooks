@@ -193,6 +193,17 @@ private:
 
 ModelIndexSFoils g_modelIndexSFoils;
 
+int SFoilsFilterHook(int* params)
+{
+	const unsigned short modelIndex = (unsigned short)params[0];
+
+	const auto sfoils = g_modelIndexSFoils.Get(modelIndex);
+
+	params[0] = sfoils.size() ? 0 : 1;
+
+	return 0;
+}
+
 int SFoilsHook1(int* params)
 {
 	const int modelIndex = params[0];

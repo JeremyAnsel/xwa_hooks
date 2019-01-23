@@ -1,28 +1,48 @@
 
 # Disable S-Foil model filter
 
-:004FC46E - 0xFB86E
+:004FC46A - 0x0FB86A
+6683F901                cmp cx, 0001
 7419                    je 004FC489
+6683F904                cmp cx, 0004
 
-EB19                    jmp
+51                      push ecx
+E8B0C60A00              call 005A8B20, 005A8B20 - 004FC470 = 000AC6B0
+59                      pop ecx
+85C9                    test ecx, ecx
+90                      nop
 
-
-:00403AF0 - 0x002EF0
+:00403AEC - 0x002EEC
+6683F901                cmp cx, 0001
 740A                    je 00403AFC
+6683F904                cmp cx, 0004
 
-EB0A                    jmp
+51                      push ecx
+E82E501A00              call 005A8B20, 005A8B20 - 00403AF2 = 001A502E
+59                      pop ecx
+85C9                    test ecx, ecx
+90                      nop
 
-
-:00459520 - 0x058920
+:0045951C - 0x05891C
+663D0100                cmp ax, 0001
 7406                    je 00459528
+663D0400                cmp ax, 0004
 
-EB06                    jmp
+50                      push eax
+E8FEF51400              call 005A8B20, 005A8B20 - 00459522 = 0014F5FE
+58                      pop eax
+85C0                    test eax, eax
+90                      nop
 
-
-:00508DE4 - 0x1081E4
+:00508DE0 - 0x1081E0
+663D0100                cmp ax, 0001
 7405                    je 00508DEB
+663BC3                  cmp ax, bx
 
-EB05                    jmp
+50                      push eax
+E83AFD0900              call 005A8B20, 005A8B20 - 00508DE6 = 0009FD3A
+58                      pop eax
+85C0                    test eax, eax
 
 
 # To call the hook that defines S-Foils

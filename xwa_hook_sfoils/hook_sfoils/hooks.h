@@ -5,6 +5,10 @@
 
 static const HookFunction g_hookFunctions[] =
 {
+	{ 0x4FC470, SFoilsFilterHook },
+	{ 0x403AF2, SFoilsFilterHook },
+	{ 0x459522, SFoilsFilterHook },
+	{ 0x508DE6, SFoilsFilterHook },
 	{ 0x4016F9, SFoilsHook1 },
 	{ 0x40191A, SFoilsHook2 },
 	{ 0x45EECD, SFoilsHangarShuttleHook },
@@ -16,10 +20,10 @@ static const HookFunction g_hookFunctions[] =
 
 static const HookPatchItem g_disableSFoilModelFilterPatch[] =
 {
-	{ 0x0FB86E, "7419", "EB19" },
-	{ 0x002EF0, "740A", "EB0A" },
-	{ 0x058920, "7406", "EB06" },
-	{ 0x1081E4, "7405", "EB05" },
+	{ 0x0FB86A, "6683F90174196683F904", "51E8B0C60A005985C990" },
+	{ 0x002EEC, "6683F901740A6683F904", "51E82E501A005985C990" },
+	{ 0x05891C, "663D01007406663D0400", "50E8FEF514005885C090" },
+	{ 0x1081E0, "663D01007405663BC3", "50E83AFD09005885C0" },
 };
 
 static const HookPatchItem g_defineSFoilsPatch[] =

@@ -1,4 +1,4 @@
-﻿xwa_hook_sfoils
+xwa_hook_sfoils
 
 This hook enables S-Foils for any craft.
 
@@ -23,10 +23,10 @@ Place hook_sfoils.dll next to xwingalliance.exe
 The following modifications are applied at runtime to xwingalliance.exe:
 
 # Disable S-Foil model filter
-At offset 0FB86E, replace 7419 with EB19.
-At offset 002EF0, replace 740A with EB0A.
-At offset 058920, replace 7406 with EB06.
-At offset 1081E4, replace 7405 with EB05.
+At offset 0FB86A, replace 6683F90174196683F904 with 51E8B0C60A005985C990.
+At offset 002EEC, replace 6683F901740A6683F904 with 51E82E501A005985C990.
+At offset 05891C, replace 663D01007406663D0400 with 50E8FEF514005885C090.
+At offset 1081E0, replace 663D01007405663BC3 with 50E83AFD09005885C0.
 
 # To call the hook that defines S-Foils
 At offset 000AF3, replace 4883F8310F872001000033C98A8840184000 with 50E827741A0083C4045F5E5D5BC390909090.
