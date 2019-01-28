@@ -14,6 +14,9 @@ This dll requires:
 
 Place hook_slam.dll next to xwingalliance.exe
 
+Copy the "overdrive.lst" file and the "overdrive" directory in the "WAVE" directory.
+If "overdrive.lst" exists, "powerup.wav" and "powerdn.wav" will be used, else "HyperstartImp.wav" and "Hyperend.wav" will be used.
+
 
 *** Patch ***
 

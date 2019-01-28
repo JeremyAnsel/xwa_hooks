@@ -3,6 +3,7 @@
 #include "config.h"
 #include <map>
 #include <utility>
+#include <fstream>
 
 class FlightModelsList
 {
@@ -141,6 +142,10 @@ ModelIndexSlam g_modelIndexSlam;
 
 int SlamHook(int* params)
 {
+	static bool soundsLoaded = false;
+	static unsigned short powerupSoundIndex;
+	static unsigned short powerdnSoundIndex;
+
 	params[-1] = 0x004FDBFF;
 
 	const int playerIndex = params[76];
@@ -148,9 +153,31 @@ int SlamHook(int* params)
 
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	const auto ShowMessage = (void(*)(int, int))0x00497D40;
+	const auto PlaySound = (int(*)(int, int, int))0x0043BF90;
+	const auto LoadSfxLst = (short(*)(const char*, unsigned short, const char*))0x0043A150;
 
 	const unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
 	int hasSlam = modelIndex == 0 ? 0 : g_modelIndexSlam.HasSlam(modelIndex);
+
+	if (hasSlam && !soundsLoaded)
+	{
+		soundsLoaded = true;
+
+		if (std::ifstream("wave\\overdrive.lst"))
+		{
+			LoadSfxLst("wave\\overdrive.lst", 1, "wave\\overdrive\\");
+
+			powerupSoundIndex = 1; // powerup.wav
+			powerdnSoundIndex = 2; // powerdn.wav
+		}
+		else
+		{
+			powerupSoundIndex = 115; // HyperstartImp.wav
+			powerdnSoundIndex = 117; // Hyperend.wav
+		}
+
+		*(int*)0x004909A1 = powerdnSoundIndex;
+	}
 
 	if (hasSlam == 0)
 	{
@@ -167,6 +194,7 @@ int SlamHook(int* params)
 
 			// MSG_OVERDRIVE_OFF
 			ShowMessage(372, playerIndex);
+			PlaySound(powerdnSoundIndex, 0xFFFF, playerIndex);
 		}
 		else
 		{
@@ -174,6 +202,7 @@ int SlamHook(int* params)
 
 			// MSG_OVERDRIVE_ON
 			ShowMessage(371, playerIndex);
+			PlaySound(powerupSoundIndex, 0xFFFF, playerIndex);
 		}
 	}
 
