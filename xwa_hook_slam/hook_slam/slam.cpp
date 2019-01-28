@@ -60,7 +60,9 @@ FlightModelsList g_flightModelsList;
 
 struct XwaCraft
 {
-	char unk000[246];
+	char unk000[11];
+	char m00B;
+	char unk00C[234];
 	short IsSlamEnabled;
 	char unk0F8[769];
 };
@@ -207,4 +209,17 @@ int SlamHook(int* params)
 	}
 
 	return 0;
+}
+
+int EngineGlowLengthHook(int* params)
+{
+	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
+
+	if (currentCraft->m00B == 0x05 || currentCraft->m00B == 0x06)
+		return 0;
+
+	if (currentCraft->IsSlamEnabled)
+		return 0;
+
+	return 1;
 }

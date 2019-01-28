@@ -27,6 +27,7 @@ At offset 100DB3, replace 19 with 00.
 At offset 100D5E, replace 26 with 19.
 At offset 100CF8, replace AEC14F00 with 74185000.
 At offset 100C72, replace 5F5E5B8BE55DC3 with EB10E8A7720A00.
+At offset 02CB52, replace 0F84FA0100003C06 with E8D9B317009085C0.
 
 
 *** Usage ***

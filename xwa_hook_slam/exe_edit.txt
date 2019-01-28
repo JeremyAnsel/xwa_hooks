@@ -33,3 +33,12 @@ E8A7720A00              call 005A8B20, 005A8B20 - 00501879 = 000A72A7
 :004FDBFF 33C9                    xor ecx, ecx
 
 :00501884 5F                      pop edi
+
+
+:0042D752 - 0x02CB52
+0F84FA010000            je 0042D952
+3C06                    cmp al, 06
+
+E8D9B31700              call 005A8B30, 005A8B30 - 0042D757 = 0017B3D9
+90                      nop
+85C0                    test eax, eax
