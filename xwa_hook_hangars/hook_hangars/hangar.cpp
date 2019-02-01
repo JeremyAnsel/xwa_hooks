@@ -1114,7 +1114,7 @@ int HangarLoadDroidsHook(int* params)
 	S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
 
 	const auto lines = GetCustomFileLines("HangarObjects");
-	const int value = GetFileKeyValueInt(lines, "LoadDroids");
+	const int value = GetFileKeyValueInt(lines, "LoadDroids", 1);
 
 	if (value == 1)
 	{
