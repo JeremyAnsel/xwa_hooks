@@ -17,13 +17,57 @@ E8FBA60900  call 005A8B30, 005A8B30 - 0050E435 = 0009A6FB
 C3          ret
 
 
+; FrameTargetEllapsedTime
+:0053EF28 - 0x13E328
+99                      cdq
+F7FE                    idiv esi
+
+33C0                    xor eax, eax
+40                      inc eax
+
+:0053F826 - 0x13EC26
+F77C2404                idiv [esp+04]
+
+33C0                    xor eax, eax
+40                      inc eax
+90
+
+
+; L00540A80, peek message in video playing
+:00540AD3 - 0x13FED3
+A142709F00              mov eax, dword ptr [009F7042]
+85C0                    test eax, eax
+750E                    jne 00540AEA
+EBC1                    jmp 00540A9F
+
+6A30                    push 00000001
+FF1574905A00            call dword ptr [005A9074] // Sleep
+90                      nop
+EB0C                    jmp 00540AEA, 00540AEA - 00540ADE = 0C
+
+
+; L0053E760
+XwaWinMainRun
+:0053EAEF - 0x13DEEF
+0F844AFDFFFF            je 0053E83F
+
+909090909090
+
+
+; L0053FD00
+XwaRunGameStateLoop
+:0053FE62 - 0x13F262
+0F84C1FEFFFF            je 0053FD29
+
+909090909090
+
+
 ; inflight 1
 
 ;:005107D5 - 0x10FBD5
 ;7D24                    jge 005107FB
 ;
 ;EB24                    jmp 005107FB
-
 
 :005107D2 - 0x10FBD2
 83FA08                  cmp edx, 00000008
@@ -56,6 +100,7 @@ C3          ret
 
 
 ; in hangar
+
 :00458C05 - 0x058005
 83FA08                  cmp edx, 00000008
 
@@ -72,6 +117,7 @@ C3          ret
 E808D21400              call 005977ED
 
 9090909090
+
 
 ; L00597784 XwaD3dTextureCacheUpdateOrAdd
 :00597796 - 0x196B96

@@ -25,6 +25,11 @@ The following modifications are applied at runtime to xwingalliance.exe:
 # To call the hook that reduces CPU usage
 At offset 10D810, replace E82BF8FFFF8B with E81BA70900C3.
 At offset 10D830, replace E80BF8FFFF8B with E8FBA60900C3.
+At offset 13E328, replace 99F7FE with 33C040.
+At offset 13EC26, replace F77C2404 with 33C04090.
+At offset 13FED3, replace A142709F0085C0750EEBC1 with 6A30FF1574905A0090EB0C.
+At offset 13DEEF, replace 0F844AFDFFFF with 909090909090.
+At offset 13F262, replace 0F84C1FEFFFF with 909090909090.
 
 # To call the hook that sets full FPS
 At offset 10FBD2, replace 83FA08 with 83FA02.
