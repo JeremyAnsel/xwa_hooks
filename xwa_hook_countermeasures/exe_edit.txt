@@ -1,0 +1,23 @@
+
+// L00460650
+
+:00460A6C - 0x05FE6C
+8D04D0                  lea eax, dword ptr [eax+8*edx]
+8A8440B3B65B00          mov al, byte ptr [eax+2*eax+005BB6B3]
+
+57                      push edi
+53                      push ebx
+E8BD801400              call 005A8B30, 005A8B30 - 00460A73 = 001480BD
+83C408                  add esp, 00000008
+
+
+// L004B0770
+
+:004B1545 - 0x0B0945
+8D04D0                  lea eax, dword ptr [eax+8*edx]
+8A8440B3B65B00          mov al, byte ptr [eax+2*eax+005BB6B3]
+
+50                      push eax
+51                      push ecx
+E8E4750F00              call 005A8B30, 005A8B30 - 004B154C = 000F75E4
+83C408                  add esp, 00000008
