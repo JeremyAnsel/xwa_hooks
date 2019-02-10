@@ -104,6 +104,12 @@ See http://www.xwaupgrade.com/phpBB3/viewtopic.php?p=156215#p156215
 
 This hook permits to define weapon decharge and recharge rates for any craft.
 
+## xwa_hook_windowed
+
+This hook enables windowed mode.
+
+See http://www.xwaupgrade.com/phpBB3/viewtopic.php?f=10&t=12061
+
 ## xwa_hook_wingmen_voices
 
 This hook enables setting wingmen voices for imperial IFF.

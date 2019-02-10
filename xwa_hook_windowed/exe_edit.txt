@@ -1,0 +1,186 @@
+
+// L0042B520
+int XwaDIKeyboardIsAnyKeyPressed(  )
+
+:0050B68C - 0x10AA8C
+E88FFEF1FF              call 0042B520
+
+E89FD40900              call 005A8B30, 005A8B30 - 0050B691 = 0009D49F
+
+
+// L0042B740
+unsigned short XwaDIKeyboardGetPressedKey(  )
+
+:0050B700 - 0x10AB00
+E83B00F2FF              call 0042B740
+
+E82BD40900              call 005A8B30, 005A8B30 - 0050B705 = 0009D42B
+
+
+// L0042B680
+int XwaDIKeyboardTryUpdateShiftControlAltKeysPressedState(  )
+
+:004588D5 - 0x057CD5
+E8A62DFDFF              call 0042B680
+
+E856021500              call 005A8B30, 005A8B30 - 004588DA = 00150256
+
+:0050C74A - 0x10BB4A
+E831EFF1FF              call 0042B680
+
+E8E1C30900              call 005A8B30, 005A8B30 - 0050C74F = 0009C3E1
+
+:0050CA78 - 0x10BE78
+E803ECF1FF              call 0042B680
+
+E8B3C00900              call 005A8B30, 005A8B30 - 0050CA7D = 0009C0B3
+
+:0050CA9A - 0x10BE9A
+E8E1EBF1FF              call 0042B680
+
+E891C00900              call 005A8B30, 005A8B30 - 0050CA9F = 0009C091
+
+:0050CDC8 - 0x10C1C8
+E8B3E8F1FF              call 0042B680
+
+E863BD0900              call 005A8B30, 005A8B30 - 0050CDCD = 0009BD63
+
+
+// L0042B900
+int XwaDIRetrieveKeyboardState(  )
+
+:004F9A5A - 0x0F8E5A
+E8A11EF3FF              call 0042B900
+
+E8D1F00A00              call 005A8B30, 005A8B30 - 004F9A5F = 000AF0D1
+
+
+// L0042B920
+void XwaDIRetrieveMouseState(  )
+
+:004588DA - 0x057CDA
+E84130FDFF              call 0042B920
+
+E841021500              call 005A8B20, 005A8B20 - 004588DF = 00150241
+
+:0045D629 - 0x05CA29
+E8F2E2FCFF              call 0042B920
+
+E8F2B41400              call 005A8B20, 005A8B20 - 0045D62E = 0014B4F2
+
+:004F9B5F - 0x0F8F5F
+E8BC1DF3FF              call 0042B920
+
+E8BCEF0A00              call 005A8B20, 005A8B20 - 004F9B64 = 000AEFBC
+
+
+// L0053EB30
+XwaCreateMainWindow
+
+:0053EB98 - 0x13DF98
+53                      push ebx
+56                      push esi
+8B3544925A00            mov esi, dword ptr [005A9244]
+53                      push ebx
+53                      push ebx
+6A01                    push 00000001
+FFD6                    call esi
+50                      push eax
+53                      push ebx
+FFD6                    call esi
+50                      push eax
+53                      push ebx
+53                      push ebx
+6800000090              push 90000000
+68C0306000              push 006030C0
+68C0306000              push 006030C0
+53                      push ebx
+FF1540925A00            Call dword ptr [005A9240]
+
+56                      push esi
+50                      push eax
+E8919F0600              call 005A8B30, 005A8B30 - 0053EB9F = 00069F91
+83C408                  add esp, 00000008
+9090909090
+9090909090
+9090909090
+9090909090
+9090909090
+9090909090
+909090
+
+
+// SetCursorPos
+
+:0053E551 - 0x13D951
+51                      push ecx
+50                      push eax
+FF1574925A00            Call dword ptr [005A9274]
+
+90
+90
+E8D8A50600              call 005A8B30, 005A8B30 - 0053E558 = 0006A5D8
+90
+
+:0055BA9F - 0x15AE9F
+51                      push ecx
+50                      push eax
+A3ED659F00              mov dword ptr [009F65ED], eax
+890DF1659F00            mov dword ptr [009F65F1], ecx
+FF1574925A00            Call dword ptr [005A9274]
+
+90
+90
+A3ED659F00              mov dword ptr [009F65ED], eax
+890DF1659F00            mov dword ptr [009F65F1], ecx
+E87FD00400              call 005A8B30, 005A8B30 - 0055BAB1 = 0004D07F
+90
+
+:0055BAB9 - 0x15AEB9
+51                      push ecx
+50                      push eax
+A3ED659F00              mov dword ptr [009F65ED], eax
+890DF1659F00            mov dword ptr [009F65F1], ecx
+FF1574925A00            Call dword ptr [005A9274]
+
+90
+90
+A3ED659F00              mov dword ptr [009F65ED], eax
+890DF1659F00            mov dword ptr [009F65F1], ecx
+E865D00400              call 005A8B30, 005A8B30 - 0055BACB = 0004D065
+90
+
+
+// SetCursorPos 0, 0
+
+:0053EC79 - 0x13E079
+53                      push ebx
+53                      push ebx
+FF1574925A00            Call dword ptr [005A9274]
+
+90
+90
+E8B09E0600              call 005A8B30, 005A8B30 - 0053EC80 = 00069EB0
+90
+
+:0054009E - 0x13F49E
+6A00                    push 00000000
+6A00                    push 00000000
+FF1574925A00            Call dword ptr [005A9274]
+
+9090
+9090
+E8898A0600              call 005A8B30, 005A8B30 - 005400A7 = 00068A89
+90
+
+:0054076E - 0x13FB6E
+6A00                    push 00000000
+6A00                    push 00000000
+A30B7F9F00              mov dword ptr [009F7F0B], eax
+FF1574925A00            Call dword ptr [005A9274]
+
+9090
+9090
+A30B7F9F00              mov dword ptr [009F7F0B], eax
+E8B4830600              call 005A8B30, 005A8B30 - 0054077C = 000683B4
+90
