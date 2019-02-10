@@ -386,9 +386,18 @@ int HangarOptLoadHook(int* params)
 	const auto lines = GetCustomFileLines("HangarObjects");
 	const std::string value = GetFileKeyValue(lines, opt);
 
-	if (!value.empty() && std::ifstream(value))
+	if (!value.empty())
 	{
-		return OptLoad(value.c_str());
+		std::string opt_base_exterior = GetStringWithoutExtension(opt);
+		opt_base_exterior.append("Exterior.opt");
+
+		if (_stricmp(opt_base_exterior.c_str(), value.c_str()) != 0)
+		{
+			if (std::ifstream(value))
+			{
+				return OptLoad(value.c_str());
+			}
+		}
 	}
 
 	if (_stricmp(opt.c_str(), "FlightModels\\Hangar.opt") == 0)

@@ -184,6 +184,7 @@ The dll searches a "HangarObjects.txt" file in this order (from first to last):
 - "FlightModels\HangarObjects.txt"
 If a "HangarObjects.txt" file doesn't exist, no model is replaced.
 The format is a line per object: "FlightModels\ObjectA = FlightModels\NewObjA"
+The replacement of a base opt with an exterior opt is ignored: lines like "FlightModels\ObjectA.opt = FlightModels\ObjectAExterior.opt" are ignored.
 To remove an object, use an empty invisible opt.
 To not load the shuttle, set "LoadShuttle = 0".
 To set the shuttle model index, set "ShuttleModelIndex = value". value is an integer. The default value is 50 (Shuttle).
