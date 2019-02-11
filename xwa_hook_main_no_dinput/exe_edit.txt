@@ -1,0 +1,78 @@
+
+; code segment end
+; void Hook()
+:005A8B20 - 0x1A7F20
+00000000000000000000    BYTE 10 DUP(0)
+
+50                      push eax
+60                      pushad
+54                      push esp
+FF15608B5A00            Call dword ptr [005A8B60]
+83C404                  add esp, 00000004
+61                      popad
+58                      pop eax
+C3                      ret
+90
+
+
+; code segment end
+; int Hook()
+:005A8B30 - 0x1A7F30
+00000000000000000000    BYTE 10 DUP(0)
+
+53                      push ebx
+60                      pushad
+54                      push esp
+FF15608B5A00            Call dword ptr [005A8B60]
+83C404                  add esp, 00000004
+61                      popad
+5B                      pop ebx
+C3                      ret
+90
+
+
+; call WinMain
+:0059CEAD - 0x19C2AD
+E8EED5F6FF              call 0050A4A0
+
+E8BEBC0000              call 005A8B70, 005A8B70 - 0059CEB2 = 0000BCBE
+
+
+; "hooks_main.dll"
+:005A8B40 - 0x1A7F40
+000000000000000000000000000000
+
+686F6F6B735F6D61696E2E646C6C00 "hooks_main.dll"
+
+
+; "CallHook"
+:005A8B50 - 0x1A7F50
+000000000000000000
+
+43616C6C486F6F6B00 "CallHook"
+
+
+; code segment end
+; void InitializeHooks()
+:005A8B70 - 0x1A7F70
+00000000000000000000    BYTE 10 DUP(0)
+00000000000000000000    BYTE 10 DUP(0)
+00000000000000000000    BYTE 10 DUP(0)
+0000000000000000        BYTE 8 DUP(0)
+
+60                      pushad
+68408B5A00              push 005A8B40 // "hooks_main.dll"
+FF15C0915A00            Call dword ptr [005A91C0] // KERNEL32.LoadLibraryA
+68508B5A00              push 005A8B50 // "CallHook"
+50                      push eax
+FF15FC905A00            Call dword ptr [005A90FC] // KERNEL32.GetProcAddress
+50                      push eax
+6A00                    push 00000000
+FFD0                    call eax
+83C408                  add esp, 00000008
+61                      popad
+E90A19F6FF              jmp 0050A4A0, 0050A4A0 - 005A8B96 = FFF6190A // L0050A4A0, WinMain
+
+
+:005A8B60
+call hook address

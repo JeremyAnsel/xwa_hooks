@@ -8,6 +8,10 @@ See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11772
 
 This is the main dll hook that is used to call other hooks. A hook is a way to inject code into the exe.
 
+### xwa_hook_main_no_dinput
+
+If you use a custom Dinput.dll, it will conflict with this hook. In this case, use xwa_hook_main_no_dinput instead of xwa_hook_main.
+
 ## xwa_hook_backdrops
 
 This hook adds starfield backdrops to skirmish mission and permits to replace .dat files for a given mission.
