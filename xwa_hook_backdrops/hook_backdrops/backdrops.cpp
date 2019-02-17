@@ -85,7 +85,7 @@ int BackdropsHook(int* params)
 		mission->FlightGroups[flightgroupsCount].StartPointRegions[0] = region;
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Name, "0.0 0.0 0.0");
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Cargo, "0.0");
-		strcpy_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "0.94");
+		strcpy_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "0.47"); // 0.94 / 2
 		flightgroupsCount++;
 
 		// nadir
@@ -101,7 +101,7 @@ int BackdropsHook(int* params)
 		mission->FlightGroups[flightgroupsCount].StartPointRegions[0] = region;
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Name, "0.0 0.0 0.0");
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Cargo, "0.0");
-		strcpy_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "0.94");
+		strcpy_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "0.47"); // 0.94 / 2
 		flightgroupsCount++;
 
 		// north
@@ -117,7 +117,7 @@ int BackdropsHook(int* params)
 		mission->FlightGroups[flightgroupsCount].StartPointRegions[0] = region;
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Name, "0.0 0.0 0.0");
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Cargo, "0.0");
-		strcpy_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "1.053");
+		strcpy_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "0.5265"); // 1.053 / 2
 		flightgroupsCount++;
 
 		// south
@@ -133,7 +133,7 @@ int BackdropsHook(int* params)
 		mission->FlightGroups[flightgroupsCount].StartPointRegions[0] = region;
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Name, "0.0 0.0 0.0");
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Cargo, "0.0");
-		strcpy_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "1.053");
+		strcpy_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "0.5265"); // 1.053 / 2
 		flightgroupsCount++;
 
 		// west
@@ -149,7 +149,7 @@ int BackdropsHook(int* params)
 		mission->FlightGroups[flightgroupsCount].StartPointRegions[0] = region;
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Name, "0.0 0.0 0.0");
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Cargo, "0.0");
-		strcpy_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "1.053");
+		strcpy_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "0.5265"); // 1.053 / 2
 		flightgroupsCount++;
 
 		// est
@@ -165,7 +165,7 @@ int BackdropsHook(int* params)
 		mission->FlightGroups[flightgroupsCount].StartPointRegions[0] = region;
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Name, "0.0 0.0 0.0");
 		strcpy_s(mission->FlightGroups[flightgroupsCount].Cargo, "0.0");
-		strcpy_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "1.053");
+		strcpy_s(mission->FlightGroups[flightgroupsCount].SpecialCargo, "0.5265"); // 1.053 / 2
 		flightgroupsCount++;
 
 		// default backdrops
