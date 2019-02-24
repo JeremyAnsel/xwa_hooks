@@ -144,7 +144,8 @@ ModelIndexSlam g_modelIndexSlam;
 
 int SlamHook(int* params)
 {
-	static bool soundsLoaded = false;
+	static bool soundsDefined = false;
+	static bool useOverdriveSounds;
 	static unsigned short powerupSoundIndex;
 	static unsigned short powerdnSoundIndex;
 
@@ -154,6 +155,7 @@ int SlamHook(int* params)
 	const int objectIndex = params[69];
 
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	int* XwaSoundEffectsBufferId = (int*)0x00917E80;
 	const auto ShowMessage = (void(*)(int, int))0x00497D40;
 	const auto PlaySound = (int(*)(int, int, int))0x0043BF90;
 	const auto LoadSfxLst = (short(*)(const char*, unsigned short, const char*))0x0043A150;
@@ -161,24 +163,35 @@ int SlamHook(int* params)
 	const unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
 	int hasSlam = modelIndex == 0 ? 0 : g_modelIndexSlam.HasSlam(modelIndex);
 
-	if (hasSlam && !soundsLoaded)
+	if (hasSlam)
 	{
-		soundsLoaded = true;
-
-		if (std::ifstream("wave\\overdrive.lst"))
+		if (!soundsDefined)
 		{
-			LoadSfxLst("wave\\overdrive.lst", 1, "wave\\overdrive\\");
+			soundsDefined = true;
 
-			powerupSoundIndex = 1; // powerup.wav
-			powerdnSoundIndex = 2; // powerdn.wav
+			if (std::ifstream("wave\\overdrive.lst"))
+			{
+				useOverdriveSounds = true;
+				powerupSoundIndex = 1; // powerup.wav
+				powerdnSoundIndex = 2; // powerdn.wav
+			}
+			else
+			{
+				useOverdriveSounds = false;
+				powerupSoundIndex = 115; // HyperstartImp.wav
+				powerdnSoundIndex = 117; // Hyperend.wav
+			}
+
+			*(int*)0x004909A1 = powerdnSoundIndex;
 		}
-		else
+
+		if (useOverdriveSounds)
 		{
-			powerupSoundIndex = 115; // HyperstartImp.wav
-			powerdnSoundIndex = 117; // Hyperend.wav
+			if (XwaSoundEffectsBufferId[1] == -1)
+			{
+				LoadSfxLst("wave\\overdrive.lst", 1, "wave\\overdrive\\");
+			}
 		}
-
-		*(int*)0x004909A1 = powerdnSoundIndex;
 	}
 
 	if (hasSlam == 0)
