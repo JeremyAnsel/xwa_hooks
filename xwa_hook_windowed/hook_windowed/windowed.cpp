@@ -3,6 +3,88 @@
 #include "config.h"
 #include <Windows.h>
 
+class WindowConfig
+{
+public:
+	WindowConfig()
+	{
+		const auto lines = GetFileLines("hook_windowed.cfg");
+		int x = GetFileKeyValueInt(lines, "X");
+		int y = GetFileKeyValueInt(lines, "Y");
+		int width = GetFileKeyValueInt(lines, "Width");
+		int height = GetFileKeyValueInt(lines, "Height");
+
+		if (x < 0)
+		{
+			x = 0;
+		}
+
+		if (y < 0)
+		{
+			y = 0;
+		}
+
+		if (width < 0)
+		{
+			width = 0;
+		}
+
+		if (height < 0)
+		{
+			height = 0;
+		}
+
+		int cx = GetSystemMetrics(SM_CXSCREEN);
+		int cy = GetSystemMetrics(SM_CYSCREEN);
+
+		bool isFullscreen;
+
+		if (width == 0 || height == 0)
+		{
+			x = 0;
+			y = 0;
+			width = cx;
+			height = cy;
+			isFullscreen = true;
+		}
+		else
+		{
+			if (width < 640)
+			{
+				width = 640;
+			}
+
+			if (height < 480)
+			{
+				height = 480;
+			}
+
+			if (x == 0 && y == 0 && width == cx && height == cy)
+			{
+				isFullscreen = true;
+			}
+			else
+			{
+				isFullscreen = false;
+			}
+		}
+
+		this->IsFullscreen = isFullscreen;
+		this->X = x;
+		this->Y = y;
+		this->Width = width;
+		this->Height = height;
+	}
+
+	bool IsFullscreen;
+	int X;
+	int Y;
+	int Width;
+	int Height;
+};
+
+WindowConfig g_windowConfig;
+
 bool IsWindowInBackground()
 {
 	static bool initialized = true;
@@ -115,53 +197,6 @@ int RetrieveMouseStateHook(int* params)
 
 int CreateWindowHook(int* params)
 {
-
-	const auto lines = GetFileLines("hook_windowed.cfg");
-	int x = GetFileKeyValueInt(lines, "X");
-	int y = GetFileKeyValueInt(lines, "Y");
-	int width = GetFileKeyValueInt(lines, "Width");
-	int height = GetFileKeyValueInt(lines, "Height");
-
-	if (x < 0)
-	{
-		x = 0;
-	}
-
-	if (y < 0)
-	{
-		y = 0;
-	}
-
-	if (width < 0)
-	{
-		width = 0;
-	}
-
-	if (height < 0)
-	{
-		height = 0;
-	}
-
-	if (width == 0 || height == 0)
-	{
-		x = 0;
-		y = 0;
-		width = GetSystemMetrics(SM_CXSCREEN);
-		height = GetSystemMetrics(SM_CYSCREEN);
-	}
-	else
-	{
-		if (width < 640)
-		{
-			width = 640;
-		}
-
-		if (height < 480)
-		{
-			height = 480;
-		}
-	}
-
 	ATOM atom = (ATOM)params[0];
 	HINSTANCE hInstance = (HINSTANCE)params[1];
 
@@ -170,8 +205,8 @@ int CreateWindowHook(int* params)
 		(LPCSTR)atom,
 		"X-Wing Alliance",
 		WS_POPUP | WS_VISIBLE,
-		x, y,
-		width, height,
+		g_windowConfig.X, g_windowConfig.Y,
+		g_windowConfig.Width, g_windowConfig.Height,
 		nullptr,
 		nullptr,
 		hInstance,
@@ -187,9 +222,12 @@ int CursorHook(int* params)
 	int x = *(int*)0x009F65ED;
 	int y = *(int*)0x009F65F1;
 
-	if (x == 0 || y == 0 || x == 640 || y == 480)
+	if (!g_windowConfig.IsFullscreen || IsWindowInBackground())
 	{
-		return TRUE;
+		if (x == 0 || y == 0 || x == 640 || y == 480)
+		{
+			return TRUE;
+		}
 	}
 
 	RECT rc;
