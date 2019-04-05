@@ -86,6 +86,12 @@ This hook enables S-Foils for any craft.
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11693
 
+## xwa_hook_shield
+
+This hook permits to define shield recharge rates for any craft.
+
+See https://www.xwaupgrade.com/phpBB3/viewtopic.php?f=33&t=12125
+
 ## xwa_hook_slam
 
 This hook enables the SLAM system when the K key pressed.

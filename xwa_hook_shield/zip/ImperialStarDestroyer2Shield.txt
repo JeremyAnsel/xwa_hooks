@@ -1,0 +1,4 @@
+
+UseGenerator = 1
+PerGeneratorRechargeRate = 5
+RechargeRate = 0

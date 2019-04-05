@@ -1,0 +1,4 @@
+;ModelIndex, UseGenerator, PerGeneratorRechargeRate, RechargeRate
+
+;ModelIndex_001_Xwing
+1, 0, 0, 20
