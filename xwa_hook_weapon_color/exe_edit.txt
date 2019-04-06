@@ -11,3 +11,43 @@ L004E1760
 A1C4337B00              mov eax, dword ptr [007B33C4]
 
 E84A650C00              call 005A8B30, 005A8B30 - 004E25E6 = 000C654A
+
+
+L004E8680
+:004E86CF - 0x0E7ACF
+663D2802                cmp ax, 0228
+750E                    jne 004E86E3
+668B4608                mov ax, word ptr [esi+08]
+
+50                      push eax
+56                      push esi
+E85A040C00              call 005A8B30, 005A8B30 - 004E86D6 = 000C045A
+EB16                    jmp 004E86EE, 004E86EE - 004E86D8 = 16
+90                      nop
+
+
+L00408DC0
+:0040AFB5 - 0x00A3B5
+E886E40D00              call 004E9440
+
+E866DB1900              call 005A8B20, 005A8B20 - 0040AFBA = 0019DB66
+
+:0040B252 - 0x00A652
+E8E9E10D00              call 004E9440
+
+E8C9D81900              call 005A8B20, 005A8B20 - 0040B257 = 0019D8C9
+
+
+L0046AA20
+:0046AB29 - 0x069F29
+6681BDB00100001801      cmp word ptr [ebp+000001B0], 0118
+
+E8F2DF1300              call 005A8B20, 005A8B20 - 0046AB2E = 0013DFF2
+EB53                    jmp 0046AB83, 0046AB83 - 0046AB30 = 53
+9090                    nop
+
+:0046AB7B - 0x069F7B
+C7442418926900FF        mov [esp+18], FF006992
+
+E8A0DF1300              call 005A8B20, 005A8B20 - 0046AB80 = 0013DFA0
+909090                  nop

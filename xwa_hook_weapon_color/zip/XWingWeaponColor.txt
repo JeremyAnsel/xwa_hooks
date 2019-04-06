@@ -2,3 +2,17 @@
 WeaponColor = 0
 WeaponColor280 = 1
 WeaponColor281 = 1
+
+WeaponImpactColor_3100 = FF0000FF
+WeaponImpactColor_3200 = FFFF0000
+WeaponImpactColor_3300 = FF00FF00
+WeaponImpactColor_3400 = FFFF00FF
+WeaponImpactColor_3500 = FFFFFF00
+
+WeaponImpactColor280 = FF00FF00
+WeaponImpactColor281 = FF00FF00
+
+EnergyBarColorLaserHigh = FFFF0000
+EnergyBarColorLaserLow = FF9B1E00
+EnergyBarColorIonHigh = FF00B4FF
+EnergyBarColorIonLow = FF006992

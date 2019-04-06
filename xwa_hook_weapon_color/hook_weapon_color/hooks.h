@@ -7,12 +7,22 @@ static const HookFunction g_hookFunctions[] =
 {
 	{ 0x49204E, WeaponColorHook },
 	{ 0x4E25E6, WeaponColorCapitalShipHook },
+	{ 0x4E86D6, WeaponImpactColorHook },
+	{ 0x40AFBA, WeaponImpactColorSetIndexHook },
+	{ 0x40B257, WeaponImpactColorSetIndexHook },
+	{ 0x46AB2E, WeaponEnergyBarLaserColorHook },
+	{ 0x46AB80, WeaponEnergyBarIonColorHook },
 };
 
 static const HookPatchItem g_weaponColorPatch[] =
 {
 	{ 0x091449, "A1C4337B00", "E8E26A1100" },
 	{ 0x0E19E1, "A1C4337B00", "E84A650C00" },
+	{ 0x0E7ACF, "663D2802750E668B4608", "5056E85A040C00EB1690" },
+	{ 0x00A3B5, "E886E40D00", "E866DB1900" },
+	{ 0x00A652, "E8E9E10D00", "E8C9D81900" },
+	{ 0x069F29, "6681BDB00100001801", "E8F2DF1300EB539090" },
+	{ 0x069F7B, "C7442418926900FF", "E8A0DF1300909090" },
 };
 
 static const HookPatch g_patches[] =
