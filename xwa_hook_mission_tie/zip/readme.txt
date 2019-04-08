@@ -32,7 +32,11 @@ Suppose that the mission is "[MissionDir]\[Mission].tie".
 
 To override the mission data, create a file named "[MissionDir]\[Mission].txt" or create a section named "[mission_tie]" in "[MissionDir]\[Mission].ini".
 The format is a line per replacement.
+
 To replace the flight group markings, the format is: "fg", fg number, "markings", value.
+To replace the flight group iff, the format is: "fg", fg number, "iff", value.
+To replace the flight group pilot voice, the format is: "fg", fg number, "pilotvoice", value.
+
 See "mission.txt".
 
 
