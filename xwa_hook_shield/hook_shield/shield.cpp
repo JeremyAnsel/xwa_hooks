@@ -304,7 +304,7 @@ ModelIndexShield g_modelIndexShield;
 int ShieldRechargeHook(int* params)
 {
 	auto& rechargeRate = params[6];
-	int objectIndex = params[9];
+	int objectIndex = (unsigned short)params[7];
 
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	unsigned char difficulty = *(unsigned char*)0x0080540A;
