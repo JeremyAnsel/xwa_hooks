@@ -1,4 +1,4 @@
-﻿xwa_hook_hangars
+xwa_hook_hangars
 
 This hook permits to customize the hangars.
 The XWA's engine uses two hangar models, Hangar.opt and FamilyBase.opt. If you wanted to use a custom hangar, you had to replace one of them. You can now choose which hangar to use, customize the objects and the camera positions, for a specific craft or for a specific mission.
@@ -43,7 +43,7 @@ At offset 054EA4, replace 750E50E8F4140000 with 909050E874301500.
 At offset 055EF7, replace 66391C7DE0A67C007522 with 57E82320150083C40490.
 
 # To call the hook that reloads the hangar
-At offset 0FD859, replace E8C297F5FF with E8D2A60A00.
+At offset 057021, replace A10C337700 with E80A0F1500.
 
 # To remove the opt filter
 At offset 563C3, replace 83FB0E0F8FCB0000000F84 with 33C089442410E9BF090000.

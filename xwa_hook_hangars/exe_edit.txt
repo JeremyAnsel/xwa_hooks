@@ -31,12 +31,12 @@ E823201500              call 005A8B20, 005A8B20 - 00456AFD = 00152023
 90                      nop
 
 
-; from L004FBA80
+; from L00457C20
 ; hook for hangar reloading
-:004FE459 - 0x0FD859
-E8C297F5FF              call 00457C20
+:00457C21 - 0x057021
+A10C337700              mov eax, dword ptr [0077330C]
 
-E8D2A60A00              call 005A8B30, 005A8B30 - 004FE45E = 000AA6D2
+E80A0F1500              call 005A8B30, 005A8B30 - 00457C26 = 00150F0A
 
 
 ; from L00456FA0

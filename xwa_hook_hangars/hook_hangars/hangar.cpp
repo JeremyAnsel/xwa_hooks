@@ -489,9 +489,8 @@ void HangarReloadHookReleaseObjects()
 
 int HangarReloadHook(int* params)
 {
-	const short objectIndex = (short)params[0];
+	const short objectIndex = (short)params[2];
 
-	const auto HangarReload = (int(*)(short))0x00457C20;
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 	const auto XwaRandom = (unsigned short(*)())0x00494E10;
 	const auto SetSFoils = (void(*)(int))0x004016B0;
@@ -505,7 +504,7 @@ int HangarReloadHook(int* params)
 
 	if (objectIndex == -1)
 	{
-		return HangarReload(objectIndex);
+		return *(int*)0x0077330C;
 	}
 
 	unsigned short modelIndex = xwaObjects[objectIndex].ModelIndex;
@@ -563,7 +562,7 @@ int HangarReloadHook(int* params)
 		V0x068BC10++;
 	}
 
-	return HangarReload(objectIndex);
+	return *(int*)0x0077330C;
 }
 
 int HangarCameraPositionHook(int* params)

@@ -8,7 +8,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4579F3, HangarOptLoadHook },
 	{ 0x455AAC, HangarOptReloadHook },
 	{ 0x456AFD, HangarObjectCreateHook },
-	{ 0x4FE45E, HangarReloadHook },
+	{ 0x457C26, HangarReloadHook },
 	{ 0x45FCA8, HangarCameraPositionHook },
 	{ 0x4563DD, HangarLoadShuttleHook },
 	{ 0x45C1AA, HangarShuttleUpdateHook },
@@ -57,7 +57,7 @@ static const HookPatchItem g_createHangarObjectPatch[] =
 
 static const HookPatchItem g_reloadHangarPatch[] =
 {
-	{ 0x0FD859, "E8C297F5FF", "E8D2A60A00" },
+	{ 0x057021, "A10C337700", "E80A0F1500" },
 };
 
 static const HookPatchItem g_removeOptFilterPatch[] =
