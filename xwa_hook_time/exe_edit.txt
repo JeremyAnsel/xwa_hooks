@@ -72,12 +72,12 @@ XwaRunGameStateLoop
 :005107D2 - 0x10FBD2
 83FA08                  cmp edx, 00000008
 
-83FA02                  cmp edx, 00000002
+83FA01                  cmp edx, 00000001
 
 :005107F6 - 0x10FBF6
 83F808                  cmp eax, 00000008
 
-83F802                  cmp eax, 00000002
+83F801                  cmp eax, 00000001
 
 
 ; inflight 2
@@ -91,12 +91,12 @@ XwaRunGameStateLoop
 :0051088A - 0x10FC8A
 83FA08                  cmp edx, 00000008
 
-83FA02                  cmp edx, 00000002
+83FA01                  cmp edx, 00000001
 
 :005108B2 - 0x10FCB2
 83F808                  cmp eax, 00000008
 
-83F802                  cmp eax, 00000002
+83F801                  cmp eax, 00000001
 
 
 ; in hangar
@@ -104,12 +104,30 @@ XwaRunGameStateLoop
 :00458C05 - 0x058005
 83FA08                  cmp edx, 00000008
 
-83FA02                  cmp edx, 00000002
+83FA01                  cmp edx, 00000001
 
 :00458C27 - 0x058027
 83F908                  cmp ecx, 00000008
 
-83F902                  cmp ecx, 00000002
+83F901                  cmp ecx, 00000001
+
+
+; remove fps limit of 59
+
+:004F7F9C - 0x0F739C
+730A                    jnb 004F7FA8
+
+EB0A
+
+:00510986 - 0x10FD86
+7D07                    jge 0051098F
+
+EB07
+
+:00510F4C - 0x11034C
+7D07                    jge 00510F55
+
+EB07
 
 
 ; Disable std3D_FlushTextureCache in XwaFlushTextureCache L0044A5E0

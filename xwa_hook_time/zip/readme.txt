@@ -32,12 +32,15 @@ At offset 13DEEF, replace 0F844AFDFFFF with 909090909090.
 At offset 13F262, replace 0F84C1FEFFFF with 909090909090.
 
 # To call the hook that sets full FPS
-At offset 10FBD2, replace 83FA08 with 83FA02.
-At offset 10FBF6, replace 83F808 with 83F802.
-At offset 10FC8A, replace 83FA08 with 83FA02.
-At offset 10FCB2, replace 83F808 with 83F802.
-At offset 58005, replace 83FA08 with 83FA02.
-At offset 58027, replace 83F908 with 83F902.
+At offset 10FBD2, replace 83FA08 with 83FA01.
+At offset 10FBF6, replace 83F808 with 83F801.
+At offset 10FC8A, replace 83FA08 with 83FA01.
+At offset 10FCB2, replace 83F808 with 83F801.
+At offset 58005, replace 83FA08 with 83FA01.
+At offset 58027, replace 83F908 with 83F901.
+At offset 0F739C, replace 730A with EB0A.
+At offset 10FD86, replace 7D07 with EB07.
+At offset , replace 7D07 with EB07.
 
 # To call the hook that disables flush texture cache inflight
 At offset 499E0, replace E808D21400 with 9090909090.

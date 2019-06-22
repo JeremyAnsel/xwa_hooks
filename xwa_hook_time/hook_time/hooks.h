@@ -23,13 +23,16 @@ static const HookPatchItem g_reduceCPUUsagePatch[] =
 static const HookPatchItem g_fullFpsPatch[] =
 {
 	//{ 0x10FBD5, "7D24", "EB24" },
-	{ 0x10FBD2, "83FA08", "83FA02" },
-	{ 0x10FBF6, "83F808", "83F802" },
+	{ 0x10FBD2, "83FA08", "83FA01" },
+	{ 0x10FBF6, "83F808", "83F801" },
 	//{ 0x10FC8D, "0F8DFCFEFFFF", "90E9FCFEFFFF" },
-	{ 0x10FC8A, "83FA08", "83FA02" },
-	{ 0x10FCB2, "83F808", "83F802" },
-	{ 0x058005, "83FA08", "83FA02" },
-	{ 0x058027, "83F908", "83F902" },
+	{ 0x10FC8A, "83FA08", "83FA01" },
+	{ 0x10FCB2, "83F808", "83F801" },
+	{ 0x058005, "83FA08", "83FA01" },
+	{ 0x058027, "83F908", "83F901" },
+	{ 0x0F739C, "730A", "EB0A" },
+	{ 0x10FD86, "7D07", "EB07" },
+	{ 0x11034C, "7D07", "EB07" },
 };
 
 static const HookPatchItem g_disableFlushTextureCacheInflightPatch[] =
