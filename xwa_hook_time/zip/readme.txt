@@ -40,7 +40,7 @@ At offset 58005, replace 83FA08 with 83FA01.
 At offset 58027, replace 83F908 with 83F901.
 At offset 0F739C, replace 730A with EB0A.
 At offset 10FD86, replace 7D07 with EB07.
-At offset , replace 7D07 with EB07.
+At offset 11034C, replace 7D07 with EB07.
 
 # To call the hook that disables flush texture cache inflight
 At offset 499E0, replace E808D21400 with 9090909090.
