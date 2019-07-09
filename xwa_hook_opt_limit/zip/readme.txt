@@ -59,9 +59,9 @@ At offset 0E79E1, replace 64D37600 with hitDataArray4.
 At offset 0E7A02, replace 60D37600 with hitDataArray0.
 At offset 0E7A08, replace 64D37600 with hitDataArray4.
 
-# 'GlowMarkUVArray vertices count' patch
-At offset 0E758F, replace A148D37600 with A1066D9B00.
-At offset 0E75B8, replace A148D37600 with A1066D9B00.
+;# 'GlowMarkUVArray vertices count' patch
+;At offset 0E758F, replace A148D37600 with A1066D9B00.
+;At offset 0E75B8, replace A148D37600 with A1066D9B00.
 
 
 *** Usage ***
