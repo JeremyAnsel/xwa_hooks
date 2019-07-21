@@ -76,6 +76,17 @@ struct ExeEnableEntry
 
 static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24");
 
+struct XwaMobileObject
+{
+	char Unk0000[149];
+	unsigned short ModelIndex;
+	char Unk0097[2];
+	unsigned char Markings;
+	char Unk009A[75];
+};
+
+static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 229");
+
 struct XwaObject
 {
 	short m00;
@@ -91,7 +102,7 @@ struct XwaObject
 	short m17;
 	char unk19[6];
 	int PlayerIndex;
-	char unk1D[4];
+	XwaMobileObject* pMobileObject;
 };
 
 static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
@@ -346,16 +357,20 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 	}
 
 	const std::string ship = GetCommandShipLstLine();
-	lines = GetFileLines(ship + name + ".txt");
 
-	if (!lines.size())
+	if (!ship.empty())
 	{
-		lines = GetFileLines(ship + ".ini", name);
-	}
+		lines = GetFileLines(ship + name + ".txt");
 
-	if (lines.size())
-	{
-		return lines;
+		if (!lines.size())
+		{
+			lines = GetFileLines(ship + ".ini", name);
+		}
+
+		if (lines.size())
+		{
+			return lines;
+		}
 	}
 
 	const std::string path = "FlightModels\\";
@@ -1019,6 +1034,7 @@ int HangarCameraPositionHook(int* params)
 
 int HangarLoadShuttleHook(int* params)
 {
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 
 	unsigned short a0 = (unsigned short)params[0];
@@ -1031,6 +1047,7 @@ int HangarLoadShuttleHook(int* params)
 	const auto lines = GetCustomFileLines("HangarObjects");
 	const int value = GetFileKeyValueInt(lines, "LoadShuttle", 1);
 	const unsigned short shuttleModelIndex = (unsigned short)GetFileKeyValueInt(lines, "ShuttleModelIndex");
+	const int shuttleMarkings = GetFileKeyValueInt(lines, "ShuttleMarkings");
 
 	if (shuttleModelIndex != 0)
 	{
@@ -1039,7 +1056,11 @@ int HangarLoadShuttleHook(int* params)
 
 	if (value == 1)
 	{
-		return AddObject(a0, a1, a2, a3, a4, a5);
+		short objectIndex = AddObject(a0, a1, a2, a3, a4, a5);
+
+		xwaObjects[objectIndex].pMobileObject->Markings = shuttleMarkings;
+
+		return objectIndex;
 	}
 
 	return 0;
@@ -1148,6 +1169,7 @@ int HangarLoadDroidsHook(int* params)
 
 int HangarMapHook(int* params)
 {
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 
 	const auto lines = GetCustomFileLines("HangarMap");
@@ -1165,14 +1187,38 @@ int HangarMapHook(int* params)
 				continue;
 			}
 
-			unsigned short modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
-			int positionX = std::stoi(value[1], 0, 0);
-			int positionY = std::stoi(value[2], 0, 0);
-			int positionZ = std::stoi(value[3], 0, 0);
-			short orientationXY = static_cast<short>(std::stoi(value[4], 0, 0));
-			short orientationZ = static_cast<short>(std::stoi(value[5], 0, 0));
+			unsigned short modelIndex;
+			int markings;
+			int positionX;
+			int positionY;
+			int positionZ;
+			short orientationXY;
+			short orientationZ;
+
+			if (value.size() == 7)
+			{
+				modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
+				markings = std::stoi(value[1], 0, 0);
+				positionX = std::stoi(value[2], 0, 0);
+				positionY = std::stoi(value[3], 0, 0);
+				positionZ = std::stoi(value[4], 0, 0);
+				orientationXY = static_cast<short>(std::stoi(value[5], 0, 0));
+				orientationZ = static_cast<short>(std::stoi(value[6], 0, 0));
+			}
+			else
+			{
+				modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
+				markings = 0;
+				positionX = std::stoi(value[1], 0, 0);
+				positionY = std::stoi(value[2], 0, 0);
+				positionZ = std::stoi(value[3], 0, 0);
+				orientationXY = static_cast<short>(std::stoi(value[4], 0, 0));
+				orientationZ = static_cast<short>(std::stoi(value[5], 0, 0));
+			}
 
 			short objectIndex = AddObject(modelIndex, positionX, positionY, positionZ, orientationXY, orientationZ);
+
+			xwaObjects[objectIndex].pMobileObject->Markings = markings;
 
 			switch (i)
 			{
@@ -1233,6 +1279,7 @@ int HangarMapHook(int* params)
 
 int FamHangarMapHook(int* params)
 {
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 
 	const auto lines = GetCustomFileLines("FamHangarMap");
@@ -1250,14 +1297,38 @@ int FamHangarMapHook(int* params)
 				continue;
 			}
 
-			unsigned short modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
-			int positionX = std::stoi(value[1], 0, 0);
-			int positionY = std::stoi(value[2], 0, 0);
-			int positionZ = std::stoi(value[3], 0, 0);
-			short orientationXY = static_cast<short>(std::stoi(value[4], 0, 0));
-			short orientationZ = static_cast<short>(std::stoi(value[5], 0, 0));
+			unsigned short modelIndex;
+			int markings;
+			int positionX;
+			int positionY;
+			int positionZ;
+			short orientationXY;
+			short orientationZ;
+
+			if (value.size() == 7)
+			{
+				modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
+				markings = std::stoi(value[1], 0, 0);
+				positionX = std::stoi(value[2], 0, 0);
+				positionY = std::stoi(value[3], 0, 0);
+				positionZ = std::stoi(value[4], 0, 0);
+				orientationXY = static_cast<short>(std::stoi(value[5], 0, 0));
+				orientationZ = static_cast<short>(std::stoi(value[6], 0, 0));
+			}
+			else
+			{
+				modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
+				markings = 0;
+				positionX = std::stoi(value[1], 0, 0);
+				positionY = std::stoi(value[2], 0, 0);
+				positionZ = std::stoi(value[3], 0, 0);
+				orientationXY = static_cast<short>(std::stoi(value[4], 0, 0));
+				orientationZ = static_cast<short>(std::stoi(value[5], 0, 0));
+			}
 
 			short objectIndex = AddObject(modelIndex, positionX, positionY, positionZ, orientationXY, orientationZ);
+
+			xwaObjects[objectIndex].pMobileObject->Markings = markings;
 
 			switch (i)
 			{

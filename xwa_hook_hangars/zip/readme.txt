@@ -188,6 +188,7 @@ The replacement of a base opt with an exterior opt is ignored: lines like "Fligh
 To remove an object, use an empty invisible opt.
 To not load the shuttle, set "LoadShuttle = 0".
 To set the shuttle model index, set "ShuttleModelIndex = value". value is an integer. The default value is 50 (Shuttle).
+To set the shuttle markings, set "ShuttleMarkings = value". value is an integer. The default value is 0.
 To not load the droids, set "LoadDroids = 0".
 See "HangarObjects.txt".
 
@@ -249,6 +250,7 @@ The dll searches a "HangarMap.txt" file in this order (from first to last):
 If a "HangarMap.txt" file doesn't exist, default values are used.
 The file must contain at least 4 object line.
 The format is : model index, position X, position Y, position Z, heading XY, heading Z.
+or : model index, markings, position X, position Y, position Z, heading XY, heading Z.
 The numbers can be  written in decimal or hexadecimal (0x) notation.
 When position Z is set to 0x7FFFFFFF, this means that the object stands at the ground.
 See "HangarMap.txt".
@@ -265,6 +267,7 @@ The dll searches a "FamHangarMap.txt" file in this order (from first to last):
 If a "FamHangarMap.txt" file doesn't exist, default values are used.
 The file must contain at least 4 object line.
 The format is : model index, position X, position Y, position Z, heading XY, heading Z.
+or : model index, markings, position X, position Y, position Z, heading XY, heading Z.
 The numbers can be  written in decimal or hexadecimal (0x) notation.
 When position Z is set to 0x7FFFFFFF, this means that the object stands at the ground.
 See "FamHangarMap.txt".
