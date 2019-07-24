@@ -17,6 +17,29 @@ unsigned int GetFileKeyValueUnsignedInt(const std::vector<std::string>& lines, c
 	return std::stoul(value, 0, 16);
 }
 
+class Config
+{
+public:
+	Config()
+	{
+		const auto lines = GetFileLines("hook_weapon_color.cfg");
+
+		this->WeaponImpactColor_3100 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3100", 0xFF0000FF); // blue
+		this->WeaponImpactColor_3200 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3200", 0xFFFF0000); // red
+		this->WeaponImpactColor_3300 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3300", 0xFF00FF00); // green
+		this->WeaponImpactColor_3400 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3400", 0xFFFF00FF); // purple
+		this->WeaponImpactColor_3500 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3500", 0xFFFFFF00); // yellow
+	}
+
+	unsigned int WeaponImpactColor_3100;
+	unsigned int WeaponImpactColor_3200;
+	unsigned int WeaponImpactColor_3300;
+	unsigned int WeaponImpactColor_3400;
+	unsigned int WeaponImpactColor_3500;
+};
+
+Config g_config;
+
 class FlightModelsList
 {
 public:
@@ -187,11 +210,11 @@ std::array<unsigned int, 28> GetWeaponImpactColor(int modelIndex)
 		lines = GetFileLines(ship + ".ini", "WeaponColor");
 	}
 
-	unsigned int ResData_Animations_3100 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3100", 0xFF0000FF); // blue
-	unsigned int ResData_Animations_3200 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3200", 0xFFFF0000); // red
-	unsigned int ResData_Animations_3300 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3300", 0xFF00FF00); // green
-	unsigned int ResData_Animations_3400 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3400", 0xFFFF00FF); // purple
-	unsigned int ResData_Animations_3500 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3500", 0xFFFFFF00); // yellow
+	unsigned int ResData_Animations_3100 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3100", g_config.WeaponImpactColor_3100); // blue
+	unsigned int ResData_Animations_3200 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3200", g_config.WeaponImpactColor_3200); // red
+	unsigned int ResData_Animations_3300 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3300", g_config.WeaponImpactColor_3300); // green
+	unsigned int ResData_Animations_3400 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3400", g_config.WeaponImpactColor_3400); // purple
+	unsigned int ResData_Animations_3500 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3500", g_config.WeaponImpactColor_3500); // yellow
 
 	std::array<unsigned int, 28> color;
 
