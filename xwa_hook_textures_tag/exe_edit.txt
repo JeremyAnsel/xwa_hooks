@@ -1,0 +1,30 @@
+
+// dat images
+:004326EB - 0x031AEB
+E8CE391600              call 005960BE
+
+E840641700              call 005A8B30, 005A8B30 - 004326F0 = 00176440
+
+// opt read
+:004CC94C - 0x0CBD4C
+E8AF010000              call 004CCB00
+
+E8DFC10D00              call 005A8B30, 005A8B30 - 004CC951 = 000DC1DF
+
+// opt texture color
+:00441CDF - 0x0410DF
+E8DA431500              call 005960BE
+
+E84C6E1600              call 005A8B30, 005A8B30 - 00441CE4 = 00166E4C
+
+// opt texture light
+:00441D9B - 0x04119B
+E81E431500              call 005960BE
+
+E8906D1600              call 005A8B30, 005A8B30 - 00441DA0 = 00166D90
+
+// create texture surface
+:005965F0 - 0x1959F0
+E8FB710000              call 0059D7F0
+
+E82B250100              call 005A8B20, 005A8B20 - 005965F5 = 0001252B
