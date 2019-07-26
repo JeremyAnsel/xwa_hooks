@@ -16,3 +16,6 @@ EnergyBarColorLaserHigh = FFFF0000
 EnergyBarColorLaserLow = FF9B1E00
 EnergyBarColorIonHigh = FF00B4FF
 EnergyBarColorIonLow = FF006992
+
+WeaponLightColor280 = FF3300
+WeaponLightColor281 = FF3300

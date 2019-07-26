@@ -29,6 +29,13 @@ public:
 		this->WeaponImpactColor_3300 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3300", 0xFF00FF00); // green
 		this->WeaponImpactColor_3400 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3400", 0xFFFF00FF); // purple
 		this->WeaponImpactColor_3500 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3500", 0xFFFFFF00); // yellow
+
+		for (int i = 0; i < 28; i++)
+		{
+			const std::string key = std::string("WeaponLightColor") + std::to_string(280 + i);
+
+			this->WeaponLightColor[i] = GetFileKeyValueUnsignedInt(lines, key);
+		}
 	}
 
 	unsigned int WeaponImpactColor_3100;
@@ -36,6 +43,8 @@ public:
 	unsigned int WeaponImpactColor_3300;
 	unsigned int WeaponImpactColor_3400;
 	unsigned int WeaponImpactColor_3500;
+
+	std::array<unsigned int, 28> WeaponLightColor;
 };
 
 Config g_config;
@@ -108,7 +117,9 @@ struct XwaObject
 {
 	char Unk0000[2];
 	unsigned short ModelIndex;
-	char Unk0004[31];
+	char Unk0004[23];
+	short m1B;
+	char Unk001D[6];
 	XwaMobileObject* pMobileObject;
 };
 
@@ -151,6 +162,22 @@ struct S0x0761E70
 };
 
 static_assert(sizeof(S0x0761E70) == 75, "size of S0x0761E70 must be 75");
+
+struct S0x07FA360
+{
+	int PositionX;
+	int PositionY;
+	int PositionZ;
+	char unk0C[12];
+	float m18;
+	int m1C;
+	float m20;
+	float ColorR;
+	float ColorB;
+	float ColorG;
+};
+
+static_assert(sizeof(S0x07FA360) == 48, "size of S0x07FA360 must be 48");
 
 #pragma pack(pop)
 
@@ -321,6 +348,36 @@ WeaponEnergyBarColor GetWeaponEnergyBarColor(int modelIndex)
 	return color;
 }
 
+std::array<unsigned int, 28> GetWeaponLightColor(int modelIndex)
+{
+	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(ship + "WeaponColor.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", "WeaponColor");
+	}
+
+	std::array<unsigned int, 28> color = g_config.WeaponLightColor;
+
+	if (lines.size())
+	{
+		for (int i = 0; i < 28; i++)
+		{
+			const std::string key = std::string("WeaponLightColor") + std::to_string(280 + i);
+			unsigned int value = GetFileKeyValueUnsignedInt(lines, key);
+
+			if (value != 0)
+			{
+				color[i] = value;
+			}
+		}
+	}
+
+	return color;
+}
+
 class ModelIndexWeapon
 {
 public:
@@ -382,10 +439,32 @@ public:
 		}
 	}
 
+	unsigned int GetLightColor(int modelIndex, int weaponModelIndex)
+	{
+		if (weaponModelIndex < 280 || weaponModelIndex >= 280 + 28)
+		{
+			return 0;
+		}
+
+		auto it = this->_weaponLightColor.find(modelIndex);
+
+		if (it != this->_weaponLightColor.end())
+		{
+			return it->second[weaponModelIndex - 280];
+		}
+		else
+		{
+			auto value = GetWeaponLightColor(modelIndex);
+			this->_weaponLightColor.insert(std::make_pair(modelIndex, value));
+			return value[weaponModelIndex - 280];
+		}
+	}
+
 private:
 	std::map<int, std::array<int, 28>> _weaponColor;
 	std::map<int, std::array<unsigned int, 28>> _weaponImpactColor;
 	std::map<int, WeaponEnergyBarColor> _weaponEnergyBarColor;
+	std::map<int, std::array<unsigned int, 28>> _weaponLightColor;
 };
 
 ModelIndexWeapon g_modelIndexWeapon;
@@ -583,6 +662,221 @@ int WeaponEnergyBarIonColorHook(int* params)
 	else
 	{
 		colorLow = color.IonLow;
+	}
+
+	return 0;
+}
+
+int WeaponLightColorHook(int* params)
+{
+	const XwaObject* A4 = (XwaObject*)params[0];
+	const unsigned short weaponModelIndex = A4->ModelIndex;
+	const unsigned short modelIndex = A4->pMobileObject->ModelIndex;
+
+	S0x07FA360* lights = (S0x07FA360*)0x007FA360;
+	int& lightsCount = *(int*)0x00782840;
+
+	unsigned int color = g_modelIndexWeapon.GetLightColor(modelIndex, weaponModelIndex);
+
+	if (color != 0)
+	{
+		switch (weaponModelIndex)
+		{
+		case 280: // ModelIndex_280_1_17_LaserRebel
+		case 281: // ModelIndex_281_1_18_LaserRebelTurbo
+		case 288: // ModelIndex_288_1_18_LaserRebelTurbo
+		case 297: // ModelIndex_297_1_18_LaserRebelTurbo
+		case 301: // ModelIndex_301_1_18_LaserRebelTurbo
+		case 302: // ModelIndex_302_1_18_LaserRebelTurbo
+			lights[lightsCount].m18 = 200.0f;
+			break;
+
+		case 282: // ModelIndex_282_1_19_LaserImp
+		case 283: // ModelIndex_283_1_20_LaserImpTurbo
+		case 289: // ModelIndex_289_1_20_LaserImpTurbo
+		case 303: // ModelIndex_303_1_20_LaserImpTurbo
+		case 304: // ModelIndex_304_1_20_LaserImpTurbo
+		case 305: // ModelIndex_305_1_20_LaserImpTurbo
+			lights[lightsCount].m18 = 200.0f;
+			break;
+
+		case 284: // ModelIndex_284_1_22_LaserIon
+		case 285: // ModelIndex_285_1_23_LaserIonTurbo
+		case 290: // ModelIndex_290_1_23_LaserIonTurbo
+			lights[lightsCount].m18 = 200.0f;
+			break;
+
+		case 286: // ModelIndex_286_1_24_ProtonTorpedo
+		case 291: // ModelIndex_291_1_24_ProtonTorpedo
+			lights[lightsCount].m18 = 250.0f;
+			break;
+
+		case 287: // ModelIndex_287_1_25_ConcussionMissile
+		case 292: // ModelIndex_292_1_25_ConcussionMissile
+		case 293: // ModelIndex_293_1_26_SpaceBomb
+		case 294: // ModelIndex_294_1_27_HeavyRocket
+			lights[lightsCount].m18 = 250.0f;
+			break;
+
+		case 295: // ModelIndex_295_1_28_MagPulse
+			lights[lightsCount].m18 = 250.0f;
+			break;
+
+		case 296: // ModelIndex_296_1_28_MagPulse
+			lights[lightsCount].m18 = 250.0f;
+			break;
+
+		case 298: // ModelIndex_298_1_29_Flare
+			lights[lightsCount].m18 = 200.0f;
+			break;
+
+		case 306: // ModelIndex_306_1_21_LaserImpDS
+			lights[lightsCount].m18 = 50000.0f;
+			lights[lightsCount].m1C = 0x4000;
+			break;
+		}
+
+		unsigned int R = (color >> 16) & 0xFFU;
+		unsigned int G = (color >> 8) & 0xFFU;
+		unsigned int B = color & 0xFFU;
+
+		lights[lightsCount].ColorR = R / 255.0f;
+		lights[lightsCount].ColorG = G / 255.0f;
+		lights[lightsCount].ColorB = B / 255.0f;
+		lightsCount++;
+	}
+	else
+	{
+		switch (weaponModelIndex)
+		{
+		case 59: // ModelIndex_059_0_46_MilleniumFalcon2
+			lights[lightsCount].m18 = 2048.0f;
+			lights[lightsCount].m1C = 0x100;
+			lights[lightsCount].ColorR = 0.5f;
+			lights[lightsCount].ColorG = 0.5f;
+			lights[lightsCount].ColorB = 0.5f;
+			lightsCount++;
+			break;
+
+		case 280: // ModelIndex_280_1_17_LaserRebel
+		case 281: // ModelIndex_281_1_18_LaserRebelTurbo
+		case 288: // ModelIndex_288_1_18_LaserRebelTurbo
+		case 297: // ModelIndex_297_1_18_LaserRebelTurbo
+		case 301: // ModelIndex_301_1_18_LaserRebelTurbo
+		case 302: // ModelIndex_302_1_18_LaserRebelTurbo
+			lights[lightsCount].m18 = 200.0f;
+			lights[lightsCount].ColorR = 1.0f;
+			lights[lightsCount].ColorG = 0.2f;
+			lights[lightsCount].ColorB = 0.0f;
+			lightsCount++;
+			break;
+
+		case 282: // ModelIndex_282_1_19_LaserImp
+		case 283: // ModelIndex_283_1_20_LaserImpTurbo
+		case 289: // ModelIndex_289_1_20_LaserImpTurbo
+		case 303: // ModelIndex_303_1_20_LaserImpTurbo
+		case 304: // ModelIndex_304_1_20_LaserImpTurbo
+		case 305: // ModelIndex_305_1_20_LaserImpTurbo
+			lights[lightsCount].m18 = 200.0f;
+			lights[lightsCount].ColorR = 0.0f;
+			lights[lightsCount].ColorG = 1.0f;
+			lights[lightsCount].ColorB = 0.2f;
+			lightsCount++;
+			break;
+
+		case 284: // ModelIndex_284_1_22_LaserIon
+		case 285: // ModelIndex_285_1_23_LaserIonTurbo
+		case 290: // ModelIndex_290_1_23_LaserIonTurbo
+			lights[lightsCount].m18 = 200.0f;
+			lights[lightsCount].ColorR = 0.2f;
+			lights[lightsCount].ColorG = 0.2f;
+			lights[lightsCount].ColorB = 1.0f;
+			lightsCount++;
+			break;
+
+		case 286: // ModelIndex_286_1_24_ProtonTorpedo
+		case 291: // ModelIndex_291_1_24_ProtonTorpedo
+			lights[lightsCount].m18 = 250.0f;
+			lights[lightsCount].ColorR = 0.4f;
+			lights[lightsCount].ColorG = 0.2f;
+			lights[lightsCount].ColorB = 1.0f;
+			lightsCount++;
+			break;
+
+		case 287: // ModelIndex_287_1_25_ConcussionMissile
+		case 292: // ModelIndex_292_1_25_ConcussionMissile
+		case 293: // ModelIndex_293_1_26_SpaceBomb
+		case 294: // ModelIndex_294_1_27_HeavyRocket
+			lights[lightsCount].m18 = 250.0f;
+			lights[lightsCount].ColorR = 1.0f;
+			lights[lightsCount].ColorG = 0.4f;
+			lights[lightsCount].ColorB = 0.2f;
+			lightsCount++;
+			break;
+
+		case 295: // ModelIndex_295_1_28_MagPulse
+			lights[lightsCount].m18 = 250.0f;
+			lights[lightsCount].ColorR = 1.0f;
+			lights[lightsCount].ColorG = 0.2f;
+			lights[lightsCount].ColorB = 1.0f;
+			lightsCount++;
+			break;
+
+		case 296: // ModelIndex_296_1_28_MagPulse
+			lights[lightsCount].m18 = 250.0f;
+			lights[lightsCount].ColorR = 0.2f;
+			lights[lightsCount].ColorG = 0.2f;
+			lights[lightsCount].ColorB = 1.0f;
+			lightsCount++;
+			break;
+
+		case 298: // ModelIndex_298_1_29_Flare
+			lights[lightsCount].m18 = 200.0f;
+			lights[lightsCount].ColorR = 1.0f;
+			lights[lightsCount].ColorG = 0.4f;
+			lights[lightsCount].ColorB = 1.0f;
+			lightsCount++;
+			break;
+
+		case 306: // ModelIndex_306_1_21_LaserImpDS
+			lights[lightsCount].m18 = 50000.0f;
+			lights[lightsCount].m1C = 0x4000;
+			lights[lightsCount].ColorR = 0.0f;
+			lights[lightsCount].ColorG = 1.0f;
+			lights[lightsCount].ColorB = 0.2f;
+			lightsCount++;
+			break;
+
+		case 324: // ModelIndex_324_1_61_DSReactorCylinder
+			lights[lightsCount].m18 = A4->m1B;
+			lights[lightsCount].m1C = 0x20000;
+			lights[lightsCount].ColorR = 0.3f;
+			lights[lightsCount].ColorG = 0.5f;
+			lights[lightsCount].ColorB = 0.9f;
+			lightsCount++;
+			break;
+
+		case 349: // ModelIndex_349_1_86_DSAccelChamber
+			lights[lightsCount].m18 = A4->m1B;
+
+			if ((A4->m1B & 0x01) != 0)
+			{
+				lights[lightsCount].m1C = 0x8000;
+				lights[lightsCount].ColorR = 0.2f;
+				lights[lightsCount].ColorG = 0.0f;
+				lights[lightsCount].ColorB = 0.8f;
+			}
+			else
+			{
+				lights[lightsCount].m1C = 0x400;
+				lights[lightsCount].ColorR = 0.8f;
+				lights[lightsCount].ColorG = 0.0f;
+				lights[lightsCount].ColorB = 0.4f;
+			}
+
+			lightsCount++;
+			break;
+		}
 	}
 
 	return 0;

@@ -6,3 +6,4 @@ int WeaponImpactColorHook(int* params);
 int WeaponImpactColorSetIndexHook(int* params);
 int WeaponEnergyBarLaserColorHook(int* params);
 int WeaponEnergyBarIonColorHook(int* params);
+int WeaponLightColorHook(int* params);

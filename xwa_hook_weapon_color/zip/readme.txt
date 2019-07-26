@@ -29,6 +29,7 @@ At offset 00A3B5, replace E886E40D00 with E866DB1900.
 At offset 00A652, replace E8E9E10D00 with E8C9D81900.
 At offset 069F29, replace 6681BDB00100001801 with E8F2DF1300EB539090.
 At offset 069F7B, replace C7442418926900FF with E8A0DF1300909090.
+At offset 0F1CC2, replace 3D190100007F403D18010000 with 56E858620B005EE992020000.
 
 
 *** Usage ***
@@ -49,6 +50,7 @@ EnergyBarColorLaserHigh = ARGB color
 EnergyBarColorLaserLow = ARGB color
 EnergyBarColorIonHigh = ARGB color
 EnergyBarColorIonLow = ARGB color
+WeaponLightColorXXX = RGB color
 
 The format of the color is ARGB: FF000000 is black, FFFF0000 is red, FF00FF00 is green, FF0000FF is blue.
 
@@ -56,16 +58,14 @@ WeaponColor defines the default value used for all weapons.
 XXX in WeaponColorXXX goes from 280 to 307. When present, this overrides the default value. You can define a different value for all weapons.
 The default value is 0.
 
-The default impact colors are:
-WeaponImpactColor_3100 = FF0000FF
-WeaponImpactColor_3200 = FFFF0000
-WeaponImpactColor_3300 = FF00FF00
-WeaponImpactColor_3400 = FFFF00FF
-WeaponImpactColor_3500 = FFFFFF00
 XXX in WeaponImpactColorXXX goes from 280 to 307. When present, this overrides the default impact color.  If it is set to 0, the default value will be used. You can define a different impact color for all weapons.
+The default impact colors are defined in "hook_weapon_color.cfg".
 
 EnergyBarColorLaserHigh and EnergyBarColorLaserLow define the color of the laser energy bar.
 EnergyBarColorIonHigh and EnergyBarColorIonLow define the color of the ion energy bar.
+
+XXX in WeaponLightColorXXX goes from 280 to 307. When present, this overrides the default lighting effect color.  If it is set to 0, the default value will be used. You can define a different light color for all weapons.
+The default light colors are defined in "hook_weapon_color.cfg".
 
 See XWingWeaponColor.txt.
 
