@@ -33,7 +33,7 @@ The tag can be read from the CreateSurface method of the IDirectDraw interface. 
 
 The format of the tag is:
 - for dat images: "dat,groupId,ImageId,mipmapLevel"
-- for opt textures: "opt,optFileName,textureName,color,mipmapLevel" for color maps or "opt,optFileName,textureName,light,mipmapLevel" for light maps
+- for opt textures: "opt,optFileName,textureName,color,mipmapLevel" for color maps or "opt,optFileName,textureName,color-transparent,mipmapLevel" for transparent color maps or "opt,optFileName,textureName,light,mipmapLevel" for light maps
 
 To help debugging, the hook can optionally write the tags to the debug ouput that can be read with DebugView.
 See "hook_textures_tag.cfg".

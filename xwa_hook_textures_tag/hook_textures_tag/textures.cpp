@@ -54,6 +54,18 @@ struct XwaVBuffer
 
 static_assert(sizeof(XwaVBuffer) == 216, "size of XwaVBuffer must be 216");
 
+struct XwaTextureDescription
+{
+	unsigned char* Palettes;
+	int m04;
+	int TextureSize;
+	int DataSize;
+	int Width;
+	int Height;
+};
+
+static_assert(sizeof(XwaTextureDescription) == 24, "size of XwaTextureDescription must be 24");
+
 struct DDSURFACEDESC
 {
 	char unk00[32];
@@ -116,8 +128,54 @@ int OptTextureColorHook(int* params)
 	char A18 = (char)params[5];
 
 	const char* textureFileName = (const char*)params[708];
+	XwaTextureDescription* textureDescription = (XwaTextureDescription*)params[710];
+	int texureAlphaIllum = params[712];
+
+	int size = textureDescription->Width * textureDescription->Height;
+
+	int bytesSize;
+
+	if (size == textureDescription->TextureSize)
+	{
+		bytesSize = textureDescription->DataSize;
+	}
+	else
+	{
+		bytesSize = size;
+	}
+
+	int bpp = 0;
+
+	if (bytesSize >= size && bytesSize < size * 2)
+	{
+		bpp = 8;
+	}
+	else if (bytesSize >= size * 4 && bytesSize < size * 8)
+	{
+		bpp = 32;
+	}
+
+	bool hasAlpha;
+
+	if (bpp == 8)
+	{
+		hasAlpha = texureAlphaIllum != 0;
+	}
+	else if (bpp == 32)
+	{
+		hasAlpha = textureDescription->Palettes[2] != 0 || texureAlphaIllum != 0;
+	}
+	else
+	{
+		hasAlpha = false;
+	}
 
 	g_textureTag = "opt," + g_currentOptFileName + "," + textureFileName + ",color";
+
+	if (hasAlpha)
+	{
+		g_textureTag.append("-transparent");
+	}
 
 	for (int i = 0; i < A14; i++)
 	{
