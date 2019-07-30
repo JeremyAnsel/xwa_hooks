@@ -54,6 +54,71 @@ static_assert(sizeof(XwaMission) == 1290432, "size of XwaMission must be 1290432
 
 #pragma pack(pop)
 
+int g_planetsImageCount[] =
+{
+	0,
+	7, // 6010
+	7, // 6011
+	7, // 6012
+	7, // 6013
+	7, // 6014
+	7, // 6020
+	7, // 6021
+	7, // 6022
+	7, // 6023
+	7, // 6024
+	7, // 6025
+	7, // 6026
+	7, // 6027
+	7, // 6028
+	7, // 6029
+	7, // 6030
+	7, // 6031
+	7, // 6032
+	7, // 6033
+	3, // 6034
+	7, // 6040
+	7, // 6041
+	1, // 6042
+	7, // 6043
+	0, // 6050
+	7, // 6060
+	7, // 6061
+	7, // 6062
+	7, // 6063
+	7, // 6064
+	7, // 6070
+	7, // 6071
+	7, // 6072
+	7, // 6073
+	7, // 6074
+	7, // 6075
+	7, // 6076
+	7, // 6077
+	7, // 6078
+	3, // 6079
+	7, // 6080
+	7, // 6081
+	7, // 6082
+	7, // 6083
+	7, // 6084
+	7, // 6090
+	7, // 6091
+	7, // 6092
+	7, // 6093
+	7, // 6094
+	7, // 6100
+	7, // 6101
+	7, // 6102
+	7, // 6103
+	7, // 6104
+	7, // 6110
+	7, // 6111
+	7, // 6112
+	7, // 6113
+	7, // 6114
+};
+
 int BackdropsHook(int* params)
 {
 	const auto XwaRand = (int(*)())0x0059BEB0;
@@ -169,24 +234,34 @@ int BackdropsHook(int* params)
 		flightgroupsCount++;
 
 		// default backdrops
-
 		mission->FlightGroups[flightgroupsCount].CraftId = 0xB7;
-		mission->FlightGroups[flightgroupsCount + 1].CraftId = 0xB7;
 
-		do
+		int planetId0 = (XwaRand() % 0x3B) + 0x01;
+
+		if (planetId0 >= 0x37)
 		{
-			mission->FlightGroups[flightgroupsCount].PlanetId = (XwaRand() % 0x3C) + 0x01;
-		} while (mission->FlightGroups[flightgroupsCount].PlanetId == 0x37);
+			planetId0++;
+		}
 
-		mission->FlightGroups[flightgroupsCount + 1].PlanetId = (XwaRand() % 0x0A) + 0x54;
+		mission->FlightGroups[flightgroupsCount].PlanetId = planetId0;
 
-		mission->FlightGroups[flightgroupsCount].GlobalCargoIndex = XwaRand() % 0x07;
+		int imageCount0 = g_planetsImageCount[planetId0];
+		unsigned char globalCargoIndex0 = 0;
+
+		if (imageCount0 != 0)
+		{
+			globalCargoIndex0 = XwaRand() % imageCount0;
+		}
+
+		mission->FlightGroups[flightgroupsCount].GlobalCargoIndex = globalCargoIndex0;
 		mission->FlightGroups[flightgroupsCount].WavesCount = 0;
 		mission->FlightGroups[flightgroupsCount].CraftsCount = 0x01;
 		mission->FlightGroups[flightgroupsCount].GlobalGroupId = 0x0A;
 		mission->FlightGroups[flightgroupsCount].Iff = 0x02;
 		mission->FlightGroups[flightgroupsCount].Team = 0x09;
 
+		mission->FlightGroups[flightgroupsCount + 1].CraftId = 0xB7;
+		mission->FlightGroups[flightgroupsCount + 1].PlanetId = (XwaRand() % 0x0A) + 0x54;
 		mission->FlightGroups[flightgroupsCount + 1].GlobalCargoIndex = 0;
 		mission->FlightGroups[flightgroupsCount + 1].WavesCount = 0;
 		mission->FlightGroups[flightgroupsCount + 1].CraftsCount = 0x01;
