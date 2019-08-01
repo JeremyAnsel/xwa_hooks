@@ -1,0 +1,252 @@
+
+; textures bpp 8 to 32
+
+// L00596F89 std3D_CopyTextureFromSource
+:005970C5 - 0x1964C5
+8A02                    mov al, byte ptr [edx]
+8801                    mov byte ptr [ecx], al
+
+8B02                    mov eax, dword ptr [edx]
+8901                    mov dword ptr [ecx], eax
+
+:005970CF - 0x1964CF
+83C101                  add ecx, 00000001
+
+83C104                  add ecx, 00000004
+
+:005970DE - 0x1964DE
+83C201                  add edx, 00000001
+
+83C204                  add edx, 00000004
+
+// L005960BE XwaCreateTextureSurface
+:005961BE - 0x1955BE
+8B4804                  mov ecx, dword ptr [eax+04]
+
+909090                  nop
+
+:005961C1 - 0x1955C1
+898DE8FEFFFF            mov dword ptr [ebp+FFFFFEE8], ecx
+83BDE8FEFFFF00          cmp dword ptr [ebp+FFFFFEE8], 00000000
+751A                    jne 005961EA
+
+C785E8FEFFFF00000000    mov dword ptr [ebp+FFFFFEE8], 00000000
+909090                  nop
+EB1A                    jmp 005961EA
+
+:00596930 - 0x195D30
+755E                    jne 00596990
+
+EB5E                    jmp 00596990
+
+// L004418A0 CreateD3DfromTexture ColorMap
+:00441AD9 - 0x040ED9
+8D040B                  lea eax, dword ptr [ebx+ecx]
+
+8D0499                  lea eax, dword ptr [ecx+4*ebx]
+
+:00441B0F - 0x040F0F
+C7843C0806000008000000  mov dword ptr [esp+edi+00000608], 00000008
+
+C7843C0806000020000000  mov dword ptr [esp+edi+00000608], 00000020
+
+:00441B1A - 0x040F1A
+7409                    je 00441B25
+8D140B                  lea edx, dword ptr [ebx+ecx]
+8B4C2420                mov ecx, dword ptr [esp+20]
+8911                    mov dword ptr [ecx], edx
+
+C1A43CFC05000002        shl dword ptr [esp+edi+000005FC], 02
+909090                  nop
+
+:00441C64 - 0x041064
+399424080B0000         cmp dword ptr [esp+00000B08], edx
+
+BE03000000             mov esi, 00000003
+EB56                   jmp 00441CC1
+
+// L005995F0 XwaEnumTextureFormatsCallback
+:0059962F - 0x198A2F
+8B484C                 mov ecx, dword ptr [eax+4C]
+83E120                 and ecx, 00000020
+
+8B4864                 mov ecx, dword ptr [eax+64]
+C1E918                 shr ecx, 18
+
+:005996ED - 0x198AED
+83E108                 and ecx, 00000008
+
+83E128                 and ecx, 00000028
+
+;// disable lightmaps
+;:00441B25 - 0x040F25
+;8B4C243C85C9           mov ecx, dword ptr [esp+3C]
+;
+;E9FF000000             jmp 00441C29
+;90                     nop
+
+:00441B2B - 0x040F2B
+0F84F8000000            je 00441C29
+
+909090909090
+
+// L004418A0 CreateD3DfromTexture LightMap
+:00441C07 - 0x041007
+C7843CF800000008000000  mov dword ptr [esp+edi+000000F8], 00000008
+
+C7843CF800000020000000  mov dword ptr [esp+edi+000000F8], 00000020
+
+:00441C12 - 0x041012
+740D                    je 00441C21
+68F8465B00              push 005B46F8
+E872880C00              call 0050A490
+83C404                  add esp, 00000004
+
+C1A43CEC00000002        shl dword ptr [esp+edi+000000EC], 02
+90909090909090          nop
+
+:00441D93 - 0x041193
+6A01                    push 00000001
+
+6A03                    push 00000003
+
+:00441B31 - 0x040F31
+8B8C24F80A0000          mov ecx, dword ptr [esp+00000AF8]
+85C9                    test ecx, ecx
+0F84E9000000            je 00441C29
+80395F                  cmp byte ptr [ecx], 5F
+0F84E0000000            je 00441C29
+
+33D2                    xor edx, edx
+8B442414                mov eax, dword ptr [esp+14]
+0FAFC5                  imul eax, ebp
+50                      push eax
+E8F06F1600              call 005A8B30, 005A8B30 - 00441B40 = 00166FF0
+83C404                  add esp, 00000004
+EB74                    jmp 00441BB9, 00441BB9 - 00441B45 = 74
+90909090                nop
+
+// set TextureAlphaMask
+:00482AA1 - 0x081EA1
+8B4508                  mov eax, dword ptr [ebp+08]
+3BC2                    cmp eax, edx
+0F8400010000            je 00482BAC
+8B4D0C                  mov ecx, dword ptr [ebp+0C]
+8B01                    mov eax, dword ptr [ecx]
+8B4814                  mov ecx, dword ptr [eax+14]
+898EB4000000            mov dword ptr [esi+000000B4], ecx
+
+33C9                    xor ecx, ecx
+8A4802                  mov cl, byte ptr [eax+02]
+898EB4000000            mov dword ptr [esi+000000B4], ecx
+890D30CA6800            mov dword ptr [0068CA30], ecx
+E93E010000              jmp 00482BF5, 00482BF5 - 00482AB7 = 0000013E
+909090                  nop
+
+:00482B8C - 0x081F8C
+8B4508                  mov eax, dword ptr [ebp+08]
+3BC2                    cmp eax, edx
+7419                    je 00482BAC
+8B450C                  mov eax, dword ptr [ebp+0C]
+8B00                    mov eax, dword ptr [eax]
+8B4814                  mov ecx, dword ptr [eax+14]
+890D30CA6800            mov dword ptr [0068CA30], ecx
+
+33C0                    xor eax, eax
+8A4102                  mov al, byte ptr [ecx+02]
+8986B4000000            mov dword ptr [esi+000000B4], eax
+A330CA6800              mov dword ptr [0068CA30], eax
+EB57                    jmp 00482BF5, 00482BF5 - 00482B9E = 57
+909090                  nop
+
+// set AlphaMask in CreateD3DfromTexture
+:00441DCB - 0x0411CB
+8A8C24080B0000          mov cl, byte ptr [esp+00000B08]
+
+E8606D1600              call 005A8B30, 005A8B30 - 00441DD0 = 00166D60
+8BC8                    mov ecx, eax
+
+// L004CCD40, disable brightness palette convert
+:004CCC8F - 0x0CC08F
+E8AC000000              call 004CCD40
+
+9090909090              nop
+
+// L004418A0, Read or Convert ColorMap
+:00441A02 - 0x040E02
+7D0D                    jge 00441A11
+6838475B00              push 005B4738
+
+E819711600              call 005A8B20, 005A8B20 - 00441A07 = 00167119
+EB08                    jmp 00441A11, 00441A11 - 00441A09 = 08
+
+
+; color intensity
+
+// global lights
+:004424C5 - 0x0418C5
+C70200000000            mov dword ptr [edx], 00000000
+33DB                    xor ebx, ebx
+C70600000000            mov dword ptr [esi], 00000000
+
+E856661600              call 005A8B20, 005A8B20 - 004424CA = 00166656
+E998000000              jmp 00442567, 00442567 - 004424CF = 00000098
+90909090                nop
+
+
+; dat images 16 to 32
+
+; L004324E0
+// set ebx = 3
+:00432617 - 0x031A17
+EB3C                    jmp 00432655
+
+EBB8                    jmp 004325D1
+
+:004325D1 - 0x0319D1
+5800000000
+
+BB03000000              mov ebx, 00000003
+
+// set PixelFormatType = 0
+:004325EB - 0x0319EB
+C744243C02000000        mov [esp+3C], 00000002
+
+C744243C00000000        mov [esp+3C], 00000000
+
+; L00432120
+:00432152 - 0x031552
+7440                    je 00432194
+81E3FFFF0000            and ebx, 0000FFFF
+8D1C5B                  lea ebx, dword ptr [ebx+2*ebx]
+C1E303                  shl ebx, 03
+668B8B50B25F00          mov cx, word ptr [ebx+005FB250]
+
+33C0                    xor eax, eax
+6681FBA201              cmp bx, 01A2 // ModelIndex_418_16000_0_ResData_Fonts
+7403                    je 0043215E
+40                      inc eax
+EB03                    jmp 00432161
+83C004                  add eax, 00000004
+89442410                mov dword ptr [esp+10], eax
+EB0B                    jmp 00432172, 00432172 - 00432167 = 0B
+
+:00432172 - 0x031572
+8BC1                    mov eax, ecx
+2500400000              and eax, 00004000
+F7D8                    neg eax
+1BC0                    sbb eax, eax
+24FD                    and al, FD
+83C006                  add eax, 00000006
+
+81E3FFFF0000            and ebx, 0000FFFF
+8D1C5B                  lea ebx, dword ptr [ebx+2*ebx]
+C1E303                  shl ebx, 03
+EB47                    jmp 004321C7, 004321C7 - 00432180 = 47
+9090
+
+; L004CE1D0
+:004CE447 - 0x0CD847
+E8A4000000              call 004CE4F0
+
+E8D4A60D00              call 005A8B20, 005A8B20 - 004CE44C = 000DA6D4

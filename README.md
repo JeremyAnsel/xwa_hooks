@@ -12,6 +12,12 @@ This is the main dll hook that is used to call other hooks. A hook is a way to i
 
 If you use a custom Dinput.dll, it will conflict with this hook. In this case, use xwa_hook_main_no_dinput instead of xwa_hook_main.
 
+## xwa_hook_32bpp
+
+This hook enables 32-bit mode.
+
+See https://www.xwaupgrade.com/phpBB3/viewtopic.php?f=33&t=12257
+
 ## xwa_hook_backdrops
 
 This hook adds starfield backdrops to skirmish mission and permits to replace .dat files for a given mission.
