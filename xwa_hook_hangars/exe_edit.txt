@@ -328,6 +328,154 @@ E8DF331500              call 005A8B20, 005A8B20 - 00455741 = 001533DF
 E918010000              jmp 00455861, 00455861 - 00455749 = 00000118
 
 
+; from L0045B0D0
+; hook for launch animation
+
+:0045B831 - 0x05AC31
+03CB                    add ecx, ebx
+894C300F                mov dword ptr [eax+esi+0F], ecx
+
+E8EAD21400              call 005A8B20, 005A8B20 - 0045B836 = 0014D2EA
+90
+
+:0045B8FA - 0x05ACFA
+81C2F7000000            add edx, 000000F7
+3BC2                    cmp eax, edx
+0F8ED9070000            jle 0045C0E1
+
+E831D21400              call 005A8B30, 005A8B30 - 0045B8FF = 0014D231
+90                      nop
+85C0                    test eax, eax
+0F84D9070000            je 0045C0E1, 0045C0E1 - 0045B908 = 07D9
+
+
+; from L00456AE0
+; hook for hangar objects elevation in add object
+:00456F14 - 0x056314
+8B15C4337B00            mov edx, dword ptr [007B33C4]
+03C1                    add eax, ecx
+8944320F                mov dword ptr [edx+esi+0F], eax
+
+50                      push eax
+55                      push ebp
+E8051C1500              call 005A8B20, 005A8B20 - 00456F1B = 00151C05
+83C408                  add esp, 00000008
+9090                    nop
+
+; from L004554F0
+; hook for hangar floor elevation
+:00455DB8 - 0x0551B8
+2BF8                    sub edi, eax
+893D38BC6800            mov dword ptr [0068BC38], edi
+
+50                      push eax
+E8622D1500              call 005A8B20, 005A8B20 - 00455DBE = 00152D62
+58                      pop eax
+90                      nop
+
+; from L0045C680
+; hook for player craft elevation
+:0045C9C4 - 0x05BDC4
+8B15C4337B00            mov edx, dword ptr [007B33C4]
+03C1                    add eax, ecx
+8944320F                mov dword ptr [edx+esi+0F], eax
+
+50                      push eax
+E856C11400              call 005A8B20, 005A8B20 - 0045C9CA = 0014C156
+58                      pop eax
+9090909090              nop
+
+; from L00457C20
+; hook for re-enter animations
+; init positionZ
+:004582EF - 0x0576EF
+A138BC6800              mov eax, dword ptr [0068BC38]
+8D8823020000            lea ecx, dword ptr [eax+00000223]
+
+E83C081500              call 005A8B30, 005A8B30 - 004582F4 = 0015083C
+8BC8                    mov ecx, eax
+90909090                nop
+
+; from L0045B0D0
+; s_V0x0686B94 = 5
+:0045BB69 - 0x05AF69
+81C293000000            add edx, 00000093
+3954350F                cmp dword ptr [ebp+esi+0F], edx
+7E7A                    jle 0045BBEF
+
+E8C2CF1400              call 005A8B30, 005A8B30 - 0045BB6E = 0014CFC2
+909090                  nop
+85C0                    test eax, eax
+747A                    je 0045BBEF, 0045BBEF - 0045BB75 = 7A
+
+; s_V0x0686B94 = 5
+:0045BBAC - 0x05AFAC
+8B1538BC6800            mov edx, dword ptr [0068BC38]
+8B7C350F                mov edi, dword ptr [ebp+esi+0F]
+03C2                    add eax, edx
+3BF8                    cmp edi, eax
+7E33                    jle 0045BBEF
+
+50                      push eax
+E87ECF1400              call 005A8B30, 005A8B30 - 0045BBB2 = 0014CF7E
+8B7C350F                mov edi, dword ptr [ebp+esi+0F]
+85C0                    test eax, eax
+58                      pop eax
+90                      nop
+7433                    je 0045BBEF, 0045BBEF - 0045BBBC = 33
+
+; s_V0x0686B94 = 5
+:0045BBE3 - 0x05AFE3
+2BF8                    sub edi, eax
+897C350F                mov dword ptr [ebp+esi+0F], edi
+8B2DC4337B00            mov ebp, dword ptr [007B33C4]
+
+50                      push eax
+E837CF1400              call 005A8B20, 005A8B20 - 0045BBE9 = 0014CF37
+58                      pop eax
+9090909090              nop
+
+; s_V0x0686B94 = 6
+:0045BE23 - 0x05B223
+8B1538BC6800            mov edx, dword ptr [0068BC38]
+8B4C370F                mov ecx, dword ptr [edi+esi+0F]
+
+50                      push eax
+E8F7CC1400              call 005A8B20, 005A8B20 - 0045BE29 = 0014CCF7
+58                      pop eax
+EB15                    jmp 0045BE41, 0045BE41 - 0045BE2C = 15
+90                      nop
+
+; s_V0x0686B94 = 7
+:0045BF0C - 0x05B30C
+2BCA                    sub ecx, edx
+894C300F                mov dword ptr [eax+esi+0F], ecx
+
+E80FCC1400              call 005A8B20, 005A8B20 - 0045BF11 = 0014CC0F
+90                      nop
+
+; s_V0x0686B94 = 7
+:0045BF70 - 0x05B370
+8B1538BC6800            mov edx, dword ptr [0068BC38]
+03C2                    add eax, edx
+8B54310F                mov edx, dword ptr [ecx+esi+0F]
+3BD0                    cmp edx, eax
+0F8F5F010000            jg 0045C0E3
+
+50                      push eax
+E8BACB1400              call 005A8B30, 005A8B30 - 0045BF76 = 0014CBBA
+83C404                  add esp, 00000004
+909090                  nop
+85C0                    test eax, eax
+0F845F010000            je 0045C0E3, 0045C0E3 - 0045BF84 = 0000015F
+
+; s_V0x0686B94 = 7
+:0045C00D - 0x05B40D
+E82E660000              call 00462640
+
+E81ECB1400              call 005A8B30, 005A8B30 - 0045C012 = 0014CB1E
+
+
 ; from L004598E0
 ; get craft index
 :00459CBA - 0x0590BA

@@ -23,6 +23,19 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x46264F, CraftElevationHook },
 	{ 0x455670, CraftSelectionMissionHook },
 	{ 0x455741, CraftSelectionMeleeHook },
+	{ 0x45B836, HangarLaunchAnimation1Hook },
+	{ 0x45B8FF, HangarLaunchAnimation2Hook },
+	{ 0x456F1B, HangarObjectsElevationHook },
+	{ 0x455DBE, HangarFloorElevationHook },
+	{ 0x45C9CA, HangarPlayerCraftElevationHook },
+	{ 0x4582F4, HangarReenterInitPositionZHook },
+	{ 0x45BB6E, HangarRenterAnimation51Hook },
+	{ 0x45BBB2, HangarRenterAnimation52Hook },
+	{ 0x45BBE9, HangarRenterAnimation53Hook },
+	{ 0x45BE29, HangarReenterAnimation6Hook },
+	{ 0x45BF11, HangarReenterAnimation71Hook },
+	{ 0x45BF76, HangarReenterAnimation72Hook },
+	{ 0x45C012, HangarReenterAnimation73Hook },
 	{ 0x459CBF, HangarGetCraftIndexHook },
 };
 
@@ -143,6 +156,31 @@ static const HookPatchItem g_setCraftSelectionPatch[] =
 	{ 0x54B39, "80FA02BE02000000755A6683F901740B", "525150E8DF33150058595AE918010000" },
 };
 
+static const HookPatchItem g_hangarLaunchAnimationPatch[] =
+{
+	{ 0x05AC31, "03CB894C300F", "E8EAD2140090" },
+	{ 0x05ACFA, "81C2F70000003BC20F8ED9070000", "E831D214009085C00F84D9070000" },
+};
+
+static const HookPatchItem g_hangarObjectsElevationPatch[] =
+{
+	{ 0x056314, "8B15C4337B0003C18944320F", "5055E8051C150083C4089090" },
+	{ 0x0551B8, "2BF8893D38BC6800", "50E8622D15005890" },
+	{ 0x05BDC4, "8B15C4337B0003C18944320F", "50E856C11400589090909090" },
+};
+
+static const HookPatchItem g_hangarReenterAnimationPatch[] =
+{
+	{ 0x0576EF, "A138BC68008D8823020000", "E83C0815008BC890909090" },
+	{ 0x05AF69, "81C2930000003954350F7E7A", "E8C2CF140090909085C0747A" },
+	{ 0x05AFAC, "8B1538BC68008B7C350F03C23BF87E33", "50E87ECF14008B7C350F85C058907433" },
+	{ 0x05AFE3, "2BF8897C350F8B2DC4337B00", "50E837CF1400589090909090" },
+	{ 0x05B223, "8B1538BC68008B4C370F", "50E8F7CC140058EB1590" },
+	{ 0x05B30C, "2BCA894C300F", "E80FCC140090" },
+	{ 0x05B370, "8B1538BC680003C28B54310F3BD00F8F5F010000", "50E8BACB140083C40490909085C00F845F010000" },
+	{ 0x05B40D, "E82E660000", "E81ECB1400" },
+};
+
 static const HookPatchItem g_hangarGetCraftIndexPatch[] =
 {
 	{ 0x0590BA, "E871310800", "E871EE1400" },
@@ -169,5 +207,8 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the family hangar map", g_setFamilyHangarMapPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the craft elevation", g_setCraftElevationPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the craft selection", g_setCraftSelectionPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the hangar launch animation", g_hangarLaunchAnimationPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the hangar objects elevation", g_hangarObjectsElevationPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the hangar re-enter animation", g_hangarReenterAnimationPatch),
 	MAKE_HOOK_PATCH("To call the hook that gets the craft index", g_hangarGetCraftIndexPatch),
 };

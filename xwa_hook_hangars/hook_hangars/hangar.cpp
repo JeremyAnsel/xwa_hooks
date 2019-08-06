@@ -379,6 +379,16 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 	return lines;
 }
 
+bool g_isHangarFloorInverted = false;
+
+void ReadIsHangarFloorInverted()
+{
+	const auto lines = GetCustomFileLines("HangarObjects");
+	const int isHangarFloorInverted = GetFileKeyValueInt(lines, "IsHangarFloorInverted");
+
+	g_isHangarFloorInverted = isHangarFloorInverted != 0;
+}
+
 int HangarOptLoadHook(int* params)
 {
 	const char* argOpt = (char*)params[0];
@@ -1598,6 +1608,289 @@ int CraftSelectionMeleeHook(int* params)
 	}
 
 	return 0;
+}
+
+int HangarLaunchAnimation1Hook(int* params)
+{
+	const int esp1C = params[7];
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	int& positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
+
+	if (!g_isHangarFloorInverted)
+	{
+		positionZ += esp1C;
+	}
+	else
+	{
+		positionZ -= esp1C;
+	}
+
+	return 0;
+}
+
+int HangarLaunchAnimation2Hook(int* params)
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
+	const int hangarFloorPositionZ = *(int*)0x068BC38;
+
+	const int elevation = 0xF7;
+
+	int ret;
+
+	if (!g_isHangarFloorInverted)
+	{
+		ret = positionZ > hangarFloorPositionZ + elevation ? 1 : 0;
+	}
+	else
+	{
+		ret = positionZ < hangarFloorPositionZ - elevation ? 1 : 0;
+	}
+
+	return ret;
+}
+
+int HangarObjectsElevationHook(int* params)
+{
+	const int objectIndex = params[0];
+	const int objectElevation = params[1];
+
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	int& positionZ = xwaObjects[objectIndex].PositionZ;
+	const int hangarFloorPositionZ = *(int*)0x068BC38;
+
+	if (!g_isHangarFloorInverted)
+	{
+		positionZ = hangarFloorPositionZ + objectElevation;
+	}
+	else
+	{
+		positionZ = hangarFloorPositionZ - objectElevation;
+	}
+
+	return 0;
+}
+
+int HangarFloorElevationHook(int* params)
+{
+	ReadIsHangarFloorInverted();
+
+	const int elevation = params[0];
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
+	int& hangarFloorPositionZ = *(int*)0x068BC38;
+
+	if (!g_isHangarFloorInverted)
+	{
+		hangarFloorPositionZ = positionZ - elevation;
+	}
+	else
+	{
+		hangarFloorPositionZ = positionZ + elevation;
+	}
+
+	return 0;
+}
+
+int HangarPlayerCraftElevationHook(int* params)
+{
+	ReadIsHangarFloorInverted();
+
+	const int elevation = params[0];
+
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
+	const int currentPlayerId = *(int*)0x08C1CC8;
+	const int hangarFloorPositionZ = *(int*)0x068BC38;
+
+	if (!g_isHangarFloorInverted)
+	{
+		xwaObjects[xwaPlayers[currentPlayerId].ObjectIndex].PositionZ = hangarFloorPositionZ + elevation;
+	}
+	else
+	{
+		xwaObjects[xwaPlayers[currentPlayerId].ObjectIndex].PositionZ = hangarFloorPositionZ - elevation;
+	}
+
+	return 0;
+}
+
+int HangarReenterInitPositionZHook(int* params)
+{
+	ReadIsHangarFloorInverted();
+
+	const int hangarFloorPositionZ = *(int*)0x068BC38;
+	const int elevation = 0x223;
+
+	int positionZ;
+
+	if (!g_isHangarFloorInverted)
+	{
+		positionZ = hangarFloorPositionZ + elevation;
+	}
+	else
+	{
+		positionZ = hangarFloorPositionZ - elevation;
+	}
+
+	return positionZ;
+}
+
+int HangarRenterAnimation51Hook(int* params)
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
+	const int hangarFloorPositionZ = *(int*)0x068BC38;
+
+	const int elevation = 0x93;
+
+	int ret;
+
+	if (!g_isHangarFloorInverted)
+	{
+		ret = positionZ > hangarFloorPositionZ + elevation ? 1 : 0;
+	}
+	else
+	{
+		ret = positionZ < hangarFloorPositionZ - elevation ? 1 : 0;
+	}
+
+	return ret;
+}
+
+int HangarRenterAnimation52Hook(int* params)
+{
+	const int elevation = params[0];
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
+	const int hangarFloorPositionZ = *(int*)0x068BC38;
+
+	int ret;
+
+	if (!g_isHangarFloorInverted)
+	{
+		ret = positionZ > hangarFloorPositionZ + elevation ? 1 : 0;
+	}
+	else
+	{
+		ret = positionZ < hangarFloorPositionZ - elevation ? 1 : 0;
+	}
+
+	return ret;
+}
+
+int HangarRenterAnimation53Hook(int* params)
+{
+	const int delta = params[0];
+
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	int& positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
+
+	if (!g_isHangarFloorInverted)
+	{
+		positionZ -= delta;
+	}
+	else
+	{
+		positionZ += delta;
+	}
+
+	return 0;
+}
+
+int HangarReenterAnimation6Hook(int* params)
+{
+	const int elevation = params[0];
+	const int esp1C = params[8];
+
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	int& positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
+	const int hangarFloorPositionZ = *(int*)0x068BC38;
+
+	if (!g_isHangarFloorInverted)
+	{
+		if (positionZ > hangarFloorPositionZ + elevation)
+		{
+			positionZ -= esp1C;
+		}
+	}
+	else
+	{
+		if (positionZ < hangarFloorPositionZ - elevation)
+		{
+			positionZ += esp1C;
+		}
+	}
+
+	return 0;
+}
+
+int HangarReenterAnimation71Hook(int* params)
+{
+	const int esp1C = params[7];
+
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	int& positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
+
+	if (!g_isHangarFloorInverted)
+	{
+		positionZ -= esp1C;
+	}
+	else
+	{
+		positionZ += esp1C;
+	}
+
+	return 0;
+}
+
+int HangarReenterAnimation72Hook(int* params)
+{
+	const int elevation = params[0];
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
+	const int hangarFloorPositionZ = *(int*)0x068BC38;
+
+	int ret;
+
+	if (!g_isHangarFloorInverted)
+	{
+		ret = positionZ <= hangarFloorPositionZ + elevation ? 1 : 0;
+	}
+	else
+	{
+		ret = positionZ >= hangarFloorPositionZ - elevation ? 1 : 0;
+	}
+
+	return ret;
+}
+
+int HangarReenterAnimation73Hook(int* params)
+{
+	const int modelIndex = params[0];
+
+	const auto GetCraftElevation = (int(*)(int))0x00462640;
+
+	int elevation = GetCraftElevation(modelIndex);
+
+	if (g_isHangarFloorInverted)
+	{
+		elevation = -elevation;
+	}
+
+	return elevation;
 }
 
 int HangarGetCraftIndexHook(int* params)

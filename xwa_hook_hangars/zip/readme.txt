@@ -105,6 +105,25 @@ At offset 5BDA4, replace 83F804741050E8718E0200 with 50E8965C000083C404EB0F.
 At offset 54A69, replace 6683F93A0F84400100006683F941 with 5150E8B03415005859E9EA010000.
 At offset 54B39, replace 80FA02BE02000000755A6683F901740B with 525150E8DF33150058595AE918010000.
 
+# To call the hook that sets the hangar launch animation
+At offset 05AC31, replace 03CB894C300F with E8EAD2140090.
+At offset 05ACFA, replace 81C2F70000003BC20F8ED9070000 with E831D214009085C00F84D9070000.
+
+# To call the hook that sets the hangar objects elevation
+At offset 056314, replace 8B15C4337B0003C18944320F with 5055E8051C150083C4089090.
+At offset 0551B8, replace 2BF8893D38BC6800 with 50E8622D15005890.
+At offset 05BDC4, replace 8B15C4337B0003C18944320F with 50E856C11400589090909090.
+
+# To call the hook that sets the hangar re-enter animation
+At offset 0576EF, replace A138BC68008D8823020000 with E83C0815008BC890909090.
+At offset 05AF69, replace 81C2930000003954350F7E7A with E8C2CF140090909085C0747A.
+At offset 05AFAC, replace 8B1538BC68008B7C350F03C23BF87E33 with 50E87ECF14008B7C350F85C058907433.
+At offset 05AFE3, replace 2BF8897C350F8B2DC4337B00 with 50E837CF1400589090909090.
+At offset 05B223, replace 8B1538BC68008B4C370F with 50E8F7CC140058EB1590.
+At offset 05B30C, replace 2BCA894C300F with E80FCC140090.
+At offset 05B370, replace 8B1538BC680003C28B54310F3BD00F8F5F010000 with 50E8BACB140083C40490909085C00F845F010000.
+At offset 05B40D, replace E82E660000 with E81ECB1400.
+
 # To call the hook that gets the craft index
 At offset 0590BA, replace E871310800 with E871EE1400.
 At offset 0590C9, replace 7467 with EB67.
@@ -194,6 +213,7 @@ To not load the shuttle, set "LoadShuttle = 0".
 To set the shuttle model index, set "ShuttleModelIndex = value". value is an integer. The default value is 50 (Shuttle).
 To set the shuttle markings, set "ShuttleMarkings = value". value is an integer. The default value is 0.
 To not load the droids, set "LoadDroids = 0".
+To invert the hangar floor, set "IsHangarFloorInverted = 1". When set to 0, the floor is below the player craft. When set to 1, the floor is above the player craft.
 See "HangarObjects.txt".
 
 Apply to hangar:

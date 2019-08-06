@@ -2,4 +2,5 @@ LoadShuttle = 1
 ShuttleModelIndex = 50
 ShuttleMarkings = 0
 LoadDroids = 1
+IsHangarFloorInverted = 0
 FlightModels\YWing.opt = FlightModels\TieFighter.opt
