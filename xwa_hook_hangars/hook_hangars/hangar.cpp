@@ -670,6 +670,21 @@ int HangarCameraPositionHook(int* params)
 				positionY = xwaObjects[V0x068BCC0].PositionY;
 				positionZ = xwaObjects[V0x068BCC0].PositionZ + 0x1E;
 			}
+			else
+			{
+				if (cameraLines.size())
+				{
+					positionX += GetFileKeyValueInt(cameraLines, "Key3_X");
+					positionY += GetFileKeyValueInt(cameraLines, "Key3_Y");
+					positionZ += GetFileKeyValueInt(cameraLines, "Key3_Z");
+				}
+				else
+				{
+					positionX += -0x460;
+					positionY += 0x550;
+					positionZ += -0x316;
+				}
+			}
 
 			break;
 		}
@@ -689,6 +704,21 @@ int HangarCameraPositionHook(int* params)
 				positionX = xwaObjects[V0x068BCC0].PositionX;
 				positionY = xwaObjects[V0x068BCC0].PositionY;
 				positionZ = xwaObjects[V0x068BCC0].PositionZ + 0x1E;
+			}
+			else
+			{
+				if (cameraLines.size())
+				{
+					positionX += GetFileKeyValueInt(cameraLines, "Key3_X");
+					positionY += GetFileKeyValueInt(cameraLines, "Key3_Y");
+					positionZ += GetFileKeyValueInt(cameraLines, "Key3_Z");
+				}
+				else
+				{
+					positionX += -0x460;
+					positionY += 0x550;
+					positionZ += -0x316;
+				}
 			}
 
 			break;
