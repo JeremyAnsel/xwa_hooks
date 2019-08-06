@@ -18,3 +18,4 @@ int SelectHangarModelIndex(int* params);
 int CraftElevationHook(int* params);
 int CraftSelectionMissionHook(int* params);
 int CraftSelectionMeleeHook(int* params);
+int HangarGetCraftIndexHook(int* params);

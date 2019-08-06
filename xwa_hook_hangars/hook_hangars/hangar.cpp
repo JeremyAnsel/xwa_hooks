@@ -1569,3 +1569,29 @@ int CraftSelectionMeleeHook(int* params)
 
 	return 0;
 }
+
+int HangarGetCraftIndexHook(int* params)
+{
+	const int modelIndex = params[0];
+	const auto GetCraftIndex = (int(*)(int))0x004DCE30;
+
+	int craftIndex = GetCraftIndex(modelIndex);
+
+	char* esp18 = (char*)&params[7];
+
+	if (craftIndex == 0xFFFF)
+	{
+		esp18[0] = 0;
+		craftIndex = 0;
+	}
+	else
+	{
+		const char* yourCraftString = *(const char**)0x009C6DF4;
+		const char* craftName = *(const char**)(0x005BB484 + craftIndex * 0x3DB);
+
+		strcpy_s(esp18, 52, yourCraftString);
+		strcat_s(esp18, 52, craftName);
+	}
+
+	return craftIndex;
+}
