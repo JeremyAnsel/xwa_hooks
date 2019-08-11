@@ -1,5 +1,12 @@
 
 L004D3DE0
+:004D3DFA - 0x0D31FA
+8901                    mov dword ptr [ecx], eax
+
+9090
+
+
+L004D3DE0
 :004D3DE0 - 0x0D31E0
 8B156C4B7D00            mov edx, dword ptr [007D4B6C]
 
@@ -28,3 +35,16 @@ E80E4C0D00              call 005A8B20, 005A8B20 - 004D3F12 = 000D4C0E
 5D                      pop ebp
 5B                      pop ebx
 C3                      ret
+
+
+L004D3ED0
+:004D3F74 - 0x0D3374
+892C85E0C27400          mov dword ptr [4*eax+0074C2E0], ebp
+
+90909090909090
+
+:004D3F99 - 0x0D3399
+C705A0D57400E0C27400    mov dword ptr [0074D5A0], 0074C2E0
+
+E8824B0D00              call 005A8B20, 005A8B20 - 004D3F9E = 000D4B82
+9090909090

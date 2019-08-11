@@ -2,7 +2,34 @@
 #include "res1200.h"
 #include <vector>
 
-std::vector<int> g_resBuffer;
+class ResBuffer
+{
+public:
+	ResBuffer()
+	{
+		unsigned int size = 1200;
+
+		this->_buffer.reserve(size);
+	}
+
+	void Reserve(int size, int pitch)
+	{
+		if (this->_buffer.capacity() < size)
+		{
+			this->_buffer.reserve(size);
+		}
+
+		for (unsigned int i = 0; i < size; i++)
+		{
+			this->_buffer.data()[i] = i * pitch;
+		}
+	}
+
+	std::vector<int> _buffer;
+};
+
+ResBuffer g_resBuffer;
+ResBuffer g_resBuffer2;
 
 int Res1200Hook1(int* params)
 {
@@ -14,15 +41,7 @@ int Res1200Hook1(int* params)
 	const int*& s_V0x074D5A4 = *(const int**)0x0074D5A4;
 	const int*& s_V0x074D5A0 = *(const int**)0x0074D5A0;
 
-	if (g_resBuffer.capacity() < s_XwaTextBoundY)
-	{
-		g_resBuffer.reserve(s_XwaTextBoundY);
-	}
-
-	for (unsigned int edx = 0; edx < s_XwaTextBoundY; edx++)
-	{
-		g_resBuffer[edx] = edx * s_XwaFlightScreenPitch;
-	}
+	g_resBuffer.Reserve(s_XwaTextBoundY, s_XwaFlightScreenPitch);
 
 	s_V0x06002BC = L0050E470();
 
@@ -35,24 +54,22 @@ int Res1200Hook1(int* params)
 	}
 
 	s_V0x074D5A4 = &s_XwaFlightScreenPitch;
-	s_V0x074D5A0 = g_resBuffer.data();
+	s_V0x074D5A0 = g_resBuffer._buffer.data();
 
 	return 0;
 }
 
 int Res1200Hook2(int* params)
 {
+	unsigned int width = (unsigned int)params[6];
 	unsigned int height = (unsigned int)params[7];
 
-	const int& s_XwaFlightScreenPitch = *(int*)0x0080DC58;
+	const int s_XwaFlightScreenBppDiv8 = *(int*)0x005AA0AC;
 	const int*& s_V0x074D5A0 = *(const int**)0x0074D5A0;
 
-	if (g_resBuffer.capacity() < height)
-	{
-		g_resBuffer.reserve(height);
-	}
+	g_resBuffer.Reserve(height, width * s_XwaFlightScreenBppDiv8);
 
-	s_V0x074D5A0 = g_resBuffer.data();
+	s_V0x074D5A0 = g_resBuffer._buffer.data();
 
 	return 0;
 }
@@ -65,18 +82,25 @@ int Res1200Hook3(int* params)
 	const int*& s_V0x074D5A4 = *(const int**)0x0074D5A4;
 	const int*& s_V0x074D5A0 = *(const int**)0x0074D5A0;
 
-	if (g_resBuffer.capacity() < height)
-	{
-		g_resBuffer.reserve(height);
-	}
-
-	for (unsigned int cx = 0; cx < height; cx++)
-	{
-		g_resBuffer[cx] = cx * s_XwaFlightScreenPitch;
-	}
+	g_resBuffer.Reserve(height, s_XwaFlightScreenPitch);
 
 	s_V0x074D5A4 = &s_XwaFlightScreenPitch;
-	s_V0x074D5A0 = g_resBuffer.data();
+	s_V0x074D5A0 = g_resBuffer._buffer.data();
+
+	return 0;
+}
+
+int Res1200Hook800(int* params)
+{
+	const int A8 = params[3];
+	const int AC = params[4];
+
+	const int*& s_V0x074D5A0 = *(const int**)0x0074D5A0;
+	const int s_XwaFlightScreenBppDiv8 = *(int*)0x005AA0AC;
+
+	g_resBuffer2.Reserve(AC, A8 * s_XwaFlightScreenBppDiv8);
+
+	s_V0x074D5A0 = g_resBuffer2._buffer.data();
 
 	return 0;
 }

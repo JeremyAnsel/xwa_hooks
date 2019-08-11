@@ -20,9 +20,12 @@ Place hook_res1200.dll next to xwingalliance.exe
 The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that fix res 1200 crash
+At offset 0D31FA, replace 8901 with 9090.
 At offset 0D31E0, replace 8B156C4B7D00 with E83B4D0D00C3.
 At offset 0D32F0, replace C705A0D57400A0907F00 with E82B4C0D009090909090.
 At offset 0D330D, replace 8B54241C33C985D27620 with E80E4C0D005F5E5D5BC3.
+At offset 0D3374, replace 892C85E0C27400 with 90909090909090.
+At offset 0D3399, replace C705A0D57400E0C27400 with E8824B0D009090909090.
 
 
 *** Credits ***
