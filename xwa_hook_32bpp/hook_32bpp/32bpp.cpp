@@ -204,7 +204,15 @@ int ConvertColorMapHook(int* params)
 			unsigned short color = A1C[4 * 256 + colorIndex];
 			unsigned short color8 = A1C[8 * 256 + colorIndex];
 
-			if (color != 0 && color == color8)
+			unsigned char r = (unsigned char)((color & 0xF800U) >> 11);
+			unsigned char g = (unsigned char)((color & 0x7E0U) >> 5);
+			unsigned char b = (unsigned char)(color & 0x1FU);
+
+			if (r <= 8 && g <= 16 && b <= 8)
+			{
+				illumBuffer[i] = 0;
+			}
+			else if (color == color8)
 			{
 				hasIllum = true;
 				illumBuffer[i] = 0x3f;
