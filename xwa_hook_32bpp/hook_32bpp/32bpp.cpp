@@ -212,6 +212,10 @@ int ConvertColorMapHook(int* params)
 			{
 				illumBuffer[i] = 0;
 			}
+			else if (hasAlpha && *(unsigned char*)(A14 + i) != 255)
+			{
+				illumBuffer[i] = 0;
+			}
 			else if (color == color8)
 			{
 				hasIllum = true;
@@ -258,6 +262,11 @@ int ConvertColorMapHook(int* params)
 		{
 			int paletteIndex = 4 + brightnessLevel;
 			unsigned char illum = A14 == 0 ? (unsigned char)0 : *(unsigned char*)(A14 + i);
+
+			if (*(unsigned char*)(A10 + i * 4 + 3) != 255)
+			{
+				illum = 0;
+			}
 
 			unsigned int b = *(unsigned char*)(A10 + i * 4 + 0);
 			unsigned int g = *(unsigned char*)(A10 + i * 4 + 1);
