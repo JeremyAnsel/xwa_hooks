@@ -1,4 +1,16 @@
 
+# S-Foils and Landing Gears keys
+
+00501930
+Key_V = 118, 0x39
+Key_CONTROL_L = 282, 0xDD
+
+:00501A0D - 0x100E0D
+26
+
+10
+
+
 # Disable S-Foil model filter
 
 :004FC46A - 0x0FB86A
@@ -6,7 +18,7 @@
 7419                    je 004FC489
 6683F904                cmp cx, 0004
 
-51                      push ecx
+50                      push eax
 E8B0C60A00              call 005A8B20, 005A8B20 - 004FC470 = 000AC6B0
 59                      pop ecx
 85C9                    test ecx, ecx
@@ -17,28 +29,34 @@ E8B0C60A00              call 005A8B20, 005A8B20 - 004FC470 = 000AC6B0
 740A                    je 00403AFC
 6683F904                cmp cx, 0004
 
-51                      push ecx
+50                      push eax
 E82E501A00              call 005A8B20, 005A8B20 - 00403AF2 = 001A502E
 59                      pop ecx
 85C9                    test ecx, ecx
 90                      nop
 
-:0045951C - 0x05891C
+:00459517 - 0x058917
+668B443102              mov ax, word ptr [ecx+esi+02]
 663D0100                cmp ax, 0001
 7406                    je 00459528
 663D0400                cmp ax, 0004
 
+8D0431                  lea eax, dword ptr [ecx+esi]
+9090                    nop
 50                      push eax
 E8FEF51400              call 005A8B20, 005A8B20 - 00459522 = 0014F5FE
 58                      pop eax
 85C0                    test eax, eax
 90                      nop
 
-:00508DE0 - 0x1081E0
+:00508DDB - 0x1081DB
+668B440102              mov ax, word ptr [ecx+eax+02]
 663D0100                cmp ax, 0001
 7405                    je 00508DEB
 663BC3                  cmp ax, bx
 
+03C1                    add eax, ecx
+909090                  nop
 50                      push eax
 E83AFD0900              call 005A8B20, 005A8B20 - 00508DE6 = 0009FD3A
 58                      pop eax
@@ -78,6 +96,12 @@ E816721A00              call 005A8B30, 005A8B30 - 0040191A = 001A7216
 8BF8                    mov edi, eax
 E94E010000              jmp 00401A72, 00401A72 - 00401924 = 0000014E
 9090                    nop
+
+
+:004018A7 - 0x000CA7
+66C70536168C000E00      mov word ptr [008C1636], 000E
+
+66C70536168C000200      mov word ptr [008C1636], 0002
 
 
 # To call the hook that defines hangar shuttle S-Foils
@@ -198,3 +222,34 @@ L004836F0
 7517                    jne 00483C72
 
 9090
+
+
+# Set S-Foils for AI Out Of Hyperspace
+
+L004AFD50
+:004AFE14 - 0x0AF214
+E807B0FEFF              call 0049AE20
+
+E8078D0F00              call 005A8B20, 005A8B20 - 004AFE19 = 000F8D07
+
+L004AFE20
+:004AFE2A - 0x0AF22A
+E81152FFFF              call 004A5040
+
+E8F18C0F00              call 005A8B20, 005A8B20 - 004AFE2F = 000F8CF1
+
+# Set S-Foils for AI Into Hyperspace
+
+L004AE3F0
+:004AE3FC - 0x0AD7FC
+E85F52FFFF              call 004A3660
+
+E81FA70F00              call 005A8B20, 005A8B20 - 004AE401 = 000FA71F
+
+# Set S-Foils for AI Hyperspace order
+
+L004BA6F0
+:004BA88D - 0x0B9C8D
+E85EBCFFFF              call 004B64F0
+
+E88EE20E00              call 005A8B20, 005A8B20 - 004BA892 = 000EE28E

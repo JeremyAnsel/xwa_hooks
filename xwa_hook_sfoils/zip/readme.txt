@@ -22,15 +22,19 @@ Place hook_sfoils.dll next to xwingalliance.exe
 
 The following modifications are applied at runtime to xwingalliance.exe:
 
+# S-Foils and Landing Gears keys
+At offset 100E0D, replace 26 with 10.
+
 # Disable S-Foil model filter
-At offset 0FB86A, replace 6683F90174196683F904 with 51E8B0C60A005985C990.
-At offset 002EEC, replace 6683F901740A6683F904 with 51E82E501A005985C990.
-At offset 05891C, replace 663D01007406663D0400 with 50E8FEF514005885C090.
-At offset 1081E0, replace 663D01007405663BC3 with 50E83AFD09005885C0.
+At offset 0FB86A, replace 6683F90174196683F904 with 50E8B0C60A005985C990.
+At offset 002EEC, replace 6683F901740A6683F904 with 50E82E501A005985C990.
+At offset 058917, replace 668B443102663D01007406663D0400 with 8D0431909050E8FEF514005885C090.
+At offset 1081DB, replace 668B440102663D01007405663BC3 with 03C190909050E83AFD09005885C0.
 
 # To call the hook that defines S-Foils
 At offset 000AF3, replace 4883F8310F872001000033C98A8840184000 with 50E827741A0083C4045F5E5D5BC390909090.
 At offset 000D14, replace 4883F8310F87B101000033D28A90C42C4000 with 50E816721A0083C4048BF8E94E0100009090.
+At offset 000CA7, replace 66C70536168C000E00 with 66C70536168C000200.
 
 # To call the hook that defines hangar shuttle S-Foils
 At offset 05E2C4, replace 8B15C4337B00668B4C320251E88B9A0200 with 6AFF5757E8539C140083C40CEB6A909090.
@@ -47,10 +51,17 @@ At offset 080D8A, replace 7517 with 9090.
 At offset 08304B, replace 0F85E9000000 with 909090909090.
 At offset 083059, replace 7517 with 9090.
 
+# To call the hook that set S-Foils for hyperspace
+At offset 0AF214, replace E807B0FEFF with E8078D0F00.
+At offset 0AF22A, replace E81152FFFF with E8F18C0F00.
+At offset 0AD7FC, replace E85F52FFFF with E81FA70F00.
+At offset 0B9C8D, replace E85EBCFFFF with E88EE20E00.
+
 
 *** Usage ***
 
 Suppose that the craft is "FlightModels\[Model].opt".
+
 To create s-foils, create a file named "FlightModels\[Model]SFoils.txt" or create a section named "[SFoils]" in "FlightModels\[Model].ini".
 If the file does not exist, default values are used (S-Foils for XWing, BWing, and Shuttle).
 The format is a line per mesh:
@@ -60,6 +71,14 @@ To enable or disable the S-Foils closing/opening in before/after hyperspace, cre
 To slow down the animation, create a setting named "SFoilsAnimationSpeed". For instance, if you set "2", the animation will be slowed down by a factor of 2. The default value is "1" (normal speed).
 
 See XWingSFoils.txt, BWingSFoils.txt, ShuttleSFoils.txt.
+
+To create landing gears, create a file named "FlightModels\[Model]SFoilsLandingGears.txt" or create a section named "[SFoilsLandingGears]" in "FlightModels\[Model].ini".
+The format is a line per mesh:
+mesh index, angle, closing speed, opening speed.
+
+Landing gears are deployed when a craft in is the hangar. When the s-foils are closed in space, the landing gears are not deployed.
+
+To open or close s-foils, use the V key. To deploy or retract landing gears, use the Ctrl+L key.
 
 
 *** Credits ***

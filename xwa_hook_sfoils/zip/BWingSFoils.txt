@@ -3,3 +3,6 @@
 3, 64, 2, 2
 5, 64, 2, 2
 6, 64, 2, 2
+
+CloseSFoilsInHyperspace = 1
+SFoilsAnimationSpeed = 1

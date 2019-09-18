@@ -16,20 +16,30 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x45F408, SFoilsHangarShuttleHook },
 	{ 0x45F6FD, SFoilsHangarShuttleHook },
 	{ 0x45F9CC, SFoilsHangarShuttleHook },
+	{ 0x4AFE19, SFoilsAIOutOfHyperspace1Hook },
+	{ 0x4AFE2F, SFoilsAIOutOfHyperspace2Hook },
+	{ 0x4AE401, SFoilsAIIntoHyperspace1Hook },
+	{ 0x4BA892, SFoilsAIHyperspaceOrderHook },
+};
+
+static const HookPatchItem g_keysSFoilsLandingGearsPatch[] =
+{
+	{ 0x100E0D, "26", "10" },
 };
 
 static const HookPatchItem g_disableSFoilModelFilterPatch[] =
 {
-	{ 0x0FB86A, "6683F90174196683F904", "51E8B0C60A005985C990" },
-	{ 0x002EEC, "6683F901740A6683F904", "51E82E501A005985C990" },
-	{ 0x05891C, "663D01007406663D0400", "50E8FEF514005885C090" },
-	{ 0x1081E0, "663D01007405663BC3", "50E83AFD09005885C0" },
+	{ 0x0FB86A, "6683F90174196683F904", "50E8B0C60A005985C990" },
+	{ 0x002EEC, "6683F901740A6683F904", "50E82E501A005985C990" },
+	{ 0x058917, "668B443102663D01007406663D0400", "8D0431909050E8FEF514005885C090" },
+	{ 0x1081DB, "668B440102663D01007405663BC3", "03C190909050E83AFD09005885C0" },
 };
 
 static const HookPatchItem g_defineSFoilsPatch[] =
 {
 	{ 0x000AF3, "4883F8310F872001000033C98A8840184000", "50E827741A0083C4045F5E5D5BC390909090" },
 	{ 0x000D14, "4883F8310F87B101000033D28A90C42C4000", "50E816721A0083C4048BF8E94E0100009090" },
+	{ 0x000CA7, "66C70536168C000E00", "66C70536168C000200" },
 };
 
 static const HookPatchItem g_defineHangarShuttleSFoilsPatch[] =
@@ -51,10 +61,20 @@ static const HookPatchItem g_alignCameraBridgePatch[] =
 	{ 0x083059, "7517", "9090" },
 };
 
+static const HookPatchItem g_setSFoilsHyperspacePatch[] =
+{
+	{ 0x0AF214, "E807B0FEFF", "E8078D0F00" },
+	{ 0x0AF22A, "E81152FFFF", "E8F18C0F00" },
+	{ 0x0AD7FC, "E85F52FFFF", "E81FA70F00" },
+	{ 0x0B9C8D, "E85EBCFFFF", "E88EE20E00" },
+};
+
 static const HookPatch g_patches[] =
 {
+	MAKE_HOOK_PATCH("Keys for SFoils and LandingGears", g_keysSFoilsLandingGearsPatch),
 	MAKE_HOOK_PATCH("Disable S-Foil model filter", g_disableSFoilModelFilterPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines S-Foils", g_defineSFoilsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines hangar shuttle S-Foils", g_defineHangarShuttleSFoilsPatch),
 	MAKE_HOOK_PATCH("Align the camera with the bridge", g_alignCameraBridgePatch),
+	MAKE_HOOK_PATCH("To call the hook that set S-Foils for hyperspace", g_setSFoilsHyperspacePatch),
 };

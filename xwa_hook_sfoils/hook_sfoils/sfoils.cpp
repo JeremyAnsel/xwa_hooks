@@ -174,7 +174,7 @@ std::vector<SFoil> GetDefaultSFoils(int modelIndex)
 	return values;
 }
 
-std::vector<SFoil> GetSFoils(int modelIndex)
+std::vector<SFoil> GetSFoilsList(int modelIndex)
 {
 	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
 
@@ -199,6 +199,42 @@ std::vector<SFoil> GetSFoils(int modelIndex)
 	return sfoils;
 }
 
+std::vector<SFoil> GetLandingGearsList(int modelIndex)
+{
+	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(ship + "SFoilsLandingGears.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", "SFoilsLandingGears");
+	}
+
+	const auto sfoils = GetFileListValues(lines);
+
+	std::vector<SFoil> values;
+
+	for (unsigned int i = 0; i < sfoils.size(); i++)
+	{
+		const auto& value = sfoils[i];
+
+		if (value.size() < 4)
+		{
+			continue;
+		}
+
+		SFoil sfoil;
+		sfoil.meshIndex = std::stoi(value[0], 0, 0);
+		sfoil.angle = std::stoi(value[1], 0, 0);
+		sfoil.closingSpeed = std::stoi(value[2], 0, 0);
+		sfoil.openingSpeed = std::stoi(value[3], 0, 0);
+
+		values.push_back(sfoil);
+	}
+
+	return values;
+}
+
 CraftSettings GetSFoilsSettings(int modelIndex)
 {
 	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
@@ -220,7 +256,7 @@ CraftSettings GetSFoilsSettings(int modelIndex)
 class ModelIndexSFoils
 {
 public:
-	std::vector<SFoil> Get(int modelIndex)
+	std::vector<SFoil> GetSFoils(int modelIndex)
 	{
 		auto it = this->_sfoils.find(modelIndex);
 
@@ -230,10 +266,35 @@ public:
 		}
 		else
 		{
-			auto value = GetSFoils(modelIndex);
+			auto value = GetSFoilsList(modelIndex);
 			this->_sfoils.insert(std::make_pair(modelIndex, value));
 			return value;
 		}
+	}
+
+	std::vector<SFoil> GetLandingGears(int modelIndex)
+	{
+		auto it = this->_landingGears.find(modelIndex);
+
+		if (it != this->_landingGears.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetLandingGearsList(modelIndex);
+			this->_landingGears.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+	std::vector<SFoil> GetSFoilsAndLandingGears(int modelIndex)
+	{
+		auto sfoils = this->GetSFoils(modelIndex);
+		auto landingGears = this->GetLandingGears(modelIndex);
+
+		sfoils.insert(sfoils.end(), landingGears.begin(), landingGears.end());
+		return sfoils;
 	}
 
 	CraftSettings GetSettings(int modelIndex)
@@ -252,18 +313,237 @@ public:
 		}
 	}
 
+	bool AreSFoilsOpened(const XwaObject* object)
+	{
+		const XwaCraft* craft = object->pMobileObject->pCraft;
+		const unsigned short modelIndex = object->ModelIndex;
+		const auto sfoils = this->GetSFoils(modelIndex);
+
+		if (!sfoils.size())
+		{
+			return false;
+		}
+
+		bool ret = true;
+
+		for (unsigned int i = 0; i < sfoils.size(); i++)
+		{
+			const auto& sfoil = sfoils[i];
+
+			if (craft->MeshRotationAngles[sfoil.meshIndex] != 0)
+			{
+				ret = false;
+				break;
+			}
+		}
+
+		return ret;
+	}
+
+	bool AreLandingGearsClosed(const XwaObject* object)
+	{
+		const XwaCraft* craft = object->pMobileObject->pCraft;
+		const unsigned short modelIndex = object->ModelIndex;
+		const auto landingGears = this->GetLandingGears(modelIndex);
+
+		if (!landingGears.size())
+		{
+			return true;
+		}
+
+		bool ret = true;
+
+		for (unsigned int i = 0; i < landingGears.size(); i++)
+		{
+			const auto& landingGear = landingGears[i];
+
+			if (craft->MeshRotationAngles[landingGear.meshIndex] != 0)
+			{
+				ret = false;
+				break;
+			}
+		}
+
+		return ret;
+	}
+
 private:
 	std::map<int, std::vector<SFoil>> _sfoils;
+	std::map<int, std::vector<SFoil>> _landingGears;
 	std::map<int, CraftSettings> _settings;
 };
 
 ModelIndexSFoils g_modelIndexSFoils;
 
+class ObjectIndexTime
+{
+public:
+	int Get(int objectIndex)
+	{
+		auto it = this->_time.find(objectIndex);
+
+		if (it != this->_time.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = 0;
+			this->_time.insert(std::make_pair(objectIndex, value));
+			return value;
+		}
+	}
+
+	void Set(int objectIndex, int value)
+	{
+		auto it = this->_time.find(objectIndex);
+
+		if (it != this->_time.end())
+		{
+			it->second = value;
+		}
+		else
+		{
+			this->_time.insert(std::make_pair(objectIndex, value));
+		}
+	}
+
+private:
+	std::map<int, int> _time;
+};
+
+ObjectIndexTime g_objectIndexTime;
+
+bool g_keySFoils = false;
+bool g_keyLandingGears = false;
+
+void SetSFoilsText()
+{
+	const char** s_StringsMessageLines = (const char**)0x009B6400;
+	const int StringsMessageLine_MSG_SFOILS_OPENING = 134;
+	const int StringsMessageLine_MSG_SFOILS_CLOSING = 135;
+	const int StringsMessageLine_MSG_SFOILS_OPEN = 136;
+	const int StringsMessageLine_MSG_SFOILS_CLOSED = 137;
+
+	if (g_keySFoils)
+	{
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSING] = "\03S-Foils closing";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPENING] = "\03S-Foils opening";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSED] = "\03S-Foils have reached [closed] position";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPEN] = "\03S-Foils have reached [open] position";
+	}
+	else if (g_keyLandingGears)
+	{
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSING] = "\03Landing Gears opening";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPENING] = "\03Landing Gears closing";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSED] = "\03Landing Gears have reached [open] position";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPEN] = "\03Landing Gears have reached [closed] position";
+	}
+	else
+	{
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSING] = "\03S-Foils closing";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPENING] = "\03S-Foils opening";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSED] = "\03S-Foils have reached [closed] position";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPEN] = "\03S-Foils have reached [open] position";
+	}
+}
+
 int SFoilsFilterHook(int* params)
 {
-	const unsigned short modelIndex = (unsigned short)params[0];
+	const XwaObject* object = (XwaObject*)params[0];
+	const unsigned short modelIndex = object->ModelIndex;
 
-	const auto sfoils = g_modelIndexSFoils.Get(modelIndex);
+	const char** s_StringsMessageLines = (const char**)0x009B6400;
+	const int StringsMessageLine_MSG_SFOILS_NO_FIRE = 138;
+	const int StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL = 293;
+
+	std::vector<SFoil> sfoils;
+
+	// Key_V
+	if (params[-1] == 0x4FC470)
+	{
+		bool areSFoilsOpened = g_modelIndexSFoils.AreSFoilsOpened(object);
+		bool areLandingGearsClosed = g_modelIndexSFoils.AreLandingGearsClosed(object);
+
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_NO_FIRE] = "\03Cannons cannot fire with S-Foils closed or Landing Gears opened";
+
+		unsigned short key = *(unsigned short*)0x08053C0;
+
+		// Key_V = 118
+		if (key == 118)
+		{
+			sfoils = g_modelIndexSFoils.GetSFoils(modelIndex);
+
+			if (g_keyLandingGears)
+			{
+				sfoils.clear();
+				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = "\03[Landing Gears] are already opening or closing";
+			}
+			else if (sfoils.size() && !areSFoilsOpened && !areLandingGearsClosed)
+			{
+				sfoils.clear();
+				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = "\03Close [Landing Gear] before engaging [S-Foils]";
+			}
+			else
+			{
+				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = "\03Your craft is not equipped with [S-Foils]";
+
+				if (sfoils.size())
+				{
+					g_keySFoils = true;
+
+					if (areSFoilsOpened)
+					{
+						object->pMobileObject->pCraft->SFoilsState = 0;
+					}
+					else
+					{
+						object->pMobileObject->pCraft->SFoilsState = 2;
+					}
+				}
+			}
+		}
+		// Key_Control_L = 282
+		else if (key == 282)
+		{
+			sfoils = g_modelIndexSFoils.GetLandingGears(modelIndex);
+
+			if (g_keySFoils)
+			{
+				sfoils.clear();
+				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = "\03[S-Foils] are already opening or closing";
+			}
+			else if (sfoils.size() && areSFoilsOpened && areLandingGearsClosed)
+			{
+				sfoils.clear();
+				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = "\03Close [S-Foils] before engaging [Landing Gears]";
+			}
+			else
+			{
+				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = "\03Your craft is not equipped with [Landing Gears]";
+
+				if (sfoils.size())
+				{
+					g_keyLandingGears = true;
+
+					if (areLandingGearsClosed)
+					{
+						object->pMobileObject->pCraft->SFoilsState = 0;
+					}
+					else
+					{
+						object->pMobileObject->pCraft->SFoilsState = 2;
+					}
+				}
+			}
+		}
+
+		SetSFoilsText();
+	}
+	else
+	{
+		sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex);
+	}
 
 	params[0] = sfoils.size() ? 0 : 1;
 
@@ -276,7 +556,7 @@ int SFoilsHook1(int* params)
 
 	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
 
-	const auto sfoils = g_modelIndexSFoils.Get(modelIndex);
+	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex);
 
 	if (!sfoils.size())
 	{
@@ -299,10 +579,40 @@ int SFoilsHook1(int* params)
 int SFoilsHook2(int* params)
 {
 	const int modelIndex = params[0];
+	const int objectIndex = params[25];
 
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
+	short elapsedTime = *(short*)0x08C1640;
+	XwaAIData* aiData = (XwaAIData*)((int)currentCraft + 0x28);
+	int currentPlayerId = *(int*)0x008C1CC8;
 
-	const auto sfoils = g_modelIndexSFoils.Get(modelIndex);
+	std::vector<SFoil> sfoils;
+
+	if (xwaObjects[objectIndex].PlayerIndex == currentPlayerId && (g_keySFoils || g_keyLandingGears))
+	{
+		if (g_keySFoils)
+		{
+			sfoils = g_modelIndexSFoils.GetSFoils(modelIndex);
+		}
+		else if (g_keyLandingGears)
+		{
+			sfoils = g_modelIndexSFoils.GetLandingGears(modelIndex);
+		}
+	}
+	else
+	{
+		if (currentCraft->SFoilsState == 3 && (aiData->ManrId == 21 || xwaObjects[objectIndex].PlayerIndex == currentPlayerId))
+		{
+			sfoils = g_modelIndexSFoils.GetSFoils(modelIndex);
+		}
+		else
+		{
+			sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex);
+		}
+	}
+
+	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
 
 	if (!sfoils.size())
 	{
@@ -310,11 +620,27 @@ int SFoilsHook2(int* params)
 		return 0;
 	}
 
+	const int timeFrame = 15 * settings.SFoilsAnimationSpeed;
+	int time = g_objectIndexTime.Get(objectIndex);
+	time += elapsedTime;
+
+	int timeSpeed = 0;
+	if (time >= timeFrame)
+	{
+		timeSpeed = 1;
+		time = time % timeFrame;
+	}
+
+	g_objectIndexTime.Set(objectIndex, time);
+
 	int ret = 0;
 
 	for (unsigned int i = 0; i < sfoils.size(); i++)
 	{
-		const auto& sfoil = sfoils[i];
+		auto sfoil = sfoils[i];
+
+		sfoil.closingSpeed *= timeSpeed;
+		sfoil.openingSpeed *= timeSpeed;
 
 		if ((currentCraft->SFoilsState & 1) != 0)
 		{
@@ -349,6 +675,14 @@ int SFoilsHook2(int* params)
 		}
 	}
 
+	if ((currentCraft->SFoilsState & 1) != 0 && xwaObjects[objectIndex].PlayerIndex == currentPlayerId && ret == 0)
+	{
+		SetSFoilsText();
+
+		g_keySFoils = false;
+		g_keyLandingGears = false;
+	}
+
 	return ret;
 }
 
@@ -361,13 +695,13 @@ int SFoilsHangarShuttleHook(int* params)
 
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 
-	int objectIndex = params[10];
-	unsigned short modelIndex = xwaObjects[objectIndex].ModelIndex;
+	const int objectIndex = params[10];
+	const unsigned short modelIndex = xwaObjects[objectIndex].ModelIndex;
 	XwaCraft* currentCraft = (XwaCraft*)params[0];
 	int time = params[1];
 	bool closing = params[2] != 0;
 
-	auto sfoils = g_modelIndexSFoils.Get(modelIndex);
+	auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex);
 
 	if (!sfoils.size())
 	{
@@ -409,6 +743,120 @@ int SFoilsHangarShuttleHook(int* params)
 				}
 			}
 		}
+	}
+
+	return 0;
+}
+
+int SFoilsAIOutOfHyperspace1Hook(int* params)
+{
+	const int objectIndex = params[0];
+
+	const auto L0049AE20 = (int(*)(int))0x0049AE20;
+
+	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const unsigned short modelIndex = xwaObjects[objectIndex].ModelIndex;
+
+	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
+
+	L0049AE20(objectIndex);
+
+	if (settings.CloseSFoilsInHyperspace)
+	{
+		for (unsigned int i = 0; i < 50; i++)
+		{
+			currentCraft->MeshRotationAngles[i] = 0;
+		}
+
+		const auto sfoils = g_modelIndexSFoils.GetSFoils(modelIndex);
+
+		if (!sfoils.size())
+		{
+			currentCraft->SFoilsState = 0;
+			return 0;
+		}
+
+		for (unsigned int i = 0; i < sfoils.size(); i++)
+		{
+			const auto& sfoil = sfoils[i];
+
+			currentCraft->MeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+		}
+
+		currentCraft->SFoilsState = 2;
+	}
+
+	return 0;
+}
+
+int SFoilsAIOutOfHyperspace2Hook(int* params)
+{
+	const int pLeaderCraft = params[0];
+
+	const auto GetCraftAIData = (int(*)(int))0x004A5040;
+
+	const XwaObject* pObject = *(XwaObject**)(0x07CA1A0 + 0x04);
+	XwaCraft* pCraft = *(XwaCraft**)(0x07CA1A0 + 0x0C);
+	const XwaAIData* pAIData = *(XwaAIData**)(0x07CA1A0 + 0x10);
+	const unsigned short modelIndex = pObject->ModelIndex;
+
+	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
+
+	if (settings.CloseSFoilsInHyperspace)
+	{
+		if (pAIData->m5E != 0)
+		{
+			if (pAIData->m5E <= 0x2AC && pCraft->SFoilsState != 0)
+			{
+				pCraft->SFoilsState = 1;
+			}
+		}
+	}
+
+	GetCraftAIData(pLeaderCraft);
+
+	return 0;
+}
+
+int SFoilsAIIntoHyperspace1Hook(int* params)
+{
+	const auto L004A3660 = (void(*)())0x004A3660;
+
+	const XwaObject* pObject = *(XwaObject**)(0x07CA1A0 + 0x04);
+	XwaCraft* pCraft = *(XwaCraft**)(0x07CA1A0 + 0x0C);
+	const unsigned short modelIndex = pObject->ModelIndex;
+
+	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
+
+	L004A3660();
+
+	if (settings.CloseSFoilsInHyperspace)
+	{
+		pCraft->SFoilsState = 3;
+	}
+
+	return 0;
+}
+
+int SFoilsAIHyperspaceOrderHook(int* params)
+{
+	const int param0 = params[0];
+	const int param1 = params[1];
+
+	const auto L004B64F0 = (void(*)(int, int))0x004A3660;
+
+	const XwaObject* pObject = *(XwaObject**)(0x07CA1A0 + 0x04);
+	const unsigned short modelIndex = pObject->ModelIndex;
+	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
+
+	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
+
+	L004B64F0(param0, param1);
+
+	if (settings.CloseSFoilsInHyperspace)
+	{
+		currentCraft->SFoilsState = 3;
 	}
 
 	return 0;
