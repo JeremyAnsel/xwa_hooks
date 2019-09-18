@@ -55,6 +55,10 @@ To create s-foils, create a file named "FlightModels\[Model]SFoils.txt" or creat
 If the file does not exist, default values are used (S-Foils for XWing, BWing, and Shuttle).
 The format is a line per mesh:
 mesh index, angle, closing speed, opening speed.
+
+To enable or disable the S-Foils closing/opening in before/after hyperspace, create a setting named "CloseSFoilsInHyperspace". To enable, set "1". To disable, set "0". The default value is "0".
+To slow down the animation, create a setting named "SFoilsAnimationSpeed". For instance, if you set "2", the animation will be slowed down by a factor of 2. The default value is "1" (normal speed).
+
 See XWingSFoils.txt, BWingSFoils.txt, ShuttleSFoils.txt.
 
 

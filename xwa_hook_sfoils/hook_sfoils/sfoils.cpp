@@ -2,6 +2,7 @@
 #include "sfoils.h"
 #include "config.h"
 #include <map>
+#include <algorithm>
 #include <utility>
 
 class FlightModelsList
@@ -111,6 +112,12 @@ struct SFoil
 	int openingSpeed;
 };
 
+struct CraftSettings
+{
+	bool CloseSFoilsInHyperspace;
+	int SFoilsAnimationSpeed;
+};
+
 std::vector<SFoil> GetFileListSFoils(const std::vector<std::string>& lines)
 {
 	const auto sfoils = GetFileListValues(lines);
@@ -192,6 +199,24 @@ std::vector<SFoil> GetSFoils(int modelIndex)
 	return sfoils;
 }
 
+CraftSettings GetSFoilsSettings(int modelIndex)
+{
+	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(ship + "SFoils.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", "SFoils");
+	}
+
+	CraftSettings settings;
+	settings.CloseSFoilsInHyperspace = GetFileKeyValueInt(lines, "CloseSFoilsInHyperspace", 0) == 0 ? false : true;
+	settings.SFoilsAnimationSpeed = std::max(GetFileKeyValueInt(lines, "SFoilsAnimationSpeed", 1), 1);
+
+	return settings;
+}
+
 class ModelIndexSFoils
 {
 public:
@@ -211,8 +236,25 @@ public:
 		}
 	}
 
+	CraftSettings GetSettings(int modelIndex)
+	{
+		auto it = this->_settings.find(modelIndex);
+
+		if (it != this->_settings.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetSFoilsSettings(modelIndex);
+			this->_settings.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
 private:
 	std::map<int, std::vector<SFoil>> _sfoils;
+	std::map<int, CraftSettings> _settings;
 };
 
 ModelIndexSFoils g_modelIndexSFoils;
