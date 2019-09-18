@@ -57,18 +57,11 @@ FlightModelsList g_flightModelsList;
 
 #pragma pack(push, 1)
 
-struct XwaObject
-{
-	char unk000[2];
-	unsigned short ModelIndex;
-	char unk004[35];
-};
-
-static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
-
 struct XwaCraft
 {
-	char unk000[39];
+	char unk000[6];
+	int LeaderObjectIndex;
+	char unk00A[29];
 	char SFoilsState;
 	char unk028[568];
 	unsigned char MeshRotationAngles[50];
@@ -76,6 +69,37 @@ struct XwaCraft
 };
 
 static_assert(sizeof(XwaCraft) == 1017, "size of XwaCraft must be 1017");
+
+struct XwaMobileObject
+{
+	char unk00[221];
+	XwaCraft* pCraft;
+	char unkE1[4];
+};
+
+static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 229");
+
+struct XwaObject
+{
+	char unk000[2];
+	unsigned short ModelIndex;
+	char unk004[27];
+	int PlayerIndex;
+	XwaMobileObject* pMobileObject;
+};
+
+static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
+
+struct XwaAIData
+{
+	char unk00[92];
+	unsigned char ManrId;
+	unsigned char m5D;
+	int m5E;
+	int m62;
+};
+
+static_assert(sizeof(XwaAIData) == 102, "size of XwaAIData must be 102");
 
 #pragma pack(pop)
 
