@@ -389,6 +389,51 @@ void ReadIsHangarFloorInverted()
 	g_isHangarFloorInverted = isHangarFloorInverted != 0;
 }
 
+int GetCraftElevation(unsigned short modelIndex, bool isHangarFloorInverted)
+{
+	const auto ModelGetSizeZ = (int(*)(unsigned int))0x0485820;
+
+	const std::string optSize = g_flightModelsList.GetLstLine(modelIndex);
+	auto optSizeLines = GetFileLines(optSize + "Size.txt");
+
+	if (!optSizeLines.size())
+	{
+		optSizeLines = GetFileLines(optSize + ".ini", "Size");
+	}
+
+	int elevation;
+
+	if (optSizeLines.size())
+	{
+		if (!isHangarFloorInverted)
+		{
+			elevation = GetFileKeyValueInt(optSizeLines, "ClosedSFoilsElevation");
+		}
+		else
+		{
+			elevation = GetFileKeyValueInt(optSizeLines, "ClosedSFoilsElevationInverted");
+
+			if (elevation == 0)
+			{
+				elevation = GetFileKeyValueInt(optSizeLines, "ClosedSFoilsElevation");
+			}
+		}
+	}
+	else
+	{
+		if (modelIndex == 4) // BWing
+		{
+			elevation = 0x32;
+		}
+		else
+		{
+			elevation = ModelGetSizeZ(modelIndex) / 2;
+		}
+	}
+
+	return elevation;
+}
+
 int HangarOptLoadHook(int* params)
 {
 	const char* argOpt = (char*)params[0];
@@ -1655,11 +1700,13 @@ int HangarLaunchAnimation2Hook(int* params)
 int HangarObjectsElevationHook(int* params)
 {
 	const int objectIndex = params[0];
-	const int objectElevation = params[1];
+	//const int objectElevation = params[1];
 
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	int& positionZ = xwaObjects[objectIndex].PositionZ;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
+
+	int objectElevation = GetCraftElevation(xwaObjects[objectIndex].ModelIndex, g_isHangarFloorInverted);
 
 	if (!g_isHangarFloorInverted)
 	{
@@ -1677,12 +1724,14 @@ int HangarFloorElevationHook(int* params)
 {
 	ReadIsHangarFloorInverted();
 
-	const int elevation = params[0];
+	//const int elevation = params[0];
 
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	int& hangarFloorPositionZ = *(int*)0x068BC38;
+
+	int elevation = GetCraftElevation(xwaObjects[hangarPlayerObjectIndex].ModelIndex, g_isHangarFloorInverted);
 
 	if (!g_isHangarFloorInverted)
 	{
@@ -1700,12 +1749,14 @@ int HangarPlayerCraftElevationHook(int* params)
 {
 	ReadIsHangarFloorInverted();
 
-	const int elevation = params[0];
+	//const int elevation = params[0];
 
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
 	const int currentPlayerId = *(int*)0x08C1CC8;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
+
+	int elevation = GetCraftElevation(xwaObjects[xwaPlayers[currentPlayerId].ObjectIndex].ModelIndex, g_isHangarFloorInverted);
 
 	if (!g_isHangarFloorInverted)
 	{
@@ -1765,12 +1816,14 @@ int HangarRenterAnimation51Hook(int* params)
 
 int HangarRenterAnimation52Hook(int* params)
 {
-	const int elevation = params[0];
+	//const int elevation = params[0];
 
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
+
+	int elevation = GetCraftElevation(xwaObjects[hangarPlayerObjectIndex].ModelIndex, g_isHangarFloorInverted);
 
 	int ret;
 
@@ -1808,13 +1861,15 @@ int HangarRenterAnimation53Hook(int* params)
 
 int HangarReenterAnimation6Hook(int* params)
 {
-	const int elevation = params[0];
+	//const int elevation = params[0];
 	const int esp1C = params[8];
 
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
 	int& positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
+
+	int elevation = GetCraftElevation(xwaObjects[hangarPlayerObjectIndex].ModelIndex, g_isHangarFloorInverted);
 
 	if (!g_isHangarFloorInverted)
 	{
@@ -1856,12 +1911,14 @@ int HangarReenterAnimation71Hook(int* params)
 
 int HangarReenterAnimation72Hook(int* params)
 {
-	const int elevation = params[0];
+	//const int elevation = params[0];
 
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
+
+	int elevation = GetCraftElevation(xwaObjects[hangarPlayerObjectIndex].ModelIndex, g_isHangarFloorInverted);
 
 	int ret;
 
@@ -1881,9 +1938,11 @@ int HangarReenterAnimation73Hook(int* params)
 {
 	const int modelIndex = params[0];
 
-	const auto GetCraftElevation = (int(*)(int))0x00462640;
+	//const auto GetCraftElevation = (int(*)(int))0x00462640;
 
-	int elevation = GetCraftElevation(modelIndex);
+	//int elevation = GetCraftElevation(modelIndex);
+
+	int elevation = GetCraftElevation(modelIndex, g_isHangarFloorInverted);
 
 	if (g_isHangarFloorInverted)
 	{

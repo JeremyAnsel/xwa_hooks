@@ -298,10 +298,12 @@ See "FamHangarMap.txt".
 
 To set the elevation of the craft with closed S-Foils, create a file named "FlightModels\[Player]Size.txt".
 Or create a section named "[Size]" in "FlightModels\[Player].ini".
+If the hangar floor is inverted, the ClosedSFoilsElevationInverted setting is used, else the ClosedSFoilsElevation setting is used.
 If a such file file doesn't exist for a model, default values are used:
 if the craft is BWing, elevation = 50, else elevation = model height / 2.
 The format is:
 "ClosedSFoilsElevation = value"
+"ClosedSFoilsElevationInverted = value"
 See "BWingSize.txt".
 
 # craft selection:
