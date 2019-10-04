@@ -159,6 +159,12 @@ else
   hangar = Hangar
 endif
 
+The ProvingGroundHangarModel option set the proving ground hangar opt model.
+The default value is "" or "FlightModels\".
+Example:
+ProvingGroundHangarModel = FlightModels\ProvingGround.opt
+This will load "FlightModels\ProvingGroundHangar.opt" and "FlightModels\ProvingGround.ini" (or txt files). "FlightModels\ProvingGround.opt" may not exist.
+
 # hangar files:
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".

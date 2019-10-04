@@ -305,30 +305,50 @@ std::string GetCommandShipLstLine()
 
 std::string GetCustomFilePath(const std::string& name)
 {
+	const bool isProvingGround = *(unsigned char*)(0x08053E0 + 0x05) != 0;
 	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	std::string mission = GetStringWithoutExtension(xwaMissionFileName);
-
-	if (!mission.empty())
+	if (isProvingGround)
 	{
-		mission.append("_");
-		mission.append(name);
+		const auto configLines = GetFileLines("hook_hangars.cfg");
+		std::string ship = GetFileKeyValue(configLines, "ProvingGroundHangarModel");
 
-		if (std::ifstream(mission))
+		if (!ship.empty())
 		{
-			return mission;
+			ship = GetStringWithoutExtension(ship);
+			ship.append(name);
+
+			if (std::ifstream(ship))
+			{
+				return ship;
+			}
 		}
 	}
-
-	std::string ship = GetCommandShipLstLine();
-
-	if (!ship.empty())
+	else
 	{
-		ship.append(name);
+		std::string mission = GetStringWithoutExtension(xwaMissionFileName);
 
-		if (std::ifstream(ship))
+		if (!mission.empty())
 		{
-			return ship;
+			mission.append("_");
+			mission.append(name);
+
+			if (std::ifstream(mission))
+			{
+				return mission;
+			}
+		}
+
+		std::string ship = GetCommandShipLstLine();
+
+		if (!ship.empty())
+		{
+			ship.append(name);
+
+			if (std::ifstream(ship))
+			{
+				return ship;
+			}
 		}
 	}
 
@@ -340,36 +360,61 @@ std::string GetCustomFilePath(const std::string& name)
 
 std::vector<std::string> GetCustomFileLines(const std::string& name)
 {
+	const bool isProvingGround = *(unsigned char*)(0x08053E0 + 0x05) != 0;
 	const char* xwaMissionFileName = (const char*)0x06002E8;
 	std::vector<std::string> lines;
 
-	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
-	lines = GetFileLines(mission + "_" + name + ".txt");
-
-	if (!lines.size())
+	if (isProvingGround)
 	{
-		lines = GetFileLines(mission + ".ini", name);
+		const auto configLines = GetFileLines("hook_hangars.cfg");
+		std::string ship = GetFileKeyValue(configLines, "ProvingGroundHangarModel");
+
+		if (!ship.empty())
+		{
+			ship = GetStringWithoutExtension(ship);
+			lines = GetFileLines(ship + name + ".txt");
+
+			if (!lines.size())
+			{
+				lines = GetFileLines(ship + ".ini", name);
+			}
+
+			if (lines.size())
+			{
+				return lines;
+			}
+		}
 	}
-
-	if (lines.size())
+	else
 	{
-		return lines;
-	}
-
-	const std::string ship = GetCommandShipLstLine();
-
-	if (!ship.empty())
-	{
-		lines = GetFileLines(ship + name + ".txt");
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		lines = GetFileLines(mission + "_" + name + ".txt");
 
 		if (!lines.size())
 		{
-			lines = GetFileLines(ship + ".ini", name);
+			lines = GetFileLines(mission + ".ini", name);
 		}
 
 		if (lines.size())
 		{
 			return lines;
+		}
+
+		const std::string ship = GetCommandShipLstLine();
+
+		if (!ship.empty())
+		{
+			lines = GetFileLines(ship + name + ".txt");
+
+			if (!lines.size())
+			{
+				lines = GetFileLines(ship + ".ini", name);
+			}
+
+			if (lines.size())
+			{
+				return lines;
+			}
 		}
 	}
 
