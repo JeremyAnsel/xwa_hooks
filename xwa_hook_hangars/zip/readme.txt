@@ -186,6 +186,7 @@ The possible involved files are:
 - "FlightModels\[Model]FamHangarCamera.txt"
 - "FlightModels\[Model]HangarMap.txt"
 - "FlightModels\[Model]FamHangarMap.txt"
+- "FlightModels\default.ini"
 - "FlightModels\Hangar.opt"
 - "FlightModels\HangarObjects.txt"
 - "FlightModels\HangarCamera.txt"
@@ -211,6 +212,7 @@ The dll searches a "HangarObjects.txt" file in this order (from first to last):
 - "FlightModels\[Model]HangarObjects.txt"
 - "FlightModels\[Model].ini", section "[HangarObjects]"
 - "FlightModels\HangarObjects.txt"
+- "FlightModels\default.ini", section "[HangarObjects]"
 If a "HangarObjects.txt" file doesn't exist, no model is replaced.
 The format is a line per object: "FlightModels\ObjectA = FlightModels\NewObjA"
 The replacement of a base opt with an exterior opt is ignored: lines like "FlightModels\ObjectA.opt = FlightModels\ObjectAExterior.opt" are ignored.
@@ -231,6 +233,7 @@ The dll searches a "HangarCamera.txt" file in this order (from first to last):
 - "FlightModels\[Model]HangarCamera.txt"
 - "FlightModels\[Model].ini", section "[HangarCamera]"
 - "FlightModels\HangarCamera.txt"
+- "FlightModels\default.ini", section "[HangarCamera]"
 If a "HangarCamera.txt" file doesn't exist, default values are used.
 Only the position for keys 1,2,3,6,9 can be set with a "HangarCamera.txt" file.
 The format is:
@@ -248,6 +251,7 @@ The dll searches a "FamHangarCamera.txt" file in this order (from first to last)
 - "FlightModels\[Model]FamHangarCamera.txt"
 - "FlightModels\[Model].ini", section "[FamHangarCamera]"
 - "FlightModels\FamHangarCamera.txt"
+- "FlightModels\default.ini", section "[FamHangarCamera]"
 If a "FamHangarCamera.txt" file doesn't exist, default values are used.
 Only the position for keys 1,2,3,6,7,8,9 can be set with a "FamHangarCamera.txt" file.
 The format is:
@@ -277,6 +281,7 @@ The dll searches a "HangarMap.txt" file in this order (from first to last):
 - "FlightModels\[Model]HangarMap.txt"
 - "FlightModels\[Model].ini", section "[HangarMap]"
 - "FlightModels\HangarMap.txt"
+- "FlightModels\default.ini", section "[HangarMap]"
 If a "HangarMap.txt" file doesn't exist, default values are used.
 The file must contain at least 4 object line.
 The format is : model index, position X, position Y, position Z, heading XY, heading Z.
@@ -294,6 +299,7 @@ The dll searches a "FamHangarMap.txt" file in this order (from first to last):
 - "FlightModels\[Model]FamHangarMap.txt"
 - "FlightModels\[Model].ini", section "[FamHangarMap]"
 - "FlightModels\FamHangarMap.txt"
+- "FlightModels\default.ini", section "[FamHangarMap]"
 If a "FamHangarMap.txt" file doesn't exist, default values are used.
 The file must contain at least 4 object line.
 The format is : model index, position X, position Y, position Z, heading XY, heading Z.

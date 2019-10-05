@@ -421,6 +421,11 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 	const std::string path = "FlightModels\\";
 	lines = GetFileLines(path + name + ".txt");
 
+	if (!lines.size())
+	{
+		lines = GetFileLines(path + "default.ini", name);
+	}
+
 	return lines;
 }
 
