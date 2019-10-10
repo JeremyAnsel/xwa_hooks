@@ -1,4 +1,4 @@
-﻿xwa_hook_mission_objects
+xwa_hook_mission_objects
 
 This hook permits to replace mission objects and to enable crafts turrets.
 
@@ -57,9 +57,11 @@ Suppose that the player craft is "FlightModels\[Player].opt".
 
 The possible involved files are:
 - "FlightModels\[Player]Gunner.opt"
+- "FlightModels\[Player]Gunner2.opt"
 - "FlightModels\CorellianTransportGunner.opt"
 
 To define a custom gunner opt, create a "[Player]Gunner.opt" file.
+To define a second custom gunner opt, create a "[Player]Gunner2.opt" file.
 
 
 *** Credits ***

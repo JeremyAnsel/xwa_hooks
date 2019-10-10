@@ -192,7 +192,7 @@ int MissionObjectsHook(int* params)
 	return OptLoad(argOpt);
 }
 
-void TurretOptReload(int gunnerModelIndex, int playerModelIndex)
+void TurretOptReload(int gunnerModelIndex, int playerModelIndex, int turretIndex)
 {
 	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
 	const auto OptLoad = (short(*)(const char*))0x004CC940;
@@ -218,7 +218,29 @@ void TurretOptReload(int gunnerModelIndex, int playerModelIndex)
 
 	FlightModelsList g_flightModelsList;
 	std::string ship = g_flightModelsList.GetLstLine(playerModelIndex);
-	ship.append("Gunner.opt");
+
+	switch (turretIndex)
+	{
+	case 1:
+		ship.append("Gunner.opt");
+		break;
+
+	case 2:
+		if (std::ifstream(ship + "Gunner2.opt"))
+		{
+			ship.append("Gunner2.opt");
+		}
+		else
+		{
+			ship.append("Gunner.opt");
+		}
+
+		break;
+
+	default:
+		ship.append("Gunner.opt");
+		break;
+	}
 
 	if (!std::ifstream(ship))
 	{
@@ -294,7 +316,7 @@ int CraftTurretHook(int* params)
 
 		if (turretsCount != 0)
 		{
-			TurretOptReload(ExeCraftTable[playerCraftIndex].TurretOptModelId[0], playerModelIndex);
+			bool call_L004201E0 = false;
 
 			if (XwaPlayers[arg4].XwaPlayer_mBCE != 0)
 			{
@@ -305,7 +327,7 @@ int CraftTurretHook(int* params)
 					XwaPlayers[arg4].TurretIndex = turretsCount - 1;
 				}
 
-				L004201E0(arg4, playerObjectIndex, 0);
+				call_L004201E0 = true;
 			}
 			else
 			{
@@ -338,9 +360,32 @@ int CraftTurretHook(int* params)
 						XwaPlayers[arg4].TurretIndex = 0;
 					}
 
-					L004201E0(arg4, playerObjectIndex, 0);
+					call_L004201E0 = true;
 				}
+			}
 
+			int turretModelIndex;
+
+			switch (XwaPlayers[arg4].TurretIndex)
+			{
+			case 1:
+				turretModelIndex = ExeCraftTable[playerCraftIndex].TurretOptModelId[0];
+				break;
+
+			case 2:
+				turretModelIndex = ExeCraftTable[playerCraftIndex].TurretOptModelId[1];
+				break;
+
+			default:
+				turretModelIndex = ExeCraftTable[playerCraftIndex].TurretOptModelId[0];
+				break;
+			}
+
+			TurretOptReload(turretModelIndex, playerModelIndex, XwaPlayers[arg4].TurretIndex);
+
+			if (call_L004201E0)
+			{
+				L004201E0(arg4, playerObjectIndex, 0);
 			}
 		}
 
