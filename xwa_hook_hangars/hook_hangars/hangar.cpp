@@ -659,7 +659,7 @@ int HangarReloadHook(int* params)
 		s_V0x068BBC8->m08 = 0;
 
 		S0x09C6780* s_V0x0686D38 = (S0x09C6780*)0x0686D38;
-		s_V0x0686D38->ObjectIndex = AddObject(0x13C, -0x578, 0x312, -0x11A, 0, 0); // ModelIndex_316_1_38_HangarRoofCrane
+		s_V0x0686D38->ObjectIndex = HangarLoadHangarRoofCraneHook(nullptr);
 		s_V0x0686D38->m04 = 0;
 		s_V0x0686D38->m26 = XwaRandom() / 2;
 		s_V0x0686D38->m22 = 0;
@@ -843,6 +843,20 @@ int HangarCameraPositionHook(int* params)
 				positionZ += -0x352;
 			}
 			break;
+
+		case 8:
+			{
+				const S0x09C6780& V0x0686D38 = *(S0x09C6780*)0x0686D38;
+				int& V0x068BCC0 = *(int*)0x068BCC0;
+
+				V0x068BCC0 = V0x0686D38.ObjectIndex;
+
+				positionX = xwaObjects[V0x068BCC0].PositionX;
+				positionY = xwaObjects[V0x068BCC0].PositionY + 0x28E;
+				positionZ = xwaObjects[V0x068BCC0].PositionZ - 0x08;
+
+				break;
+			}
 
 		case 9:
 			if (cameraLines.size())
@@ -1300,6 +1314,18 @@ int HangarLoadDroidsHook(int* params)
 	}
 
 	return 0;
+}
+
+int HangarLoadHangarRoofCraneHook(int* params)
+{
+	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
+
+	const auto lines = GetCustomFileLines("HangarObjects");
+	const int positionY = GetFileKeyValueInt(lines, "HangarRoofCranePositionY", 786);
+	const int positionZ = GetFileKeyValueInt(lines, "HangarRoofCranePositionZ", -282);
+
+	// ModelIndex_316_1_38_HangarRoofCrane
+	return AddObject(316, -1400, positionY, positionZ, 0, 0);
 }
 
 int HangarMapHook(int* params)

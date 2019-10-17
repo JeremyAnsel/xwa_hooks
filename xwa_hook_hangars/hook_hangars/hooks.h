@@ -15,6 +15,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4586E0, HangarShuttleCameraHook },
 	{ 0x45860A, HangarShuttleOptReadInfosHook },
 	{ 0x456312, HangarLoadDroidsHook },
+	{ 0x45643A, HangarLoadHangarRoofCraneHook },
 	{ 0x455F4B, HangarMapHook },
 	{ 0x456479, FamHangarMapHook },
 	{ 0x57EB9D, SelectHangarTypeHook },
@@ -88,6 +89,7 @@ static const HookPatchItem g_setHangarCameraPatch[] =
 	{ 0x5F7F4, "F7FC4500", "7EFC4500" },
 	{ 0x5F7F8, "26FD4500", "7EFC4500" },
 	{ 0x5F7FC, "5FFD4500", "7EFC4500" },
+	{ 0x5F800, "08FF4500", "7EFC4500" },
 	{ 0x5F804, "4DFF4500", "7EFC4500" },
 	{ 0x5F86C, "08004600", "7EFC4500" },
 	{ 0x5F870, "41004600", "7EFC4500" },
@@ -127,6 +129,11 @@ static const HookPatchItem g_loadDroidsPatch[] =
 	{ 0x0557B9, "899EA6679C00", "909090909090" },
 	{ 0x0557C4, "899EA2679C00", "909090909090" },
 	{ 0x0557CC, "899E88679C00891510BC6800", "909090909090909090909090" },
+};
+
+static const HookPatchItem g_loadHangarRoofCranePatch[] =
+{
+	{ 0x055835, "E8A6060000", "E8F6261500" },
 };
 
 static const HookPatchItem g_setHangarMapPatch[] =
@@ -203,6 +210,7 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the shuttle camera", g_setShuttleCameraPatch),
 	MAKE_HOOK_PATCH("To call the hook that reads the shuttle opt infos", g_readShuttleOptInfosPatch),
 	MAKE_HOOK_PATCH("To call the hook that loads the droids", g_loadDroidsPatch),
+	MAKE_HOOK_PATCH("To call the hook that loads the Hangar Roof Crane", g_loadHangarRoofCranePatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar map", g_setHangarMapPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the family hangar map", g_setFamilyHangarMapPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the craft elevation", g_setCraftElevationPatch),
