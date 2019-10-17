@@ -1841,7 +1841,7 @@ int HangarReenterInitPositionZHook(int* params)
 	return positionZ;
 }
 
-int HangarRenterAnimation51Hook(int* params)
+int HangarReenterAnimation51Hook(int* params)
 {
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
@@ -1864,7 +1864,7 @@ int HangarRenterAnimation51Hook(int* params)
 	return ret;
 }
 
-int HangarRenterAnimation52Hook(int* params)
+int HangarReenterAnimation52Hook(int* params)
 {
 	//const int elevation = params[0];
 
@@ -1889,7 +1889,7 @@ int HangarRenterAnimation52Hook(int* params)
 	return ret;
 }
 
-int HangarRenterAnimation53Hook(int* params)
+int HangarReenterAnimation53Hook(int* params)
 {
 	const int delta = params[0];
 
