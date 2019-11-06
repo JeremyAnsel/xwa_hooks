@@ -128,6 +128,12 @@ At offset 05B30C, replace 2BCA894C300F with E80FCC140090.
 At offset 05B370, replace 8B1538BC680003C28B54310F3BD00F8F5F010000 with 50E8BACB140083C40490909085C00F845F010000.
 At offset 05B40D, replace E82E660000 with E81ECB1400.
 
+# To call the hook that sets the shuttle launch and re-enter animations
+At offset 05E598, replace 0FAFC301443507 with 53E8829914005B.
+At offset 05E76D, replace 0FAFC301443507 with 53E8AD9714005B.
+At offset 05E8E9, replace D80DF8955A00 with D80DD0955A00.
+At offset 05E4CF, replace A1C4337B008B4C010B with 51E85B9A1400599090.
+
 # To call the hook that gets the craft index
 At offset 0590BA, replace E871310800 with E871EE1400.
 At offset 0590C9, replace 7467 with EB67.
@@ -224,6 +230,8 @@ To remove an object, use an empty invisible opt.
 To not load the shuttle, set "LoadShuttle = 0".
 To set the shuttle model index, set "ShuttleModelIndex = value". value is an integer. The default value is 50 (Shuttle).
 To set the shuttle markings, set "ShuttleMarkings = value". value is an integer. The default value is 0.
+To set the shuttle animation, set "ShuttleAnimation = value". value is "Right", "Top", or "Bottom". The default value is "Right".
+To set the shuttle straight line animation length, set "ShuttleAnimationStraightLine = value". value is an integer. The default value is 0.
 To not load the droids, set "LoadDroids = 0".
 To set the Hangar Roof Crane position, set "HangarRoofCranePositionY = value Y" and "HangarRoofCranePositionZ = value Z". The values are integers. The default value for HangarRoofCranePositionY is 786. The default value for HangarRoofCranePositionZ is -282.
 To invert the hangar floor, set "IsHangarFloorInverted = 1". When set to 0, the floor is below the player craft. When set to 1, the floor is above the player craft.

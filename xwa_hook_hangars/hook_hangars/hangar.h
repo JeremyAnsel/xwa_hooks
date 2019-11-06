@@ -32,4 +32,6 @@ int HangarReenterAnimation6Hook(int* params);
 int HangarReenterAnimation71Hook(int* params);
 int HangarReenterAnimation72Hook(int* params);
 int HangarReenterAnimation73Hook(int* params);
+int HangarShuttleLaunchReenterAnimationsHook(int* params);
+int HangarShuttleLaunchReenterAnimation3Hook(int* params);
 int HangarGetCraftIndexHook(int* params);

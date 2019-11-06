@@ -37,6 +37,9 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x45BF11, HangarReenterAnimation71Hook },
 	{ 0x45BF76, HangarReenterAnimation72Hook },
 	{ 0x45C012, HangarReenterAnimation73Hook },
+	{ 0x45F19E, HangarShuttleLaunchReenterAnimationsHook },
+	{ 0x45F373, HangarShuttleLaunchReenterAnimationsHook },
+	{ 0x45F0D5, HangarShuttleLaunchReenterAnimation3Hook },
 	{ 0x459CBF, HangarGetCraftIndexHook },
 };
 
@@ -188,6 +191,14 @@ static const HookPatchItem g_hangarReenterAnimationPatch[] =
 	{ 0x05B40D, "E82E660000", "E81ECB1400" },
 };
 
+static const HookPatchItem g_hangarShuttleLaunchReenterAnimationsPatch[] =
+{
+	{ 0x05E598, "0FAFC301443507", "53E8829914005B" },
+	{ 0x05E76D, "0FAFC301443507", "53E8AD9714005B" },
+	{ 0x05E8E9, "D80DF8955A00", "D80DD0955A00" },
+	{ 0x05E4CF, "A1C4337B008B4C010B", "51E85B9A1400599090" },
+};
+
 static const HookPatchItem g_hangarGetCraftIndexPatch[] =
 {
 	{ 0x0590BA, "E871310800", "E871EE1400" },
@@ -218,5 +229,6 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar launch animation", g_hangarLaunchAnimationPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar objects elevation", g_hangarObjectsElevationPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar re-enter animation", g_hangarReenterAnimationPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the shuttle launch and re-enter animations", g_hangarShuttleLaunchReenterAnimationsPatch),
 	MAKE_HOOK_PATCH("To call the hook that gets the craft index", g_hangarGetCraftIndexPatch),
 };

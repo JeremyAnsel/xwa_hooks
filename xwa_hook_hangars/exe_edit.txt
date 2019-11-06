@@ -484,6 +484,40 @@ E82E660000              call 00462640
 E81ECB1400              call 005A8B30, 005A8B30 - 0045C012 = 0014CB1E
 
 
+; from L0045EC70
+; hook for shuttle launch and re-enter animations
+:0045F198 - 0x05E598
+0FAFC3                  imul eax, ebx
+01443507                add dword ptr [ebp+esi+07], eax
+
+53                      push ebx
+E882991400              call 005A8B20, 005A8B20 - 0045F19E = 00149982
+5B                      pop ebx
+
+:0045F36D - 0x05E76D
+0FAFC3                  imul eax, ebx
+01443507                add dword ptr [ebp+esi+07], eax
+
+53                      push ebx
+E8AD971400              call 005A8B20, 005A8B20 - 0045F373 = 001497AD
+5B                      pop ebx
+
+; hook for shuttle straight line animation
+:0045F4E9 - 0x05E8E9
+D80DF8955A00            fmul dword ptr [005A95F8]
+
+D80DD0955A00            fmul dword ptr [005A95D0]
+
+:0045F0CF - 0x05E4CF
+A1C4337B00              mov eax, dword ptr [007B33C4]
+8B4C010B                mov ecx, dword ptr [ecx+eax+0B]
+
+51                      push ecx
+E85B9A1400              call 005A8B30, 005A8B30 - 0045F0D5 = 00149A5B
+59                      pop ecx
+9090                    nop
+
+
 ; from L004598E0
 ; get craft index
 :00459CBA - 0x0590BA

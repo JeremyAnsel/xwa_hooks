@@ -2028,6 +2028,60 @@ int HangarReenterAnimation73Hook(int* params)
 	return elevation;
 }
 
+int HangarShuttleLaunchReenterAnimationsHook(int* params)
+{
+	const int A4 = params[0];
+
+	const S0x09C6780* s_V0x068BBC8 = (S0x09C6780*)0x068BBC8;
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	XwaObject* object = &xwaObjects[s_V0x068BBC8->ObjectIndex];
+
+	const auto lines = GetCustomFileLines("HangarObjects");
+	std::string value = GetFileKeyValue(lines, "ShuttleAnimation");
+
+	object->m17 += A4 * 20;
+
+	int step = (int)(sin(object->m13 * 9.587372E-05f) * s_V0x068BBC8->m22) * A4;
+
+	if (_stricmp(value.c_str(), "Right") == 0)
+	{
+		object->m17 -= A4 * 20;
+		object->PositionX += step;
+	}
+	else if (_stricmp(value.c_str(), "Top") == 0)
+	{
+		object->PositionZ += step;
+	}
+	else if (_stricmp(value.c_str(), "Bottom") == 0)
+	{
+		object->PositionZ -= step;
+	}
+	else
+	{
+		// Right
+		object->m17 -= A4 * 20;
+		object->PositionX += step;
+	}
+
+	return 0;
+}
+
+int HangarShuttleLaunchReenterAnimation3Hook(int* params)
+{
+	int& offset = params[0];
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarObjectIndex = *(int*)0x068BCC4;
+	int positionY = xwaObjects[hangarObjectIndex].PositionY;
+
+	const auto lines = GetCustomFileLines("HangarObjects");
+	int value = GetFileKeyValueInt(lines, "ShuttleAnimationStraightLine", 0);
+
+	offset = positionY + value;
+
+	return *(int*)0x07B33C4;
+}
+
 int HangarGetCraftIndexHook(int* params)
 {
 	const int modelIndex = params[0];
