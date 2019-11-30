@@ -35,6 +35,7 @@ At offset 03CDFA, replace 4883F8400F87D500000033DB8A98C4DC4300 with 5650E81FB116
 At offset 05826F, replace 4983F9400F87CF00000033D28A9178964500 with 5051E8AAFC140083C40458E9C90000009090.
 At offset 039725, replace 7515 with 9090.
 At offset 039733, replace 7726 with EB26.
+At offset 03CC6F, replace 3D89000000741A3D8A000000 with 50E8BBB216008BF858EB1B90.
 
 # To call the hook that defines weapon sounds
 At offset 03B5DE, replace 8DB8E8FEFFFF83FF190F870801000033D28A972CC34300FF2495FCC24300 with 8B56230FBF929500000050525551E83FC9160083C4105F5E5DC390909090.
@@ -58,8 +59,12 @@ To define which sound is played, create a file named "FlightModels\[Model]Sound.
 The format is:
 EngineSoundInterior = interior sound type
 EngineSoundFlyBy = flyby sound type
+EngineSoundWash = wash sound type
 WeaponSoundBehavior = behavior value
-Use a value of 0 to not select a sound. For engine sounds, it means that no sound is played. For weapon sounds, it means that a default sound is played (based on weapon type).
+Use a value of 0 to not select a sound.
+For engine sounds, it means that no sound is played.
+For wash sounds, it means that the default sound is played.
+For weapon sounds, it means that a default sound is played (based on weapon type).
 
 Add a line whith "EngineSoundInterior = value". The value is between 0 and 7:
 - 0 means no sound
@@ -97,6 +102,10 @@ Add a line with "EngineSoundFlyBy = value". The value is between 0 and 8, 11 and
 - 26 means FlyByCort3D
 - 27 means FlyByCort3D
 - 28 means custom3D (second unused/FlyBySlave3D)
+
+Add a line with "EngineSoundWash = value". The value is between 1 and 2:
+- 1 means EngineWash
+- 2 means EngineWashSD
 
 Add a line with "WeaponSoundBehavior = value". The value is 0, CorellianTransport, TieFighter, Rebel, RebelTurbo, Empire, EmpireTurbo, Falcon, FalconTurbo, Ion or IonTurbo.
 0 means that a default sound is played.
@@ -196,6 +205,16 @@ type 7:
 - ModelIndex_026_0_25_SupaFighter
 - ModelIndex_032_0_31_SlaveTwo
 - ModelIndex_059_0_46_MilleniumFalcon2
+
+Wash sound:
+type 2:
+- ModelIndex_137_0_91_Interdictor2
+- ModelIndex_138_0_92_VictoryStarDestroyer2
+- ModelIndex_139_0_93_ImperialStarDestroyer2
+- ModelIndex_140_0_94_SuperStarDestroyer
+type 1:
+other crafts
+
 
 For the tie fighters (TieFighter, TieInterceptor, TieBomber, TieAdvanced, TieDefender, TieBizarro, TieBigGun, TieWarheads, TieBomb, TieBooster), laser sounds are replaced with "EmpireLaserChChChhh.wav".
 For the Corellian transports (CorellianTransport2, FamilyTransport, MilleniumFalcon2), "LaserRebel" is replaced with "FalconLaser.wav" and "LaserRebelTurbo" is replaced with "FalconLaserTurbo.wav".

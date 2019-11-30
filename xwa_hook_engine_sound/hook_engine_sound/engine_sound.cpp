@@ -216,6 +216,42 @@ int GetEngineSoundTypeFlyBy(int modelIndex)
 	return type;
 }
 
+int GetEngineSoundTypeWash(int modelIndex)
+{
+	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(path + "Sound.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(path + ".ini", "Sound");
+	}
+
+	int type = 0;
+
+	if (lines.size())
+	{
+		type = GetFileKeyValueInt(lines, "EngineSoundWash");
+	}
+	else
+	{
+		switch (modelIndex)
+		{
+		case 137: // ModelIndex_137_0_91_Interdictor2
+		case 138: // ModelIndex_138_0_92_VictoryStarDestroyer2
+		case 139: // ModelIndex_139_0_93_ImperialStarDestroyer2
+		case 140: // ModelIndex_140_0_94_SuperStarDestroyer
+			type = 2;
+			break;
+
+		default:
+			type = 1;
+		}
+	}
+
+	return type;
+}
+
 std::string GetWeaponSoundBehavior(int modelIndex)
 {
 	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
@@ -299,6 +335,22 @@ public:
 		}
 	}
 
+	int GetEngineTypeWash(int modelIndex)
+	{
+		auto it = this->_typeWash.find(modelIndex);
+
+		if (it != this->_typeWash.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetEngineSoundTypeWash(modelIndex);
+			this->_typeWash.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
 	std::string GetWeaponBehavior(int modelIndex)
 	{
 		auto it = this->_weaponBehavior.find(modelIndex);
@@ -318,6 +370,7 @@ public:
 private:
 	std::map<int, int> _typeInterior;
 	std::map<int, int> _typeFlyBy;
+	std::map<int, int> _typeWash;
 	std::map<int, std::string> _weaponBehavior;
 };
 
@@ -627,6 +680,32 @@ int LaunchSoundHook(int* params)
 	SetFlyBySound(eax, modelIndex);
 
 	return 0;
+}
+
+int WashSoundHook(int* params)
+{
+	const int modelIndex = params[0];
+
+	const int type = g_modelIndexSound.GetEngineTypeWash(modelIndex);
+
+	int soundIndex;
+
+	switch (type)
+	{
+	case 1:
+		soundIndex = 0x72; // EngineWash
+		break;
+
+	case 2:
+		soundIndex = 0x71; // EngineWashSD
+		break;
+
+	default:
+		soundIndex = 0x72; // EngineWash
+		break;
+	}
+
+	return soundIndex;
 }
 
 int WeaponSoundHook(int* params)

@@ -114,6 +114,19 @@ E9C9000000              jmp 00458F48, 00458F48 - 00458E7F = 000000C9
 
 EB26                    jmp 0043A35B
 
+// Engine Wash sound
+:0043D86F - 0x03CC6F
+3D89000000              cmp eax, 00000089
+741A                    je 0043D890
+3D8A000000              cmp eax, 0000008A
+
+50                      push eax
+E8BBB21600              call 005A8B30, 005A8B30 - 0043D875 = 0016B2BB
+8BF8                    mov edi, eax
+58                      pop eax
+EB1B                    jmp 0043D895, 0043D895 - 0043D87A = 1B
+90                      nop
+
 
 // Weapon sounds
 :0043C1DE - 0x03B5DE

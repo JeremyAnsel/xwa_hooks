@@ -6,5 +6,6 @@ int InteriorSoundHook(int* params);
 int StopInteriorSoundHook(int* params);
 int FlyBySoundHook(int* params);
 int LaunchSoundHook(int* params);
+int WashSoundHook(int* params);
 
 int WeaponSoundHook(int* params);
