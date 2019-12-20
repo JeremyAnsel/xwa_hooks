@@ -116,7 +116,7 @@ E876C91400  call 005A8B20, 005A8B20 - 0045C1AA = 0014C976
 
 
 ; from L0045B0D0
-; hook for shuttle camera
+; hook for shuttle re-enter position
 :004586DB - 0x57ADB
 8D1480      lea edx, dword ptr [eax+4*eax]
 C1E203      shl edx, 03
@@ -516,6 +516,17 @@ A1C4337B00              mov eax, dword ptr [007B33C4]
 E85B9A1400              call 005A8B30, 005A8B30 - 0045F0D5 = 00149A5B
 59                      pop ecx
 9090                    nop
+
+; hook for shuttle animation 9
+:0045F8A1 - 0x05ECA1
+8B1538BC6800            mov edx, dword ptr [0068BC38]
+81C28A000000            add edx, 0000008A
+
+50                      push eax
+E889921400              call 005A8B30, 005A8B30 - 0045F8A7 = 00149289
+8BD0                    mov edx, eax
+58                      pop eax
+909090                  nop
 
 
 ; from L004598E0

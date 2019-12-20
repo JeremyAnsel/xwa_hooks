@@ -12,7 +12,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x45FCA8, HangarCameraPositionHook },
 	{ 0x4563DD, HangarLoadShuttleHook },
 	{ 0x45C1AA, HangarShuttleUpdateHook },
-	{ 0x4586E0, HangarShuttleCameraHook },
+	{ 0x4586E0, HangarShuttleReenterPositionHook },
 	{ 0x45860A, HangarShuttleOptReadInfosHook },
 	{ 0x456312, HangarLoadDroidsHook },
 	{ 0x45643A, HangarLoadHangarRoofCraneHook },
@@ -40,6 +40,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x45F19E, HangarShuttleLaunchReenterAnimationsHook },
 	{ 0x45F373, HangarShuttleLaunchReenterAnimationsHook },
 	{ 0x45F0D5, HangarShuttleLaunchReenterAnimation3Hook },
+	{ 0x45F8A7, HangarShuttleLaunchReenterAnimation9Hook },
 	{ 0x459CBF, HangarGetCraftIndexHook },
 };
 
@@ -197,6 +198,7 @@ static const HookPatchItem g_hangarShuttleLaunchReenterAnimationsPatch[] =
 	{ 0x05E76D, "0FAFC301443507", "53E8AD9714005B" },
 	{ 0x05E8E9, "D80DF8955A00", "D80DD0955A00" },
 	{ 0x05E4CF, "A1C4337B008B4C010B", "51E85B9A1400599090" },
+	{ 0x05ECA1, "8B1538BC680081C28A000000", "50E8899214008BD058909090" },
 };
 
 static const HookPatchItem g_hangarGetCraftIndexPatch[] =

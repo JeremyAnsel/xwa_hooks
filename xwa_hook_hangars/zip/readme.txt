@@ -73,7 +73,7 @@ At offset 557D8, replace E803070000 with E853271500.
 # To call the hook that updates the shuttle
 At offset 5B5A5, replace E8C62A0000 with E876C91400.
 
-# To call the hook that sets the shuttle camera
+# To call the hook that sets the shuttle re-enter position
 At offset 57ADB, replace 8D1480C1E2032BD0A108BC6800 with E840041500E9B4000000909090.
 
 # To call the hook that reads the shuttle opt infos
@@ -133,6 +133,7 @@ At offset 05E598, replace 0FAFC301443507 with 53E8829914005B.
 At offset 05E76D, replace 0FAFC301443507 with 53E8AD9714005B.
 At offset 05E8E9, replace D80DF8955A00 with D80DD0955A00.
 At offset 05E4CF, replace A1C4337B008B4C010B with 51E85B9A1400599090.
+At offset 05ECA1, replace 8B1538BC680081C28A000000 with 50E8899214008BD058909090.
 
 # To call the hook that gets the craft index
 At offset 0590BA, replace E871310800 with E871EE1400.

@@ -471,13 +471,19 @@ int GetCraftElevation(unsigned short modelIndex, bool isHangarFloorInverted)
 	}
 	else
 	{
-		if (modelIndex == 4) // BWing
+		switch (modelIndex)
 		{
+		case 4: // BWing
 			elevation = 0x32;
-		}
-		else
-		{
+			break;
+
+		case 50: // Shuttle
+			elevation = 0x8A;
+			break;
+
+		default:
 			elevation = ModelGetSizeZ(modelIndex) / 2;
+			break;
 		}
 	}
 
@@ -845,18 +851,18 @@ int HangarCameraPositionHook(int* params)
 			break;
 
 		case 8:
-			{
-				const S0x09C6780& V0x0686D38 = *(S0x09C6780*)0x0686D38;
-				int& V0x068BCC0 = *(int*)0x068BCC0;
+		{
+			const S0x09C6780& V0x0686D38 = *(S0x09C6780*)0x0686D38;
+			int& V0x068BCC0 = *(int*)0x068BCC0;
 
-				V0x068BCC0 = V0x0686D38.ObjectIndex;
+			V0x068BCC0 = V0x0686D38.ObjectIndex;
 
-				positionX = xwaObjects[V0x068BCC0].PositionX;
-				positionY = xwaObjects[V0x068BCC0].PositionY + 0x28E;
-				positionZ = xwaObjects[V0x068BCC0].PositionZ - 0x08;
+			positionX = xwaObjects[V0x068BCC0].PositionX;
+			positionY = xwaObjects[V0x068BCC0].PositionY + 0x28E;
+			positionZ = xwaObjects[V0x068BCC0].PositionZ - 0x08;
 
-				break;
-			}
+			break;
+		}
 
 		case 9:
 			if (cameraLines.size())
@@ -1186,12 +1192,19 @@ int HangarLoadShuttleHook(int* params)
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 
-	unsigned short a0 = (unsigned short)params[0];
-	const int a1 = params[1];
-	const int a2 = params[2];
-	const int a3 = params[3];
-	const unsigned short a4 = (unsigned short)params[4];
-	const unsigned short a5 = (unsigned short)params[5];
+	//unsigned short a0 = (unsigned short)params[0];
+	//const int a1 = params[1];
+	//const int a2 = params[2];
+	//const int a3 = params[3];
+	//const unsigned short a4 = (unsigned short)params[4];
+	//const unsigned short a5 = (unsigned short)params[5];
+
+	unsigned short a0 = 0x32;
+	const int a1 = 0x467;
+	const int a2 = 0x3BF;
+	const int a3 = 0x7FFFFFFF;
+	const unsigned short a4 = 0xA880;
+	const unsigned short a5 = 0;
 
 	const auto lines = GetCustomFileLines("HangarObjects");
 	const int value = GetFileKeyValueInt(lines, "LoadShuttle", 1);
@@ -1232,7 +1245,7 @@ int HangarShuttleUpdateHook(int* params)
 	return 0;
 }
 
-int HangarShuttleCameraHook(int* params)
+int HangarShuttleReenterPositionHook(int* params)
 {
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
@@ -1629,12 +1642,15 @@ int CraftElevationHook(int* params)
 	}
 	else
 	{
-		if (modelIndex == 4) // BWing
+		switch (modelIndex)
 		{
+		case 4: // BWing
 			return 0x32;
-		}
-		else
-		{
+
+		case 50: // Shuttle
+			return 0x8A;
+
+		default:
 			return ModelGetSizeZ(modelIndex) / 2;
 		}
 	}
@@ -2080,6 +2096,17 @@ int HangarShuttleLaunchReenterAnimation3Hook(int* params)
 	offset = positionY + value;
 
 	return *(int*)0x07B33C4;
+}
+
+int HangarShuttleLaunchReenterAnimation9Hook(int* params)
+{
+	const S0x09C6780* s_V0x068BBC8 = (S0x09C6780*)0x068BBC8;
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	XwaObject* object = &xwaObjects[s_V0x068BBC8->ObjectIndex];
+
+	int elevation = GetCraftElevation(object->ModelIndex, false);
+
+	return *(int*)0x068BC38 + elevation;
 }
 
 int HangarGetCraftIndexHook(int* params)
