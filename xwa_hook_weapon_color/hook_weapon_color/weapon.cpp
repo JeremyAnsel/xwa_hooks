@@ -671,12 +671,18 @@ int WeaponLightColorHook(int* params)
 {
 	const XwaObject* A4 = (XwaObject*)params[0];
 	const unsigned short weaponModelIndex = A4->ModelIndex;
-	const unsigned short modelIndex = A4->pMobileObject->ModelIndex;
+
+	unsigned int color = 0;
+
+	if (weaponModelIndex >= 280 && weaponModelIndex < 280 + 28)
+	{
+		const unsigned short modelIndex = A4->pMobileObject->ModelIndex;
+
+		color = g_modelIndexWeapon.GetLightColor(modelIndex, weaponModelIndex);
+	}
 
 	S0x07FA360* lights = (S0x07FA360*)0x007FA360;
 	int& lightsCount = *(int*)0x00782840;
-
-	unsigned int color = g_modelIndexWeapon.GetLightColor(modelIndex, weaponModelIndex);
 
 	if (color != 0)
 	{
