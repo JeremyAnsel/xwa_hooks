@@ -68,6 +68,10 @@ This hook permits to replace mission objects and to enable crafts turrets.
 
 This hook permits to override the data of mission files.
 
+## xwa_hook_normals
+
+This hook transmits vertex normals to DDraw via the specular component.
+
 ## xwa_hook_opt_limit
 
 This hook removes the opt limit of 512 vertices per mesh.

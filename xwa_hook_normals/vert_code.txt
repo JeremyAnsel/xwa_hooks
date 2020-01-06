@@ -1,0 +1,254 @@
+
+// L004477E0
+
+    if( AC[A4].Position.z < 0.0f )
+    {
+        if( AC[A8].Position.z >= 0.0f )
+        {
+            dword esp18 = s_V0x0686AB4;
+            s_V0x0686AB4 += 1;
+        }
+    }
+    else if( AC[A8].Position.z < 0.0f )
+    {
+        dword esp18 = s_V0x0686AB4;
+        s_V0x0686AB4 += 1;
+    }
+
+
+// L00444030
+
+    if( AC[A4].Position.y < 0.0f )
+    {
+        if( AC[A8].Position.y >= 0.0f )
+        {
+            dword esp18 = s_V0x0686AB4;
+            s_V0x0686AB4 += 1;
+        }
+    }
+    else if( AC[A8].Position.y < 0.0f )
+    {
+        dword esp18 = s_V0x0686AB4;
+        s_V0x0686AB4 += 1;
+    }
+
+
+// L00444DF0
+
+    float esp10 = (float)( s_V0x07FFB60 );
+
+    if( AC[A4].Position.y > esp10 )
+    {
+        if( AC[A8].Position.y <= esp10 )
+        {
+            dword esp18 = s_V0x0686AB4;
+            s_V0x0686AB4 += 1;
+        }
+    }
+    else if( AC[A8].Position.y > esp10 )
+    {
+        dword esp18 = s_V0x0686AB4;
+        s_V0x0686AB4 += 1;
+    }
+
+
+// L00445C00
+
+    if( AC[A4].Position.x < 0.0f )
+    {
+        if( AC[A8].Position.x >= 0.0f )
+        {
+            dword esp18 = s_V0x0686AB4;
+            s_V0x0686AB4 += 1;
+        }
+    }
+    else if( AC[A8].Position.x < 0.0f )
+    {
+        dword esp18 = s_V0x0686AB4;
+        s_V0x0686AB4 += 1;
+    }
+
+
+// L004469D0
+
+    float esp10 = (float)( s_V0x07FBB72 );
+
+    if( AC[A4].Position.x > esp10 )
+    {
+        if( AC[A8].Position.x <= esp10 )
+        {
+            dword esp18 = s_V0x0686AB4;
+            s_V0x0686AB4 += 1;
+        }
+    }
+    else if( AC[A8].Position.x > esp10 )
+    {
+        dword esp18 = s_V0x0686AB4;
+        s_V0x0686AB4 += 1;
+    }
+
+===============================================================================
+
+// L004477E0
+
+    if( AC[A4].Position.z < 0.0f )
+    {
+        if( AC[A8].Position.z >= 0.0f )
+        {
+            dword esp18 = s_V0x0686AB4;
+            s_V0x0686AB4 += 1;
+
+            AC[esp18].ColorA = AC[A4].ColorA - AC[A4].Position.z / (- AC[A4].Position.z + s_V0x08B94CC / AC[A8].Position.z - 1.0f) * (AC[A8].ColorA - AC[A4].ColorA);
+        }
+    }
+    else if( AC[A8].Position.z < 0.0f )
+    {
+        dword esp18 = s_V0x0686AB4;
+        s_V0x0686AB4 += 1;
+
+        AC[esp18].ColorA = AC[A8].ColorA - AC[A8].Position.z / (AC[A8].Position.z - s_V0x08B94CC / AC[A4].Position.z + 1.0f) * (AC[A8].ColorA - AC[A4].ColorA);
+    }
+
+
+// L00444030
+
+    if( AC[A4].Position.y < 0.0f )
+    {
+        if( AC[A8].Position.y >= 0.0f )
+        {
+            dword esp18 = s_V0x0686AB4;
+            s_V0x0686AB4 += 1;
+
+            if( - AC[A4].Position.y < AC[A8].Position.y )
+            {
+                AC[esp18].ColorA = AC[A4].ColorA - AC[A4].Position.y / (AC[A8].Position.y - AC[A4].Position.y) * (AC[A8].ColorA - AC[A4].ColorA);
+            }
+            else
+            {
+                AC[esp18].ColorA = AC[A8].ColorA - AC[A8].Position.y / (AC[A8].Position.y - AC[A4].Position.y) * (AC[A8].ColorA - AC[A4].ColorA);
+            }
+        }
+    }
+    else if( AC[A8].Position.y < 0.0f )
+    {
+        dword esp18 = s_V0x0686AB4;
+        s_V0x0686AB4 += 1;
+
+        if( AC[A4].Position.y < - AC[A8].Position.y )
+        {
+            AC[esp18].ColorA = AC[A4].ColorA - AC[A4].Position.y / (AC[A8].Position.y - AC[A4].Position.y) * (AC[A8].ColorA - AC[A4].ColorA);
+        }
+        else
+        {
+            AC[esp18].ColorA = AC[A8].ColorA - AC[A8].Position.y / (AC[A8].Position.y - AC[A4].Position.y) * (AC[A8].ColorA - AC[A4].ColorA);
+        }
+    }
+
+
+// L00444DF0
+
+    float esp10 = (float)( s_V0x07FFB60 );
+
+    if( AC[A4].Position.y > esp10 )
+    {
+        if( AC[A8].Position.y <= esp10 )
+        {
+            dword esp18 = s_V0x0686AB4;
+            s_V0x0686AB4 += 1;
+
+            if( AC[A4].Position.y - esp10 < esp10 - AC[A8].Position.y )
+            {
+                AC[esp18].ColorA = AC[A4].ColorA - (AC[A4].Position.y - esp10) / (AC[A8].Position.y - AC[A4].Position.y) * (AC[A8].ColorA - AC[A4].ColorA);
+            }
+            else
+            {
+                AC[esp18].ColorA = AC[A8].ColorA - (AC[A8].Position.y - esp10) / (AC[A8].Position.y - AC[A4].Position.y) * (AC[A8].ColorA - AC[A4].ColorA);
+            }
+        }
+    }
+    else if( AC[A8].Position.y > esp10 )
+    {
+        dword esp18 = s_V0x0686AB4;
+        s_V0x0686AB4 += 1;
+
+        if( esp10 - AC[A4].Position.y < (AC[A8].Position.y - esp10) )
+        {
+            AC[esp18].ColorA = AC[A4].ColorA - (AC[A4].Position.y - esp10) / (AC[A8].Position.y - AC[A4].Position.y) * (AC[A8].ColorA - AC[A4].ColorA);
+        }
+        else
+        {
+            AC[esp18].ColorA = AC[A8].ColorA - (AC[A8].Position.y - esp10) / (AC[A8].Position.y - AC[A4].Position.y) * (AC[A8].ColorA - AC[A4].ColorA);
+        }
+    }
+
+
+// L00445C00
+
+    if( AC[A4].Position.x < 0.0f )
+    {
+        if( AC[A8].Position.x >= 0.0f )
+        {
+            dword esp18 = s_V0x0686AB4;
+            s_V0x0686AB4 += 1;
+
+            if( - AC[A4].Position.x < AC[A8].Position.x )
+            {
+                AC[esp18].ColorA = AC[A4].ColorA - AC[A4].Position.x / (AC[A8].Position.x - AC[A4].Position.x) * (AC[A8].ColorA - AC[A4].ColorA);
+            }
+            else
+            {
+                AC[esp18].ColorA = AC[A8].ColorA - AC[A8].Position.x / (AC[A8].Position.x - AC[A4].Position.x) * (AC[A8].ColorA - AC[A4].ColorA);
+            }
+        }
+    }
+    else if( AC[A8].Position.x < 0.0f )
+    {
+        dword esp18 = s_V0x0686AB4;
+        s_V0x0686AB4 += 1;
+
+        if( AC[A4].Position.x < - AC[A8].Position.x )
+        {
+            AC[esp18].ColorA = AC[A4].ColorA - AC[A4].Position.x / (AC[A8].Position.x - AC[A4].Position.x) * (AC[A8].ColorA - AC[A4].ColorA);
+        }
+        else
+        {
+            AC[esp18].ColorA = AC[A8].ColorA - AC[A8].Position.x / (AC[A8].Position.x - AC[A4].Position.x) * (AC[A8].ColorA - AC[A4].ColorA);
+        }
+    }
+
+
+// L004469D0
+
+    float esp10 = (float)( s_V0x07FBB72 );
+
+    if( AC[A4].Position.x > esp10 )
+    {
+        if( AC[A8].Position.x <= esp10 )
+        {
+            dword esp18 = s_V0x0686AB4;
+            s_V0x0686AB4 += 1;
+
+            if( AC[A4].Position.x - esp10 < esp10 - AC[A8].Position.x )
+            {
+                AC[esp18].ColorA = AC[A4].ColorA - (AC[A4].Position.x - esp10) / (AC[A8].Position.x - AC[A4].Position.x) * (AC[A8].ColorA - AC[A4].ColorA);
+            }
+            else
+            {
+                AC[esp18].ColorA = AC[A8].ColorA - (AC[A8].Position.x - esp10) / (AC[A8].Position.x - AC[A4].Position.x) * (AC[A8].ColorA - AC[A4].ColorA);
+            }
+        }
+    }
+    else if( AC[A8].Position.x > esp10 )
+    {
+        dword esp18 = s_V0x0686AB4;
+        s_V0x0686AB4 += 1;
+
+        if( esp10 - AC[A4].Position.x < AC[A8].Position.x - esp10 )
+        {
+            AC[esp18].ColorA = AC[A4].ColorA - (AC[A4].Position.x - esp10) / (AC[A8].Position.x - AC[A4].Position.x) * (AC[A8].ColorA - AC[A4].ColorA);
+        }
+        else
+        {
+            AC[esp18].ColorA = AC[A8].ColorA - (AC[A8].Position.x - esp10) / (AC[A8].Position.x - AC[A4].Position.x) * (AC[A8].ColorA - AC[A4].ColorA);
+        }
+    }

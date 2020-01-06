@@ -1,0 +1,26 @@
+
+// L004487E0
+
+// L004489C0
+
+
+// L00448000
+void L00448000( Ptr<SceneCompData> A4 )
+
+// L00442F70
+void L00442F70( Ptr<SceneCompData> A4 )
+
+
+// L00442820
+void L00442820( Ptr<SceneCompData> A4 )
+
+// L00442480
+void L00442480( Ptr<SceneCompData> A4, Ptr<SceneVertList> A8, Ptr<XwaVector3> AC, Ptr<XwaVector3> A10, Ptr<XwaVector3> A14 )
+
+
+// L00442F70
+L004477E0
+L00444030
+L00444DF0
+L00445C00
+L004469D0

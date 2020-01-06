@@ -1,0 +1,83 @@
+
+// set XwaSceneVertLists
+:00489154 - 0x088554
+8915C66C9B00            mov dword ptr [009B6CC6], edx
+
+E8C7F91100              call 005A8B20, 005A8B20 - 00489159 = 0011F9C7
+90                      nop
+
+// set vertex normal
+:00442A2B - 0x041E2B
+E850FAFFFF              call 00442480
+
+E8F0601600              call 005A8B20, 005A8B20 - 00442A30 = 001660F0
+
+// set specular solid
+:004435D3 - 0x0429D3
+E808520000              call 004487E0
+
+E858551600              call 005A8B30, 005A8B30 - 004435D8 = 00165558
+
+:004435EB - 0x0429EB
+E8F0510000              call 004487E0
+
+E840551600              call 005A8B30, 005A8B30 - 004435F0 = 00165540
+
+// set specular transparent
+:0044354D - 0x04294D
+E86E540000              call 004489C0
+
+E8DE551600              call 005A8B30, 005A8B30 - 00443552 = 001655DE
+
+:0044356F - 0x04296F
+E84C540000              call 004489C0
+
+E8BC551600              call 005A8B30, 005A8B30 - 00443574 = 001655BC
+
+// copy vert
+:004432AB - 0x0426AB
+8B7910                  mov edi, dword ptr [ecx+10]
+897810                  mov dword ptr [eax+10], edi
+8B7914                  mov edi, dword ptr [ecx+14]
+897814                  mov dword ptr [eax+14], edi
+8B7918                  mov edi, dword ptr [ecx+18]
+897818                  mov dword ptr [eax+18], edi
+8B791C                  mov edi, dword ptr [ecx+1C]
+89781C                  mov dword ptr [eax+1C], edi
+
+51                      push ecx
+50                      push eax
+E86E581600              call 005A8B20, 005A8B20 - 004432B2 = 0016586E
+83C408                  add esp, 00000008
+9090                    nop
+909090                  nop
+909090                  nop
+909090                  nop
+909090                  nop
+
+
+// L00442F70
+:004433A9 - 0x0427A9
+E832440000              call 004477E0
+
+E872571600              call 005A8B20, 005A8B20 - 004433AE = 00165772
+
+:0044341B - 0x04281B
+E8100C0000              call 00444030
+
+E800571600              call 005A8B20, 005A8B20 - 00443420 = 00165700
+
+:0044345D - 0x04285D
+E88E190000              call 00444DF0
+
+E8BE561600              call 005A8B20, 005A8B20 - 00443462 = 001656BE
+
+:0044349F - 0x04289F
+E85C270000              call 00445C00
+
+E87C561600              call 005A8B20, 005A8B20 - 004434A4 = 0016567C
+
+:004434E2 - 0x0428E2
+E8E9340000              call 004469D0
+
+E839561600              call 005A8B20, 005A8B20 - 004434E7 = 00165639
