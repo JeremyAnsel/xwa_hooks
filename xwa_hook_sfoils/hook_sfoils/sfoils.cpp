@@ -543,6 +543,14 @@ int SFoilsFilterHook(int* params)
 	else
 	{
 		sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex);
+
+		bool areSFoilsOpened = g_modelIndexSFoils.AreSFoilsOpened(object);
+		bool areLandingGearsClosed = g_modelIndexSFoils.AreLandingGearsClosed(object);
+
+		if (!areSFoilsOpened && areLandingGearsClosed)
+		{
+			sfoils.clear();
+		}
 	}
 
 	params[0] = sfoils.size() ? 0 : 1;
