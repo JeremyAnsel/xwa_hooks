@@ -1,0 +1,141 @@
+
+// L0045A520
+:0045AB27 - 0x059F27
+668B8450D0B65B00        mov ax, word ptr [eax+2*edx+005BB6D0]
+
+B83D010000              mov eax, 0000013D
+909090                  nop
+
+// L00462670
+:00462833 - 0x061C33
+668B8440D2B65B00        mov ax, word ptr [eax+2*eax+005BB6D2]
+
+B83D010000              mov eax, 0000013D
+909090                  nop
+
+// L00491EB0
+:0049238B - 0x09178B
+668B8408D2B65B00        mov ax, word ptr [eax+ecx+005BB6D2]
+
+B83D010000              mov eax, 0000013D
+909090                  nop
+
+// L00497610
+:00497768 - 0x096B68
+668BB0D2B65B00          mov si, word ptr [eax+005BB6D2]
+
+BE3D010000              mov esi, 0000013D
+9090                    nop
+
+:0049772A - 0x096B2A
+8D0450                  lea eax, dword ptr [eax+2*edx]
+
+909090                  nop
+
+:00497733 - 0x096B33
+0FBF88C6B65B00          movsx ecx, word ptr [eax+005BB6C6]
+
+50                      push eax
+E8E7131100              call 005A8B20, 005A8B20 - 00497739 = 001113E7
+59                      pop ecx
+
+:0049773C - 0x096B3C
+0FBF90BEB65B00          movsx edx, word ptr [eax+005BB6BE]
+
+50                      push eax
+E8DE131100              call 005A8B20, 005A8B20 - 00497742 = 001113DE
+5A                      pop edx
+
+:00497753 - 0x096B53
+0FBF90C2B65B00          movsx edx, word ptr [eax+005BB6C2]
+
+50                      push eax
+E8C7131100              call 005A8B20, 005A8B20 - 00497759 = 001113C7
+5A                      pop edx
+
+// L0040D410
+:0040D5DF - 0x00C9DF
+668B9C42D2B65B00        mov bx, word ptr [edx+2*eax+005BB6D2]
+
+BB3D010000              mov ebx, 0000013D
+909090                  nop
+
+// L00415760
+:00416977 - 0x015D77
+668B8440D2B65B00        mov ax, word ptr [eax+2*eax+005BB6D2]
+
+B83D010000              mov eax, 0000013D
+909090                  nop
+
+// L004314B0
+:0043173C - 0x030B3C
+668B8440D2B65B00        mov ax, word ptr [eax+2*eax+005BB6D2]
+
+B83D010000              mov eax, 0000013D
+909090                  nop
+
+// L0043F8E0
+:0043FA07 - 0x03EE07
+668B88C8B65B00          mov cx, word ptr [eax+005BB6C8]
+668B90CCB65B00          mov dx, word ptr [eax+005BB6CC]
+
+50                      push eax
+56                      push esi
+E812911600              call 005A8B20, 005A8B20 - 0043FA0E = 00169112
+59                      pop ecx
+5A                      pop edx
+9090909090              nop
+
+// L00507B20
+:00507BAA - 0x106FAA
+50                      push eax
+E88052FDFF              call 004DCE30
+25FFFF0000              and eax, 0000FFFF
+83C404                  add esp, 00000004
+8D1480                  lea edx, dword ptr [eax+4*eax]
+8D0CD0                  lea ecx, dword ptr [eax+8*edx]
+
+50                      push eax
+E8800F0A00              call 005A8B30, 005A8B30 - 00507BB0 = 000A0F80
+83C404                  add esp, 00000004
+85C0                    test eax, eax
+0F849E010000            je 00507D59, 00507D59 - 00507BBB = 0000019E
+EB23                    jmp 00507BE0, 00507BE0 - 00507BBD = 23
+90                      nop
+
+// L004C3EF0
+:004C402F - 0x0C342F
+6683B8D2B65B0000        cmp word ptr [eax+005BB6D2], 0000
+7424                    je 004C405D
+EB18                    jmp 004C4053
+
+E8800F0A00              call 005A8B30, 005A8B30 - 00507BB0 = 000A0F80
+909090                  nop
+7424                    je 004C405D, 004C405D - 004C4039 = 24
+EB28                    jmp 004C4063, 004C4063 - 004C403B = 28
+
+:004C40A0 - 0x0C34A0
+3B404C00                DWORD 004C403B
+
+21404C00                DWORD 004C4021
+
+// L004E9900
+:004E9A65 - 0x0E8E65
+668B8448D0B65B00        mov ax, word ptr [eax+2*ecx+005BB6D0]
+
+B83D010000              mov eax, 0000013D
+909090                  nop
+
+// L004EFB40
+:004EFC0E - 0x0EF00E
+668B8448D0B65B00        mov ax, word ptr [eax+2*ecx+005BB6D0]
+
+B83D010000              mov eax, 0000013D
+909090                  nop
+
+// L004EFE00
+:004F080D - 0x0EFC0D
+668B8450D0B65B00        mov ax, word ptr [eax+2*edx+005BB6D0]
+
+B83D010000              mov eax, 0000013D
+909090                  nop

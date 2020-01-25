@@ -1,0 +1,156 @@
+
+// Set XwaCrafts
+:00415AF6 - 0x014EF6
+E8F5870F00              call 0050E2F0
+
+E835301900              call 005A8B30, 005A8B30 - 00415AFB = 00193035
+
+// Clear Craft Data
+:0041D2FF - 0x01C6FF
+668B442428              mov ax, word ptr [esp+28]
+
+E82CB81800              call 005A8B30, 005A8B30 - 0041D304 = 0018B82C
+
+// Clone Object
+:0041EE2F - 0x01E22F
+B9FE000000              mov ecx, 000000FE
+F3                      repz
+A5                      movsd
+A4                      movsb
+8B0DC4337B00            mov ecx, dword ptr [007B33C4]
+
+56                      push esi
+57                      push edi
+E8EA9C1800              call 005A8B20, 005A8B20 - 0041EE36 = 00189CEA
+83C408                  add esp, 00000008
+90909090                nop
+
+// Compute Craft Angles
+:004FACE6 - 0x0FA0E6
+0FBF933B958B00          movsx edx, word ptr [ebx+008B953B]
+8B75EC                  mov esi, dword ptr [ebp-14]
+8B45F4                  mov eax, dword ptr [ebp-0C]
+8955E0                  mov dword ptr [ebp-20], edx
+
+53                      push ebx
+55                      push ebp
+E833DE0A00              call 005A8B20, 005A8B20 - 004FACED = 000ADE33
+83C408                  add esp, 00000008
+E9B20A0000              jmp 004FB7A7, 004FB7A7 - 004FACF5 = 00000AB2
+90                      nop
+
+// Set RotationAngle
+:00481347 - 0x080747
+0FBF8C46BF030000        movsx ecx, word ptr [esi+2*eax+000003BF]
+
+56                      push esi
+E8D3771200              call 005A8B20, 005A8B20 - 0048134D = 001277D3
+59                      pop ecx
+90                      nop
+
+:00481317 - 0x080717
+0FBF8C46C3030000        movsx ecx, word ptr [esi+2*eax+000003C3]
+
+56                      push esi
+E803781200              call 005A8B20, 005A8B20 - 0048131D = 00127803
+59                      pop ecx
+90                      nop
+
+:00483DF3 - 0x0831F3
+0FBF8456BF030000        movsx eax, word ptr [esi+2*edx+000003BF]
+
+56                      push esi
+E8274D1200              call 005A8B20, 005A8B20 - 00483DF9 = 00124D27
+58                      pop eax
+90                      nop
+
+:00483DC6 - 0x0831C6
+0FBF8456C3030000        movsx eax, word ptr [esi+2*edx+000003C3]
+
+56                      push esi
+E8544D1200              call 005A8B20, 005A8B20 - 00483DCC = 00124D54
+58                      pop eax
+90                      nop
+
+// Set L00491EB0 angle
+:004921A0 - 0x0915A0
+668B9C41C1030000        mov bx, word ptr [ecx+2*eax+000003C1]
+
+55                      push ebp
+E87A691100              call 005A8B20, 005A8B20 - 004921A6 = 0011697A
+5B                      pop ebx
+90                      nop
+
+:004921C9 - 0x0915C9
+668B8441C5030000        mov ax, word ptr [ecx+2*eax+000003C5]
+
+55                      push ebp
+E851691100              call 005A8B20, 005A8B20 - 004921CF = 00116951
+58                      pop eax
+90                      nop
+
+:00492539 - 0x091939
+0FBF8C01C1030000        movsx ecx, word ptr [ecx+eax+000003C1]
+
+55                      push ebp
+E8E1651100              call 005A8B20, 005A8B20 - 0049253F = 001165E1
+59                      pop ecx
+90                      nop
+
+:004925CF - 0x0919CF
+0FBF9408C5030000        movsx edx, word ptr [eax+ecx+000003C5]
+
+55                      push ebp
+E84B651100              call 005A8B20, 005A8B20 - 004925D5 = 0011654B
+5A                      pop edx
+90                      nop
+
+// Set L00497610 angle
+:0049785D - 0x096C5D
+0FBF8C4EBF030000        movsx ecx, word ptr [esi+2*ecx+000003BF]
+
+56                      push esi
+E8BD121100              call 005A8B20, 005A8B20 - 00497863 = 001112BD
+59                      pop ecx
+90                      nop
+
+:0049791C - 0x096D1C
+0FBF8C56C3030000        movsx ecx, word ptr [esi+2*edx+000003C3]
+
+56                      push esi
+E8FE111100              call 005A8B20, 005A8B20 - 00497922 = 001111FE
+59                      pop ecx
+90                      nop
+
+// Set L0040D410 angle
+:0040D74A - 0x00CB4A
+0FBF8451C1030000        movsx eax, word ptr [ecx+2*edx+000003C1]
+
+51                      push ecx
+E8D0B31900              call 005A8B20, 005A8B20 - 0040D750 = 0019B3D0
+58                      pop eax
+90                      nop
+
+:0040D7E1 - 0x00CBE1
+0FBF8C42C5030000        movsx ecx, word ptr [edx+2*eax+000003C5]
+
+52                      push edx
+E839B31900              call 005A8B20, 005A8B20 - 0040D7E7 = 0019B339
+59                      pop ecx
+90                      nop
+
+// Set L0043F8E0 angle
+:0043FA55 - 0x03EE55
+668B8C47BF030000        mov cx, word ptr [edi+2*eax+000003BF]
+
+56                      push esi
+E8C5901600              call 005A8B20, 005A8B20 - 0043FA5B = 001690C5
+59                      pop ecx
+90                      nop
+
+:0043FA6F - 0x03EE6F
+668BB8C3030000          mov di, word ptr [eax+000003C3]
+
+56                      push esi
+E8AB901600              call 005A8B20, 005A8B20 - 0043FA75 = 001690AB
+5F                      pop edi

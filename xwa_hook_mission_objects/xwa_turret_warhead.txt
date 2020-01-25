@@ -1,0 +1,69 @@
+
+// if( s_XwaPlayers[A4].TurretIndex > 0 )
+
+:00501FBF - 0x1013BF
+7E29                    jle 00501FEA
+
+EB29                    jmp 00501FEA
+
+At offset 1013BF, replace 7E29 with EB29.
+
+
+// Key_W: if( s_XwaPlayers[A4].TurretIndex != 0 )
+
+:004FC541 - 0x0FB941
+0F85B8160000            jne 004FDBFF
+
+909090909090            nop
+
+At offset 0FB941, replace 0F85B8160000 with 909090909090.
+
+
+// L00490EE0
+// void XwaPlayerShoot( unknown A4 )
+// if( s_XwaPlayers[A4].TurretIndex == 0 )
+
+:00490FFE - 0x0903FE
+0F8591000000            jne 00491095
+
+909090909090            nop
+
+At offset 0903FE, replace 0F8591000000 with 909090909090.
+
+
+// L004912C0: shoot laser
+// L004918F0: shoot warhead
+
+// laser shoot hook
+
+:00491052 - 0x090452
+E869020000              call 004912C0
+
+E8C97A1100              call 005A8B20, 005A8B20 - 00491057 = 00117AC9
+
+:00491066 - 0x090466
+E855020000              call 004912C0
+
+E8B57A1100              call 005A8B20, 005A8B20 - 0049106B = 00117AB5
+
+:0049108B - 0x09048B
+E830020000              call 004912C0
+
+E8907A1100              call 005A8B20, 005A8B20 - 00491090 = 00117A90
+
+:004910EA - 0x904EA
+E8D1010000              call 004912C0
+
+E8317A1100              call 005A8B20, 005A8B20 - 004910EF = 00117A31
+
+:0049117C - 0x9057C
+E83F010000              call 004912C0
+
+E89F791100              call 005A8B20, 005A8B20 - 00491181 = 0011799F
+
+// warhead shoot hook
+
+:004911E9 - 0x905E9
+E802070000              call 004918F0
+
+E832791100              call 005A8B20, 005A8B20 - 004911EE = 00117932

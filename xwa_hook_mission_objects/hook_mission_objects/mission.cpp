@@ -2,6 +2,7 @@
 #include "mission.h"
 #include "config.h"
 #include <fstream>
+#include <map>
 
 class FlightModelsList
 {
@@ -52,6 +53,52 @@ private:
 	std::vector<std::string> _equipmentList;
 };
 
+FlightModelsList g_flightModelsList;
+
+enum HardpointTypeEnum : unsigned int
+{
+	HardpointType_None = 0,
+	HardpointType_RebelLaser = 1,
+	HardpointType_TurboRebelLaser = 2,
+	HardpointType_EmpireLaser = 3,
+	HardpointType_TurboEmpireLaser = 4,
+	HardpointType_IonCannon = 5,
+	HardpointType_TurboIonCannon = 6,
+	HardpointType_Torpedo = 7,
+	HardpointType_Missile = 8,
+	HardpointType_SuperRebelLaser = 9,
+	HardpointType_SuperEmpireLaser = 10,
+	HardpointType_SuperIonCannon = 11,
+	HardpointType_SuperTorpedo = 12,
+	HardpointType_SuperMissile = 13,
+	HardpointType_DumbBomb = 14,
+	HardpointType_FiredBomb = 15,
+	HardpointType_MagPulse = 16,
+	HardpointType_TurboMagPulse = 17,
+	HardpointType_SuperMagPulse = 18,
+	HardpointType_Gunner = 19,
+	HardpointType_CockpitSparks = 20,
+	HardpointType_DockingPoint = 21,
+	HardpointType_Towing = 22,
+	HardpointType_AccStart = 23,
+	HardpointType_AccEnd = 24,
+	HardpointType_InsideHangar = 25,
+	HardpointType_OutsideHangar = 26,
+	HardpointType_DockFromBig = 27,
+	HardpointType_DockFromSmall = 28,
+	HardpointType_DockToBig = 29,
+	HardpointType_DockToSmall = 30,
+	HardpointType_Cockpit = 31,
+	HardpointType_EngineGlow = 32,
+	HardpointType_Unknown1 = 33,
+	HardpointType_Unknown2 = 34,
+	HardpointType_Unknown3 = 35,
+	HardpointType_Unknown4 = 36,
+	HardpointType_Unknown5 = 37,
+	HardpointType_Unknown6 = 38,
+	HardpointType_JammingPoint = 39,
+};
+
 #pragma pack(push, 1)
 
 struct ExeEnableEntry
@@ -68,9 +115,16 @@ static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24")
 
 struct ExeCraftEntry
 {
-	char Unk0000[594];
+	char Unk0000[574];
+	short TurretPositionY[2];
+	short TurretPositionZ[2];
+	short TurretPositionX[2];
+	unsigned short TurretOrientationX[2];
+	unsigned short TurretOrientationY[2];
 	short TurretOptModelId[2];
-	char Unk0256[389];
+	unsigned short TurretArcX[2];
+	unsigned short TurretArcY[2];
+	char Unk025E[381];
 };
 
 static_assert(sizeof(ExeCraftEntry) == 987, "size of ExeCraftEntry must be 987");
@@ -98,7 +152,9 @@ struct XwaCraft
 {
 	char Unk0000[4];
 	short CraftIndex;
-	char Unk0006[424];
+	char Unk0006[136];
+	short PickedUpObjectIndex;
+	char Unk0090[286];
 	char WeaponRacksCount;
 	char Unk01AF[304];
 	XwaCraftWeaponRack WeaponRacks[16];
@@ -120,7 +176,8 @@ struct XwaObject
 {
 	char Unk0000[2];
 	short ModelIndex;
-	char Unk0004[31];
+	char Unk0004[27];
+	int PlayerIndex;
 	XwaMobileObject* pMobileObject;
 };
 
@@ -133,10 +190,20 @@ struct XwaPlayer
 	short XwaPlayer_m00E;
 	char Unk0010[1];
 	char XwaPlayer_m011;
-	char Unk0012[33];
+	char Unk0012[1];
+	char XwaPlayer_m013;
+	char Unk0014[1];
+	char XwaPlayer_m015;
+	char Unk0016[29];
 	char XwaPlayer_m033;
 	char XwaPlayer_m034;
-	char Unk0035[455];
+	char Unk0035[36];
+	short XwaPlayer_m059;
+	short XwaPlayer_m05B;
+	short XwaPlayer_m05D;
+	char Unk005F[397];
+	int XwaPlayer_m1EC;
+	char Unk01F0[12];
 	char XwaPlayer_m1FC;
 	short MousePositionX;
 	short MousePositionY;
@@ -144,12 +211,192 @@ struct XwaPlayer
 	short TurretIndex;
 	short XwaPlayer_m21B;
 	char Unk021D[2481];
-	char XwaPlayer_mBCE;
+	unsigned char InTraining;
 };
 
 static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 #pragma pack(pop)
+
+struct TurretData
+{
+	short PositionX;
+	short PositionY;
+	short PositionZ;
+	unsigned short OrientationX;
+	unsigned short OrientationY;
+	unsigned short ArcX;
+	unsigned short ArcY;
+	std::string OptModel;
+	bool IsInverted;
+};
+
+struct CraftData
+{
+	short m3C1;
+	short m3C5;
+	int m3C9;
+	int m3D1;
+};
+
+std::string GetFileNameWithoutExtension(const std::string& str)
+{
+	auto a = str.find_last_of('\\');
+
+	return str.substr(a, str.size() - a);
+}
+
+std::vector<TurretData> GetTurretDataList(int modelIndex)
+{
+	const std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(shipPath + "Turrets.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", "Turrets");
+	}
+
+	std::vector<TurretData> turrets;
+
+	if (lines.size())
+	{
+		const auto values = GetFileListValues(lines);
+
+		for (unsigned int i = 0; i < values.size(); i++)
+		{
+			const auto& value = values[i];
+
+			if (value.size() < 9)
+			{
+				continue;
+			}
+
+			TurretData turret;
+			turret.PositionX = (short)std::stoi(value[0], 0, 0);
+			turret.PositionY = (short)std::stoi(value[1], 0, 0);
+			turret.PositionZ = (short)std::stoi(value[2], 0, 0);
+			turret.OrientationX = (unsigned short)std::stoi(value[3], 0, 0);
+			turret.OrientationY = (unsigned short)std::stoi(value[4], 0, 0);
+			turret.ArcX = (unsigned short)std::stoi(value[5], 0, 0);
+			turret.ArcY = (unsigned short)std::stoi(value[6], 0, 0);
+			turret.OptModel = value[7];
+			turret.IsInverted = std::stoi(value[8], 0, 0) != 0;
+
+			turrets.push_back(turret);
+		}
+	}
+	else
+	{
+		const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+		const ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+
+		const short craftIndex = ExeEnableTable[modelIndex].CraftIndex;
+		const ExeCraftEntry& craftEntry = ExeCraftTable[craftIndex];
+
+		const std::string shipName = GetFileNameWithoutExtension(shipPath);
+
+		for (unsigned int i = 0; i < 2; i++)
+		{
+			if (craftEntry.TurretOptModelId[i] == 0)
+			{
+				continue;
+			}
+
+			TurretData turret;
+			turret.PositionX = craftEntry.TurretPositionX[i];
+			turret.PositionY = craftEntry.TurretPositionY[i];
+			turret.PositionZ = craftEntry.TurretPositionZ[i];
+			turret.OrientationX = craftEntry.TurretOrientationX[i];
+			turret.OrientationY = craftEntry.TurretOrientationY[i];
+			turret.ArcX = craftEntry.TurretArcX[i];
+			turret.ArcY = craftEntry.TurretArcY[i];
+
+			switch (i)
+			{
+			case 0:
+			{
+				if (std::ifstream(shipPath + "Gunner.opt"))
+				{
+					turret.OptModel = shipName + "Gunner";
+				}
+				else
+				{
+					turret.OptModel = "CorellianTransportGunner";
+				}
+
+				break;
+			}
+
+			case 1:
+			{
+				if (std::ifstream(shipPath + "Gunner2.opt"))
+				{
+					turret.OptModel = shipName + "Gunner2";
+				}
+				else if (std::ifstream(shipPath + "Gunner.opt"))
+				{
+					turret.OptModel = shipName + "Gunner";
+				}
+				else
+				{
+					turret.OptModel = "CorellianTransportGunner";
+				}
+
+				break;
+			}
+			}
+
+			switch (i)
+			{
+			case 0:
+				turret.IsInverted = false;
+				break;
+
+			case 1:
+				turret.IsInverted = true;
+				break;
+			}
+
+			turrets.push_back(turret);
+		}
+	}
+
+	return turrets;
+}
+
+class ModelIndexTurrets
+{
+public:
+	std::vector<TurretData>& GetTurrets(int modelIndex)
+	{
+		auto it = this->_turrets.find(modelIndex);
+
+		if (it != this->_turrets.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetTurretDataList(modelIndex);
+			this->_turrets.insert(std::make_pair(modelIndex, value));
+			//return value;
+			return this->_turrets.find(modelIndex)->second;
+		}
+	}
+
+	int GetTurretsCount(int modelIndex)
+	{
+		return this->GetTurrets(modelIndex).size();
+	}
+
+private:
+	std::map<int, std::vector<TurretData>> _turrets;
+};
+
+ModelIndexTurrets g_modelIndexTurrets;
+
+std::vector<std::vector<CraftData>> g_craftsData;
 
 std::vector<std::string> GetCustomFileLines(const std::string& name)
 {
@@ -216,35 +463,22 @@ void TurretOptReload(int gunnerModelIndex, int playerModelIndex, int turretIndex
 		ExeEnableTable[gunnerModelIndex].pData2 = nullptr;
 	}
 
-	FlightModelsList g_flightModelsList;
-	std::string ship = g_flightModelsList.GetLstLine(playerModelIndex);
+	std::string ship;
 
-	switch (turretIndex)
-	{
-	case 1:
-		ship.append("Gunner.opt");
-		break;
-
-	case 2:
-		if (std::ifstream(ship + "Gunner2.opt"))
-		{
-			ship.append("Gunner2.opt");
-		}
-		else
-		{
-			ship.append("Gunner.opt");
-		}
-
-		break;
-
-	default:
-		ship.append("Gunner.opt");
-		break;
-	}
-
-	if (!std::ifstream(ship))
+	if (turretIndex == 0)
 	{
 		ship = "FlightModels\\CorellianTransportGunner.opt";
+	}
+	else
+	{
+		const TurretData& turret = g_modelIndexTurrets.GetTurrets(playerModelIndex)[turretIndex - 1];
+
+		ship = "FlightModels\\" + turret.OptModel + ".opt";
+
+		if (!std::ifstream(ship))
+		{
+			ship = "FlightModels\\CorellianTransportGunner.opt";
+		}
 	}
 
 	s_V0x077333C = 1;
@@ -275,7 +509,7 @@ int CraftTurretHook(int* params)
 	const auto L004201E0 = (int(*)(int, int, int))0x004201E0;
 	const auto L00497D40 = (void(*)(int, int))0x00497D40;
 
-	const ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+	const short CorellianTransportGunnerModelIndex = 317;
 	XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	const int XwaCurrentPlayerId = *(int*)0x008C1CC8;
@@ -302,29 +536,19 @@ int CraftTurretHook(int* params)
 			XwaPlayers[arg4].XwaPlayer_m1FC = 0;
 		}
 
-		int turretsCount = 0;
-
-		if (ExeCraftTable[playerCraftIndex].TurretOptModelId[0] != 0)
-		{
-			turretsCount++;
-
-			if (ExeCraftTable[playerCraftIndex].TurretOptModelId[1] != 0)
-			{
-				turretsCount++;
-			}
-		}
+		int turretsCount = g_modelIndexTurrets.GetTurretsCount(playerModelIndex);
 
 		if (turretsCount != 0)
 		{
 			bool call_L004201E0 = false;
 
-			if (XwaPlayers[arg4].XwaPlayer_mBCE != 0)
+			if (XwaPlayers[arg4].InTraining != 0)
 			{
 				XwaPlayers[arg4].TurretIndex++;
 
 				if (XwaPlayers[arg4].TurretIndex > turretsCount)
 				{
-					XwaPlayers[arg4].TurretIndex = turretsCount - 1;
+					XwaPlayers[arg4].TurretIndex = 1;
 				}
 
 				call_L004201E0 = true;
@@ -341,7 +565,7 @@ int CraftTurretHook(int* params)
 					if (XwaPlayers[index].XwaPlayer_m011 == 0)
 						continue;
 
-					if (XwaPlayers[index].XwaPlayer_mBCE == 0)
+					if (XwaPlayers[index].InTraining == 0)
 						continue;
 
 					if (XwaPlayers[index].XwaPlayer_m00E == XwaPlayers[arg4].XwaPlayer_m00E)
@@ -364,24 +588,7 @@ int CraftTurretHook(int* params)
 				}
 			}
 
-			int turretModelIndex;
-
-			switch (XwaPlayers[arg4].TurretIndex)
-			{
-			case 1:
-				turretModelIndex = ExeCraftTable[playerCraftIndex].TurretOptModelId[0];
-				break;
-
-			case 2:
-				turretModelIndex = ExeCraftTable[playerCraftIndex].TurretOptModelId[1];
-				break;
-
-			default:
-				turretModelIndex = ExeCraftTable[playerCraftIndex].TurretOptModelId[0];
-				break;
-			}
-
-			TurretOptReload(turretModelIndex, playerModelIndex, XwaPlayers[arg4].TurretIndex);
+			TurretOptReload(CorellianTransportGunnerModelIndex, playerModelIndex, XwaPlayers[arg4].TurretIndex);
 
 			if (call_L004201E0)
 			{
@@ -416,7 +623,7 @@ int CraftTurretHook(int* params)
 		}
 	}
 
-	if (XwaPlayers[arg4].TurretIndex > 0)
+	/*if (XwaPlayers[arg4].TurretIndex > 0)
 	{
 		XwaPlayers[arg4].XwaPlayer_m033 = 0;
 		XwaPlayers[arg4].XwaPlayer_m034 = 0;
@@ -427,7 +634,583 @@ int CraftTurretHook(int* params)
 		{
 			V0x077129C = 0;
 		}
+	}*/
+
+	return 0;
+}
+
+bool CheckOptHardpoint(short modelIndex, int weaponType, int weaponIndex)
+{
+	const auto XwaOptGetMeshesCount = (int(*)(short))0x00488960;
+	const auto XwaOptGetMeshHardpointsCount = (int(*)(short, int))0x00486DC0;
+	const auto XwaOptRetrieveMeshHardpoint = (void(*)(short, int, int, HardpointTypeEnum*, int*, int*, int*))0x00487180;
+
+	int meshesCount = XwaOptGetMeshesCount(modelIndex);
+	for (int mesh = 0; mesh < meshesCount; mesh++)
+	{
+		int hardpointsCount = XwaOptGetMeshHardpointsCount(modelIndex, mesh);
+		for (int hardpoint = 0; hardpoint < hardpointsCount; hardpoint++)
+		{
+			HardpointTypeEnum type;
+			int positionX;
+			int positionY;
+			int positionZ;
+			XwaOptRetrieveMeshHardpoint(modelIndex, mesh, hardpoint, &type, &positionX, &positionY, &positionZ);
+
+			switch (type)
+			{
+			case HardpointType_RebelLaser:
+			case HardpointType_TurboRebelLaser:
+			case HardpointType_EmpireLaser:
+			case HardpointType_TurboEmpireLaser:
+			case HardpointType_SuperRebelLaser:
+			case HardpointType_SuperEmpireLaser:
+			{
+				if (weaponType == 0 && weaponIndex == 0)
+				{
+					return true;
+				}
+
+				break;
+			}
+
+			case HardpointType_IonCannon:
+			case HardpointType_TurboIonCannon:
+			case HardpointType_SuperIonCannon:
+			{
+				if (weaponType == 0 && weaponIndex == 1)
+				{
+					return true;
+				}
+
+				break;
+			}
+
+			case HardpointType_Torpedo:
+			case HardpointType_Missile:
+			case HardpointType_SuperTorpedo:
+			case HardpointType_SuperMissile:
+			case HardpointType_DumbBomb:
+			case HardpointType_FiredBomb:
+			case HardpointType_MagPulse:
+			case HardpointType_TurboMagPulse:
+			case HardpointType_SuperMagPulse:
+			{
+				if (weaponType == 1)
+				{
+					return true;
+				}
+
+				break;
+			}
+			}
+		}
+	}
+
+	return false;
+}
+
+int LaserShootHook(int* params)
+{
+	const int objectIndex = params[0];
+	const int laserIndex = params[1];
+	const int playerIndex = params[2];
+	const int arg10 = params[3];
+
+	const auto L004912C0 = (void(*)(int, int, int, int))0x004912C0;
+
+	const short CorellianTransportGunnerModelIndex = 317;
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	int turretIndex = XwaPlayers[XwaObjects[objectIndex].PlayerIndex].TurretIndex;
+
+	if (turretIndex == 0)
+	{
+		L004912C0(objectIndex, laserIndex, playerIndex, arg10);
+	}
+	else
+	{
+		if (CheckOptHardpoint(CorellianTransportGunnerModelIndex, 0, laserIndex))
+		{
+			L004912C0(objectIndex, laserIndex, playerIndex, arg10);
+		}
 	}
 
 	return 0;
+}
+
+int WarheadShootHook(int* params)
+{
+	const int objectIndex = params[0];
+	const int warheadIndex = params[1];
+
+	const auto L004918F0 = (void(*)(int, int))0x004918F0;
+
+	const short CorellianTransportGunnerModelIndex = 317;
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	int turretIndex = XwaPlayers[XwaObjects[objectIndex].PlayerIndex].TurretIndex;
+
+	if (turretIndex == 0)
+	{
+		L004918F0(objectIndex, warheadIndex);
+	}
+	else
+	{
+		if (CheckOptHardpoint(CorellianTransportGunnerModelIndex, 1, warheadIndex))
+		{
+			L004918F0(objectIndex, warheadIndex);
+		}
+	}
+
+	return 0;
+}
+
+int SetXwaCraftsHook(int* params)
+{
+	const int handle = params[0];
+
+	const auto Lock_Handle = (int(*)(short))0x0050E2F0;
+
+	const int craftsCount = *(int*)0x008C1CE4;
+
+	g_craftsData.clear();
+	g_craftsData.resize(craftsCount);
+
+	return Lock_Handle(handle);
+}
+
+int ClearCraftDataHook(int* params)
+{
+	const short esp28 = (short)params[10];
+
+	const XwaCraft* s_XwaCrafts = *(XwaCraft**)0x009106A0;
+	const XwaCraft* s_pXwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+	const short modelIndex = *(short*)0x009E96F2;
+
+	int index = s_pXwaCurrentCraft - s_XwaCrafts;
+
+	if ((unsigned int)index < g_craftsData.size())
+	{
+		int count = g_modelIndexTurrets.GetTurretsCount(modelIndex);
+
+		g_craftsData[index].clear();
+		g_craftsData[index].resize(count, {});
+	}
+
+	return esp28;
+}
+
+int CloneObjectHook(int* params)
+{
+	XwaCraft* edi = (XwaCraft*)params[0];
+	XwaCraft* esi = (XwaCraft*)params[1];
+
+	const XwaCraft* s_XwaCrafts = *(XwaCraft**)0x009106A0;
+
+	int ediIndex = edi - s_XwaCrafts;
+	int esiIndex = esi - s_XwaCrafts;
+
+	*edi = *esi;
+
+	if ((unsigned int)ediIndex < g_craftsData.size() && (unsigned int)esiIndex < g_craftsData.size())
+	{
+		g_craftsData[ediIndex] = g_craftsData[esiIndex];
+	}
+
+	return 0;
+}
+
+int ComputeCraftAnglesHook(int* params)
+{
+	const int* ebp = (int*)params[0];
+	const int ebx = params[1];
+
+	XwaPlayer* s_XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* s_XwaObjects = *(XwaObject**)0x007B33C4;
+	const XwaCraft* s_XwaCrafts = *(XwaCraft**)0x009106A0;
+
+	XwaCraft* craft = (XwaCraft*)ebp[-5];
+	int craftIndex = craft - s_XwaCrafts;
+	int turretIndex = ebp[-3];
+	int playerIndex = ebx / sizeof(XwaPlayer);
+	short modelIndex = s_XwaObjects[s_XwaPlayers[playerIndex].ObjectIndex].ModelIndex;
+
+	CraftData& craftData = g_craftsData[craftIndex][turretIndex];
+	TurretData turretData = g_modelIndexTurrets.GetTurrets(modelIndex)[turretIndex];
+
+	craftData.m3C9 += (int)(s_XwaPlayers[playerIndex].XwaPlayer_m05B * 0.1f - craftData.m3C9 * 0.25f);
+	craftData.m3C1 += (short)craftData.m3C9;
+
+	craftData.m3D1 += (int)(s_XwaPlayers[playerIndex].XwaPlayer_m059 * 0.1f - craftData.m3D1 * 0.25f);
+	craftData.m3C5 += (short)craftData.m3D1;
+
+	if (craftData.m3C1 > turretData.ArcX)
+	{
+		craftData.m3C1 = turretData.ArcX;
+	}
+	else if (craftData.m3C1 < -turretData.ArcX)
+	{
+		craftData.m3C1 = -turretData.ArcX;
+	}
+
+	if (craftData.m3C5 > turretData.ArcY)
+	{
+		craftData.m3C5 = turretData.ArcY;
+	}
+	else if (craftData.m3C5 < -turretData.ArcY)
+	{
+		craftData.m3C5 = -turretData.ArcY;
+	}
+
+	s_XwaPlayers[playerIndex].XwaPlayer_m059 = 0;
+	s_XwaPlayers[playerIndex].XwaPlayer_m05B = 0;
+	s_XwaPlayers[playerIndex].XwaPlayer_m05D = 0;
+
+	return 0;
+}
+
+int SetRotationAngle1Hook(int* params)
+{
+	const XwaCraft* craft = (XwaCraft*)params[0];
+	int& angle = params[0];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCurrentPlayerId = *(int*)0x008C1CC8;
+
+	int craftIndex = craft - XwaCrafts;
+	int turretIndex = XwaPlayers[XwaCurrentPlayerId].TurretIndex - 1;
+
+	angle = g_craftsData[craftIndex][turretIndex].m3C1;
+
+	return 0;
+}
+
+int SetRotationAngle2Hook(int* params)
+{
+	const XwaCraft* craft = (XwaCraft*)params[0];
+	int& angle = params[0];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCurrentPlayerId = *(int*)0x008C1CC8;
+
+	int craftIndex = craft - XwaCrafts;
+	int turretIndex = XwaPlayers[XwaCurrentPlayerId].TurretIndex - 1;
+
+	angle = g_craftsData[craftIndex][turretIndex].m3C5;
+
+	return 0;
+}
+
+int SetL00491EB0Angle1Hook(int* params)
+{
+	const int* ebp = (int*)params[0];
+	int& angle = params[0];
+
+	int playerIndex = ebp[5];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	XwaCraft* craft = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].pMobileObject->pCraft;
+	int craftIndex = craft - XwaCrafts;
+	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
+
+	angle = g_craftsData[craftIndex][turretIndex].m3C1;
+
+	return 0;
+}
+
+int SetL00491EB0Angle2Hook(int* params)
+{
+	const int* ebp = (int*)params[0];
+	int& angle = params[0];
+
+	int playerIndex = ebp[5];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	XwaCraft* craft = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].pMobileObject->pCraft;
+	int craftIndex = craft - XwaCrafts;
+	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
+
+	angle = g_craftsData[craftIndex][turretIndex].m3C5;
+
+	return 0;
+}
+
+int SetL00497610Angle1Hook(int* params)
+{
+	const int playerIndex = params[34] / sizeof(XwaPlayer);
+	const XwaCraft* craft = (XwaCraft*)params[0];
+	int& angle = params[0];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+
+	int craftIndex = craft - XwaCrafts;
+	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
+
+	angle = g_craftsData[craftIndex][turretIndex].m3C1;
+
+	return 0;
+}
+
+int SetL00497610Angle2Hook(int* params)
+{
+	const int playerIndex = params[33] / sizeof(XwaPlayer);
+	const XwaCraft* craft = (XwaCraft*)params[0];
+	int& angle = params[0];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+
+	int craftIndex = craft - XwaCrafts;
+	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
+
+	angle = g_craftsData[craftIndex][turretIndex].m3C5;
+
+	return 0;
+}
+
+int SetL0040D410Angle1Hook(int* params)
+{
+	const XwaCraft* craft = (XwaCraft*)params[0];
+	int& angle = params[0];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCurrentPlayerId = *(int*)0x008C1CC8;
+
+	int craftIndex = craft - XwaCrafts;
+	int turretIndex = XwaPlayers[XwaCurrentPlayerId].TurretIndex - 1;
+
+	angle = g_craftsData[craftIndex][turretIndex].m3C1;
+
+	return 0;
+}
+
+int SetL0040D410Angle2Hook(int* params)
+{
+	const XwaCraft* craft = (XwaCraft*)params[0];
+	int& angle = params[0];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCurrentPlayerId = *(int*)0x008C1CC8;
+
+	int craftIndex = craft - XwaCrafts;
+	int turretIndex = XwaPlayers[XwaCurrentPlayerId].TurretIndex - 1;
+
+	angle = g_craftsData[craftIndex][turretIndex].m3C5;
+
+	return 0;
+}
+
+int SetL0043F8E0Angle1Hook(int* params)
+{
+	const int playerIndex = params[0] / sizeof(XwaPlayer);
+	int& angle = params[0];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
+	XwaCraft* craft = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].pMobileObject->pCraft;
+	int craftIndex = craft - XwaCrafts;
+
+	angle = g_craftsData[craftIndex][turretIndex].m3C1;
+
+	return 0;
+}
+
+int SetL0043F8E0Angle2Hook(int* params)
+{
+	const int playerIndex = params[0] / sizeof(XwaPlayer);
+	int& angle = params[0];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
+	XwaCraft* craft = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].pMobileObject->pCraft;
+	int craftIndex = craft - XwaCrafts;
+
+	angle = g_craftsData[craftIndex][turretIndex].m3C5;
+
+	return 0;
+}
+
+int ReadTurretPositionXHook(int* params)
+{
+	const int playerIndex = params[32] / sizeof(XwaPlayer);
+	const int craftIndex = params[0] / sizeof(ExeCraftEntry);
+	int& position = params[0];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
+	int modelIndex = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].ModelIndex;
+
+	position = g_modelIndexTurrets.GetTurrets(modelIndex)[turretIndex].PositionX;
+
+	return 0;
+}
+
+int ReadTurretPositionYHook(int* params)
+{
+	const int playerIndex = params[32] / sizeof(XwaPlayer);
+	const int craftIndex = params[0] / sizeof(ExeCraftEntry);
+	int& position = params[0];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
+	int modelIndex = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].ModelIndex;
+
+	position = g_modelIndexTurrets.GetTurrets(modelIndex)[turretIndex].PositionY;
+
+	return 0;
+}
+
+int ReadTurretPositionZHook(int* params)
+{
+	const int playerIndex = params[32] / sizeof(XwaPlayer);
+	const int craftIndex = params[0] / sizeof(ExeCraftEntry);
+	int& position = params[0];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
+	int modelIndex = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].ModelIndex;
+
+	position = g_modelIndexTurrets.GetTurrets(modelIndex)[turretIndex].PositionZ;
+
+	return 0;
+}
+
+int ReadTurretOrientationHook(int* params)
+{
+	const int playerIndex = params[0] / sizeof(XwaPlayer);
+	int& orientationX = params[0];
+	int& orientationY = params[1];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
+	int modelIndex = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].ModelIndex;
+
+	const TurretData& turret = g_modelIndexTurrets.GetTurrets(modelIndex)[turretIndex];
+
+	orientationX = turret.OrientationX;
+	orientationY = turret.OrientationY;
+
+	return 0;
+}
+
+int ReadL00507B20HasTurretHook(int* params)
+{
+	const int modelIndex = (unsigned short)params[0];
+
+	int count = g_modelIndexTurrets.GetTurretsCount(modelIndex);
+
+	return count == 0 ? 0 : 1;
+}
+
+int ReadL004C3EF0HasTurretHook(int* params)
+{
+	const int playerIndex = (short)params[4];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	int objectIndex = XwaPlayers[playerIndex].XwaPlayer_m015 != 0 ? XwaPlayers[playerIndex].XwaPlayer_m1EC : XwaPlayers[playerIndex].ObjectIndex;
+	int modelIndex = XwaObjects[objectIndex].ModelIndex;
+
+	int count = g_modelIndexTurrets.GetTurretsCount(modelIndex);
+
+	return count == 0 ? 0 : 1;
+}
+
+int TurretIndex2TransformHook(int* params)
+{
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const int XwaCurrentPlayerId = *(int*)0x008C1CC8;
+
+	int turretIndex = XwaPlayers[XwaCurrentPlayerId].TurretIndex - 1;
+	int modelIndex = XwaObjects[XwaPlayers[XwaCurrentPlayerId].ObjectIndex].ModelIndex;
+
+	if (turretIndex == -1)
+	{
+		return 1;
+	}
+
+	const TurretData& turret = g_modelIndexTurrets.GetTurrets(modelIndex)[turretIndex];
+
+	return turret.IsInverted ? 0 : 1;
+}
+
+int TurretIndex2BlockedHook(int* params)
+{
+	const int playerIndex = params[0];
+
+	const auto XwaShowMessageLine = (void(*)(int, int))0x00497D40;
+
+	const int StringsMessageLine_MSG_GUNNER_BLOCKED = 530;
+	const int StringsMessageLine_MSG_GUNNER_DISABLED = 531;
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	const XwaPlayer* player = &XwaPlayers[playerIndex];
+	int objectIndex = player->ObjectIndex;
+	params[0] = objectIndex;
+
+	if (objectIndex == 0xFFFF)
+	{
+		return 0;
+	}
+
+	const XwaCraft* craft = XwaObjects[objectIndex].pMobileObject->pCraft;
+	int turretIndex = player->TurretIndex - 1;
+	int modelIndex = XwaObjects[objectIndex].ModelIndex;
+
+	if (turretIndex != -1)
+	{
+		const TurretData& turret = g_modelIndexTurrets.GetTurrets(modelIndex)[turretIndex];
+		unsigned short orientation = turret.OrientationY;
+
+		if (orientation > 0xA000 && orientation < 0xE000)
+		{
+			if (craft->PickedUpObjectIndex != -1)
+			{
+				XwaShowMessageLine(StringsMessageLine_MSG_GUNNER_BLOCKED, playerIndex);
+				return 0;
+			}
+
+			if (player->XwaPlayer_m013 != 0 && player->XwaPlayer_m013 != 5)
+			{
+				XwaShowMessageLine(StringsMessageLine_MSG_GUNNER_DISABLED, playerIndex);
+				return 0;
+			}
+		}
+	}
+
+	return 1;
 }

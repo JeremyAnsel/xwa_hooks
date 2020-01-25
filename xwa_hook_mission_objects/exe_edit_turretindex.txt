@@ -1,0 +1,24 @@
+
+// L00480A80
+:00480D24 - 0x080124
+6683B8F9968B0002        cmp word ptr [eax+008B96F9], 0002
+
+E8077E1200              call 005A8B30, 005A8B30 - 00480D29 = 00127E07
+85C0                    test eax, eax
+90                      nop
+
+// L00490EE0
+:00490F8D - 0x09038D
+7546                    jne 00490FD5
+
+EB46                    jmp 00490FD5
+
+:00490EF3 - 0x0902F3
+8BAEE0948B00            mov ebp, dword ptr [esi+008B94E0]
+81FDFFFF0000            cmp ebp, 0000FFFF
+
+53                      push ebx
+E8377C1100              call 005A8B30, 005A8B30 - 00490EF9 = 00117C37
+5D                      pop ebp
+85C0                    test eax, eax
+909090                  nop
