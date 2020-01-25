@@ -21,8 +21,8 @@ int SetL0040D410Angle2Hook(int* params);
 int SetL0043F8E0Angle1Hook(int* params);
 int SetL0043F8E0Angle2Hook(int* params);
 
-int ReadTurretPositionXHook(int* params);
 int ReadTurretPositionYHook(int* params);
+int ReadTurretPositionXHook(int* params);
 int ReadTurretPositionZHook(int* params);
 int ReadTurretOrientationHook(int* params);
 int ReadL00507B20HasTurretHook(int* params);

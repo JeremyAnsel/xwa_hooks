@@ -116,9 +116,9 @@ static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24")
 struct ExeCraftEntry
 {
 	char Unk0000[574];
-	short TurretPositionY[2];
-	short TurretPositionZ[2];
 	short TurretPositionX[2];
+	short TurretPositionZ[2];
+	short TurretPositionY[2];
 	unsigned short TurretOrientationX[2];
 	unsigned short TurretOrientationY[2];
 	short TurretOptModelId[2];
@@ -1052,23 +1052,6 @@ int SetL0043F8E0Angle2Hook(int* params)
 	return 0;
 }
 
-int ReadTurretPositionXHook(int* params)
-{
-	const int playerIndex = params[32] / sizeof(XwaPlayer);
-	const int craftIndex = params[0] / sizeof(ExeCraftEntry);
-	int& position = params[0];
-
-	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
-	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-
-	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
-	int modelIndex = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].ModelIndex;
-
-	position = g_modelIndexTurrets.GetTurrets(modelIndex)[turretIndex].PositionX;
-
-	return 0;
-}
-
 int ReadTurretPositionYHook(int* params)
 {
 	const int playerIndex = params[32] / sizeof(XwaPlayer);
@@ -1082,6 +1065,23 @@ int ReadTurretPositionYHook(int* params)
 	int modelIndex = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].ModelIndex;
 
 	position = g_modelIndexTurrets.GetTurrets(modelIndex)[turretIndex].PositionY;
+
+	return 0;
+}
+
+int ReadTurretPositionXHook(int* params)
+{
+	const int playerIndex = params[32] / sizeof(XwaPlayer);
+	const int craftIndex = params[0] / sizeof(ExeCraftEntry);
+	int& position = params[0];
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
+	int modelIndex = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].ModelIndex;
+
+	position = g_modelIndexTurrets.GetTurrets(modelIndex)[turretIndex].PositionX;
 
 	return 0;
 }

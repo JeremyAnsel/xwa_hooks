@@ -39,8 +39,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x43FA5B, SetL0043F8E0Angle1Hook },
 	{ 0x43FA75, SetL0043F8E0Angle2Hook },
 
-	{ 0x497739, ReadTurretPositionXHook },
-	{ 0x497742, ReadTurretPositionYHook },
+	{ 0x497739, ReadTurretPositionYHook },
+	{ 0x497742, ReadTurretPositionXHook },
 	{ 0x497759, ReadTurretPositionZHook },
 	{ 0x43FA0E, ReadTurretOrientationHook },
 	{ 0x507BB0, ReadL00507B20HasTurretHook },
