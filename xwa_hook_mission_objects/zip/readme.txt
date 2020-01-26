@@ -32,13 +32,15 @@ At offset 101190, replace 535556578B7C2414 with E88B6D0A00C39090.
 
 # To call the hook that filters turret weapons
 At offset 0FB941, replace 0F85B8160000 with 909090909090.
-At offset 0903FE, replace 0F8591000000 with 909090909090.
+;At offset 0903FE, replace 0F8591000000 with 909090909090.
 At offset 090452, replace E869020000 with E8C97A1100.
 At offset 090466, replace E855020000 with E8B57A1100.
 At offset 09048B, replace E830020000 with E8907A1100.
 At offset 0904EA, replace E8D1010000 with E8317A1100.
-At offset 09057C, replace E83F010000 with E89F791100.
+;At offset 09057C, replace E83F010000 with E89F791100.
 At offset 0905E9, replace E802070000 with E832791100.
+At offset 0904D9, replace 7517 with 9090.
+At offset 904FD, replace 75D7 with 9090.
 
 # To call the hook that set turrets data
 At offset 014EF6, replace E8F5870F00 with E835301900.

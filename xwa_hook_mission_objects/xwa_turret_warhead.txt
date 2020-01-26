@@ -67,3 +67,18 @@ E89F791100              call 005A8B20, 005A8B20 - 00491181 = 0011799F
 E802070000              call 004918F0
 
 E832791100              call 005A8B20, 005A8B20 - 004911EE = 00117932
+
+
+// L00490EE0
+// void XwaPlayerShoot( unknown A4 )
+// if( s_ExeCraftTable[eax].LaserSequence[ebp] == 0x04 )
+
+:004910D9 - 0x0904D9
+7517                    jne 004910F2
+
+9090                    nop
+
+:004910FD - 0x0904FD
+75D7                    jne 004910D6
+
+9090                    nop

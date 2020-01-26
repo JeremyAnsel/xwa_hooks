@@ -115,7 +115,11 @@ static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24")
 
 struct ExeCraftEntry
 {
-	char Unk0000[574];
+	char Unk0000[306];
+	unsigned short LaserTypeId[3];
+	char Unk0138[9];
+	unsigned char LaserSequence[3];
+	char Unk0144[250];
 	short TurretPositionX[2];
 	short TurretPositionZ[2];
 	short TurretPositionY[2];
@@ -156,7 +160,9 @@ struct XwaCraft
 	short PickedUpObjectIndex;
 	char Unk0090[286];
 	char WeaponRacksCount;
-	char Unk01AF[304];
+	char Unk01AF[7];
+	char XwaCraft_m1B6[3];
+	char Unk01B9[294];
 	XwaCraftWeaponRack WeaponRacks[16];
 	char Unk03BF[58];
 };
@@ -722,6 +728,8 @@ int LaserShootHook(int* params)
 	const short CorellianTransportGunnerModelIndex = 317;
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+	const ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
 
 	short modelIndex = XwaObjects[objectIndex].ModelIndex;
 	int turretIndex = XwaPlayers[XwaObjects[objectIndex].PlayerIndex].TurretIndex;
@@ -732,9 +740,46 @@ int LaserShootHook(int* params)
 	}
 	else
 	{
-		if (CheckOptHardpoint(CorellianTransportGunnerModelIndex, 0, laserIndex))
+		//if (CheckOptHardpoint(CorellianTransportGunnerModelIndex, 0, laserIndex))
+		//{
+		//	L004912C0(objectIndex, laserIndex, playerIndex, arg10);
+		//}
+
+		int player_m033 = XwaPlayers[XwaObjects[objectIndex].PlayerIndex].XwaPlayer_m033;
+		short craftIndex = ExeEnableTable[modelIndex].CraftIndex;
+
+		int laserType = -1;
+		int laserSlot;
+
+		if (player_m033 == 0)
 		{
-			L004912C0(objectIndex, laserIndex, playerIndex, arg10);
+			for (laserSlot = 0; laserSlot < 3; laserSlot++)
+			{
+				if (ExeCraftTable[craftIndex].LaserSequence[laserSlot] == 4)
+				{
+					laserType = 0;
+					break;
+				}
+			}
+		}
+		else if (player_m033 == 1)
+		{
+			for (laserSlot = 0; laserSlot < 3; laserSlot++)
+			{
+				if (ExeCraftTable[craftIndex].LaserSequence[laserSlot] == 2)
+				{
+					laserType = 1;
+					break;
+				}
+			}
+		}
+
+		if (laserType != -1)
+		{
+			if (CheckOptHardpoint(CorellianTransportGunnerModelIndex, 0, laserType))
+			{
+				L004912C0(objectIndex, laserSlot, playerIndex, arg10);
+			}
 		}
 	}
 
