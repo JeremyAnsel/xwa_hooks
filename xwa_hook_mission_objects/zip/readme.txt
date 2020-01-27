@@ -130,6 +130,10 @@ To define a second custom gunner opt, create a "[Player]Gunner2.opt" file.
 
 See "FamilyTransportTurrets.txt".
 
+By default, the turrets lasers are unlimited. They can be made limited by setting "UnlimitedTurretLaser = 0".
+See "hook_mission_objects.cfg"
+
+
 *** Credits ***
 
 - Jérémy Ansel (JeremyaFr)

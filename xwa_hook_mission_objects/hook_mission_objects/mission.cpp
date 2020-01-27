@@ -55,6 +55,21 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class Config
+{
+public:
+	Config()
+	{
+		const auto lines = GetFileLines("hook_mission_objects.cfg");
+
+		this->UnlimitedTurretLaser = GetFileKeyValueInt(lines, "UnlimitedTurretLaser", 1) != 0;
+	}
+
+	bool UnlimitedTurretLaser;
+};
+
+Config g_config;
+
 enum HardpointTypeEnum : unsigned int
 {
 	HardpointType_None = 0,
@@ -740,45 +755,50 @@ int LaserShootHook(int* params)
 	}
 	else
 	{
-		//if (CheckOptHardpoint(CorellianTransportGunnerModelIndex, 0, laserIndex))
-		//{
-		//	L004912C0(objectIndex, laserIndex, playerIndex, arg10);
-		//}
-
-		int player_m033 = XwaPlayers[XwaObjects[objectIndex].PlayerIndex].XwaPlayer_m033;
-		short craftIndex = ExeEnableTable[modelIndex].CraftIndex;
-
-		int laserType = -1;
-		int laserSlot;
-
-		if (player_m033 == 0)
+		if (!g_config.UnlimitedTurretLaser)
 		{
-			for (laserSlot = 0; laserSlot < 3; laserSlot++)
+			if (CheckOptHardpoint(CorellianTransportGunnerModelIndex, 0, laserIndex))
 			{
-				if (ExeCraftTable[craftIndex].LaserSequence[laserSlot] == 4)
-				{
-					laserType = 0;
-					break;
-				}
+				L004912C0(objectIndex, laserIndex, playerIndex, arg10);
 			}
 		}
-		else if (player_m033 == 1)
+		else
 		{
-			for (laserSlot = 0; laserSlot < 3; laserSlot++)
+			int player_m033 = XwaPlayers[XwaObjects[objectIndex].PlayerIndex].XwaPlayer_m033;
+			short craftIndex = ExeEnableTable[modelIndex].CraftIndex;
+
+			int laserType = -1;
+			int laserSlot;
+
+			if (player_m033 == 0)
 			{
-				if (ExeCraftTable[craftIndex].LaserSequence[laserSlot] == 2)
+				for (laserSlot = 0; laserSlot < 3; laserSlot++)
 				{
-					laserType = 1;
-					break;
+					if (ExeCraftTable[craftIndex].LaserSequence[laserSlot] == 4)
+					{
+						laserType = 0;
+						break;
+					}
 				}
 			}
-		}
-
-		if (laserType != -1)
-		{
-			if (CheckOptHardpoint(CorellianTransportGunnerModelIndex, 0, laserType))
+			else if (player_m033 == 1)
 			{
-				L004912C0(objectIndex, laserSlot, playerIndex, arg10);
+				for (laserSlot = 0; laserSlot < 3; laserSlot++)
+				{
+					if (ExeCraftTable[craftIndex].LaserSequence[laserSlot] == 2)
+					{
+						laserType = 1;
+						break;
+					}
+				}
+			}
+
+			if (laserType != -1)
+			{
+				if (CheckOptHardpoint(CorellianTransportGunnerModelIndex, 0, laserType))
+				{
+					L004912C0(objectIndex, laserSlot, playerIndex, arg10);
+				}
 			}
 		}
 	}
