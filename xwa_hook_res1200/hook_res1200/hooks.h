@@ -23,7 +23,13 @@ static const HookPatchItem g_res1200Patch[] =
 	{ 0x0D3399, "C705A0D57400E0C27400", "E8824B0D009090909090" },
 };
 
+static const HookPatchItem g_d332dPatch[] =
+{
+	{ 0x048056, "6A01", "6A00" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that fix res 1200 crash", g_res1200Patch),
+	MAKE_HOOK_PATCH("To call the hook that fix offset d332d crash", g_d332dPatch),
 };

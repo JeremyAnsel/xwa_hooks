@@ -67,7 +67,7 @@ int Res1200Hook2(int* params)
 	const int s_XwaFlightScreenBppDiv8 = *(int*)0x005AA0AC;
 	const int*& s_V0x074D5A0 = *(const int**)0x0074D5A0;
 
-	g_resBuffer.Reserve(height, width * s_XwaFlightScreenBppDiv8);
+	//g_resBuffer.Reserve(height, width * s_XwaFlightScreenBppDiv8);
 
 	s_V0x074D5A0 = g_resBuffer._buffer.data();
 

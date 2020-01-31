@@ -85,6 +85,7 @@ See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11695
 ## xwa_hook_res1200
 
 This hook replaces a static buffer with a dynamic one in initializing 2d buffer. It fixes a crash when resolution height > 1200 is used.
+It also fixes a crash at offset 0x000d332d.
 
 ## xwa_hook_resolution
 

@@ -48,3 +48,10 @@ C705A0D57400E0C27400    mov dword ptr [0074D5A0], 0074C2E0
 
 E8824B0D00              call 005A8B20, 005A8B20 - 004D3F9E = 000D4B82
 9090909090
+
+
+// fix a crash at offset 0x000d332d
+:00448C56 - 0x048056
+6A01                    push 00000001
+
+6A00                    push 00000000
