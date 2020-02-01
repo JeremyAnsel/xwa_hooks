@@ -8,7 +8,6 @@
 #include <sstream>
 #include <iomanip>
 #include <vector>
-#include <map>
 #include <utility>
 #include <filesystem>
 
@@ -225,6 +224,9 @@ public:
 
 	void InitHooksFunctionsMap()
 	{
+		this->_functions.reserve(0x1A8000);
+		memset(this->_functions.data(), 0, 0x1A8000 * 4);
+
 		for (const auto& wrapper : this->_wrappers)
 		{
 			auto getCount = (int(*)())GetProcAddress(wrapper._module, "GetHookFunctionsCount");
@@ -243,14 +245,14 @@ public:
 						continue;
 					}
 
-					this->_functions.insert(std::make_pair(function.from, function.function));
+					this->_functions.data()[function.from - 0x401000] = function.function;
 				}
 			}
 		}
 	}
 
 	std::vector<HookWrapper> _wrappers;
-	std::map<int, int(*)(int*)> _functions;
+	std::vector<int(*)(int*)> _functions;
 };
 
 HookList g_hookList;
@@ -292,11 +294,11 @@ int HookError(int call, int* params)
 
 int Hook(int call, int* params)
 {
-	auto it = g_hookList._functions.find(call);
+	auto it = g_hookList._functions.data()[call - 0x401000];
 
-	if (it != g_hookList._functions.end())
+	if (it != nullptr)
 	{
-		return it->second(params);
+		return it(params);
 	}
 
 	return HookError(call, params);
