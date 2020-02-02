@@ -516,11 +516,12 @@ int WeaponImpactColorHook(int* params)
 
 	if (resdataModelIndex == 0x228 || resdataModelIndex == 0x117)
 	{
-		int weaponObjetIndex = esi->S0x0761E70_m08;
-		weaponModelIndex = XwaObjects[weaponObjetIndex].ModelIndex;
-		modelIndex = XwaObjects[weaponObjetIndex].pMobileObject->ModelIndex;
+		int weaponObjectIndex = esi->S0x0761E70_m08;
+		weaponModelIndex = XwaObjects[weaponObjectIndex].ModelIndex;
+		modelIndex = XwaObjects[weaponObjectIndex].pMobileObject->ModelIndex;
 
 		esi->S0x0761E70_m08 = weaponModelIndex;
+		XwaObjects[weaponObjectIndex].ModelIndex = 0;
 	}
 	else
 	{
