@@ -37,7 +37,7 @@ At offset 090452, replace E869020000 with E8C97A1100.
 At offset 090466, replace E855020000 with E8B57A1100.
 At offset 09048B, replace E830020000 with E8907A1100.
 At offset 0904EA, replace E8D1010000 with E8317A1100.
-;At offset 09057C, replace E83F010000 with E89F791100.
+At offset 09057C, replace E83F010000 with E89F791100.
 At offset 0905E9, replace E802070000 with E832791100.
 At offset 0904D9, replace 7517 with 9090.
 At offset 904FD, replace 75D7 with 9090.
@@ -129,6 +129,11 @@ To define a custom gunner opt, create a "[Player]Gunner.opt" file.
 To define a second custom gunner opt, create a "[Player]Gunner2.opt" file.
 
 See "FamilyTransportTurrets.txt".
+
+To disable the turret forward fire, set "TurretForwardFire = 0".
+The default value is "1".
+
+See "EscortShuttleTurrets.txt".
 
 By default, the turrets lasers are unlimited. They can be made limited by setting "UnlimitedTurretLaser = 0".
 See "hook_mission_objects.cfg"

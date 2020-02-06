@@ -17,7 +17,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x49106B, LaserShootHook },
 	{ 0x491090, LaserShootHook },
 	{ 0x4910EF, LaserShootHook },
-	{ 0x491181, LaserShootHook },
+	{ 0x491181, LaserShoot2Hook },
 	{ 0x4911EE, WarheadShootHook },
 
 	{ 0x415AFB, SetXwaCraftsHook },
@@ -73,7 +73,7 @@ static const HookPatchItem g_filterTurretWeaponsPatch[] =
 	{ 0x090466, "E855020000", "E8B57A1100" },
 	{ 0x09048B, "E830020000", "E8907A1100" },
 	{ 0x0904EA, "E8D1010000", "E8317A1100" },
-	//{ 0x09057C, "E83F010000", "E89F791100" },
+	{ 0x09057C, "E83F010000", "E89F791100" },
 	{ 0x0905E9, "E802070000", "E832791100" },
 	{ 0x0904D9, "7517", "9090" },
 	{ 0x0904FD, "75D7", "9090" },

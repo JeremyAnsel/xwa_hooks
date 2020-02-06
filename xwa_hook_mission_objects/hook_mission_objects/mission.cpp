@@ -386,6 +386,20 @@ std::vector<TurretData> GetTurretDataList(int modelIndex)
 	return turrets;
 }
 
+bool GetTurretForwardFire(int modelIndex)
+{
+	const std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(shipPath + "Turrets.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", "Turrets");
+	}
+
+	return GetFileKeyValueInt(lines, "TurretForwardFire", 1) != 0;
+}
+
 class ModelIndexTurrets
 {
 public:
@@ -411,8 +425,25 @@ public:
 		return this->GetTurrets(modelIndex).size();
 	}
 
+	bool GetForwardFire(int modelIndex)
+	{
+		auto it = this->_turretsForwardFire.find(modelIndex);
+
+		if (it != this->_turretsForwardFire.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetTurretForwardFire(modelIndex);
+			this->_turretsForwardFire.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
 private:
 	std::map<int, std::vector<TurretData>> _turrets;
+	std::map<int, bool> _turretsForwardFire;
 };
 
 ModelIndexTurrets g_modelIndexTurrets;
@@ -803,6 +834,33 @@ int LaserShootHook(int* params)
 		}
 	}
 
+	return 0;
+}
+
+int LaserShoot2Hook(int* params)
+{
+	const int objectIndex = params[0];
+	const int laserIndex = params[1];
+	const int playerIndex = params[2];
+	const int arg10 = params[3];
+
+	const auto L004912C0 = (void(*)(int, int, int, int))0x004912C0;
+
+	const short CorellianTransportGunnerModelIndex = 317;
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+	const ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+
+	short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	int turretIndex = XwaPlayers[XwaObjects[objectIndex].PlayerIndex].TurretIndex;
+
+	if (!g_modelIndexTurrets.GetForwardFire(modelIndex))
+	{
+		return 0;
+	}
+
+	L004912C0(objectIndex, laserIndex, playerIndex, arg10);
 	return 0;
 }
 

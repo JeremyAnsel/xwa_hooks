@@ -4,6 +4,7 @@ int MissionObjectsHook(int* params);
 int CraftTurretHook(int* params);
 
 int LaserShootHook(int* params);
+int LaserShoot2Hook(int* params);
 int WarheadShootHook(int* params);
 
 int SetXwaCraftsHook(int* params);
