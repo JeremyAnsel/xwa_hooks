@@ -13,6 +13,20 @@ A1C4337B00              mov eax, dword ptr [007B33C4]
 E84A650C00              call 005A8B30, 005A8B30 - 004E25E6 = 000C654A
 
 
+L004E1760
+:004E2292 - 0x0E1692
+8A8848655B00            mov cl, byte ptr [eax+005B6548]
+80F9FF                  cmp cl, FF
+741B                    je 004E22B8
+
+57                      push edi
+56                      push esi
+E887680C00              call 005A8B20, 005A8B20 - 004E2299 = 000C6887
+5E                      pop esi
+5F                      pop edi
+EB1B                    jmp 004E22B8
+
+
 L004E8680
 :004E86CF - 0x0E7ACF
 663D2802                cmp ax, 0228

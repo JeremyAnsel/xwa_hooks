@@ -1,4 +1,6 @@
 
+WeaponSwitchBasedOnIff = -1
+
 WeaponColor = 0
 WeaponColor280 = 1
 WeaponColor281 = 1

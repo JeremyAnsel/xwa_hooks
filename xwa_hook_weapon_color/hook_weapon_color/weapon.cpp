@@ -24,6 +24,8 @@ public:
 	{
 		const auto lines = GetFileLines("hook_weapon_color.cfg");
 
+		this->WeaponSwitchBasedOnIff = GetFileKeyValueInt(lines, "WeaponSwitchBasedOnIff", 0) != 0;
+
 		this->WeaponImpactColor_3100 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3100", 0xFF0000FF); // blue
 		this->WeaponImpactColor_3200 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3200", 0xFFFF0000); // red
 		this->WeaponImpactColor_3300 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3300", 0xFF00FF00); // green
@@ -37,6 +39,8 @@ public:
 			this->WeaponLightColor[i] = GetFileKeyValueUnsignedInt(lines, key);
 		}
 	}
+
+	bool WeaponSwitchBasedOnIff;
 
 	unsigned int WeaponImpactColor_3100;
 	unsigned int WeaponImpactColor_3200;
@@ -106,7 +110,8 @@ struct XwaMobileObject
 {
 	char Unk0000[149];
 	unsigned short ModelIndex;
-	char Unk0097[2];
+	unsigned char Iff;
+	char Unk0098[1];
 	unsigned char Markings;
 	char Unk009A[75];
 };
@@ -180,6 +185,27 @@ struct S0x07FA360
 static_assert(sizeof(S0x07FA360) == 48, "size of S0x07FA360 must be 48");
 
 #pragma pack(pop)
+
+int GetWeaponSwitch(int modelIndex)
+{
+	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(ship + "WeaponColor.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", "WeaponColor");
+	}
+
+	int weaponSwitch = -1;
+
+	if (lines.size())
+	{
+		weaponSwitch = GetFileKeyValueInt(lines, "WeaponSwitchBasedOnIff", -1);
+	}
+
+	return weaponSwitch;
+}
 
 std::array<int, 28> GetWeaponColor(int modelIndex)
 {
@@ -381,6 +407,22 @@ std::array<unsigned int, 28> GetWeaponLightColor(int modelIndex)
 class ModelIndexWeapon
 {
 public:
+	int GetSwitchBasedOnIff(int modelIndex)
+	{
+		auto it = this->_weaponSwitch.find(modelIndex);
+
+		if (it != this->_weaponSwitch.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetWeaponSwitch(modelIndex);
+			this->_weaponSwitch.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
 	int GetColor(int modelIndex, int weaponModelIndex)
 	{
 		if (weaponModelIndex < 280 || weaponModelIndex >= 280 + 28)
@@ -461,6 +503,7 @@ public:
 	}
 
 private:
+	std::map<int, int> _weaponSwitch;
 	std::map<int, std::array<int, 28>> _weaponColor;
 	std::map<int, std::array<unsigned int, 28>> _weaponImpactColor;
 	std::map<int, WeaponEnergyBarColor> _weaponEnergyBarColor;
@@ -469,15 +512,44 @@ private:
 
 ModelIndexWeapon g_modelIndexWeapon;
 
+bool GetConfigWeaponSwitchBasedOnIff(int modelIndex)
+{
+	int value = g_modelIndexWeapon.GetSwitchBasedOnIff(modelIndex);
+
+	if (value == -1)
+	{
+		return g_config.WeaponSwitchBasedOnIff;
+	}
+
+	return value != 0;
+}
+
 int WeaponColorHook(int* params)
 {
 	const int objectIndex = params[54];
-	const unsigned short weaponModelIndex = (unsigned short)params[56];
+	unsigned short& weaponModelIndex = (unsigned short&)params[56];
 	const int weaponObjectIndex = params[28];
 
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-
+	unsigned char* ExeWeaponSide = (unsigned char*)0x005B6660;
+	unsigned short* ExeWeaponSideModel = (unsigned short*)0x005B6680;
+	unsigned char* s_V0x05FE758 = (unsigned char*)0x005FE758;
 	unsigned short objectModelIndex = XwaObjects[objectIndex].ModelIndex;
+
+	if (GetConfigWeaponSwitchBasedOnIff(objectModelIndex))
+	{
+		unsigned char iff = XwaObjects[objectIndex].pMobileObject->Iff;
+		unsigned char side = ExeWeaponSide[weaponModelIndex - 280];
+
+		if (side != 0xff)
+		{
+			if (s_V0x05FE758[iff] != side)
+			{
+				weaponModelIndex = ExeWeaponSideModel[weaponModelIndex - 280];
+			}
+		}
+	}
+
 	int color = g_modelIndexWeapon.GetColor(objectModelIndex, weaponModelIndex);
 
 	XwaObjects[weaponObjectIndex].pMobileObject->Markings = color;
@@ -499,6 +571,32 @@ int WeaponColorCapitalShipHook(int* params)
 	XwaObjects[weaponObjectIndex].pMobileObject->Markings = color;
 
 	return *(int*)0x007B33C4;
+}
+
+int WeaponAIColorHook(int* params)
+{
+	unsigned short& weaponModelIndex = (unsigned short&)params[0];
+	const XwaObject* object = (XwaObject*)params[1];
+
+	unsigned char* ExeWeaponSide = (unsigned char*)0x005B6660;
+	unsigned short* ExeWeaponSideModel = (unsigned short*)0x005B6680;
+	unsigned char* s_V0x05FE758 = (unsigned char*)0x005FE758;
+
+	if (GetConfigWeaponSwitchBasedOnIff(object->ModelIndex))
+	{
+		unsigned char iff = object->pMobileObject->Iff;
+		unsigned char side = ExeWeaponSide[weaponModelIndex - 280];
+
+		if (side != 0xff)
+		{
+			if (s_V0x05FE758[iff] != side)
+			{
+				weaponModelIndex = ExeWeaponSideModel[weaponModelIndex - 280];
+			}
+		}
+	}
+
+	return 0;
 }
 
 int WeaponImpactColorHook(int* params)

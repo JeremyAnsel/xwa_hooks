@@ -24,6 +24,7 @@ The following modifications are applied at runtime to xwingalliance.exe:
 # To call the hook that defines weapon color
 At offset 091449, replace A1C4337B00 with E8E26A1100.
 At offset 0E19E1, replace A1C4337B00 with E84A650C00.
+At offset 0E1692, replace 8A8848655B0080F9FF741B with 5756E887680C005E5FEB1B.
 At offset 0E7ACF, replace 663D2802750E668B4608 with 5056E85A040C00EB1690.
 At offset 00A3B5, replace E886E40D00 with E866DB1900.
 At offset 00A652, replace E8E9E10D00 with E8C9D81900.
@@ -35,6 +36,13 @@ At offset 0F1CC2, replace 3D190100007F403D18010000 with 56E858620B005EE992020000
 *** Usage ***
 
 Suppose that the craft is "FlightModels\[Model].opt".
+
+To enable weapon switch based on IFF, set "WeaponSwitchBasedOnIff = 1" in "hook_weapon_color.cfg".
+To disable it, set "WeaponSwitchBasedOnIff = 0".
+The default value is "0".
+You can override this value with a setting named "WeaponSwitchBasedOnIff" in the file named "FlightModels\[Model]WeaponColor.txt" or the section named "[WeaponColor]" in "FlightModels\[Model].ini".
+Set "0" to disable or "1" to enable the feature or "-1" to use the global setting.
+The default value is "-1".
 
 To define the color, create a file named "FlightModels\[Model]WeaponColor.txt" or create a section named "[WeaponColor]" in "FlightModels\[Model].ini".
 The format is:
