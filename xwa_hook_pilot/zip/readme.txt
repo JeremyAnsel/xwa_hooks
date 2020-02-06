@@ -1,4 +1,4 @@
-﻿xwa_hook_pilot
+xwa_hook_pilot
 
 This hook enables pilot meshes animation for any craft.
 
@@ -31,7 +31,9 @@ At offset 05809E, replace 66A124168C00663BC3 with E8DD8BFAFFEB539090.
 *** Usage ***
 
 Suppose that the craft is "FlightModels\[Model].opt".
+
 To define wich meshes are animated, create a file named "FlightModels\[Model]Pilot.txt" or create a section named "[Pilot]" in "FlightModels\[Model].ini".
+
 If the file does not exist, default values are used:
 - X-Wing (meshes 6 and 9)
 - Y-Wing (meshes 8 et 13)
@@ -39,6 +41,7 @@ If the file does not exist, default values are used:
 - Corellian Transport 2 (meshes 19 et 17)
 - Millenium Falcon 2 (meshes 21 and 19)
 - Family Transport (meshes 13 and 9)
+
 The format is a line per mesh:
 mesh index, angle, speed, behavior
 Speed must be a multiple of 2.
@@ -46,7 +49,13 @@ Behavior can be 0, 1, or 2:
 - 0 means constant rotation
 - 1 means rotation with random
 - 2 means rotation with random and pause
+
+To define wich meshes are animated when the cockpit is displayed, create a file named "FlightModels\[Model]PilotCockpit.txt" or create a section named "[PilotCockpit]" in "FlightModels\[Model].ini".
+When the "[PilotCockpit]" is empty, the values of the "[Pilot]" section are used.
+The format is the same as the "[Pilot]" section.
+
 See *Pilot.txt.
+See AWingPilotCockpit.txt.
 
 
 *** Credits ***

@@ -66,6 +66,24 @@ struct XwaCraft
 
 static_assert(sizeof(XwaCraft) == 1017, "size of XwaCraft must be 1017");
 
+struct XwaObject
+{
+	char Unk0000[31];
+	int PlayerIndex;
+	char Unk0023[4];
+};
+
+static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
+
+struct XwaPlayer
+{
+	char Unk0000[505];
+	unsigned char CockpitDisplayed;
+	char Unk01FA[2517];
+};
+
+static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
+
 #pragma pack(pop)
 
 struct PilotMesh
@@ -179,6 +197,31 @@ std::vector<PilotMesh> GetPilotMeshes(int modelIndex)
 	return pilotMeshes;
 }
 
+std::vector<PilotMesh> GetPilotCockpitMeshes(int modelIndex)
+{
+	const std::string pilot = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(pilot + "PilotCockpit.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(pilot + ".ini", "PilotCockpit");
+	}
+
+	std::vector<PilotMesh> pilotMeshes;
+
+	if (lines.size())
+	{
+		pilotMeshes = GetFileListPilotMeshes(lines);
+	}
+	else
+	{
+		pilotMeshes = GetPilotMeshes(modelIndex);
+	}
+
+	return pilotMeshes;
+}
+
 class ModelIndexPilotMeshes
 {
 public:
@@ -198,8 +241,25 @@ public:
 		}
 	}
 
+	std::vector<PilotMesh> GetMeshesCockpit(int modelIndex)
+	{
+		auto it = this->_meshesCockpit.find(modelIndex);
+
+		if (it != this->_meshesCockpit.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetPilotCockpitMeshes(modelIndex);
+			this->_meshesCockpit.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
 private:
 	std::map<int, std::vector<PilotMesh>> _meshes;
+	std::map<int, std::vector<PilotMesh>> _meshesCockpit;
 };
 
 ModelIndexPilotMeshes g_modelIndexPilotMeshes;
@@ -210,9 +270,16 @@ int PilotHook(int* params)
 
 	XwaCraft* craft = (XwaCraft*)params[0];
 	const int modelIndex = params[1];
+	const int objectIndex = params[7];
 	const int A8 = params[8];
 
-	const auto pilotMeshes = g_modelIndexPilotMeshes.GetMeshes(modelIndex);
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	const int playerIndex = XwaObjects[objectIndex].PlayerIndex;
+	const bool isCockpitDisplayed = playerIndex != -1 && XwaPlayers[playerIndex].CockpitDisplayed != 0;
+
+	const auto pilotMeshes = isCockpitDisplayed ? g_modelIndexPilotMeshes.GetMeshesCockpit(modelIndex) : g_modelIndexPilotMeshes.GetMeshes(modelIndex);
 
 	if (!pilotMeshes.size())
 	{

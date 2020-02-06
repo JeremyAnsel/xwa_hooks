@@ -1,0 +1,2 @@
+;mesh index, angle, speed, behavior
+empty
