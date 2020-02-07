@@ -121,7 +121,7 @@ std::vector<PilotMesh> GetFileListPilotMeshes(const std::vector<std::string>& li
 	return values;
 }
 
-std::vector<PilotMesh> GetDefaultPilotMeshes(int modelIndex)
+std::vector<PilotMesh> GetDefaultPilotMeshes(int modelIndex, bool isCockpit)
 {
 	std::vector<PilotMesh> values;
 
@@ -138,7 +138,14 @@ std::vector<PilotMesh> GetDefaultPilotMeshes(int modelIndex)
 		break;
 
 	case 3: // ModelIndex_003_0_2_Awing:
-		values.push_back({ 4, 32, 2, 2 });
+		if (isCockpit)
+		{
+		}
+		else
+		{
+			values.push_back({ 4, 32, 2, 2 });
+		}
+
 		break;
 
 	case 4: // ModelIndex_004_0_3_Bwing:
@@ -191,7 +198,7 @@ std::vector<PilotMesh> GetPilotMeshes(int modelIndex)
 	}
 	else
 	{
-		pilotMeshes = GetDefaultPilotMeshes(modelIndex);
+		pilotMeshes = GetDefaultPilotMeshes(modelIndex, false);
 	}
 
 	return pilotMeshes;
@@ -208,6 +215,17 @@ std::vector<PilotMesh> GetPilotCockpitMeshes(int modelIndex)
 		lines = GetFileLines(pilot + ".ini", "PilotCockpit");
 	}
 
+	if (!lines.size())
+	{
+		lines = GetFileLines(pilot + "Pilot.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(pilot + ".ini", "Pilot");
+	}
+
+
 	std::vector<PilotMesh> pilotMeshes;
 
 	if (lines.size())
@@ -216,7 +234,7 @@ std::vector<PilotMesh> GetPilotCockpitMeshes(int modelIndex)
 	}
 	else
 	{
-		pilotMeshes = GetPilotMeshes(modelIndex);
+		pilotMeshes = GetDefaultPilotMeshes(modelIndex, true);
 	}
 
 	return pilotMeshes;
