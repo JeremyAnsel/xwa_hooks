@@ -9,6 +9,8 @@
 #include <vector>
 #include <utility>
 #include <filesystem>
+#include <chrono>
+#include <thread>
 
 std::string int_to_hex(int i)
 {
@@ -219,6 +221,8 @@ public:
 	{
 		this->_functions.reserve(0x1A8000);
 		memset(this->_functions.data(), 0, 0x1A8000 * 4);
+		this->_names.resize(0x1A8000);
+		int functionsCount = 0;
 
 		for (const auto& wrapper : this->_wrappers)
 		{
@@ -239,13 +243,24 @@ public:
 					}
 
 					this->_functions.data()[function.from - 0x401000] = function.function;
+					this->_names[function.from - 0x401000] = wrapper._name + " 0x" + int_to_hex(function.from);
+
+					functionsCount++;
 				}
 			}
 		}
+
+		OutputDebugString((
+			"Hooks: "
+			+ std::to_string(functionsCount)
+			+ " functions in "
+			+ std::to_string(this->_wrappers.size())
+			+ " modules").c_str());
 	}
 
 	std::vector<HookWrapper> _wrappers;
 	std::vector<int(*)(int*)> _functions;
+	std::vector<std::string> _names;
 };
 
 HookList g_hookList;
@@ -273,6 +288,49 @@ bool LoadAndPatchHooks()
 	return true;
 }
 
+class BenchmarkFunctions
+{
+public:
+	BenchmarkFunctions()
+	{
+		this->_benchmarks.resize(0x1A8000);
+		this->_count.resize(0x1A8000);
+	}
+
+	~BenchmarkFunctions()
+	{
+		std::vector<std::pair<int, double>> functions;
+
+		for (int i = 0; i < 0x1A8000; i++)
+		{
+			std::chrono::duration<double> ellapsed = this->_benchmarks[i];
+
+			if (ellapsed.count() != 0)
+			{
+				functions.push_back(std::make_pair(i, ellapsed.count()));
+			}
+		}
+
+		std::sort(functions.begin(), functions.end(), [](const auto& a, const auto& b) {return a.second < b.second;});
+
+		for (const auto& f : functions)
+		{
+			OutputDebugString((
+				g_hookList._names[f.first]
+				+ ": "
+				+ std::to_string(this->_count[f.first])
+				+ " calls in "
+				+ std::to_string(f.second)
+				+ " s").c_str());
+		}
+	}
+
+	std::vector<std::chrono::duration<long long, std::nano>> _benchmarks;
+	std::vector<int> _count;
+};
+
+BenchmarkFunctions g_benchmarks;
+
 int HookError(int call, int* params)
 {
 	std::string text;
@@ -287,12 +345,24 @@ int HookError(int call, int* params)
 
 int Hook(int call, int* params)
 {
+	auto start = std::chrono::high_resolution_clock::now();
+
 	auto it = g_hookList._functions.data()[call - 0x401000];
+	int ret;
 
 	if (it != nullptr)
 	{
-		return it(params);
+		ret = it(params);
+	}
+	else
+	{
+		return HookError(call, params);
 	}
 
-	return HookError(call, params);
+	auto end = std::chrono::high_resolution_clock::now();
+
+	g_benchmarks._benchmarks[call - 0x401000] += end - start;
+	g_benchmarks._count[call - 0x401000]++;
+
+	return ret;
 }

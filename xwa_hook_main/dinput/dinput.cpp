@@ -34,10 +34,10 @@ extern "C" HRESULT WINAPI DirectInputCreateA(
 	LPUNKNOWN punkOuter
 	)
 {
-	static auto dinput_proc = (decltype(DirectInputCreateA)*)GetProcAddress(dinput._module, "DirectInputCreateA");
-
 	if (dwVersion != 0)
 	{
+		static auto dinput_proc = (decltype(DirectInputCreateA)*)GetProcAddress(dinput._module, "DirectInputCreateA");
+
 		return dinput_proc(hinst, dwVersion, lplpDirectInput, punkOuter);
 	}
 	else

@@ -32,6 +32,9 @@ bool MainPatchMemory()
 		}
 	}
 
+	*(int*)(0x005A8B20 + 0x09) = (int)DirectInputCreateA - 0x005A8B2D;
+	*(int*)(0x005A8B30 + 0x09) = (int)DirectInputCreateA - 0x005A8B3D;
+
 	return true;
 }
 
