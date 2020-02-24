@@ -26,6 +26,10 @@ This hook adds starfield backdrops to skirmish mission and permits to replace .d
 
 This hook fixes countermeasures count when reloading.
 
+## xwa_hook_d3d
+
+This hook improves FPS.
+
 ## xwa_hook_d3dinfos_textures
 
 This hook increases the D3DTextures count limit. When there are more than 1624 textures, the game outputs "Not enough D3DTextures" and uses the last created texture. This hook fixes that.

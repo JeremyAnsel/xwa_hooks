@@ -1,0 +1,104 @@
+
+; Disable std3D_FlushTextureCache in XwaFlushTextureCache L0044A5E0
+:0044A5E0 - 0x499E0
+E808D21400              call 005977ED
+
+9090909090
+
+
+; L00597784 XwaD3dTextureCacheUpdateOrAdd
+:00597796 - 0x196B96
+8B5508                  mov edx, dword ptr [ebp+08]
+
+EB51                    jmp 005977E9
+90                      nop
+
+===============================================================================
+
+; L00594E6C Xwa3dDeviceBeginScene
+:00594E70 - 0x194270
+A180117B00              mov eax, dword ptr [007B1180]
+
+E8BB3C0100              call 005A8B30, 005A8B30 - 00594E75 = 00013CBB
+
+; L00594EF8 Xwa3dDeviceEndScene
+:00594EFE - 0x1942FE
+A180117B00              mov eax, dword ptr [007B1180]
+
+E82D3C0100              call 005A8B30, 005A8B30 - 00594F03 = 00013C2D
+
+; L00595095 XwaD3dExecuteBufferAddVertices
+; if( s_XwaD3dVerticesCount + A8 > s_XwaD3dMaxVertices )
+:005950B4 - 0x1944B4
+7604                    jbe 005950BA
+32C0                    xor al, al
+EB4A                    jmp 00595104
+
+909090909090            nop
+
+; L00595006 XwaD3dExecuteBufferLock
+:0059500A - 0x19440A
+C705281D7B0000000000    mov dword ptr [007B1D28], 00000000
+
+E8213B0100              call 005A8B30, 005A8B30 - 0059500F = 00013B21
+85C0                    test eax, eax
+747E                    je 00595091, 00595091 - 00595013 = 7E
+90                      nop
+
+; L00595095 XwaD3dExecuteBufferAddVertices
+:00595098 - 0x194498
+A100AA9E00              mov eax, dword ptr [009EAA00]
+03450C                  add eax, dword ptr [ebp+0C]
+A300AA9E00              mov dword ptr [009EAA00], eax
+
+E8933A0100              call 005A8B30, 005A8B30 - 0059509D = 00013A93
+85C0                    test eax, eax
+7463                    je 00595104, 00595104 - 005950A1 = 63
+90909090                nop
+
+; L00595106 XwaD3dExecuteBufferProcessVertices
+:00595109 - 0x194509
+A1CC1C7B00              mov eax, dword ptr [007B1CCC]
+A3D01C7B00              mov dword ptr [007B1CD0], eax
+
+E8223A0100              call 005A8B30, 005A8B30 - 0059510E = 00013A22
+85C0                    test eax, eax
+747D                    je 0059518F, 0059518F - 00595112 = 7D
+90                      nop
+
+; L00595191 XwaD3dExecuteBufferAddTriangles
+:00595197 - 0x194597
+A16CA99E00              mov eax, dword ptr [009EA96C]
+03450C                  add eax, dword ptr [ebp+0C]
+A36CA99E00              mov dword ptr [009EA96C], eax
+
+E894390100              call 005A8B30, 005A8B30 - 0059519C = 00013994
+85C0                    test eax, eax
+0F842E030000            je 005954D2, 005954D2 - 005951A4 = 0000032E
+
+; L005954D6 XwaD3dExecuteBufferUnlockAndExecute
+:005954DC - 0x1948DC
+A1CC1C7B00              mov eax, dword ptr [007B1CCC]
+C6000B                  mov byte ptr [eax], 0B
+8B0DCC1C7B00            mov ecx, dword ptr [007B1CCC]
+C6410100                mov [ecx+01], 00
+
+E84F360100              call 005A8B30, 005A8B30 - 005954E1 = 0001364F
+85C0                    test eax, eax
+0F8403010000            je 005955EC, 005955EC - 005954E9 = 00000103
+9090909090              nop
+
+; L00595191 XwaD3dExecuteBufferAddTriangles
+; WORD -> nop indices
+
+:00595460 - 0x194860
+A1CC1C7B00              mov eax, dword ptr [007B1CCC]
+
+EB2C                    jmp 0059548E, 0059548E - 00595462 = 2C
+909090                  nop
+
+:005952D9 - 0x1946D9
+A1CC1C7B00              mov eax, dword ptr [007B1CCC]
+
+EB2C                    jmp 00595307, 00595307 - 005952DB = 2C
+909090                  nop
