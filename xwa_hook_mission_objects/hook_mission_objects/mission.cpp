@@ -452,26 +452,33 @@ std::vector<std::vector<CraftData>> g_craftsData;
 
 std::vector<std::string> GetCustomFileLines(const std::string& name)
 {
+	static std::vector<std::string> _lines;
+	static std::string _name;
+	static std::string _mission;
+
 	const char* xwaMissionFileName = (const char*)0x06002E8;
-	std::vector<std::string> lines;
 
-	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
-	lines = GetFileLines(mission + "_" + name + ".txt");
-
-	if (!lines.size())
+	if (_name != name || _mission != xwaMissionFileName)
 	{
-		lines = GetFileLines(mission + ".ini", name);
+		_name = name;
+		_mission = xwaMissionFileName;
+
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		_lines = GetFileLines(mission + "_" + name + ".txt");
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines(mission + ".ini", name);
+		}
+
+		if (!_lines.size())
+		{
+			const std::string path = "FlightModels\\";
+			_lines = GetFileLines(path + name + ".txt");
+		}
 	}
 
-	if (lines.size())
-	{
-		return lines;
-	}
-
-	const std::string path = "FlightModels\\";
-	lines = GetFileLines(path + name + ".txt");
-
-	return lines;
+	return _lines;
 }
 
 int MissionObjectsHook(int* params)
