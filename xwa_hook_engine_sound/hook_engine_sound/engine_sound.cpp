@@ -378,6 +378,9 @@ ModelIndexSound g_modelIndexSound;
 
 int ReplaceMissionSoundsHook(int* params)
 {
+	static std::vector<std::string> _lines;
+	static std::string _mission;
+
 	const char* A4 = (const char*)params[1];
 	const char* A8 = (const char*)params[2];
 	int AC = params[3];
@@ -385,18 +388,22 @@ int ReplaceMissionSoundsHook(int* params)
 	const auto LoadSfx2 = (int(*)(const char*, const char*, int, int))0x004DAD40;
 	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
-
-	auto lines = GetFileLines(mission + "_Sounds.txt");
-
-	if (!lines.size())
+	if (_mission != xwaMissionFileName)
 	{
-		lines = GetFileLines(mission + ".ini", "Sounds");
+		_mission = xwaMissionFileName;
+
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		_lines = GetFileLines(mission + "_Sounds.txt");
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines(mission + ".ini", "Sounds");
+		}
 	}
 
-	if (lines.size())
+	if (_lines.size())
 	{
-		const std::string value = GetFileKeyValue(lines, A4);
+		const std::string value = GetFileKeyValue(_lines, A4);
 
 		if (!value.empty() && std::ifstream(value))
 		{
