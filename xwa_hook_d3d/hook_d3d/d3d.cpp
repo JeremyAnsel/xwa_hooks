@@ -126,6 +126,8 @@ int ExecuteBufferAddVerticesHook(int* params)
 	void*& s_XwaD3dExecuteBufferDataPtr = *(void**)0x007B138C;
 	void*& s_XwaD3dExecuteBufferCurrentPtr = *(void**)0x007B1CCC;
 
+	memcpy(s_XwaD3dExecuteBufferDesc->lpData, buffer, count * sizeof(XwaD3dVertex));
+
 	s_XwaD3dExecuteBufferDataPtr = (void*)s_XwaD3dExecuteBufferDesc->dwCaps;
 	s_XwaD3dExecuteBufferCurrentPtr = s_XwaD3dExecuteBufferDataPtr;
 
@@ -169,6 +171,7 @@ int ExecuteBufferAddTrianglesHook(int* params)
 		return 0;
 	}
 
+	const int s_XwaD3dVerticesCount = *(int*)0x007B1D28;
 	const D3DEXECUTEBUFFERDESC* s_XwaD3dExecuteBufferDesc = (D3DEXECUTEBUFFERDESC*)0x007B1390;
 	void*& s_XwaD3dExecuteBufferCurrentPtr = *(void**)0x007B1CCC;
 
@@ -183,7 +186,7 @@ int ExecuteBufferAddTrianglesHook(int* params)
 		*indexBuffer++ = triangle->v3;
 	}
 
-	s_XwaD3dExecuteBufferCurrentPtr = s_XwaD3dExecuteBufferDesc->lpData;
+	s_XwaD3dExecuteBufferCurrentPtr = (void*)((int)s_XwaD3dExecuteBufferDesc->lpData + s_XwaD3dVerticesCount * sizeof(XwaD3dVertex));
 
 	return 1;
 }
@@ -195,13 +198,14 @@ int ExecuteBufferUnlockAndExecuteHook(int* params)
 		return 0;
 	}
 
+	const int s_XwaD3dVerticesCount = *(int*)0x007B1D28;
 	const D3DEXECUTEBUFFERDESC* s_XwaD3dExecuteBufferDesc = (D3DEXECUTEBUFFERDESC*)0x007B1390;
 	void*& s_XwaD3dExecuteBufferDataPtr = *(void**)0x007B138C;
 	void*& s_XwaD3dExecuteBufferCurrentPtr = *(void**)0x007B1CCC;
 	void*& s_XwaD3dExecuteBufferInstructionsPtr = *(void**)0x007B1CD0;
 
 	s_XwaD3dExecuteBufferDataPtr = s_XwaD3dExecuteBufferDesc->lpData;
-	s_XwaD3dExecuteBufferInstructionsPtr = s_XwaD3dExecuteBufferDataPtr;
+	s_XwaD3dExecuteBufferInstructionsPtr = (void*)((int)s_XwaD3dExecuteBufferDataPtr + s_XwaD3dVerticesCount * sizeof(XwaD3dVertex));
 
 	(*(char**)0x007B1CCC)[0] = 0x0B;
 	(*(char**)0x007B1CCC)[1] = 0x00;
