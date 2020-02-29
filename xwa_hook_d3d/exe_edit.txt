@@ -89,16 +89,50 @@ E84F360100              call 005A8B30, 005A8B30 - 005954E1 = 0001364F
 9090909090              nop
 
 ; L00595191 XwaD3dExecuteBufferAddTriangles
-; WORD -> nop indices
+; indices
 
-:00595460 - 0x194860
+:0059546E - 0x19486E
+A1CC1C7B00              mov eax, dword ptr [007B1CCC]
+8B4DE8                  mov ecx, dword ptr [ebp-18]
+
+9090909090909090        nop
+
+:0059547E - 0x19487E
+A1CC1C7B00              mov eax, dword ptr [007B1CCC]
+8B4DE8                  mov ecx, dword ptr [ebp-18]
+
+9090909090909090        nop
+
+:0059548E - 0x19488E
 A1CC1C7B00              mov eax, dword ptr [007B1CCC]
 
-EB2C                    jmp 0059548E, 0059548E - 00595462 = 2C
-909090                  nop
+9090909090              nop
 
-:005952D9 - 0x1946D9
+:00595499 - 0x194899
+8B0DCC1C7B00            mov ecx, dword ptr [007B1CCC]
+
+8BC8                    mov ecx, eax
+90909090                nop
+
+:005952E7 - 0x1946E7
+A1CC1C7B00              mov eax, dword ptr [007B1CCC]
+8B4DE8                  mov ecx, dword ptr [ebp-18]
+
+9090909090909090        nop
+
+:005952F7 - 0x1946F7
+A1CC1C7B00              mov eax, dword ptr [007B1CCC]
+8B4DE8                  mov ecx, dword ptr [ebp-18]
+
+9090909090909090        nop
+
+:00595307 - 0x194707
 A1CC1C7B00              mov eax, dword ptr [007B1CCC]
 
-EB2C                    jmp 00595307, 00595307 - 005952DB = 2C
-909090                  nop
+9090909090              nop
+
+:00595312 - 0x194712
+8B0DCC1C7B00            mov ecx, dword ptr [007B1CCC]
+
+8BC8                    mov ecx, eax
+90909090                nop
