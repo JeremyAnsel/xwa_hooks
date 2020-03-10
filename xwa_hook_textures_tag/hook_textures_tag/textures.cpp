@@ -163,7 +163,7 @@ int OptTextureColorHook(int* params)
 	}
 	else if (bpp == 32)
 	{
-		hasAlpha = textureDescription->Palettes[2] != 0 || texureAlphaIllum != 0;
+		hasAlpha = textureDescription->Palettes[2] != 0 || (textureDescription->Palettes[4] == 0 && texureAlphaIllum != 0);
 	}
 	else
 	{
