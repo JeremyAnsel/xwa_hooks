@@ -143,11 +143,13 @@ int CreateLightMapHook(int* params)
 
 int ConvertColorMapHook(int* params)
 {
+	static XwaTextureDescription tempTextureDescription;
+
 	// esp28 = 0
 	params[10] = 0;
 
 	const char* A4 = (const char*)params[702];
-	XwaTextureDescription* AC = (XwaTextureDescription*)params[704];
+	XwaTextureDescription*& AC = *(XwaTextureDescription**)&params[704];
 	int& A10 = params[705];
 	int& A14 = params[706];
 	unsigned short* A18 = (unsigned short*)params[707];
@@ -242,8 +244,12 @@ int ConvertColorMapHook(int* params)
 			*(unsigned int*)(colorBuffer + i * 4) = (a << 24) | color32;
 		}
 
+		tempTextureDescription = *AC;
+		AC = &tempTextureDescription;
+
 		AC->Palettes[2] = hasAlpha ? 0xff : 0;
-		//AC->Palettes[4] = hasIllum ? 0xff : 0;
+		AC->Palettes[4] = hasIllum ? 0xff : 0;
+		AC->DataSize = bytesSize * 4;
 
 		A14 = hasIllum ? (int)g_illumMapBuffer.data() : 0;
 		//A14 = (int)g_illumMapBuffer.data();
