@@ -143,3 +143,11 @@ A1066D9B00
 A148D37600              mov eax, dword ptr [0076D348]
 
 A1066D9B00
+
+
+; generate spec.rci
+L00528A50
+:00528BCF - 0x127FCF
+E87C0D0000              call 00529950
+
+E84CFF0700              call 005A8B20, 005A8B20 - 00528BD4 = 0007FF4C

@@ -1,6 +1,7 @@
 xwa_hook_opt_limit
 
 This hook removes the opt limit of 512 vertices per mesh.
+It also generates the "spec.rci" file.
 
 
 *** Requirements ***
@@ -63,6 +64,9 @@ At offset 0E7A08, replace 64D37600 with hitDataArray4.
 At offset 0E758F, replace A148D37600 with A1066D9B00.
 At offset 0E75B8, replace A148D37600 with A1066D9B00.
 
+# To call the hook that generates spec.rci
+At offset 127FCF, replace E87C0D0000 with E84CFF0700.
+
 
 *** Usage ***
 
@@ -71,6 +75,9 @@ By default, the dll will use a value of 65536.
 You can modify this value in hook_opt_limit.cfg (Size = value).
 
 The size of the execute buffer is increased from 0x10000 to 0x200000.
+
+To regenerate the "spec.rci" file, delete it. The file will be generated when you launch the game.
+
 
 *** Credits ***
 

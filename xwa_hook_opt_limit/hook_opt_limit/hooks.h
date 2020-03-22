@@ -20,7 +20,7 @@ std::string int_to_hex(int i)
 
 static const HookFunction g_hookFunctions[] =
 {
-	{}
+	{0x528BD4, GenerateSpecRciHook },
 };
 
 static const std::string g_hitDataArray0 = int_to_hex(GetHitDataArrayPtr());
@@ -83,6 +83,11 @@ static const HookPatchItem g_glowMarkUVArrayPatch[] =
 	{ 0x0E75B8, "A148D37600", "A1066D9B00" },
 };
 
+static const HookPatchItem g_generateSpecRciPatch[] =
+{
+	{ 0x127FCF, "E87C0D0000", "E84CFF0700" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
@@ -91,4 +96,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("'opt textures count limit' patch", g_texturesCountPatch),
 	MAKE_HOOK_PATCH("To call the hook that removes the opt limit of 512 vertices per mesh", g_optLimitPatch),
 	MAKE_HOOK_PATCH("'GlowMarkUVArray vertices count' patch", g_glowMarkUVArrayPatch),
+	MAKE_HOOK_PATCH("To call the hook that generates spec.rci", g_generateSpecRciPatch),
 };

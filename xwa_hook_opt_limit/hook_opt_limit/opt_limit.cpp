@@ -51,3 +51,26 @@ int GetHitDataArrayPtr()
 
 	return (int)g_XwaHitDataArray.Data();
 }
+
+int GenerateSpecRciHook(int* params)
+{
+	const auto XwaReadShiplist = (void(*)())0x00529950;
+	const auto XwaGenerateSpecRci = (void(*)())0x00577490;
+	const auto XwaFileOpen = (void*(*)(const char*, const char*))0x0052AD30;
+	const auto XwaFileClose = (void(*)(void*))0x0052ADD0;
+
+	XwaReadShiplist();
+
+	void* specRciFile = XwaFileOpen("spec.rci", "rb");
+
+	if (specRciFile)
+	{
+		XwaFileClose(specRciFile);
+	}
+	else
+	{
+		XwaGenerateSpecRci();
+	}
+
+	return 0;
+}
