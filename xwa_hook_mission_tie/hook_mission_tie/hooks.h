@@ -21,5 +21,5 @@ static const HookPatchItem g_craftsCountPerRegionPatch[] =
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that override tie mission", g_overrideTiePatch),
-	MAKE_HOOK_PATCH("'crafts count per region' patch", g_overrideTiePatch),
+	MAKE_HOOK_PATCH("'crafts count per region' patch", g_craftsCountPerRegionPatch),
 };
