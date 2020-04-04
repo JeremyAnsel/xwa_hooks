@@ -60,6 +60,12 @@ See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11761
 
 This hook permits to enable interdictor feature for any craft.
 
+## xwa_hook_joystick_ff
+
+This hook permits to select the joystick device with force feedback.
+
+See https://www.xwaupgrade.com/phpBB3/viewtopic.php?f=33&t=12446
+
 ## xwa_hook_lightmaps
 
 This hook replaces a static buffer by a dynamic one in lightmaps loading.

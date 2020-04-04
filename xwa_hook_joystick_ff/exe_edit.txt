@@ -1,0 +1,8 @@
+
+:004355D0 - 0x0349D0
+83EC10                  sub esp, 00000010
+8B442414                mov eax, dword ptr [esp+14]
+56                      push esi
+
+E85B351700              call 005A8B30, 005A8B30 - 004355D5 = 0017355B
+C20800                  ret 0008
