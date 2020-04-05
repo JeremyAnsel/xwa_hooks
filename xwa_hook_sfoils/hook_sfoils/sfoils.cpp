@@ -84,7 +84,9 @@ struct XwaObject
 {
 	char unk000[2];
 	unsigned short ModelIndex;
-	char unk004[27];
+	char unk004[1];
+	unsigned char TieFlightGroupIndex;
+	char unk006[25];
 	int PlayerIndex;
 	XwaMobileObject* pMobileObject;
 };
@@ -870,4 +872,100 @@ int SFoilsAIHyperspaceOrderHook(int* params)
 	}
 
 	return 0;
+}
+
+int InitSFoilsLandingGears(int* params)
+{
+	static std::string _mission;
+	static std::vector<std::vector<std::string>> _lines;
+
+	const int modelIndex = params[0];
+	const int objectIndex = (unsigned short)params[11];
+
+	const auto XwaOptGetMeshesCount = (int(*)(int))0x00488960;
+
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+
+	if (_mission != xwaMissionFileName)
+	{
+		_mission = xwaMissionFileName;
+
+		const std::string path = GetStringWithoutExtension(xwaMissionFileName);
+		auto file = GetFileLines(path + ".txt");
+
+		if (!file.size())
+		{
+			file = GetFileLines(path + ".ini", "mission_tie");
+		}
+
+		_lines = GetFileListValues(file);
+	}
+
+	unsigned char objectFlightGroupIndex = xwaObjects[objectIndex].TieFlightGroupIndex;
+
+	for (const auto& line : _lines)
+	{
+		const auto& group = line[0];
+
+		if (_stricmp(group.c_str(), "fg") == 0)
+		{
+			if (line.size() < 4)
+			{
+				continue;
+			}
+
+			int fg = std::stoi(line[1]);
+
+			if (fg < 0 || fg > 192)
+			{
+				continue;
+			}
+
+			if (fg != objectFlightGroupIndex)
+			{
+				continue;
+			}
+
+			const auto& element = line[2];
+
+			std::vector<SFoil> sfoils;
+
+			if (_stricmp(element.c_str(), "close_SFoils") == 0)
+			{
+				int value = std::stoi(line[3]);
+
+				if (value != 1)
+				{
+					continue;
+				}
+
+				sfoils = g_modelIndexSFoils.GetSFoils(modelIndex);
+			}
+			else if (_stricmp(element.c_str(), "open_LandingGears") == 0)
+			{
+				int value = std::stoi(line[3]);
+
+				if (value != 1)
+				{
+					continue;
+				}
+
+				sfoils = g_modelIndexSFoils.GetLandingGears(modelIndex);
+			}
+
+			if (sfoils.size())
+			{
+				for (unsigned int i = 0; i < sfoils.size(); i++)
+				{
+					const auto& sfoil = sfoils[i];
+
+					currentCraft->MeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+				}
+			}
+		}
+	}
+
+	return XwaOptGetMeshesCount(modelIndex);
 }

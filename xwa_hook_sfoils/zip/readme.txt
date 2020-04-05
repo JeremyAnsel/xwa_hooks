@@ -57,6 +57,9 @@ At offset 0AF22A, replace E81152FFFF with E8F18C0F00.
 At offset 0AD7FC, replace E85F52FFFF with E81FA70F00.
 At offset 0B9C8D, replace E85EBCFFFF with E88EE20E00.
 
+# Init S-Foils and Landing Gears
+At offset 01BC59, replace E802C10600 with E8D2C21800.
+
 
 *** Usage ***
 
@@ -79,6 +82,14 @@ mesh index, angle, closing speed, opening speed.
 Landing gears are deployed when a craft in is the hangar. When the s-foils are closed in space, the landing gears are not deployed.
 
 To open or close s-foils, use the V key. To deploy or retract landing gears, use the Ctrl+L key.
+
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+
+To override the mission data, create a file named "[MissionDir]\[Mission].txt" or create a section named "[mission_tie]" in "[MissionDir]\[Mission].ini".
+The format is a line per replacement.
+
+To replace the flight group s-foils state, the format is: "fg", fg number, "close_SFoils", 1.
+To replace the flight group landing gears state, the format is: "fg", fg number, "open_LandingGears", 1.
 
 
 *** Credits ***
