@@ -88,6 +88,12 @@ static const HookPatchItem g_generateSpecRciPatch[] =
 	{ 0x127FCF, "E87C0D0000", "E84CFF0700" },
 };
 
+static const HookPatchItem g_fixDepthBufferBugPatch[] =
+{
+	{ 0x0415C0, "8B442404A3B4465B00C390", "C705B4465B0000000042C3" },
+	{ 0x0415D0, "C705B4465B0000000045C3", "C705B4465B0000000042C3" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
@@ -97,4 +103,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that removes the opt limit of 512 vertices per mesh", g_optLimitPatch),
 	MAKE_HOOK_PATCH("'GlowMarkUVArray vertices count' patch", g_glowMarkUVArrayPatch),
 	MAKE_HOOK_PATCH("To call the hook that generates spec.rci", g_generateSpecRciPatch),
+	MAKE_HOOK_PATCH("'fix depth buffer bug' patch", g_fixDepthBufferBugPatch),
 };

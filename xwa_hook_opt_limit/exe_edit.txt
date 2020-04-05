@@ -151,3 +151,22 @@ L00528A50
 E87C0D0000              call 00529950
 
 E84CFF0700              call 005A8B20, 005A8B20 - 00528BD4 = 0007FF4C
+
+
+; fix depth buffer bug
+:004421C0 - 0x0415C0
+8B442404                mov eax, dword ptr [esp+04]
+A3B4465B00              mov dword ptr [005B46B4], eax
+C3                      ret
+90                      nop
+
+C705B4465B0000000042    mov dword ptr [005B46B4], 42000000
+C3                      ret
+
+
+:004421D0 - 0x0415D0
+C705B4465B0000000045    mov dword ptr [005B46B4], 45000000
+C3                      ret
+
+C705B4465B0000000042    mov dword ptr [005B46B4], 42000000
+C3                      ret
