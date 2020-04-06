@@ -874,7 +874,7 @@ int SFoilsAIHyperspaceOrderHook(int* params)
 	return 0;
 }
 
-int InitSFoilsLandingGears(int* params)
+int InitSFoilsLandingGearsHook(int* params)
 {
 	static std::string _mission;
 	static std::vector<std::vector<std::string>> _lines;

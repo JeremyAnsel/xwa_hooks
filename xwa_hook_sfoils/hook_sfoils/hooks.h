@@ -20,7 +20,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4AFE2F, SFoilsAIOutOfHyperspace2Hook },
 	{ 0x4AE401, SFoilsAIIntoHyperspace1Hook },
 	{ 0x4BA892, SFoilsAIHyperspaceOrderHook },
-	{ 0x41C85E, InitSFoilsLandingGears },
+	{ 0x41C85E, InitSFoilsLandingGearsHook },
 };
 
 static const HookPatchItem g_keysSFoilsLandingGearsPatch[] =
