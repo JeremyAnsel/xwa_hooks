@@ -9,3 +9,5 @@ int SFoilsAIOutOfHyperspace2Hook(int* params);
 int SFoilsAIIntoHyperspace1Hook(int* params);
 int SFoilsAIHyperspaceOrderHook(int* params);
 int InitSFoilsLandingGearsHook(int* params);
+int EnterHangarHook(int* params);
+int EnterHyperspaceHook(int* params);

@@ -261,3 +261,29 @@ E88EE20E00              call 005A8B20, 005A8B20 - 004BA892 = 000EE28E
 E802C10600              call 00488960
 
 E8D2C21800              call 005A8B30, 005A8B30 - 0041C85E = 0018C2D2
+
+
+# Enter hangar
+L00408DC0
+
+:0040968E - 0x008A8E
+8A8732958B00            mov al, byte ptr [edi+008B9532]
+
+E89DF41900              call 005A8B30, 005A8B30 - 00409693 = 0019F49D
+90                      nop
+
+:004097F3 - 0x008BF3
+8A8732958B00            mov al, byte ptr [edi+008B9532]
+
+E838F31900              call 005A8B30, 005A8B30 - 004097F8 = 0019F338
+90                      nop
+
+
+# Enter Hyperspace
+L00408DC0
+
+:00409915 - 0x008D15
+8A8732958B00            mov al, byte ptr [edi+008B9532]
+
+E816F21900              call 005A8B30, 005A8B30 - 0040991A = 0019F216
+90                      nop

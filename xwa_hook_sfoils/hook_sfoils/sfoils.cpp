@@ -56,6 +56,23 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class Config
+{
+public:
+	Config()
+	{
+		const auto lines = GetFileLines("hook_sfoils.cfg");
+
+		this->CloseSFoilsAndOpenLangingGearsBeforeEnterHangar = GetFileKeyValueInt(lines, "CloseSFoilsAndOpenLangingGearsBeforeEnterHangar") != 0;
+		this->CloseLangingGearsBeforeEnterHyperspace = GetFileKeyValueInt(lines, "CloseLangingGearsBeforeEnterHyperspace") != 0;
+	}
+
+	bool CloseSFoilsAndOpenLangingGearsBeforeEnterHangar;
+	bool CloseLangingGearsBeforeEnterHyperspace;
+};
+
+Config g_config;
+
 #pragma pack(push, 1)
 
 struct XwaCraft
@@ -103,6 +120,16 @@ struct XwaAIData
 };
 
 static_assert(sizeof(XwaAIData) == 102, "size of XwaAIData must be 102");
+
+struct XwaPlayer
+{
+	int ObjectIndex;
+	char unk004[78];
+	unsigned char m052;
+	char unk053[2940];
+};
+
+static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 #pragma pack(pop)
 
@@ -968,4 +995,126 @@ int InitSFoilsLandingGearsHook(int* params)
 	}
 
 	return XwaOptGetMeshesCount(modelIndex);
+}
+
+int EnterHangarHook(int* params)
+{
+	const int playerIndex = params[18];
+
+	const auto DisplayMessage = (void(*)(int, int))0x00497D40;
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
+	const int currentPlayerId = *(int*)0x08C1CC8;
+
+	const char** s_StringsMessageLines = (const char**)0x009B6400;
+	const int StringsMessageLine_MSG_HANGAR_TRACTOR = 279;
+
+	const XwaObject* object = &xwaObjects[xwaPlayers[playerIndex].ObjectIndex];
+
+	if (!g_config.CloseSFoilsAndOpenLangingGearsBeforeEnterHangar)
+	{
+		return xwaPlayers[playerIndex].m052;
+	}
+
+	if (xwaPlayers[playerIndex].m052 != 0)
+	{
+		return 1;
+	}
+
+	bool hasSFoils = g_modelIndexSFoils.GetSFoils(object->ModelIndex).size() != 0;
+	bool areSFoilsOpened = g_modelIndexSFoils.AreSFoilsOpened(object);
+	bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(object->ModelIndex).size() != 0;
+	bool areLandingGearsClosed = g_modelIndexSFoils.AreLandingGearsClosed(object);
+
+	int ret;
+
+	if (hasSFoils && areSFoilsOpened && hasLandingGears && areLandingGearsClosed)
+	{
+		if (playerIndex == currentPlayerId)
+		{
+			s_StringsMessageLines[StringsMessageLine_MSG_HANGAR_TRACTOR] = "\04Close S-Foils and open Landing Gears before enter hangar";
+			DisplayMessage(StringsMessageLine_MSG_HANGAR_TRACTOR, currentPlayerId);
+		}
+
+		ret = 1;
+	}
+	else if (hasSFoils && areSFoilsOpened)
+	{
+		if (playerIndex == currentPlayerId)
+		{
+			s_StringsMessageLines[StringsMessageLine_MSG_HANGAR_TRACTOR] = "\04Close S-Foils before enter hangar";
+			DisplayMessage(StringsMessageLine_MSG_HANGAR_TRACTOR, currentPlayerId);
+		}
+
+		ret = 1;
+	}
+	else if (hasLandingGears && areLandingGearsClosed)
+	{
+		if (playerIndex == currentPlayerId)
+		{
+			s_StringsMessageLines[StringsMessageLine_MSG_HANGAR_TRACTOR] = "\04Open Landing Gears before enter hangar";
+			DisplayMessage(StringsMessageLine_MSG_HANGAR_TRACTOR, currentPlayerId);
+		}
+
+		ret = 1;
+	}
+	else
+	{
+		s_StringsMessageLines[StringsMessageLine_MSG_HANGAR_TRACTOR] = "\04Hit [Space] to activate tractor beam and enter hangar";
+		ret = 0;
+	}
+
+	return ret;
+}
+
+int EnterHyperspaceHook(int* params)
+{
+	const int playerIndex = params[18];
+
+	const auto DisplayMessage = (void(*)(int, int))0x00497D40;
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
+	const int currentPlayerId = *(int*)0x08C1CC8;
+
+	const char** s_StringsMessageLines = (const char**)0x009B6400;
+	const int StringsMessageLine_MSG_ASK_ABOUT_HYPER = 121;
+
+	const XwaObject* object = &xwaObjects[xwaPlayers[playerIndex].ObjectIndex];
+
+	if (!g_config.CloseLangingGearsBeforeEnterHyperspace)
+	{
+		return xwaPlayers[playerIndex].m052;
+	}
+
+	if (xwaPlayers[playerIndex].m052 != 0)
+	{
+		return 1;
+	}
+
+	bool hasSFoils = g_modelIndexSFoils.GetSFoils(object->ModelIndex).size() != 0;
+	bool areSFoilsOpened = g_modelIndexSFoils.AreSFoilsOpened(object);
+	bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(object->ModelIndex).size() != 0;
+	bool areLandingGearsClosed = g_modelIndexSFoils.AreLandingGearsClosed(object);
+
+	int ret;
+
+	if (hasLandingGears && !areLandingGearsClosed)
+	{
+		if (playerIndex == currentPlayerId)
+		{
+			s_StringsMessageLines[StringsMessageLine_MSG_ASK_ABOUT_HYPER] = "\03Close Landing Gears before enter hyperspace";
+			DisplayMessage(StringsMessageLine_MSG_ASK_ABOUT_HYPER, currentPlayerId);
+		}
+
+		ret = 1;
+	}
+	else
+	{
+		s_StringsMessageLines[StringsMessageLine_MSG_ASK_ABOUT_HYPER] = "\03Press [SPACE] to hyperspace to [*]";
+		ret = 0;
+	}
+
+	return ret;
 }

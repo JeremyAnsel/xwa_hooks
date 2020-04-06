@@ -21,6 +21,9 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4AE401, SFoilsAIIntoHyperspace1Hook },
 	{ 0x4BA892, SFoilsAIHyperspaceOrderHook },
 	{ 0x41C85E, InitSFoilsLandingGearsHook },
+	{ 0x409693, EnterHangarHook },
+	{ 0x4097F8, EnterHangarHook },
+	{ 0x40991A, EnterHyperspaceHook },
 };
 
 static const HookPatchItem g_keysSFoilsLandingGearsPatch[] =
@@ -75,6 +78,17 @@ static const HookPatchItem g_initSFoilsLandingGearsPatch[] =
 	{ 0x01BC59, "E802C10600", "E8D2C21800" },
 };
 
+static const HookPatchItem g_enterHangarPatch[] =
+{
+	{ 0x008A8E, "8A8732958B00", "E89DF4190090" },
+	{ 0x008BF3, "8A8732958B00", "E838F3190090" },
+};
+
+static const HookPatchItem g_enterHyperspacePatch[] =
+{
+	{ 0x008D15, "8A8732958B00", "E816F2190090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("Keys for SFoils and LandingGears", g_keysSFoilsLandingGearsPatch),
@@ -84,4 +98,6 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("Align the camera with the bridge", g_alignCameraBridgePatch),
 	MAKE_HOOK_PATCH("To call the hook that set S-Foils for hyperspace", g_setSFoilsHyperspacePatch),
 	MAKE_HOOK_PATCH("Init S-Foils and Landing Gears", g_initSFoilsLandingGearsPatch),
+	MAKE_HOOK_PATCH("To call the hook that set enter hangar state", g_enterHangarPatch),
+	MAKE_HOOK_PATCH("To call the hook that set enter hyperspace state", g_enterHyperspacePatch),
 };

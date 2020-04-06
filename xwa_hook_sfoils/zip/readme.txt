@@ -15,7 +15,7 @@ This dll requires:
 
 *** Setup ***
 
-Place hook_sfoils.dll next to xwingalliance.exe
+Place hook_sfoils.dll and hook_sfoils.cfg next to xwingalliance.exe
 
 
 *** Patch ***
@@ -60,6 +60,13 @@ At offset 0B9C8D, replace E85EBCFFFF with E88EE20E00.
 # Init S-Foils and Landing Gears
 At offset 01BC59, replace E802C10600 with E8D2C21800.
 
+# To call the hook that set enter hangar state
+At offset 008A8E, replace 8A8732958B00 with E89DF4190090.
+At offset 008BF3, replace 8A8732958B00 with E838F3190090.
+
+# To call the hook that set enter hyperspace state
+At offset 008D15, replace 8A8732958B00 with E816F2190090.
+
 
 *** Usage ***
 
@@ -90,6 +97,16 @@ The format is a line per replacement.
 
 To replace the flight group s-foils state, the format is: "fg", fg number, "close_SFoils", 1.
 To replace the flight group landing gears state, the format is: "fg", fg number, "open_LandingGears", 1.
+
+To require s-foils being closed before enter hangar, set the CloseSFoilsAndOpenLangingGearsBeforeEnterHangar setting.
+When set to 0, normal behavior
+When set to 1, s-foils must be closed and landing gears opened before enter hangar
+
+To require landing gears being closed before enter hyperspace, set the CloseLangingGearsBeforeEnterHyperspace setting.
+When set to 0, normal behavior
+When set to 1, landing gears must be closed before enter hyperspace
+
+See "hook_sfoils.cfg".
 
 
 *** Credits ***
