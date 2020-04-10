@@ -42,6 +42,12 @@ This hook enables setting engine sound and weapon sound behavior for any craft.
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11746
 
+## xwa_hook_exterior
+
+This hook displays the HUD in exterior view.
+
+See https://xwaupgrade.com/phpBB3/viewtopic.php?f=9&t=12471
+
 ## xwa_hook_hangars
 
 This hook permits to customize the hangars.

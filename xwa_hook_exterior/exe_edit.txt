@@ -1,0 +1,48 @@
+
+; 3D render function
+L004EFE00
+
+:004F2217 - 0x0F1617
+E8E4DBFFFF              call 004EFE00
+
+E804690B00              call 005A8B20, 005A8B20 - 004F221C = 000B6904
+
+
+:00508CFD - 0x1080FD
+6689BE69A08B00          mov word ptr [esi+008BA069], di
+
+90909090909090
+
+:00508D1F - 0x10811F
+6689BE44A08B00          mov word ptr [esi+008BA044], di
+6689BE46A08B00          mov word ptr [esi+008BA046], di
+
+90909090909090
+90909090909090
+
+:004AFB78 - 0x0AEF78
+66898669A08B00          mov word ptr [esi+008BA069], ax
+
+90909090909090
+
+:004AFB9F - 0x0AEF9F
+66898644A08B00          mov word ptr [esi+008BA044], ax
+66898646A08B00          mov word ptr [esi+008BA046], ax
+
+90909090909090
+90909090909090
+
+
+:00500BFC - 0x0FFFFC
+0F85820C0000            jne 00501884
+
+909090909090
+
+
+:004661F0 - 0x0655F0
+8B442404                mov eax, dword ptr [esp+04]
+8B4C2408                mov ecx, dword ptr [esp+08]
+
+E82B291400              call 005A8B20, 005A8B20 - 004661F5 = 0014292B
+C3                      ret
+9090                    nop
