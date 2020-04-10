@@ -6,3 +6,10 @@
 
 E85B351700              call 005A8B30, 005A8B30 - 004355D5 = 0017355B
 C20800                  ret 0008
+
+
+; allow small movements
+:004344A0 - 0x0338A0
+51                      push ecx
+
+C3                      ret

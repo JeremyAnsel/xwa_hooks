@@ -21,6 +21,7 @@ The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that selects the joystick ff device
 At offset 0349D0, replace 83EC108B44241456 with E85B351700C20800.
+At offset 0338A0, replace 51 with C3.
 
 
 *** Usage ***
