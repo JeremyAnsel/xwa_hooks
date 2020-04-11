@@ -91,7 +91,7 @@ int SetHudVisibilityHook(int* params)
 
 	XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
 
-	if (callback == 0x0045D2B5 || callback == 0x00500C24)
+	if (callback == 0x0045D2B5 || callback == 0x00500C24 || callback == 0x004603B9)
 	{
 		xwaPlayers[playerIndex].IsHudVisible = visibility;
 	}
