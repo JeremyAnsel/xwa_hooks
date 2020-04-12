@@ -1,8 +1,43 @@
 #include "targetver.h"
 #include "resolution.h"
-#include <string>
+#include "config.h"
 #include <sstream>
 #include <iomanip>
+#include <Windows.h>
+
+class Config
+{
+public:
+	Config()
+	{
+		const auto lines = GetFileLines("hook_resolution.cfg");
+
+		this->IsAutoResolutionEnabled = GetFileKeyValueInt(lines, "IsAutoResolutionEnabled", 1) != 0;
+		this->ResolutionWidth = GetFileKeyValueInt(lines, "ResolutionWidth", 0);
+		this->ResolutionHeight = GetFileKeyValueInt(lines, "ResolutionHeight", 0);
+
+		if (this->ResolutionWidth <= 0 || this->ResolutionHeight <= 0)
+		{
+			this->ResolutionWidth = GetSystemMetrics(SM_CXSCREEN);
+			this->ResolutionHeight = GetSystemMetrics(SM_CYSCREEN);
+		}
+
+		DEVMODE mode{};
+		mode.dmSize = sizeof(DEVMODE);
+		EnumDisplaySettings(nullptr, ENUM_CURRENT_SETTINGS, &mode);
+
+		this->DisplayWidth = mode.dmPelsWidth;
+		this->DisplayHeight = mode.dmPelsHeight;
+	}
+
+	bool IsAutoResolutionEnabled;
+	int ResolutionWidth;
+	int ResolutionHeight;
+	int DisplayWidth;
+	int DisplayHeight;
+};
+
+Config g_config;
 
 std::string g_screenResolution;
 
@@ -64,13 +99,64 @@ int ResolutionHook(int* params)
 		break;
 	}
 
+	if (g_config.IsAutoResolutionEnabled)
+	{
+		width = g_config.ResolutionWidth;
+		height = g_config.ResolutionHeight;
+		hudScale = g_config.ResolutionHeight / 600.0f;
+	}
+
 	std::stringstream stream;
-	stream << screenIndex << ": ";
-	stream << width << " x " << height;
-	stream << " HUD: ";
-	stream << std::fixed << std::setprecision(2) << hudScale;
+	stream << std::fixed << std::setprecision(2);
+	stream << screenIndex << ":" << width << "x" << height;
+	stream << " HUD:" << hudScale;
+
+	if (g_config.IsAutoResolutionEnabled)
+	{
+		stream << " DPI:" << (100 * g_config.DisplayWidth / g_config.ResolutionWidth) << "%";
+	}
 
 	g_screenResolution = stream.str();
 
 	return (int)g_screenResolution.c_str();
+}
+
+int FlightRunLoopHook(int* params)
+{
+	const auto L0050D070 = (void(*)())0x0050D070;
+
+	if (g_config.IsAutoResolutionEnabled)
+	{
+		float cy = (float)g_config.ResolutionHeight;
+
+		*(float*)0x06002B8 = cy / 600.0f;
+		*(int*)0x091AB6C = (int)(cy * 1.0666f + 0.5f);
+		*(int*)0x07B33CC = *(int*)0x091AB6C / 2;
+		*(float*)0x07D4B78 = *(float*)0x06002B8 * 1.25f;
+
+		*(float*)0x08B94CC = (float)*(int*)0x091AB6C;
+		*(float*)0x08B94BC = *(int*)0x091AB6C * 0.001953125f;
+	}
+
+	L0050D070();
+	return 0;
+}
+
+int FlightMainHook(int* params)
+{
+	const auto L0050BC20 = (char(*)())0x0050BC20;
+
+	if (g_config.IsAutoResolutionEnabled)
+	{
+		int cx = g_config.ResolutionWidth;
+		int cy = g_config.ResolutionHeight;
+
+		*(int*)0x091AD34 = cx;
+		*(int*)0x091AD3C = cy;
+		*(int*)0x06002B0 = cx;
+		*(int*)0x06002B4 = cy;
+		*(int*)0x05FFDB4 = cx;
+	}
+
+	return L0050BC20();
 }
