@@ -66,7 +66,7 @@ int Render3DHook(int* params)
 		((void(*)())0x0046D610)();
 
 		// render target miniature
-		if (xwaPlayers[currentPlayerId].XwaPlayer_m025 != -1)
+		if (xwaPlayers[currentPlayerId].IsHudVisible != 0 && *(unsigned char*)0x05B5334 != 0 && xwaPlayers[currentPlayerId].XwaPlayer_m025 != -1)
 		{
 			short di = *(short*)0x068C5BC;
 			short ebx = *(short*)0x068C5C0;
