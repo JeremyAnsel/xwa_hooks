@@ -12,7 +12,7 @@ public:
 	{
 		const auto lines = GetFileLines("hook_resolution.cfg");
 
-		this->IsAutoResolutionEnabled = GetFileKeyValueInt(lines, "IsAutoResolutionEnabled", 1) != 0;
+		this->IsAutoResolutionEnabled = GetFileKeyValueInt(lines, "IsAutoResolutionEnabled", 0) != 0;
 		this->ResolutionWidth = GetFileKeyValueInt(lines, "ResolutionWidth", 0);
 		this->ResolutionHeight = GetFileKeyValueInt(lines, "ResolutionHeight", 0);
 
