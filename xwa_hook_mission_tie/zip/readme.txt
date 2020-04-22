@@ -21,6 +21,7 @@ The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that override tie mission
 At offset 1521A, replace E8E1A40000 with E8112D1900.
+At offset 1C6FF, replace 668B442428 with E82CB81800.
 
 # 'crafts count per region' patch
 At offset 14C2E, replace 60000000C1E305 with C0000000C1E306.
@@ -34,6 +35,7 @@ To override the mission data, create a file named "[MissionDir]\[Mission].txt" o
 The format is a line per replacement.
 
 To replace the flight group markings, the format is: "fg", fg number, "markings", value.
+To replace the flight group wingman markings, the format is: "fg", fg number, "index", wingman index, "markings", value.
 To replace the flight group iff, the format is: "fg", fg number, "iff", value.
 To replace the flight group pilot voice, the format is: "fg", fg number, "pilotvoice", value.
 

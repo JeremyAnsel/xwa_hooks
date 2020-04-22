@@ -5,12 +5,14 @@
 
 static const HookFunction g_hookFunctions[] =
 {
-	{0x415E1F, TieHook },
+	{ 0x415E1F, TieHook },
+	{ 0x41D304, CreateObjectHook },
 };
 
 static const HookPatchItem g_overrideTiePatch[] =
 {
 	{ 0x01521A, "E8E1A40000", "E8112D1900" },
+	{ 0x01C6FF, "668B442428", "E82CB81800" },
 };
 
 static const HookPatchItem g_craftsCountPerRegionPatch[] =

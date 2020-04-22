@@ -1,3 +1,4 @@
 fg, 0, markings, 2
+fg, 0, index, 1, markings, 3
 fg, 0, iff, 1
 fg, 0, pilotvoice, IP1
