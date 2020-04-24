@@ -179,7 +179,12 @@ struct XwaCraft
 	char XwaCraft_m1B6[3];
 	char Unk01B9[294];
 	XwaCraftWeaponRack WeaponRacks[16];
-	char Unk03BF[58];
+	char Unk03BF[2];
+	short m03C1[2];
+	short m03C5[2];
+	int m03C9[2];
+	int m03D1[2];
+	char Unk03D9[32];
 };
 
 static_assert(sizeof(XwaCraft) == 1017, "size of XwaCraft must be 1017");
@@ -916,11 +921,17 @@ int SetXwaCraftsHook(int* params)
 
 int ClearCraftDataHook(int* params)
 {
-	const short esp28 = (short)params[10];
-
 	const XwaCraft* s_XwaCrafts = *(XwaCraft**)0x009106A0;
-	const XwaCraft* s_pXwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+	XwaCraft* s_pXwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 	const short modelIndex = *(short*)0x009E96F2;
+
+	for (int i = 0; i < 2; i++)
+	{
+		s_pXwaCurrentCraft->m03C1[i] = 0;
+		s_pXwaCurrentCraft->m03C5[i] = 0;
+		s_pXwaCurrentCraft->m03C9[i] = 0;
+		s_pXwaCurrentCraft->m03D1[i] = 0;
+	}
 
 	int index = s_pXwaCurrentCraft - s_XwaCrafts;
 
@@ -932,7 +943,7 @@ int ClearCraftDataHook(int* params)
 		g_craftsData[index].resize(count, {});
 	}
 
-	return esp28;
+	return 0;
 }
 
 int CloneObjectHook(int* params)

@@ -6,10 +6,14 @@ E8F5870F00              call 0050E2F0
 E835301900              call 005A8B30, 005A8B30 - 00415AFB = 00193035
 
 // Clear Craft Data
-:0041D2FF - 0x01C6FF
-668B442428              mov ax, word ptr [esp+28]
+:0041D2B7 - 0x01C6B7
+33C9                    xor ecx, ecx
+33C0                    xor eax, eax
+BA02000000              mov edx, 00000002
 
-E82CB81800              call 005A8B30, 005A8B30 - 0041D304 = 0018B82C
+E864B81800              call 005A8B20, 005A8B20 - 0041D2BC = 0018B864
+EB41                    jmp 0041D2FF, 0041D2FF - 0041D2BE = 41
+9090                    nop
 
 // Clone Object
 :0041EE2F - 0x01E22F

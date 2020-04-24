@@ -21,7 +21,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4911EE, WarheadShootHook },
 
 	{ 0x415AFB, SetXwaCraftsHook },
-	{ 0x41D304, ClearCraftDataHook },
+	{ 0x41D2BC, ClearCraftDataHook },
 	{ 0x41EE36, CloneObjectHook },
 	{ 0x4FACED, ComputeCraftAnglesHook },
 	{ 0x48134D, SetRotationAngle1Hook },
@@ -82,7 +82,7 @@ static const HookPatchItem g_filterTurretWeaponsPatch[] =
 static const HookPatchItem g_setTurretDataPatch[] =
 {
 	{ 0x014EF6, "E8F5870F00", "E835301900" },
-	{ 0x01C6FF, "668B442428", "E82CB81800" },
+	{ 0x01C6B7, "33C933C0BA02000000", "E864B81800EB419090" },
 	{ 0x01E22F, "B9FE000000F3A5A48B0DC4337B00", "5657E8EA9C180083C40890909090" },
 	{ 0x0FA0E6, "0FBF933B958B008B75EC8B45F48955E0", "5355E833DE0A0083C408E9B20A000090" },
 	{ 0x080747, "0FBF8C46BF030000", "56E8D37712005990" },
