@@ -1,0 +1,15 @@
+
+Reticle_5 = 5
+Reticle_6 = 6
+Reticle_7 = 7
+Reticle_8 = 8
+Reticle_9 = 9
+Reticle_10 = 10
+Reticle_15 = 15
+Reticle_16 = 16
+Reticle_17 = 17
+Reticle_18 = 18
+Reticle_19 = 19
+Reticle_20 = 20
+Reticle_21 = 21
+Reticle_22 = 22

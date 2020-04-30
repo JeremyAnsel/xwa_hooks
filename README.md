@@ -108,6 +108,10 @@ It also fixes a crash at offset 0x000d332d.
 
 This hook displays the screen resolution in the video options screen.
 
+## xwa_hook_reticle
+
+This hook permits to select the reticle image index for any craft.
+
 ## xwa_hook_sfoils
 
 This hook enables S-Foils for any craft.
