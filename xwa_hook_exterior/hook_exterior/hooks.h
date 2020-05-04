@@ -7,6 +7,7 @@ static const HookFunction g_hookFunctions[] =
 {
 	{ 0x4F221C, Render3DHook },
 	{ 0x4661F5, SetHudVisibilityHook },
+	{ 0x478763, LodDistanceHook },
 };
 
 static const HookPatchItem g_render3DPatch[] =
@@ -20,7 +21,13 @@ static const HookPatchItem g_render3DPatch[] =
 	{ 0x0655F0, "8B4424048B4C2408", "E82B291400C39090" },
 };
 
+static const HookPatchItem g_lodDistancePatch[] =
+{
+	{ 0x077B5E, "E8FD1B0700", "E8CD031300" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that renders 3D exterior", g_render3DPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the MFD lod distance", g_lodDistancePatch),
 };

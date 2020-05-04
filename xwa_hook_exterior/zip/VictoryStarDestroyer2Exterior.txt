@@ -1,0 +1,2 @@
+
+LodDistance = 0x7fffffff
