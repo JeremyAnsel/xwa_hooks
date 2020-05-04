@@ -42,6 +42,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x45F0D5, HangarShuttleLaunchReenterAnimation3Hook },
 	{ 0x45F8A7, HangarShuttleLaunchReenterAnimation9Hook },
 	{ 0x459CBF, HangarGetCraftIndexHook },
+	{ 0x45AF1E, HangarDisableShadowWhenInvertedHook },
 };
 
 static const HookPatchItem g_selectHangarTypePatch[] =
@@ -207,6 +208,11 @@ static const HookPatchItem g_hangarGetCraftIndexPatch[] =
 	{ 0x0590C9, "7467", "EB67" },
 };
 
+static const HookPatchItem g_hangarDisableShadowWhenInvertedPatch[] =
+{
+	{ 0x05A319, "E8D2870200", "E802DC1400" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that selects the hangar type", g_selectHangarTypePatch),
@@ -233,4 +239,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar re-enter animation", g_hangarReenterAnimationPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the shuttle launch and re-enter animations", g_hangarShuttleLaunchReenterAnimationsPatch),
 	MAKE_HOOK_PATCH("To call the hook that gets the craft index", g_hangarGetCraftIndexPatch),
+	MAKE_HOOK_PATCH("To call the hook that disable shadow when inverted", g_hangarDisableShadowWhenInvertedPatch),
 };

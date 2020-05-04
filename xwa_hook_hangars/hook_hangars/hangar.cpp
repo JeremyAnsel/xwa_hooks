@@ -2134,3 +2134,17 @@ int HangarGetCraftIndexHook(int* params)
 
 	return craftIndex;
 }
+
+int HangarDisableShadowWhenInvertedHook(int* params)
+{
+	const int A4 = params[0];
+
+	const auto L004836F0 = (void(*)(int))0x004836F0;
+
+	if (!g_isHangarFloorInverted)
+	{
+		L004836F0(A4);
+	}
+
+	return 0;
+}

@@ -139,6 +139,9 @@ At offset 05ECA1, replace 8B1538BC680081C28A000000 with 50E8899214008BD058909090
 At offset 0590BA, replace E871310800 with E871EE1400.
 At offset 0590C9, replace 7467 with EB67.
 
+# To call the hook that disable shadow when inverted
+At offset 05A319, replace E8D2870200 with E802DC1400.
+
 
 *** Usage ***
 

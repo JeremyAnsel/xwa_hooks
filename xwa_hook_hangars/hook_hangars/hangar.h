@@ -36,3 +36,4 @@ int HangarShuttleLaunchReenterAnimationsHook(int* params);
 int HangarShuttleLaunchReenterAnimation3Hook(int* params);
 int HangarShuttleLaunchReenterAnimation9Hook(int* params);
 int HangarGetCraftIndexHook(int* params);
+int HangarDisableShadowWhenInvertedHook(int* params);

@@ -540,3 +540,11 @@ E871EE1400              call 005A8B30, 005A8B30 - 00459CBF = 0014EE71
 7467                    je 00459D32
 
 EB67                    je 00459D32
+
+
+; from L0045A520
+; disable shadow when inverted
+:0045AF19 - 0x05A319
+E8D2870200              call 004836F0
+
+E802DC1400              call 005A8B20, 005A8B20 - 0045AF1E = 0014DC02
