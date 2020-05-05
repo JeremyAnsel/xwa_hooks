@@ -615,11 +615,15 @@ int WeaponImpactColorHook(int* params)
 	if (resdataModelIndex == 0x228 || resdataModelIndex == 0x117)
 	{
 		int weaponObjectIndex = esi->S0x0761E70_m08;
-		weaponModelIndex = XwaObjects[weaponObjectIndex].ModelIndex;
+		weaponModelIndex = -XwaObjects[weaponObjectIndex].ModelIndex;
 		modelIndex = XwaObjects[weaponObjectIndex].pMobileObject->ModelIndex;
 
 		esi->S0x0761E70_m08 = weaponModelIndex;
-		XwaObjects[weaponObjectIndex].ModelIndex = 0;
+
+		if (XwaObjects[weaponObjectIndex].ModelIndex >= 0x8000)
+		{
+			XwaObjects[weaponObjectIndex].ModelIndex = 0;
+		}
 	}
 	else
 	{
@@ -667,7 +671,7 @@ int WeaponImpactColorSetIndexHook(int* params)
 
 	if (XwaObjects[weaponObjectIndex].ModelIndex == 0)
 	{
-		XwaObjects[weaponObjectIndex].ModelIndex = A8;
+		XwaObjects[weaponObjectIndex].ModelIndex = -A8;
 	}
 
 	S0x0761E70* eax = L004E9440(A4, A8, AC, A10, A14);
