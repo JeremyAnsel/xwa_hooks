@@ -221,7 +221,8 @@ int ConvertColorMapHook(int* params)
 			else if (color == color8)
 			{
 				hasIllum = true;
-				illumBuffer[i] = 0x3f;
+				//illumBuffer[i] = 0x3f;
+				illumBuffer[i] = 0x7f;
 			}
 			else
 			{
@@ -312,9 +313,13 @@ int ComputeGlobalLightsHook(int* params)
 	const int XwaGlobalLightsCount = *(int*)0x00782848;
 	const XwaGlobalLight* XwaGlobalLights = (XwaGlobalLight*)0x007D4FA0;
 
-	ColorR = 0.2f;
-	ColorG = 0.2f;
-	ColorB = 0.2f;
+	//ColorR = 0.2f;
+	//ColorG = 0.2f;
+	//ColorB = 0.2f;
+
+	ColorR = 0.4f;
+	ColorG = 0.4f;
+	ColorB = 0.4f;
 
 	for (int ebx = 0; ebx < XwaGlobalLightsCount; ebx++)
 	{
@@ -322,10 +327,10 @@ int ComputeGlobalLightsHook(int* params)
 
 		float esp24 = light->DirectionX * normalX + light->DirectionY * normalY + light->DirectionZ * normalZ;
 
-		if (fabs(normalX) < 0.4f && fabs(normalY) < 0.4f && fabs(normalZ) > 0.6f)
-		{
-			esp24 = 1.0f;
-		}
+		//if (fabs(normalX) < 0.4f && fabs(normalY) < 0.4f && fabs(normalZ) > 0.6f)
+		//{
+		//	esp24 = 1.0f;
+		//}
 
 		if (esp24 > 0.0f)
 		{
