@@ -1,6 +1,7 @@
 #include "common.h"
 #include "hook.h"
 #include "hook_function.h"
+#include "config.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -11,6 +12,21 @@
 #include <filesystem>
 #include <chrono>
 #include <thread>
+
+class Config
+{
+public:
+	Config()
+	{
+		const auto lines = GetFileLines("dinput.cfg");
+
+		this->OutputStats = GetFileKeyValueInt(lines, "OutputStats", 0) != 0;
+	}
+
+	bool OutputStats;
+};
+
+Config g_config;
 
 std::string int_to_hex(int i)
 {
@@ -250,12 +266,15 @@ public:
 			}
 		}
 
-		OutputDebugString((
-			"Hooks: "
-			+ std::to_string(functionsCount)
-			+ " functions in "
-			+ std::to_string(this->_wrappers.size())
-			+ " modules").c_str());
+		if (g_config.OutputStats)
+		{
+			OutputDebugString((
+				"Hooks: "
+				+ std::to_string(functionsCount)
+				+ " functions in "
+				+ std::to_string(this->_wrappers.size())
+				+ " modules").c_str());
+		}
 	}
 
 	std::vector<HookWrapper> _wrappers;
@@ -299,29 +318,32 @@ public:
 
 	~BenchmarkFunctions()
 	{
-		std::vector<std::pair<int, double>> functions;
-
-		for (int i = 0; i < 0x1A8000; i++)
+		if (g_config.OutputStats)
 		{
-			std::chrono::duration<double> ellapsed = this->_benchmarks[i];
+			std::vector<std::pair<int, double>> functions;
 
-			if (ellapsed.count() != 0)
+			for (int i = 0; i < 0x1A8000; i++)
 			{
-				functions.push_back(std::make_pair(i, ellapsed.count()));
+				std::chrono::duration<double> ellapsed = this->_benchmarks[i];
+
+				if (ellapsed.count() != 0)
+				{
+					functions.push_back(std::make_pair(i, ellapsed.count()));
+				}
 			}
-		}
 
-		std::sort(functions.begin(), functions.end(), [](const auto& a, const auto& b) {return a.second < b.second;});
+			std::sort(functions.begin(), functions.end(), [](const auto& a, const auto& b) {return a.second < b.second;});
 
-		for (const auto& f : functions)
-		{
-			OutputDebugString((
-				g_hookList._names[f.first]
-				+ ": "
-				+ std::to_string(this->_count[f.first])
-				+ " calls in "
-				+ std::to_string(f.second)
-				+ " s").c_str());
+			for (const auto& f : functions)
+			{
+				OutputDebugString((
+					g_hookList._names[f.first]
+					+ ": "
+					+ std::to_string(this->_count[f.first])
+					+ " calls in "
+					+ std::to_string(f.second)
+					+ " s").c_str());
+			}
 		}
 	}
 
@@ -343,7 +365,7 @@ int HookError(int call, int* params)
 	return 0;
 }
 
-int Hook(int call, int* params)
+int HookWithStats(int call, int* params)
 {
 	auto start = std::chrono::high_resolution_clock::now();
 
@@ -365,4 +387,23 @@ int Hook(int call, int* params)
 	g_benchmarks._count[call - 0x401000]++;
 
 	return ret;
+}
+
+int Hook(int call, int* params)
+{
+	if (g_config.OutputStats)
+	{
+		return HookWithStats(call, params);
+	}
+
+	auto it = g_hookList._functions.data()[call - 0x401000];
+
+	if (it != nullptr)
+	{
+		return it(params);
+	}
+	else
+	{
+		return HookError(call, params);
+	}
 }

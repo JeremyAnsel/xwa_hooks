@@ -11,7 +11,7 @@ This dll requires:
 
 *** Setup ***
 
-Place dinput.dll next to xwingalliance.exe
+Place dinput.dll and dinput.cfg next to xwingalliance.exe
 
 
 *** Patch ***

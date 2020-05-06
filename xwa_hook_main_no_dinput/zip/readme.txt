@@ -11,7 +11,7 @@ This dll requires:
 
 *** Setup ***
 
-1) Place hooks_main.dll next to xwingalliance.exe
+1) Place hooks_main.dll and dinput.cfg next to xwingalliance.exe
 
 2) edit xwingalliance.exe:
 
