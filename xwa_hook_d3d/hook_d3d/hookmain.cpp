@@ -12,7 +12,7 @@ public:
 	{
 		const auto lines = GetFileLines("hook_d3d.cfg");
 
-		this->IsHookD3DEnabled = GetFileKeyValueInt(lines, "IsHookD3DEnabled", 0) != 0;
+		this->IsHookD3DEnabled = GetFileKeyValueInt(lines, "IsHookD3DEnabled", 1) != 0;
 	}
 
 	bool IsHookD3DEnabled;
