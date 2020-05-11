@@ -47,18 +47,31 @@ The default value is "-1".
 To define the color, create a file named "FlightModels\[Model]WeaponColor.txt" or create a section named "[WeaponColor]" in "FlightModels\[Model].ini".
 The format is:
 WeaponColor = color marking value
+WeaponColor_fgFG_ = color marking value
 WeaponColorXXX = color marking value
+WeaponColor_fgFG_XXX = color marking value
 WeaponImpactColor_3100 = ARGB color
 WeaponImpactColor_3200 = ARGB color
 WeaponImpactColor_3300 = ARGB color
 WeaponImpactColor_3400 = ARGB color
 WeaponImpactColor_3500 = ARGB color
+WeaponImpactColor_3100_fgFG_ = ARGB color
+WeaponImpactColor_3200_fgFG_ = ARGB color
+WeaponImpactColor_3300_fgFG_ = ARGB color
+WeaponImpactColor_3400_fgFG_ = ARGB color
+WeaponImpactColor_3500_fgFG_ = ARGB color
 WeaponImpactColorXXX = ARGB color
+WeaponImpactColor_fgFG_XXX = ARGB color
 EnergyBarColorLaserHigh = ARGB color
 EnergyBarColorLaserLow = ARGB color
 EnergyBarColorIonHigh = ARGB color
 EnergyBarColorIonLow = ARGB color
+EnergyBarColorLaserHigh_fgFG_ = ARGB color
+EnergyBarColorLaserLow_fgFG_ = ARGB color
+EnergyBarColorIonHigh_fgFG_ = ARGB color
+EnergyBarColorIonLow_fgFG_ = ARGB color
 WeaponLightColorXXX = RGB color
+WeaponLightColor_fgFG_XXX = RGB color
 
 The format of the color is ARGB: FF000000 is black, FFFF0000 is red, FF00FF00 is green, FF0000FF is blue.
 
@@ -74,6 +87,8 @@ EnergyBarColorIonHigh and EnergyBarColorIonLow define the color of the ion energ
 
 XXX in WeaponLightColorXXX goes from 280 to 307. When present, this overrides the default lighting effect color.  If it is set to 0, the default value will be used. You can define a different light color for all weapons.
 The default light colors are defined in "hook_weapon_color.cfg".
+
+FG in _fgFG_ defines the flight group markings.
 
 See XWingWeaponColor.txt.
 

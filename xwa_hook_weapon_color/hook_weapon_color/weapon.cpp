@@ -108,7 +108,8 @@ FlightModelsList g_flightModelsList;
 
 struct XwaMobileObject
 {
-	char Unk0000[149];
+	char Unk0000[147];
+	short ObjectIndex;
 	unsigned short ModelIndex;
 	unsigned char Iff;
 	char Unk0098[1];
@@ -207,7 +208,17 @@ int GetWeaponSwitch(int modelIndex)
 	return weaponSwitch;
 }
 
-std::array<int, 28> GetWeaponColor(int modelIndex)
+std::string GetMarkingsKey(std::string key, int markings)
+{
+	if (markings == -1)
+	{
+		return key;
+	}
+
+	return key + "_fg" + std::to_string(markings) + "_";
+}
+
+std::array<int, 28> GetWeaponColor(int modelIndex, int markings)
 {
 	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
 
@@ -220,9 +231,16 @@ std::array<int, 28> GetWeaponColor(int modelIndex)
 
 	std::array<int, 28> color;
 
+	if (markings != -1)
+	{
+		color = GetWeaponColor(modelIndex, -1);
+	}
+
 	if (lines.size())
 	{
-		int defaultValue = GetFileKeyValueInt(lines, "WeaponColor", -1);
+		std::string key = GetMarkingsKey("WeaponColor", markings);
+
+		int defaultValue = GetFileKeyValueInt(lines, key, -1);
 
 		if (defaultValue != -1)
 		{
@@ -230,12 +248,15 @@ std::array<int, 28> GetWeaponColor(int modelIndex)
 		}
 		else
 		{
-			color.fill(0);
+			if (markings == -1)
+			{
+				color.fill(0);
+			}
 		}
 
 		for (int i = 0; i < 28; i++)
 		{
-			const std::string key = std::string("WeaponColor") + std::to_string(280 + i);
+			const std::string key = std::string(key) + std::to_string(280 + i);
 			int value = GetFileKeyValueInt(lines, key, -1);
 
 			if (value != -1)
@@ -246,13 +267,16 @@ std::array<int, 28> GetWeaponColor(int modelIndex)
 	}
 	else
 	{
-		color.fill(0);
+		if (markings == -1)
+		{
+			color.fill(0);
+		}
 	}
 
 	return color;
 }
 
-std::array<unsigned int, 28> GetWeaponImpactColor(int modelIndex)
+std::array<unsigned int, 28> GetWeaponImpactColor(int modelIndex, int markings)
 {
 	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
 
@@ -263,48 +287,112 @@ std::array<unsigned int, 28> GetWeaponImpactColor(int modelIndex)
 		lines = GetFileLines(ship + ".ini", "WeaponColor");
 	}
 
-	unsigned int ResData_Animations_3100 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3100", g_config.WeaponImpactColor_3100); // blue
-	unsigned int ResData_Animations_3200 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3200", g_config.WeaponImpactColor_3200); // red
-	unsigned int ResData_Animations_3300 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3300", g_config.WeaponImpactColor_3300); // green
-	unsigned int ResData_Animations_3400 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3400", g_config.WeaponImpactColor_3400); // purple
-	unsigned int ResData_Animations_3500 = GetFileKeyValueUnsignedInt(lines, "WeaponImpactColor_3500", g_config.WeaponImpactColor_3500); // yellow
-
 	std::array<unsigned int, 28> color;
 
-	color[0] = ResData_Animations_3200;
-	color[1] = ResData_Animations_3200;
-	color[2] = ResData_Animations_3300;
-	color[3] = ResData_Animations_3300;
-	color[4] = ResData_Animations_3100;
-	color[5] = ResData_Animations_3100;
-	color[6] = ResData_Animations_3500;
-	color[7] = ResData_Animations_3500;
-	color[8] = ResData_Animations_3200;
-	color[9] = ResData_Animations_3300;
-	color[10] = ResData_Animations_3100;
-	color[11] = ResData_Animations_3500;
-	color[12] = ResData_Animations_3500;
-	color[13] = ResData_Animations_3500;
-	color[14] = ResData_Animations_3500;
-	color[15] = ResData_Animations_3400;
-	color[16] = ResData_Animations_3100;
-	color[17] = ResData_Animations_3200;
-	color[18] = ResData_Animations_3400;
-	color[19] = ResData_Animations_3500;
-	color[20] = ResData_Animations_3500;
-	color[21] = ResData_Animations_3200;
-	color[22] = ResData_Animations_3200;
-	color[23] = ResData_Animations_3300;
-	color[24] = ResData_Animations_3300;
-	color[25] = ResData_Animations_3300;
-	color[26] = ResData_Animations_3300;
-	color[27] = ResData_Animations_3500;
+	if (markings != -1)
+	{
+		color = GetWeaponImpactColor(modelIndex, -1);
+	}
+
+	if (markings == -1)
+	{
+		unsigned int ResData_Animations_3100 = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("WeaponImpactColor_3100", markings), g_config.WeaponImpactColor_3100); // blue
+		unsigned int ResData_Animations_3200 = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("WeaponImpactColor_3200", markings), g_config.WeaponImpactColor_3200); // red
+		unsigned int ResData_Animations_3300 = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("WeaponImpactColor_3300", markings), g_config.WeaponImpactColor_3300); // green
+		unsigned int ResData_Animations_3400 = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("WeaponImpactColor_3400", markings), g_config.WeaponImpactColor_3400); // purple
+		unsigned int ResData_Animations_3500 = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("WeaponImpactColor_3500", markings), g_config.WeaponImpactColor_3500); // yellow
+
+		color[0] = ResData_Animations_3200;
+		color[1] = ResData_Animations_3200;
+		color[2] = ResData_Animations_3300;
+		color[3] = ResData_Animations_3300;
+		color[4] = ResData_Animations_3100;
+		color[5] = ResData_Animations_3100;
+		color[6] = ResData_Animations_3500;
+		color[7] = ResData_Animations_3500;
+		color[8] = ResData_Animations_3200;
+		color[9] = ResData_Animations_3300;
+		color[10] = ResData_Animations_3100;
+		color[11] = ResData_Animations_3500;
+		color[12] = ResData_Animations_3500;
+		color[13] = ResData_Animations_3500;
+		color[14] = ResData_Animations_3500;
+		color[15] = ResData_Animations_3400;
+		color[16] = ResData_Animations_3100;
+		color[17] = ResData_Animations_3200;
+		color[18] = ResData_Animations_3400;
+		color[19] = ResData_Animations_3500;
+		color[20] = ResData_Animations_3500;
+		color[21] = ResData_Animations_3200;
+		color[22] = ResData_Animations_3200;
+		color[23] = ResData_Animations_3300;
+		color[24] = ResData_Animations_3300;
+		color[25] = ResData_Animations_3300;
+		color[26] = ResData_Animations_3300;
+		color[27] = ResData_Animations_3500;
+	}
+	else
+	{
+		unsigned int ResData_Animations_3100 = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("WeaponImpactColor_3100", markings), 0); // blue
+		unsigned int ResData_Animations_3200 = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("WeaponImpactColor_3200", markings), 0); // red
+		unsigned int ResData_Animations_3300 = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("WeaponImpactColor_3300", markings), 0); // green
+		unsigned int ResData_Animations_3400 = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("WeaponImpactColor_3400", markings), 0); // purple
+		unsigned int ResData_Animations_3500 = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("WeaponImpactColor_3500", markings), 0); // yellow
+
+		if (ResData_Animations_3100 != 0)
+		{
+			color[4] = ResData_Animations_3100;
+			color[5] = ResData_Animations_3100;
+			color[10] = ResData_Animations_3100;
+			color[16] = ResData_Animations_3100;
+		}
+
+		if (ResData_Animations_3200 != 0)
+		{
+			color[0] = ResData_Animations_3200;
+			color[1] = ResData_Animations_3200;
+			color[8] = ResData_Animations_3200;
+			color[17] = ResData_Animations_3200;
+			color[21] = ResData_Animations_3200;
+			color[22] = ResData_Animations_3200;
+		}
+
+		if (ResData_Animations_3300 != 0)
+		{
+			color[2] = ResData_Animations_3300;
+			color[3] = ResData_Animations_3300;
+			color[9] = ResData_Animations_3300;
+			color[23] = ResData_Animations_3300;
+			color[24] = ResData_Animations_3300;
+			color[25] = ResData_Animations_3300;
+			color[26] = ResData_Animations_3300;
+		}
+
+		if (ResData_Animations_3400 != 0)
+		{
+			color[15] = ResData_Animations_3400;
+			color[18] = ResData_Animations_3400;
+		}
+
+		if (ResData_Animations_3500 != 0)
+		{
+			color[6] = ResData_Animations_3500;
+			color[7] = ResData_Animations_3500;
+			color[11] = ResData_Animations_3500;
+			color[12] = ResData_Animations_3500;
+			color[13] = ResData_Animations_3500;
+			color[14] = ResData_Animations_3500;
+			color[19] = ResData_Animations_3500;
+			color[20] = ResData_Animations_3500;
+			color[27] = ResData_Animations_3500;
+		}
+	}
 
 	if (lines.size())
 	{
 		for (int i = 0; i < 28; i++)
 		{
-			const std::string key = std::string("WeaponImpactColor") + std::to_string(280 + i);
+			const std::string key = GetMarkingsKey("WeaponImpactColor", markings) + std::to_string(280 + i);
 			unsigned int value = GetFileKeyValueUnsignedInt(lines, key);
 
 			if (value != 0)
@@ -325,7 +413,7 @@ struct WeaponEnergyBarColor
 	unsigned int IonLow;
 };
 
-WeaponEnergyBarColor GetWeaponEnergyBarColor(int modelIndex)
+WeaponEnergyBarColor GetWeaponEnergyBarColor(int modelIndex, int markings)
 {
 	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
 
@@ -338,32 +426,37 @@ WeaponEnergyBarColor GetWeaponEnergyBarColor(int modelIndex)
 
 	WeaponEnergyBarColor color{};
 
+	if (markings != -1)
+	{
+		color = GetWeaponEnergyBarColor(modelIndex, -1);
+	}
+
 	if (lines.size())
 	{
 		unsigned int value;
 
-		value = GetFileKeyValueUnsignedInt(lines, "EnergyBarColorLaserHigh");
+		value = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("EnergyBarColorLaserHigh", markings));
 
 		if (value != 0)
 		{
 			color.LaserHigh = value;
 		}
 
-		value = GetFileKeyValueUnsignedInt(lines, "EnergyBarColorLaserLow");
+		value = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("EnergyBarColorLaserLow", markings));
 
 		if (value != 0)
 		{
 			color.LaserLow = value;
 		}
 
-		value = GetFileKeyValueUnsignedInt(lines, "EnergyBarColorIonHigh");
+		value = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("EnergyBarColorIonHigh", markings));
 
 		if (value != 0)
 		{
 			color.IonHigh = value;
 		}
 
-		value = GetFileKeyValueUnsignedInt(lines, "EnergyBarColorIonLow");
+		value = GetFileKeyValueUnsignedInt(lines, GetMarkingsKey("EnergyBarColorIonLow", markings));
 
 		if (value != 0)
 		{
@@ -374,7 +467,7 @@ WeaponEnergyBarColor GetWeaponEnergyBarColor(int modelIndex)
 	return color;
 }
 
-std::array<unsigned int, 28> GetWeaponLightColor(int modelIndex)
+std::array<unsigned int, 28> GetWeaponLightColor(int modelIndex, int markings)
 {
 	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
 
@@ -387,11 +480,16 @@ std::array<unsigned int, 28> GetWeaponLightColor(int modelIndex)
 
 	std::array<unsigned int, 28> color = g_config.WeaponLightColor;
 
+	if (markings != -1)
+	{
+		color = GetWeaponLightColor(modelIndex, -1);
+	}
+
 	if (lines.size())
 	{
 		for (int i = 0; i < 28; i++)
 		{
-			const std::string key = std::string("WeaponLightColor") + std::to_string(280 + i);
+			const std::string key = GetMarkingsKey("WeaponLightColor", markings) + std::to_string(280 + i);
 			unsigned int value = GetFileKeyValueUnsignedInt(lines, key);
 
 			if (value != 0)
@@ -423,14 +521,14 @@ public:
 		}
 	}
 
-	int GetColor(int modelIndex, int weaponModelIndex)
+	int GetColor(int modelIndex, int weaponModelIndex, int markings)
 	{
 		if (weaponModelIndex < 280 || weaponModelIndex >= 280 + 28)
 		{
 			return 0;
 		}
 
-		auto it = this->_weaponColor.find(modelIndex);
+		auto it = this->_weaponColor.find(std::make_pair(modelIndex, markings));
 
 		if (it != this->_weaponColor.end())
 		{
@@ -438,20 +536,20 @@ public:
 		}
 		else
 		{
-			auto value = GetWeaponColor(modelIndex);
-			this->_weaponColor.insert(std::make_pair(modelIndex, value));
+			auto value = GetWeaponColor(modelIndex, markings);
+			this->_weaponColor.insert(std::make_pair(std::make_pair(modelIndex, markings), value));
 			return value[weaponModelIndex - 280];
 		}
 	}
 
-	unsigned int GetImpactColor(int modelIndex, int weaponModelIndex)
+	unsigned int GetImpactColor(int modelIndex, int weaponModelIndex, int markings)
 	{
 		if (weaponModelIndex < 280 || weaponModelIndex >= 280 + 28)
 		{
 			return 0xFFFFFFFF;
 		}
 
-		auto it = this->_weaponImpactColor.find(modelIndex);
+		auto it = this->_weaponImpactColor.find(std::make_pair(modelIndex, markings));
 
 		if (it != this->_weaponImpactColor.end())
 		{
@@ -459,15 +557,15 @@ public:
 		}
 		else
 		{
-			auto value = GetWeaponImpactColor(modelIndex);
-			this->_weaponImpactColor.insert(std::make_pair(modelIndex, value));
+			auto value = GetWeaponImpactColor(modelIndex, markings);
+			this->_weaponImpactColor.insert(std::make_pair(std::make_pair(modelIndex, markings), value));
 			return value[weaponModelIndex - 280];
 		}
 	}
 
-	WeaponEnergyBarColor GetEnergyBarColor(int modelIndex)
+	WeaponEnergyBarColor GetEnergyBarColor(int modelIndex, int markings)
 	{
-		auto it = this->_weaponEnergyBarColor.find(modelIndex);
+		auto it = this->_weaponEnergyBarColor.find(std::make_pair(modelIndex, markings));
 
 		if (it != this->_weaponEnergyBarColor.end())
 		{
@@ -475,20 +573,20 @@ public:
 		}
 		else
 		{
-			auto value = GetWeaponEnergyBarColor(modelIndex);
-			this->_weaponEnergyBarColor.insert(std::make_pair(modelIndex, value));
+			auto value = GetWeaponEnergyBarColor(modelIndex, markings);
+			this->_weaponEnergyBarColor.insert(std::make_pair(std::make_pair(modelIndex, markings), value));
 			return value;
 		}
 	}
 
-	unsigned int GetLightColor(int modelIndex, int weaponModelIndex)
+	unsigned int GetLightColor(int modelIndex, int weaponModelIndex, int markings)
 	{
 		if (weaponModelIndex < 280 || weaponModelIndex >= 280 + 28)
 		{
 			return 0;
 		}
 
-		auto it = this->_weaponLightColor.find(modelIndex);
+		auto it = this->_weaponLightColor.find(std::make_pair(modelIndex, markings));
 
 		if (it != this->_weaponLightColor.end())
 		{
@@ -496,18 +594,18 @@ public:
 		}
 		else
 		{
-			auto value = GetWeaponLightColor(modelIndex);
-			this->_weaponLightColor.insert(std::make_pair(modelIndex, value));
+			auto value = GetWeaponLightColor(modelIndex, markings);
+			this->_weaponLightColor.insert(std::make_pair(std::make_pair(modelIndex, markings), value));
 			return value[weaponModelIndex - 280];
 		}
 	}
 
 private:
 	std::map<int, int> _weaponSwitch;
-	std::map<int, std::array<int, 28>> _weaponColor;
-	std::map<int, std::array<unsigned int, 28>> _weaponImpactColor;
-	std::map<int, WeaponEnergyBarColor> _weaponEnergyBarColor;
-	std::map<int, std::array<unsigned int, 28>> _weaponLightColor;
+	std::map<std::pair<int, int>, std::array<int, 28>> _weaponColor;
+	std::map<std::pair<int, int>, std::array<unsigned int, 28>> _weaponImpactColor;
+	std::map<std::pair<int, int>, WeaponEnergyBarColor> _weaponEnergyBarColor;
+	std::map<std::pair<int, int>, std::array<unsigned int, 28>> _weaponLightColor;
 };
 
 ModelIndexWeapon g_modelIndexWeapon;
@@ -535,6 +633,7 @@ int WeaponColorHook(int* params)
 	unsigned short* ExeWeaponSideModel = (unsigned short*)0x005B6680;
 	unsigned char* s_V0x05FE758 = (unsigned char*)0x005FE758;
 	unsigned short objectModelIndex = XwaObjects[objectIndex].ModelIndex;
+	unsigned char objectMarkings = XwaObjects[objectIndex].pMobileObject->Markings;
 
 	if (GetConfigWeaponSwitchBasedOnIff(objectModelIndex))
 	{
@@ -550,7 +649,7 @@ int WeaponColorHook(int* params)
 		}
 	}
 
-	int color = g_modelIndexWeapon.GetColor(objectModelIndex, weaponModelIndex);
+	int color = g_modelIndexWeapon.GetColor(objectModelIndex, weaponModelIndex, objectMarkings);
 
 	XwaObjects[weaponObjectIndex].pMobileObject->Markings = color;
 
@@ -566,7 +665,9 @@ int WeaponColorCapitalShipHook(int* params)
 
 	unsigned short weaponModelIndex = XwaObjects[weaponObjectIndex].ModelIndex;
 	unsigned short objectModelIndex = XwaObjects[objectIndex].ModelIndex;
-	int color = g_modelIndexWeapon.GetColor(objectModelIndex, weaponModelIndex);
+	unsigned char objectMarkings = XwaObjects[objectIndex].pMobileObject->Markings;
+
+	int color = g_modelIndexWeapon.GetColor(objectModelIndex, weaponModelIndex, objectMarkings);
 
 	XwaObjects[weaponObjectIndex].pMobileObject->Markings = color;
 
@@ -611,12 +712,20 @@ int WeaponImpactColorHook(int* params)
 
 	unsigned short weaponModelIndex;
 	unsigned short modelIndex;
+	int modelMarkings = -1;
 
 	if (resdataModelIndex == 0x228 || resdataModelIndex == 0x117)
 	{
 		int weaponObjectIndex = esi->S0x0761E70_m08;
 		weaponModelIndex = -XwaObjects[weaponObjectIndex].ModelIndex;
 		modelIndex = XwaObjects[weaponObjectIndex].pMobileObject->ModelIndex;
+
+		short objectIndex = XwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
+
+		if (objectIndex != -1)
+		{
+			modelMarkings = XwaObjects[objectIndex].pMobileObject->Markings;
+		}
 
 		esi->S0x0761E70_m08 = weaponModelIndex;
 
@@ -649,7 +758,7 @@ int WeaponImpactColorHook(int* params)
 
 	if (modelIndex != 0)
 	{
-		knockout->Color = g_modelIndexWeapon.GetImpactColor(modelIndex, weaponModelIndex);
+		knockout->Color = g_modelIndexWeapon.GetImpactColor(modelIndex, weaponModelIndex, modelMarkings);
 	}
 
 	return (int)knockout;
@@ -696,8 +805,9 @@ int WeaponEnergyBarLaserColorHook(int* params)
 	int playerId = *(int*)0x008C1CC8;
 	int playerObjectIndex = XwaPlayers[playerId].ObjectIndex;
 	unsigned short playerModelIndex = XwaObjects[playerObjectIndex].ModelIndex;
+	unsigned char playerMarkings = XwaObjects[playerObjectIndex].pMobileObject->Markings;
 
-	WeaponEnergyBarColor color = g_modelIndexWeapon.GetEnergyBarColor(playerModelIndex);
+	WeaponEnergyBarColor color = g_modelIndexWeapon.GetEnergyBarColor(playerModelIndex, playerMarkings);
 
 	if (color.LaserHigh == 0)
 	{
@@ -746,8 +856,9 @@ int WeaponEnergyBarIonColorHook(int* params)
 	int playerId = *(int*)0x008C1CC8;
 	int playerObjectIndex = XwaPlayers[playerId].ObjectIndex;
 	unsigned short playerModelIndex = XwaObjects[playerObjectIndex].ModelIndex;
+	unsigned char playerMarkings = XwaObjects[playerObjectIndex].pMobileObject->Markings;
 
-	WeaponEnergyBarColor color = g_modelIndexWeapon.GetEnergyBarColor(playerModelIndex);
+	WeaponEnergyBarColor color = g_modelIndexWeapon.GetEnergyBarColor(playerModelIndex, playerMarkings);
 
 	if (color.IonHigh == 0)
 	{
@@ -775,13 +886,24 @@ int WeaponLightColorHook(int* params)
 	const XwaObject* A4 = (XwaObject*)params[0];
 	const unsigned short weaponModelIndex = A4->ModelIndex;
 
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
 	unsigned int color = 0;
 
 	if (weaponModelIndex >= 280 && weaponModelIndex < 280 + 28)
 	{
 		const unsigned short modelIndex = A4->pMobileObject->ModelIndex;
 
-		color = g_modelIndexWeapon.GetLightColor(modelIndex, weaponModelIndex);
+		short objectIndex = A4->pMobileObject->ObjectIndex;
+
+		int modelMarkings = -1;
+
+		if (objectIndex != -1)
+		{
+			modelMarkings = XwaObjects[objectIndex].pMobileObject->Markings;
+		}
+
+		color = g_modelIndexWeapon.GetLightColor(modelIndex, weaponModelIndex, modelMarkings);
 	}
 
 	S0x07FA360* lights = (S0x07FA360*)0x007FA360;

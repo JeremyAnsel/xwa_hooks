@@ -5,19 +5,40 @@ WeaponColor = 0
 WeaponColor280 = 1
 WeaponColor281 = 1
 
+WeaponColor_fg1_ = 0
+WeaponColor_fg1_280 = 1
+WeaponColor_fg1_281 = 1
+
 WeaponImpactColor_3100 = FF0000FF
 WeaponImpactColor_3200 = FFFF0000
 WeaponImpactColor_3300 = FF00FF00
 WeaponImpactColor_3400 = FFFF00FF
 WeaponImpactColor_3500 = FFFFFF00
 
+WeaponImpactColor_3100_fg1_ = FF0000FF
+WeaponImpactColor_3200_fg1_ = FFFF0000
+WeaponImpactColor_3300_fg1_ = FF00FF00
+WeaponImpactColor_3400_fg1_ = FFFF00FF
+WeaponImpactColor_3500_fg1_ = FFFFFF00
+
 WeaponImpactColor280 = FF00FF00
 WeaponImpactColor281 = FF00FF00
+
+WeaponImpactColor_fg1_280 = FF00FF00
+WeaponImpactColor_fg1_281 = FF00FF00
 
 EnergyBarColorLaserHigh = FFFF0000
 EnergyBarColorLaserLow = FF9B1E00
 EnergyBarColorIonHigh = FF00B4FF
 EnergyBarColorIonLow = FF006992
 
+EnergyBarColorLaserHigh_fg1_ = FFFF0000
+EnergyBarColorLaserLow_fg1_ = FF9B1E00
+EnergyBarColorIonHigh_fg1_ = FF00B4FF
+EnergyBarColorIonLow_fg1_ = FF006992
+
 WeaponLightColor280 = FF3300
 WeaponLightColor281 = FF3300
+
+WeaponLightColor_fg1_280 = FF3300
+WeaponLightColor_fg1_281 = FF3300
