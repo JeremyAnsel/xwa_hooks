@@ -287,3 +287,15 @@ L00408DC0
 
 E816F21900              call 005A8B30, 005A8B30 - 0040991A = 0019F216
 90                      nop
+
+
+# MSG_SFOILS_NO_FIRE
+L004912C0
+
+:0049130D - 0x09070D
+8A4127                  mov al, byte ptr [ecx+27]
+668B7104                mov si, word ptr [ecx+04]
+
+56                      push esi
+E81D781100              call 005A8B30, 005A8B30 - 00491313 = 0011781D
+5E                      pop esi

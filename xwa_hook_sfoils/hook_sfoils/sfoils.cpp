@@ -77,7 +77,8 @@ Config g_config;
 
 struct XwaCraft
 {
-	char unk000[6];
+	char unk000[4];
+	unsigned short CraftIndex;
 	int LeaderObjectIndex;
 	char unk00A[29];
 	char SFoilsState;
@@ -1117,4 +1118,33 @@ int EnterHyperspaceHook(int* params)
 	}
 
 	return ret;
+}
+
+int NoFireMessageHook(int* params)
+{
+	const int objectIndex = params[13];
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
+	const XwaObject* object = &xwaObjects[objectIndex];
+
+	params[0] = currentCraft->CraftIndex;
+
+	bool hasSFoils = g_modelIndexSFoils.GetSFoils(object->ModelIndex).size() != 0;
+	bool areSFoilsOpened = g_modelIndexSFoils.AreSFoilsOpened(object);
+	bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(object->ModelIndex).size() != 0;
+	bool areLandingGearsClosed = g_modelIndexSFoils.AreLandingGearsClosed(object);
+
+	int ret = 0;
+
+	if (hasSFoils && !areSFoilsOpened)
+	{
+		ret = 1;
+	}
+	else if (hasLandingGears && !areLandingGearsClosed)
+	{
+		ret = 1;
+	}
+
+	return currentCraft->SFoilsState != 0 || ret;
 }

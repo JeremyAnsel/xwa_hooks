@@ -11,3 +11,4 @@ int SFoilsAIHyperspaceOrderHook(int* params);
 int InitSFoilsLandingGearsHook(int* params);
 int EnterHangarHook(int* params);
 int EnterHyperspaceHook(int* params);
+int NoFireMessageHook(int* params);

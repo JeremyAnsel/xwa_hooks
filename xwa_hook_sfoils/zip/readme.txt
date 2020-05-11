@@ -67,6 +67,9 @@ At offset 008BF3, replace 8A8732958B00 with E838F3190090.
 # To call the hook that set enter hyperspace state
 At offset 008D15, replace 8A8732958B00 with E816F2190090.
 
+# To call the hook that shows the no fire message
+At offset 09070D, replace 8A4127668B7104 with 56E81D7811005E.
+
 
 *** Usage ***
 
