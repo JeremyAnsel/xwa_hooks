@@ -288,7 +288,7 @@ std::string GetWeaponSoundBehavior(int modelIndex)
 		case 19: // ModelIndex_019_0_18_TieBigGun
 		case 20: // ModelIndex_020_0_19_TieWarheads
 		case 21: // ModelIndex_021_0_20_TieBomb
-		case 22: //ModelIndex_022_0_21_TieBooster
+		case 22: // ModelIndex_022_0_21_TieBooster
 			behavior = "TieFighter";
 			break;
 
@@ -752,6 +752,17 @@ int WeaponSoundHook(int* params)
 			{
 				return playSound(20, A4, A8); // EmpireLaserChChChhh
 			}
+			else if (behavior == "TieFighterWithIon")
+			{
+				switch (weaponIndex)
+				{
+				case 280: // ModelIndex_280_1_17_LaserRebel
+				case 281: // ModelIndex_281_1_18_LaserRebelTurbo
+				case 282: // ModelIndex_282_1_19_LaserImp
+				case 283: // ModelIndex_283_1_20_LaserImpTurbo
+					return playSound(20, A4, A8); // EmpireLaserChChChhh
+				}
+			}
 			else if (behavior == "Rebel")
 			{
 				switch (weaponIndex)
@@ -905,7 +916,7 @@ int WeaponSoundHook(int* params)
 			{
 				return playSound(9, A4, A8); // IonCannonTurbo
 			}
-			else if (behavior == "TieFighter")
+			else if (behavior == "TieFighter" || behavior == "TieFighterWithIon")
 			{
 				return playSound(20, A4, A8); // EmpireLaserChChChhh
 			}

@@ -1,4 +1,4 @@
-﻿xwa_hook_engine_sound
+xwa_hook_engine_sound
 
 This hook enables setting engine sound and weapon sound behavior for any craft.
 
@@ -107,10 +107,11 @@ Add a line with "EngineSoundWash = value". The value is between 1 and 2:
 - 1 means EngineWash
 - 2 means EngineWashSD
 
-Add a line with "WeaponSoundBehavior = value". The value is 0, CorellianTransport, TieFighter, Rebel, RebelTurbo, Empire, EmpireTurbo, Falcon, FalconTurbo, Ion or IonTurbo.
+Add a line with "WeaponSoundBehavior = value". The value is 0, CorellianTransport, TieFighter, TieFighterWithIon, Rebel, RebelTurbo, Empire, EmpireTurbo, Falcon, FalconTurbo, Ion or IonTurbo.
 0 means that a default sound is played.
 CorellianTransport means that Laser and LaserTurbo are replaced with FalconLaser or FalconLaserTurbo.
 TieFighter means that the open weapon (307) sound is EmpireLaserChChChhh or that laser sounds (RebelLaser, RebelLaserTurbo, EmpireLaser, EmpireLaserTurbo, IonCannon, IonCannonTurbo) are replaced with EmpireLaserChChChhh.
+TieFighterWithIon means that the open weapon (307) sound is EmpireLaserChChChhh or that laser sounds (RebelLaser, RebelLaserTurbo, EmpireLaser, EmpireLaserTurbo) are replaced with EmpireLaserChChChhh or ion lasers (IonCannon, IonCannonTurbo) are not replaced.
 Rebel means that the open weapon (307) sound is RebelLaser or that RebelLaser and RebelLaserTurbo are replaced with RebelLaser.
 RebelTurbo means that the open weapon (307) sound is RebelLaserTurbo or that RebelLaser and RebelLaserTurbo are replaced with RebelLaserTurbo.
 Empire means that the open weapon (307) sound is EmpireLaser or that EmpireLaser and EmpireLaserTurbo are replaced with EmpireLaser.
