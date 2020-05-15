@@ -238,7 +238,7 @@ std::array<int, 28> GetWeaponColor(int modelIndex, int markings)
 
 	if (lines.size())
 	{
-		std::string key = GetMarkingsKey("WeaponColor", markings);
+		const std::string key = GetMarkingsKey("WeaponColor", markings);
 
 		int defaultValue = GetFileKeyValueInt(lines, key, -1);
 
@@ -256,8 +256,8 @@ std::array<int, 28> GetWeaponColor(int modelIndex, int markings)
 
 		for (int i = 0; i < 28; i++)
 		{
-			const std::string key = std::string(key) + std::to_string(280 + i);
-			int value = GetFileKeyValueInt(lines, key, -1);
+			const std::string valueKey = key + std::to_string(280 + i);
+			int value = GetFileKeyValueInt(lines, valueKey, -1);
 
 			if (value != -1)
 			{
