@@ -359,12 +359,13 @@ int DatImage32Hook(int* params)
 	{
 		for (int esp10 = 0; esp10 < A18; esp10++)
 		{
-			if (A14[esp10].Width == 0)
-			{
-				break;
-			}
+			//if (A14[esp10].Width == 0)
+			//{
+			//	break;
+			//}
 
-			int ebp = (A4->Width * A4->Height) >> (A14[esp10].MipmapLevel * 2);
+			//int ebp = (A4->Width * A4->Height) >> (A14[esp10].MipmapLevel * 2);
+			int ebp = (A4->Width * A4->Height);
 
 			DatImageDescription* esi = (DatImageDescription*)XwaMemMalloc("RESOURCEITEM", sizeof(DatImageDescription) + ebp * 0x04);
 
@@ -376,22 +377,28 @@ int DatImage32Hook(int* params)
 
 				unsigned int* esp24 = (unsigned int*)((int)esi + sizeof(DatImageDescription));
 
-				if (A14[esp10].MipmapLevel == 0)
-				{
-					memcpy(esp24, (void*)AC, ebp * 4);
-				}
-				else
-				{
-					memset(esp24, 0, ebp * 4);
+				//if (A14[esp10].MipmapLevel == 0)
+				//{
+				//	memcpy(esp24, (void*)AC, ebp * 4);
+				//}
+				//else
+				//{
+				//	memset(esp24, 0, ebp * 4);
 
-					esi->Width >>= A14[esp10].MipmapLevel;
-					esi->Height >>= A14[esp10].MipmapLevel;
-					esi->DataSize >>= A14[esp10].MipmapLevel * 2;
+				//	esi->Width >>= A14[esp10].MipmapLevel;
+				//	esi->Height >>= A14[esp10].MipmapLevel;
+				//	esi->DataSize >>= A14[esp10].MipmapLevel * 2;
 
-					/*
-					XwaGetMipBit( AC, A4->Width, A4->Height, A8, A14[esp10].MipmapLevel, esp24 );
-					*/
-				}
+				//	/*
+				//	XwaGetMipBit( AC, A4->Width, A4->Height, A8, A14[esp10].MipmapLevel, esp24 );
+				//	*/
+				//}
+
+				A14[esp10].MipmapLevel = 0;
+				A14[esp10].Width = A4->Width;
+				A14[esp10].Height = A4->Height;
+
+				memcpy(esp24, (void*)AC, ebp * 4);
 			}
 
 			A14[esp10].pData = esi;
