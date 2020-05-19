@@ -722,7 +722,7 @@ int WeaponImpactColorHook(int* params)
 
 		short objectIndex = XwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-		if (objectIndex != -1)
+		if (objectIndex != -1 && XwaObjects[objectIndex].pMobileObject != nullptr)
 		{
 			modelMarkings = XwaObjects[objectIndex].pMobileObject->Markings;
 		}
@@ -894,16 +894,19 @@ int WeaponLightColorHook(int* params)
 	{
 		const unsigned short modelIndex = A4->pMobileObject->ModelIndex;
 
-		short objectIndex = A4->pMobileObject->ObjectIndex;
-
-		int modelMarkings = -1;
-
-		if (objectIndex != -1)
+		if (modelIndex != 0)
 		{
-			modelMarkings = XwaObjects[objectIndex].pMobileObject->Markings;
-		}
+			short objectIndex = A4->pMobileObject->ObjectIndex;
 
-		color = g_modelIndexWeapon.GetLightColor(modelIndex, weaponModelIndex, modelMarkings);
+			int modelMarkings = -1;
+
+			if (objectIndex != -1 && XwaObjects[objectIndex].pMobileObject != nullptr)
+			{
+				modelMarkings = XwaObjects[objectIndex].pMobileObject->Markings;
+			}
+
+			color = g_modelIndexWeapon.GetLightColor(modelIndex, weaponModelIndex, modelMarkings);
+		}
 	}
 
 	S0x07FA360* lights = (S0x07FA360*)0x007FA360;

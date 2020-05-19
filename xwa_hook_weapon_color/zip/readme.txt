@@ -14,8 +14,6 @@ This dll requires:
 
 Place hook_weapon_color.dll next to xwingalliance.exe
 
-Copy the "ANIMATIONS.DAT" file in the "RESDATA" directory.
-
 
 *** Patch ***
 
@@ -93,6 +91,8 @@ FG in _fgFG_ defines the flight group markings.
 See XWingWeaponColor.txt.
 
 You also need to add a flightgroup color/markings to the weapon OPTs.
+
+"ANIMATIONS.DAT" file in the "RESDATA" directory is a sample dat file with impact colors.
 
 
 *** Credits ***
