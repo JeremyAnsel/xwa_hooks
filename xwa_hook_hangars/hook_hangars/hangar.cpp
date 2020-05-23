@@ -54,6 +54,27 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class Config
+{
+public:
+	Config()
+	{
+		const auto lines = GetFileLines("hook_hangars.cfg");
+
+		this->SelectionMode = GetFileKeyValue(lines, "SelectionMode");
+		this->ProvingGroundHangarModel = GetFileKeyValue(lines, "ProvingGroundHangarModel");
+		this->DrawShadows = GetFileKeyValueInt(lines, "DrawShadows", 1) != 0;
+		this->ShadowLod = GetFileKeyValueInt(lines, "ShadowLod", 0) != 0;
+	}
+
+	std::string SelectionMode;
+	std::string ProvingGroundHangarModel;
+	bool DrawShadows;
+	bool ShadowLod;
+};
+
+Config g_config;
+
 #pragma pack(push, 1)
 
 struct XwaPlayer
@@ -310,8 +331,7 @@ std::string GetCustomFilePath(const std::string& name)
 
 	if (isProvingGround)
 	{
-		const auto configLines = GetFileLines("hook_hangars.cfg");
-		std::string ship = GetFileKeyValue(configLines, "ProvingGroundHangarModel");
+		std::string ship = g_config.ProvingGroundHangarModel;
 
 		if (!ship.empty())
 		{
@@ -366,8 +386,7 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 
 	if (isProvingGround)
 	{
-		const auto configLines = GetFileLines("hook_hangars.cfg");
-		std::string ship = GetFileKeyValue(configLines, "ProvingGroundHangarModel");
+		std::string ship = g_config.ProvingGroundHangarModel;
 
 		if (!ship.empty())
 		{
@@ -429,12 +448,165 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 	return lines;
 }
 
+class CustomFileLinesHangarObjects
+{
+public:
+	std::vector<std::string> GetLines()
+	{
+		this->UpdateIfChanged();
+		return this->_lines;
+	}
+
+	bool GetLoadShuttle()
+	{
+		this->UpdateIfChanged();
+		return this->LoadShuttle;
+	}
+
+	unsigned short GetShuttleModelIndex()
+	{
+		this->UpdateIfChanged();
+		return this->ShuttleModelIndex;
+	}
+
+	int GetShuttleMarkings()
+	{
+		this->UpdateIfChanged();
+		return this->ShuttleMarkings;
+	}
+
+	std::string GetShuttleAnimation()
+	{
+		this->UpdateIfChanged();
+		return this->ShuttleAnimation;
+	}
+
+	int GetShuttleAnimationStraightLine()
+	{
+		this->UpdateIfChanged();
+		return this->ShuttleAnimationStraightLine;
+	}
+
+	bool GetLoadDroids()
+	{
+		this->UpdateIfChanged();
+		return this->LoadDroids;
+	}
+
+	int GetHangarRoofCranePositionY()
+	{
+		this->UpdateIfChanged();
+		return this->HangarRoofCranePositionY;
+	}
+
+	int GetHangarRoofCranePositionZ()
+	{
+		this->UpdateIfChanged();
+		return this->HangarRoofCranePositionZ;
+	}
+
+	bool GetIsHangarFloorInverted()
+	{
+		this->UpdateIfChanged();
+		return this->IsHangarFloorInverted;
+	}
+
+	int GetPlayerAnimationElevation()
+	{
+		this->UpdateIfChanged();
+		return this->PlayerAnimationElevation;
+	}
+
+private:
+	void UpdateIfChanged()
+	{
+		if (this->HasChanged())
+		{
+			const auto lines = GetCustomFileLines("HangarObjects");
+			this->_lines = lines;
+			this->LoadShuttle = GetFileKeyValueInt(lines, "LoadShuttle", 1) == 1;
+			this->ShuttleModelIndex = (unsigned short)GetFileKeyValueInt(lines, "ShuttleModelIndex");
+			this->ShuttleMarkings = GetFileKeyValueInt(lines, "ShuttleMarkings");
+			this->ShuttleAnimation = GetFileKeyValue(lines, "ShuttleAnimation");
+			this->ShuttleAnimationStraightLine = GetFileKeyValueInt(lines, "ShuttleAnimationStraightLine", 0);
+			this->LoadDroids = GetFileKeyValueInt(lines, "LoadDroids", 1) == 1;
+			this->HangarRoofCranePositionY = GetFileKeyValueInt(lines, "HangarRoofCranePositionY", 786);
+			this->HangarRoofCranePositionZ = GetFileKeyValueInt(lines, "HangarRoofCranePositionZ", -282);
+			this->IsHangarFloorInverted = GetFileKeyValueInt(lines, "IsHangarFloorInverted", 0) != 0;
+			this->PlayerAnimationElevation = GetFileKeyValueInt(lines, "PlayerAnimationElevation", 0);
+		}
+	}
+
+	std::vector<std::string> _lines;
+	bool LoadShuttle;
+	unsigned short ShuttleModelIndex;
+	int ShuttleMarkings;
+	std::string ShuttleAnimation;
+	int ShuttleAnimationStraightLine;
+	bool LoadDroids;
+	int HangarRoofCranePositionY;
+	int HangarRoofCranePositionZ;
+	bool IsHangarFloorInverted;
+	int PlayerAnimationElevation;
+
+	bool HasChanged()
+	{
+		if (!this->isInit)
+		{
+			this->lastIsProvingGround = *(unsigned char*)(0x08053E0 + 0x05) != 0;
+
+			if (!this->lastIsProvingGround)
+			{
+				this->lastMissionFileName = (const char*)0x06002E8;
+				this->lastCommandShip = GetCommandShipLstLine();
+			}
+
+			this->isInit = true;
+			return true;
+		}
+
+		const bool isProvingGround = *(unsigned char*)(0x08053E0 + 0x05) != 0;
+		if (this->lastIsProvingGround != isProvingGround)
+		{
+			this->lastIsProvingGround = isProvingGround;
+			return true;
+		}
+
+		if (isProvingGround)
+		{
+			return false;
+		}
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+		if (this->lastMissionFileName != xwaMissionFileName)
+		{
+			this->lastMissionFileName = xwaMissionFileName;
+			return true;
+		}
+
+		const std::string ship = GetCommandShipLstLine();
+		if (this->lastCommandShip != ship)
+		{
+			this->lastCommandShip = ship;
+			return true;
+		}
+
+		return false;
+	}
+
+	bool isInit = false;
+	bool lastIsProvingGround = false;
+	std::string lastMissionFileName;
+	std::string lastCommandShip;
+};
+
+CustomFileLinesHangarObjects g_hangarObjects;
+
 bool g_isHangarFloorInverted = false;
 
 void ReadIsHangarFloorInverted()
 {
-	const auto lines = GetCustomFileLines("HangarObjects");
-	const int isHangarFloorInverted = GetFileKeyValueInt(lines, "IsHangarFloorInverted");
+	const int isHangarFloorInverted = g_hangarObjects.GetIsHangarFloorInverted();
 
 	g_isHangarFloorInverted = isHangarFloorInverted != 0;
 }
@@ -509,7 +681,7 @@ int HangarOptLoadHook(int* params)
 		opt = argOpt;
 	}
 
-	const auto lines = GetCustomFileLines("HangarObjects");
+	const auto lines = g_hangarObjects.GetLines();
 	const std::string value = GetFileKeyValue(lines, opt);
 
 	if (!value.empty())
@@ -770,10 +942,9 @@ int HangarCameraPositionHook(int* params)
 			const S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
 			int& V0x068BCC0 = *(int*)0x068BCC0;
 
-			const auto lines = GetCustomFileLines("HangarObjects");
-			int value = GetFileKeyValueInt(lines, "LoadDroids", 1);
+			bool value = g_hangarObjects.GetLoadDroids();
 
-			if (value == 1)
+			if (value)
 			{
 				V0x068BCC0 = V0x09C6780[0].ObjectIndex;
 
@@ -805,10 +976,9 @@ int HangarCameraPositionHook(int* params)
 			const S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
 			int& V0x068BCC0 = *(int*)0x068BCC0;
 
-			const auto lines = GetCustomFileLines("HangarObjects");
-			int value = GetFileKeyValueInt(lines, "LoadDroids", 1);
+			bool value = g_hangarObjects.GetLoadDroids();
 
-			if (value == 1)
+			if (value)
 			{
 				V0x068BCC0 = V0x09C6780[1].ObjectIndex;
 
@@ -1206,17 +1376,16 @@ int HangarLoadShuttleHook(int* params)
 	const unsigned short a4 = 0xA880;
 	const unsigned short a5 = 0;
 
-	const auto lines = GetCustomFileLines("HangarObjects");
-	const int value = GetFileKeyValueInt(lines, "LoadShuttle", 1);
-	const unsigned short shuttleModelIndex = (unsigned short)GetFileKeyValueInt(lines, "ShuttleModelIndex");
-	const int shuttleMarkings = GetFileKeyValueInt(lines, "ShuttleMarkings");
+	const bool value = g_hangarObjects.GetLoadShuttle();
+	const unsigned short shuttleModelIndex = g_hangarObjects.GetShuttleModelIndex();
+	const int shuttleMarkings = g_hangarObjects.GetShuttleMarkings();
 
 	if (shuttleModelIndex != 0)
 	{
 		a0 = shuttleModelIndex;
 	}
 
-	if (value == 1)
+	if (value)
 	{
 		short objectIndex = AddObject(a0, a1, a2, a3, a4, a5);
 
@@ -1234,10 +1403,9 @@ int HangarShuttleUpdateHook(int* params)
 
 	const int a0 = params[0];
 
-	const auto lines = GetCustomFileLines("HangarObjects");
-	const int value = GetFileKeyValueInt(lines, "LoadShuttle", 1);
+	const bool value = g_hangarObjects.GetLoadShuttle();
 
-	if (value == 1)
+	if (value)
 	{
 		UpdateShuttle(a0);
 	}
@@ -1263,10 +1431,9 @@ int HangarShuttleReenterPositionHook(int* params)
 	xwaObjects[hangarPlayerObjectIndex].m15 = 0;
 	xwaObjects[hangarPlayerObjectIndex].m17 = 0;
 
-	const auto lines = GetCustomFileLines("HangarObjects");
-	const int value = GetFileKeyValueInt(lines, "LoadShuttle", 1);
+	const bool value = g_hangarObjects.GetLoadShuttle();
 
-	if (value == 1)
+	if (value)
 	{
 		positionX += 0x467;
 		positionY += 0x2328;
@@ -1285,10 +1452,9 @@ int HangarShuttleOptReadInfosHook(int* params)
 	const auto CockpitOptReadInfos = (void(*)())0x004314B0;
 	const auto ExteriorOptReadInfos = (void(*)())0x00431960;
 
-	const auto lines = GetCustomFileLines("HangarObjects");
-	const int value = GetFileKeyValueInt(lines, "LoadShuttle", 1);
+	const bool value = g_hangarObjects.GetLoadShuttle();
 
-	if (value == 1)
+	if (value)
 	{
 		CockpitOptReadInfos();
 		ExteriorOptReadInfos();
@@ -1304,10 +1470,9 @@ int HangarLoadDroidsHook(int* params)
 	int& V0x068BC10 = *(int*)0x068BC10;
 	S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
 
-	const auto lines = GetCustomFileLines("HangarObjects");
-	const int value = GetFileKeyValueInt(lines, "LoadDroids", 1);
+	const bool value = g_hangarObjects.GetLoadDroids();
 
-	if (value == 1)
+	if (value)
 	{
 		// ModelIndex_311_1_33_HangarDroid
 		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(311, 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
@@ -1333,9 +1498,8 @@ int HangarLoadHangarRoofCraneHook(int* params)
 {
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 
-	const auto lines = GetCustomFileLines("HangarObjects");
-	const int positionY = GetFileKeyValueInt(lines, "HangarRoofCranePositionY", 786);
-	const int positionZ = GetFileKeyValueInt(lines, "HangarRoofCranePositionZ", -282);
+	const int positionY = g_hangarObjects.GetHangarRoofCranePositionY();
+	const int positionZ = g_hangarObjects.GetHangarRoofCranePositionZ();
 
 	// ModelIndex_316_1_38_HangarRoofCrane
 	return AddObject(316, -1400, positionY, positionZ, 0, 0);
@@ -1555,8 +1719,7 @@ int SelectHangarTypeHook(int* params)
 {
 	// apply to family mission type
 
-	const auto lines = GetFileLines("hook_hangars.cfg");
-	const auto mode = GetFileKeyValue(lines, "SelectionMode");
+	const auto mode = g_config.SelectionMode;
 	const auto missionDirectoryId = *(int*)0x0AE2A8A;
 	const auto missionDescriptionId = ((int*)0x0AE2A8E)[missionDirectoryId];
 
@@ -1582,8 +1745,7 @@ int SelectHangarInsideAnimation(int* params)
 {
 	const unsigned short modelIndex = (unsigned short)params[0];
 
-	const auto lines = GetFileLines("hook_hangars.cfg");
-	const auto mode = GetFileKeyValue(lines, "SelectionMode");
+	const auto mode = g_config.SelectionMode;
 
 	bool inside;
 
@@ -1604,8 +1766,7 @@ int SelectHangarModelIndex(int* params)
 {
 	const unsigned short modelIndex = (unsigned short)params[0];
 
-	const auto lines = GetFileLines("hook_hangars.cfg");
-	const auto mode = GetFileKeyValue(lines, "SelectionMode");
+	const auto mode = g_config.SelectionMode;
 
 	bool isFamilyBase;
 
@@ -1773,7 +1934,7 @@ int HangarLaunchAnimation2Hook(int* params)
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
 
-	const int elevation = 0xF7;
+	const int elevation = 0xF7 + g_hangarObjects.GetPlayerAnimationElevation();
 
 	int ret;
 
@@ -1867,7 +2028,8 @@ int HangarReenterInitPositionZHook(int* params)
 	ReadIsHangarFloorInverted();
 
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
-	const int elevation = 0x223;
+
+	const int elevation = 0x223 + g_hangarObjects.GetPlayerAnimationElevation();
 
 	int positionZ;
 
@@ -1890,7 +2052,7 @@ int HangarReenterAnimation51Hook(int* params)
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
 
-	const int elevation = 0x93;
+	const int elevation = 0x93 + g_hangarObjects.GetPlayerAnimationElevation();
 
 	int ret;
 
@@ -2052,8 +2214,7 @@ int HangarShuttleLaunchReenterAnimationsHook(int* params)
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	XwaObject* object = &xwaObjects[s_V0x068BBC8->ObjectIndex];
 
-	const auto lines = GetCustomFileLines("HangarObjects");
-	std::string value = GetFileKeyValue(lines, "ShuttleAnimation");
+	std::string value = g_hangarObjects.GetShuttleAnimation();
 
 	object->m17 += A4 * 20;
 
@@ -2090,8 +2251,7 @@ int HangarShuttleLaunchReenterAnimation3Hook(int* params)
 	const int hangarObjectIndex = *(int*)0x068BCC4;
 	int positionY = xwaObjects[hangarObjectIndex].PositionY;
 
-	const auto lines = GetCustomFileLines("HangarObjects");
-	int value = GetFileKeyValueInt(lines, "ShuttleAnimationStraightLine", 0);
+	int value = g_hangarObjects.GetShuttleAnimationStraightLine();
 
 	offset = positionY + value;
 
@@ -2141,9 +2301,20 @@ int HangarDisableShadowWhenInvertedHook(int* params)
 
 	const auto L004836F0 = (void(*)(int))0x004836F0;
 
-	if (!g_isHangarFloorInverted)
+	int& s_XwaOptCurrentLodDistance = *(int*)0x007D4F8C;
+
+	if (g_config.DrawShadows && !g_isHangarFloorInverted)
 	{
+		int lodDistance = s_XwaOptCurrentLodDistance;
+
+		if (g_config.ShadowLod)
+		{
+			s_XwaOptCurrentLodDistance = 0x7fffffff;
+		}
+
 		L004836F0(A4);
+
+		s_XwaOptCurrentLodDistance = lodDistance;
 	}
 
 	return 0;

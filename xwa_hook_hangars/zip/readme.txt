@@ -239,6 +239,7 @@ To set the shuttle straight line animation length, set "ShuttleAnimationStraight
 To not load the droids, set "LoadDroids = 0".
 To set the Hangar Roof Crane position, set "HangarRoofCranePositionY = value Y" and "HangarRoofCranePositionZ = value Z". The values are integers. The default value for HangarRoofCranePositionY is 786. The default value for HangarRoofCranePositionZ is -282.
 To invert the hangar floor, set "IsHangarFloorInverted = 1". When set to 0, the floor is below the player craft. When set to 1, the floor is above the player craft.
+To set the elevation delta of the player craft animation, set "PlayerAnimationElevation = value". value is an integer. The default value is 0.
 See "HangarObjects.txt".
 
 Apply to hangar:
