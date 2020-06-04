@@ -160,7 +160,7 @@ A3B4465B00              mov dword ptr [005B46B4], eax
 C3                      ret
 90                      nop
 
-C705B4465B0000000042    mov dword ptr [005B46B4], 42000000
+C705B4465B0000008042    mov dword ptr [005B46B4], 42800000
 C3                      ret
 
 
@@ -168,5 +168,5 @@ C3                      ret
 C705B4465B0000000045    mov dword ptr [005B46B4], 45000000
 C3                      ret
 
-C705B4465B0000000042    mov dword ptr [005B46B4], 42000000
+C705B4465B0000008042    mov dword ptr [005B46B4], 42800000
 C3                      ret

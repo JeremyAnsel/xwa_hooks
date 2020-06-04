@@ -90,8 +90,8 @@ static const HookPatchItem g_generateSpecRciPatch[] =
 
 static const HookPatchItem g_fixDepthBufferBugPatch[] =
 {
-	{ 0x0415C0, "8B442404A3B4465B00C390", "C705B4465B0000000042C3" },
-	{ 0x0415D0, "C705B4465B0000000045C3", "C705B4465B0000000042C3" },
+	{ 0x0415C0, "8B442404A3B4465B00C390", "C705B4465B0000008042C3" },
+	{ 0x0415D0, "C705B4465B0000000045C3", "C705B4465B0000008042C3" },
 };
 
 static const HookPatch g_patches[] =
