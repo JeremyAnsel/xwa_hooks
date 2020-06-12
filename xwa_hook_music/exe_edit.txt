@@ -1,0 +1,132 @@
+
+; L00592A19
+; timeSetEvent, skip loop
+:00592B44 - 0x191F44
+0F84C4000000            je 00592C0E
+
+90
+E9C4000000              jmp 00592C0E
+
+:00592C15 - 0x192015
+7504                    jne 00592C1B
+
+EB04                    jmp 00592C1B
+
+
+; L00592A19
+; s_V0x07B0F04->Play
+:00592C1B - 0x19201B
+6A01                    push 00000001
+6A00                    push 00000000
+6A00                    push 00000000
+A1040F7B00              mov eax, dword ptr [007B0F04]
+50                      push eax
+8B0D040F7B00            mov ecx, dword ptr [007B0F04]
+8B11                    mov edx, dword ptr [ecx]
+FF5230                  call [edx+30]
+
+9090
+9090
+9090
+9090909090
+90
+909090909090
+E8EE5E0100              call 005A8B20, 005A8B20 - 00592C32 = 00015EEE
+
+
+; L00592E4F
+; s_V0x07B0F04->Release
+:00592E52 - 0x192252
+C705080F7B0001000000    mov dword ptr [007B0F08], 00000001
+
+E8D95C0100              call 005A8B30, 005A8B30 - 00592E57 = 00015CD9
+9090909090
+
+
+; L0059305B
+; s_V0x07B0F04->GetCurrentPosition
+:00592D6A - 0x19216A
+E8EC020000              call 0059305B
+
+E8C15D0100              call 005A8B30, 005A8B30 - 00592D6F = 00015DC1
+
+
+; L00592C89
+; s_V0x07B0F04->Lock
+:00592DB8 - 0x1921B8
+6A00                    push 00000000
+68CC0E7B00              push 007B0ECC
+68240F7B00              push 007B0F24
+68F80E7B00              push 007B0EF8
+68200F7B00              push 007B0F20
+6800200000              push 00002000
+A114876000              mov eax, dword ptr [00608714]
+C1E00D                  shl eax, 0D
+50                      push eax
+8B0D040F7B00            mov ecx, dword ptr [007B0F04]
+51                      push ecx
+8B15040F7B00            mov edx, dword ptr [007B0F04]
+8B02                    mov eax, dword ptr [edx]
+FF502C                  call [eax+2C]
+
+9090
+9090909090
+9090909090
+9090909090
+9090909090
+9090909090
+9090909090
+909090
+90
+909090909090
+90
+909090909090
+E8425D0100              call 005A8B30, 005A8B30 - 00592DEE = 00015D42
+
+
+; L00592C89
+; s_V0x07B0F04->Unlock
+:00592D2C - 0x19212C
+8B0DCC0E7B00            mov ecx, dword ptr [007B0ECC]
+51                      push ecx
+8B15240F7B00            mov edx, dword ptr [007B0F24]
+52                      push edx
+A1F80E7B00              mov eax, dword ptr [007B0EF8]
+50                      push eax
+8B0D200F7B00            mov ecx, dword ptr [007B0F20]
+51                      push ecx
+8B15040F7B00            mov edx, dword ptr [007B0F04]
+52                      push edx
+A1040F7B00              mov eax, dword ptr [007B0F04]
+8B08                    mov ecx, dword ptr [eax]
+FF514C                  call [ecx+4C]
+
+909090909090
+90
+909090909090
+90
+9090909090
+90
+909090909090
+90
+909090909090
+90
+9090909090
+E8D85D0100              call 005A8B30, 005A8B30 - 00592D58 = 00015DD8
+
+
+; CoInitialize
+
+:0053DFDC - 0x13D3DC
+57                      push edi
+FF15D8925A00            Call dword ptr [005A92D8]
+
+E84FAB0600              call 005A8B30, 005A8B30 - 0053DFE1 = 0006AB4F
+9090
+
+:005A8884 - 0x1A7C84
+6A00                    push 00000000
+FF15D8925A00            Call dword ptr [005A92D8]
+
+E8A7020000              call 005A8B30, 005A8B30 - 005A8889 = 000002A7
+909090
