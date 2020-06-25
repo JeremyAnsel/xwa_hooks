@@ -150,3 +150,22 @@ E83FC91600              call 005A8B30, 005A8B30 - 0043C1F1 = 0016C93F
 5D                      pop ebp
 C3                      ret
 90909090                nop
+
+
+// Hyper sounds
+L004034D0
+
+:00403E6A - 0x00326A
+E821810300              call 0043BF90
+
+E8B14C1A00              call 005A8B20, 005A8B20 - 00403E6F = 001A4CB1
+
+:00403F53 - 0x003353
+7528                    jne 00403F7D
+
+9090                    nop
+
+:00403F75 - 0x003375
+E816800300              call 0043BF90
+
+E8A64B1A00              call 005A8B20, 005A8B20 - 00403F7A = 001A4BA6

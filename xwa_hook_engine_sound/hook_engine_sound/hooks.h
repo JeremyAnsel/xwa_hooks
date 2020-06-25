@@ -14,6 +14,9 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x43D875, WashSoundHook },
 
 	{ 0x43C1F1, WeaponSoundHook },
+
+	{ 0x403E6F, HyperStartSoundHook },
+	{ 0x403F7A, HyperZoomSoundHook },
 };
 
 static const HookPatchItem g_replaceMissionSoundsPatch[] =
@@ -40,9 +43,17 @@ static const HookPatchItem g_defineWeaponSoundsPatch[] =
 	{ 0x03B5DE, "8DB8E8FEFFFF83FF190F870801000033D28A972CC34300FF2495FCC24300", "8B56230FBF929500000050525551E83FC9160083C4105F5E5DC390909090" },
 };
 
+static const HookPatchItem g_hyperSoundsPatch[] =
+{
+	{ 0x00326A, "E821810300", "E8B14C1A00" },
+	{ 0x003353, "7528", "9090" },
+	{ 0x003375, "E816800300", "E8A64B1A00" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that replaces mission sounds", g_replaceMissionSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines engine sounds", g_defineEngineSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines weapon sounds", g_defineWeaponSoundsPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines hyper sounds", g_hyperSoundsPatch),
 };

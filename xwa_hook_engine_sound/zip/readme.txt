@@ -40,6 +40,11 @@ At offset 03CC6F, replace 3D89000000741A3D8A000000 with 50E8BBB216008BF858EB1B90
 # To call the hook that defines weapon sounds
 At offset 03B5DE, replace 8DB8E8FEFFFF83FF190F870801000033D28A972CC34300FF2495FCC24300 with 8B56230FBF929500000050525551E83FC9160083C4105F5E5DC390909090.
 
+# To call the hook that defines hyper sounds
+At offset 00326A, replace E821810300 with E8B14C1A00.
+At offset 003353, replace 7528 with 9090.
+At offset 003375, replace E816800300 with E8A64B1A00.
+
 
 *** Usage ***
 
@@ -219,6 +224,13 @@ other crafts
 
 For the tie fighters (TieFighter, TieInterceptor, TieBomber, TieAdvanced, TieDefender, TieBizarro, TieBigGun, TieWarheads, TieBomb, TieBooster), laser sounds are replaced with "EmpireLaserChChChhh.wav".
 For the Corellian transports (CorellianTransport2, FamilyTransport, MilleniumFalcon2), "LaserRebel" is replaced with "FalconLaser.wav" and "LaserRebelTurbo" is replaced with "FalconLaserTurbo.wav".
+
+To define which sound is played when entering hyperspace, set the "HyperSoundBehavior" value.
+A value of -1 means that the sound is based on the player Iff.
+A value of 0 means that the "HyperStartReb" sound is played.
+A value of 1 means that the "HyperStartImp" sound is played.
+A value of 2 means that the "HyperStartImp" and the "HyperZoomImp" sounds are played.
+
 
 See EmptySound.txt and Examples\*Sound.txt.
 

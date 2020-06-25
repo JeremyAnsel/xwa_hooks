@@ -55,6 +55,29 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+#pragma pack(push, 1)
+
+struct XwaObject
+{
+	char Unk0000[2];
+	unsigned short ModelIndex;
+	char Unk0004[35];
+};
+
+static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
+
+struct XwaPlayer
+{
+	int ObjectIndex;
+	char Unk0004[6];
+	short Iff;
+	char Unk000C[3011];
+};
+
+static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
+
+#pragma pack(pop)
+
 int GetEngineSoundTypeInterior(int modelIndex)
 {
 	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
@@ -300,6 +323,31 @@ std::string GetWeaponSoundBehavior(int modelIndex)
 	return behavior;
 }
 
+int GetHyperSoundBehavior(int modelIndex)
+{
+	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(path + "Sound.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(path + ".ini", "Sound");
+	}
+
+	int behavior;
+
+	if (lines.size())
+	{
+		behavior = GetFileKeyValueInt(lines, "HyperSoundBehavior", -1);
+	}
+	else
+	{
+		behavior = -1;
+	}
+
+	return behavior;
+}
+
 class ModelIndexSound
 {
 public:
@@ -367,11 +415,28 @@ public:
 		}
 	}
 
+	int GetHyperBehavior(int modelIndex)
+	{
+		auto it = this->_hyperBehavior.find(modelIndex);
+
+		if (it != this->_hyperBehavior.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetHyperSoundBehavior(modelIndex);
+			this->_hyperBehavior.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
 private:
 	std::map<int, int> _typeInterior;
 	std::map<int, int> _typeFlyBy;
 	std::map<int, int> _typeWash;
 	std::map<int, std::string> _weaponBehavior;
+	std::map<int, int> _hyperBehavior;
 };
 
 ModelIndexSound g_modelIndexSound;
@@ -924,6 +989,93 @@ int WeaponSoundHook(int* params)
 
 		break;
 	}
+	}
+
+	return 0;
+}
+
+int HyperStartSoundHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+	const int playerIndex = params[2];
+
+	const auto playSound = (int(*)(int, int, int))0x0043BF90;
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const short iff = XwaPlayers[playerIndex].Iff;
+	const int modelIndex = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].ModelIndex;
+
+	int behavior = g_modelIndexSound.GetHyperBehavior(modelIndex);
+
+	if (behavior == -1)
+	{
+		playSound(iff == 1 ? 0x73 : 0x76, 0xFFFF, playerIndex);
+	}
+	else
+	{
+		switch (behavior)
+		{
+		case 0:
+			// reb start
+			playSound(0x76, 0xFFFF, playerIndex);
+			break;
+
+		case 1:
+			// imp start
+			playSound(0x73, 0xFFFF, playerIndex);
+			break;
+
+		case 2:
+			// imp start + zoom
+			playSound(0x73, 0xFFFF, playerIndex);
+			break;
+		}
+	}
+
+	return 0;
+}
+
+int HyperZoomSoundHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+	const int playerIndex = params[2];
+
+	const auto playSound = (int(*)(int, int, int))0x0043BF90;
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const short iff = XwaPlayers[playerIndex].Iff;
+	const int modelIndex = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].ModelIndex;
+
+	int behavior = g_modelIndexSound.GetHyperBehavior(modelIndex);
+
+	if (behavior == -1)
+	{
+		if (iff == 1)
+		{
+			playSound(0x74, 0xFFFF, playerIndex);
+		}
+	}
+	else
+	{
+		switch (behavior)
+		{
+		case 0:
+			// reb start
+			break;
+
+		case 1:
+			// imp start
+			break;
+
+		case 2:
+			// imp start + zoom
+			playSound(0x74, 0xFFFF, playerIndex);
+			break;
+		}
 	}
 
 	return 0;

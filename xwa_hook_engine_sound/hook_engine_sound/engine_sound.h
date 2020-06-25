@@ -9,3 +9,6 @@ int LaunchSoundHook(int* params);
 int WashSoundHook(int* params);
 
 int WeaponSoundHook(int* params);
+
+int HyperStartSoundHook(int* params);
+int HyperZoomSoundHook(int* params);
