@@ -13,3 +13,24 @@ C20800                  ret 0008
 51                      push ecx
 
 C3                      ret
+
+
+:0050BA69 - 0x10AE69
+7E22                    jle 0050BA8D
+
+9090
+
+:0050BAAE - 0x10AEAE
+7E2F                    jle 0050BADF
+
+9090
+
+:0050BB00 - 0x10AF00
+7E28                    jle 0050BB2A
+
+9090
+
+:0050BB4B - 0x10AF4B
+7E3E                    jle 0050BB8B
+
+9090
