@@ -261,8 +261,8 @@ struct CraftData
 {
 	short m3C1;
 	short m3C5;
-	int m3C9;
-	int m3D1;
+	float m3C9;
+	float m3D1;
 };
 
 std::string GetFileNameWithoutExtension(const std::string& str)
@@ -984,10 +984,10 @@ int ComputeCraftAnglesHook(int* params)
 	CraftData& craftData = g_craftsData[craftIndex][turretIndex];
 	TurretData turretData = g_modelIndexTurrets.GetTurrets(modelIndex)[turretIndex];
 
-	craftData.m3C9 += (int)(s_XwaPlayers[playerIndex].XwaPlayer_m05B * 0.1f - craftData.m3C9 * 0.25f);
+	craftData.m3C9 += s_XwaPlayers[playerIndex].XwaPlayer_m05B * 0.1f - craftData.m3C9 * 0.25f;
 	craftData.m3C1 += (short)craftData.m3C9;
 
-	craftData.m3D1 += (int)(s_XwaPlayers[playerIndex].XwaPlayer_m059 * 0.1f - craftData.m3D1 * 0.25f);
+	craftData.m3D1 += s_XwaPlayers[playerIndex].XwaPlayer_m059 * 0.1f - craftData.m3D1 * 0.25f;
 	craftData.m3C5 += (short)craftData.m3D1;
 
 	if (craftData.m3C1 > turretData.ArcX)
