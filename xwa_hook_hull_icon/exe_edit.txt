@@ -52,3 +52,19 @@ E8E4D61300              call 005A8B30, 005A8B30 - 0046B44C = 0013D6E4
 83C404                  add esp, 00000004
 8BC8                    mov ecx, eax
 909090                  nop
+
+
+:004A062B - 0x09FA2B
+6681FEDE00              cmp si, 00DE
+771A                    ja 004A064C
+
+9090909090              nop
+9090                    nop
+
+:004A0638 - 0x09FA38
+668B0C75D89A5A00        mov cx, word ptr [2*esi+005A9AD8]
+
+56                      push esi
+E8E2841000              call 005A8B20, 005A8B20 - 004A063E = 001084E2
+59                      pop ecx
+90                      nop
