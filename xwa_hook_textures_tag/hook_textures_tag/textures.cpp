@@ -113,7 +113,14 @@ int OptReadHook(int* params)
 
 	g_currentOptFileName = fileName;
 
-	return OptRead(fileName, pVersion);
+	int result = OptRead(fileName, pVersion);
+
+	if (!result)
+	{
+		MessageBox(nullptr, (g_currentOptFileName + " was not found").c_str(), "OPT read", MB_OK | MB_ICONERROR);
+	}
+
+	return result;
 }
 
 int OptTextureColorHook(int* params)
