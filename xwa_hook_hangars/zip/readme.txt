@@ -383,4 +383,4 @@ Key 5 is related to the player model.
 
 *** Credits ***
 
-- J ©r ©my Ansel (JeremyaFr)
+- J√©r√©my Ansel (JeremyaFr)
