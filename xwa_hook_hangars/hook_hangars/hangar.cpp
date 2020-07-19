@@ -2,6 +2,8 @@
 #include "hangar.h"
 #include "config.h"
 #include <fstream>
+#include <map>
+#include <utility>
 
 class FlightModelsList
 {
@@ -99,7 +101,11 @@ static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24")
 
 struct XwaMobileObject
 {
-	char Unk0000[149];
+	char Unk0000[10];
+	int PositionX;
+	int PositionY;
+	int PositionZ;
+	char Unk0016[127];
 	unsigned short ModelIndex;
 	char Unk0097[2];
 	unsigned char Markings;
@@ -475,6 +481,30 @@ public:
 		return this->ShuttleMarkings;
 	}
 
+	int GetShuttlePositionX()
+	{
+		this->UpdateIfChanged();
+		return this->ShuttlePositionX;
+	}
+
+	int GetShuttlePositionY()
+	{
+		this->UpdateIfChanged();
+		return this->ShuttlePositionY;
+	}
+
+	int GetShuttlePositionZ()
+	{
+		this->UpdateIfChanged();
+		return this->ShuttlePositionZ;
+	}
+
+	bool GetIsShuttleFloorInverted()
+	{
+		this->UpdateIfChanged();
+		return this->IsShuttleFloorInverted;
+	}
+
 	std::string GetShuttleAnimation()
 	{
 		this->UpdateIfChanged();
@@ -491,6 +521,18 @@ public:
 	{
 		this->UpdateIfChanged();
 		return this->LoadDroids;
+	}
+
+	int GetDroidsPositionZ()
+	{
+		this->UpdateIfChanged();
+		return this->DroidsPositionZ;
+	}
+
+	bool GetIsDroidsFloorInverted()
+	{
+		this->UpdateIfChanged();
+		return this->IsDroidsFloorInverted;
 	}
 
 	int GetHangarRoofCranePositionY()
@@ -527,9 +569,15 @@ private:
 			this->LoadShuttle = GetFileKeyValueInt(lines, "LoadShuttle", 1) == 1;
 			this->ShuttleModelIndex = (unsigned short)GetFileKeyValueInt(lines, "ShuttleModelIndex");
 			this->ShuttleMarkings = GetFileKeyValueInt(lines, "ShuttleMarkings");
+			this->ShuttlePositionX = GetFileKeyValueInt(lines, "ShuttlePositionX", 0x467);
+			this->ShuttlePositionY = GetFileKeyValueInt(lines, "ShuttlePositionY", 0x3BF);
+			this->ShuttlePositionZ = GetFileKeyValueInt(lines, "ShuttlePositionZ", 0);
+			this->IsShuttleFloorInverted = GetFileKeyValueInt(lines, "IsShuttleFloorInverted", 0) != 0;
 			this->ShuttleAnimation = GetFileKeyValue(lines, "ShuttleAnimation");
 			this->ShuttleAnimationStraightLine = GetFileKeyValueInt(lines, "ShuttleAnimationStraightLine", 0);
 			this->LoadDroids = GetFileKeyValueInt(lines, "LoadDroids", 1) == 1;
+			this->DroidsPositionZ = GetFileKeyValueInt(lines, "DroidsPositionZ", 0);
+			this->IsDroidsFloorInverted = GetFileKeyValueInt(lines, "IsDroidsFloorInverted", 0) != 0;
 			this->HangarRoofCranePositionY = GetFileKeyValueInt(lines, "HangarRoofCranePositionY", 786);
 			this->HangarRoofCranePositionZ = GetFileKeyValueInt(lines, "HangarRoofCranePositionZ", -282);
 			this->IsHangarFloorInverted = GetFileKeyValueInt(lines, "IsHangarFloorInverted", 0) != 0;
@@ -541,9 +589,15 @@ private:
 	bool LoadShuttle;
 	unsigned short ShuttleModelIndex;
 	int ShuttleMarkings;
+	int ShuttlePositionX;
+	int ShuttlePositionY;
+	int ShuttlePositionZ;
+	bool IsShuttleFloorInverted;
 	std::string ShuttleAnimation;
 	int ShuttleAnimationStraightLine;
 	bool LoadDroids;
+	int DroidsPositionZ;
+	bool IsDroidsFloorInverted;
 	int HangarRoofCranePositionY;
 	int HangarRoofCranePositionZ;
 	bool IsHangarFloorInverted;
@@ -603,12 +657,12 @@ private:
 CustomFileLinesHangarObjects g_hangarObjects;
 
 bool g_isHangarFloorInverted = false;
+bool g_isShuttleFloorInverted = false;
 
 void ReadIsHangarFloorInverted()
 {
-	const int isHangarFloorInverted = g_hangarObjects.GetIsHangarFloorInverted();
-
-	g_isHangarFloorInverted = isHangarFloorInverted != 0;
+	g_isHangarFloorInverted = g_hangarObjects.GetIsHangarFloorInverted();
+	g_isShuttleFloorInverted = g_hangarObjects.GetIsShuttleFloorInverted();
 }
 
 int GetCraftElevation(unsigned short modelIndex, bool isHangarFloorInverted)
@@ -661,6 +715,48 @@ int GetCraftElevation(unsigned short modelIndex, bool isHangarFloorInverted)
 
 	return elevation;
 }
+
+class ModelIndexHangar
+{
+public:
+	int GetClosedSFoilsElevation(int modelIndex)
+	{
+		auto it = this->_closedSFoilsElevation.find(modelIndex);
+
+		if (it != this->_closedSFoilsElevation.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetCraftElevation(modelIndex, false);
+			this->_closedSFoilsElevation.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+	int GetClosedSFoilsElevationInverted(int modelIndex)
+	{
+		auto it = this->_closedSFoilsElevationInverted.find(modelIndex);
+
+		if (it != this->_closedSFoilsElevationInverted.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetCraftElevation(modelIndex, true);
+			this->_closedSFoilsElevationInverted.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+private:
+	std::map<int, int> _closedSFoilsElevation;
+	std::map<int, int> _closedSFoilsElevationInverted;
+};
+
+ModelIndexHangar g_modelIndexHangar;
 
 int HangarOptLoadHook(int* params)
 {
@@ -1370,8 +1466,8 @@ int HangarLoadShuttleHook(int* params)
 	//const unsigned short a5 = (unsigned short)params[5];
 
 	unsigned short a0 = 0x32;
-	const int a1 = 0x467;
-	const int a2 = 0x3BF;
+	const int a1 = g_hangarObjects.GetShuttlePositionX();
+	const int a2 = g_hangarObjects.GetShuttlePositionY();
 	const int a3 = 0x7FFFFFFF;
 	const unsigned short a4 = 0xA880;
 	const unsigned short a5 = 0;
@@ -1379,6 +1475,7 @@ int HangarLoadShuttleHook(int* params)
 	const bool value = g_hangarObjects.GetLoadShuttle();
 	const unsigned short shuttleModelIndex = g_hangarObjects.GetShuttleModelIndex();
 	const int shuttleMarkings = g_hangarObjects.GetShuttleMarkings();
+	const int shuttlePositionZ = g_hangarObjects.GetShuttlePositionZ();
 
 	if (shuttleModelIndex != 0)
 	{
@@ -1387,9 +1484,17 @@ int HangarLoadShuttleHook(int* params)
 
 	if (value)
 	{
+		bool isHangarFloorInverted = g_isHangarFloorInverted;
+		g_isHangarFloorInverted = g_isShuttleFloorInverted;
+
 		short objectIndex = AddObject(a0, a1, a2, a3, a4, a5);
 
+		g_isHangarFloorInverted = isHangarFloorInverted;
+
 		xwaObjects[objectIndex].pMobileObject->Markings = shuttleMarkings;
+
+		xwaObjects[objectIndex].PositionZ += shuttlePositionZ;
+		xwaObjects[objectIndex].pMobileObject->PositionZ = xwaObjects[objectIndex].PositionZ;
 
 		return objectIndex;
 	}
@@ -1415,6 +1520,8 @@ int HangarShuttleUpdateHook(int* params)
 
 int HangarShuttleReenterPositionHook(int* params)
 {
+	ReadIsHangarFloorInverted();
+
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
 	int& positionX = xwaObjects[hangarPlayerObjectIndex].PositionX;
@@ -1432,12 +1539,25 @@ int HangarShuttleReenterPositionHook(int* params)
 	xwaObjects[hangarPlayerObjectIndex].m17 = 0;
 
 	const bool value = g_hangarObjects.GetLoadShuttle();
+	const int shuttlePositionX = g_hangarObjects.GetShuttlePositionX();
+	const int shuttlePositionZ = g_hangarObjects.GetShuttlePositionZ();
+	const int shuttleAnimationStraightLine = g_hangarObjects.GetShuttleAnimationStraightLine();
 
 	if (value)
 	{
-		positionX += 0x467;
-		positionY += 0x2328;
-		positionZ += 0x161;
+		positionX += shuttlePositionX;
+		positionY += 0x2328 + shuttleAnimationStraightLine;
+
+		if (!g_isShuttleFloorInverted)
+		{
+			positionZ += 0x161;
+		}
+		else
+		{
+			positionZ -= 0x161;
+		}
+
+		positionZ += shuttlePositionZ;
 
 		xwaObjects[hangarPlayerObjectIndex].m13 = -0x8000;
 		xwaObjects[hangarPlayerObjectIndex].m15 = 0x4000;
@@ -1463,6 +1583,14 @@ int HangarShuttleOptReadInfosHook(int* params)
 	return 0;
 }
 
+void HangarLoadDroidsSetPositionZ(int objectIndex, int positionZ)
+{
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+
+	xwaObjects[objectIndex].PositionZ += positionZ;
+	xwaObjects[objectIndex].pMobileObject->PositionZ = xwaObjects[objectIndex].PositionZ;
+}
+
 int HangarLoadDroidsHook(int* params)
 {
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
@@ -1471,15 +1599,20 @@ int HangarLoadDroidsHook(int* params)
 	S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
 
 	const bool value = g_hangarObjects.GetLoadDroids();
+	const int droidsPositionZ = g_hangarObjects.GetDroidsPositionZ();
 
 	if (value)
 	{
+		bool isHangarFloorInverted = g_isHangarFloorInverted;
+		g_isHangarFloorInverted = g_hangarObjects.GetIsDroidsFloorInverted();
+
 		// ModelIndex_311_1_33_HangarDroid
 		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(311, 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
 		V0x09C6780[V0x068BC10].m04 = 0;
 		V0x09C6780[V0x068BC10].m26 = 0;
 		V0x09C6780[V0x068BC10].m22 = 0;
 		V0x09C6780[V0x068BC10].m08 = 0;
+		HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, droidsPositionZ);
 		V0x068BC10++;
 
 		// ModelIndex_312_1_34_HangarDroid2
@@ -1488,7 +1621,10 @@ int HangarLoadDroidsHook(int* params)
 		V0x09C6780[V0x068BC10].m26 = 0;
 		V0x09C6780[V0x068BC10].m22 = 0;
 		V0x09C6780[V0x068BC10].m08 = 0;
+		HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, droidsPositionZ);
 		V0x068BC10++;
+
+		g_isHangarFloorInverted = isHangarFloorInverted;
 	}
 
 	return 0;
@@ -1785,36 +1921,9 @@ int SelectHangarModelIndex(int* params)
 
 int CraftElevationHook(int* params)
 {
-	const auto ModelGetSizeZ = (int(*)(unsigned int))0x0485820;
-
 	const unsigned short modelIndex = (unsigned short)params[0];
 
-	const std::string optSize = g_flightModelsList.GetLstLine(modelIndex);
-	auto optSizeLines = GetFileLines(optSize + "Size.txt");
-
-	if (!optSizeLines.size())
-	{
-		optSizeLines = GetFileLines(optSize + ".ini", "Size");
-	}
-
-	if (optSizeLines.size())
-	{
-		return GetFileKeyValueInt(optSizeLines, "ClosedSFoilsElevation");
-	}
-	else
-	{
-		switch (modelIndex)
-		{
-		case 4: // BWing
-			return 0x32;
-
-		case 50: // Shuttle
-			return 0x8A;
-
-		default:
-			return ModelGetSizeZ(modelIndex) / 2;
-		}
-	}
+	return g_modelIndexHangar.GetClosedSFoilsElevation(modelIndex);
 }
 
 int CraftSelectionMissionHook(int* params)
@@ -1959,14 +2068,14 @@ int HangarObjectsElevationHook(int* params)
 	int& positionZ = xwaObjects[objectIndex].PositionZ;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
 
-	int objectElevation = GetCraftElevation(xwaObjects[objectIndex].ModelIndex, g_isHangarFloorInverted);
-
 	if (!g_isHangarFloorInverted)
 	{
+		int objectElevation = g_modelIndexHangar.GetClosedSFoilsElevation(xwaObjects[objectIndex].ModelIndex);
 		positionZ = hangarFloorPositionZ + objectElevation;
 	}
 	else
 	{
+		int objectElevation = g_modelIndexHangar.GetClosedSFoilsElevationInverted(xwaObjects[objectIndex].ModelIndex);
 		positionZ = hangarFloorPositionZ - objectElevation;
 	}
 
@@ -1984,14 +2093,14 @@ int HangarFloorElevationHook(int* params)
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	int& hangarFloorPositionZ = *(int*)0x068BC38;
 
-	int elevation = GetCraftElevation(xwaObjects[hangarPlayerObjectIndex].ModelIndex, g_isHangarFloorInverted);
-
 	if (!g_isHangarFloorInverted)
 	{
+		int elevation = g_modelIndexHangar.GetClosedSFoilsElevation(xwaObjects[hangarPlayerObjectIndex].ModelIndex);
 		hangarFloorPositionZ = positionZ - elevation;
 	}
 	else
 	{
+		int elevation = g_modelIndexHangar.GetClosedSFoilsElevationInverted(xwaObjects[hangarPlayerObjectIndex].ModelIndex);
 		hangarFloorPositionZ = positionZ + elevation;
 	}
 
@@ -2009,14 +2118,14 @@ int HangarPlayerCraftElevationHook(int* params)
 	const int currentPlayerId = *(int*)0x08C1CC8;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
 
-	int elevation = GetCraftElevation(xwaObjects[xwaPlayers[currentPlayerId].ObjectIndex].ModelIndex, g_isHangarFloorInverted);
-
 	if (!g_isHangarFloorInverted)
 	{
+		int elevation = g_modelIndexHangar.GetClosedSFoilsElevation(xwaObjects[xwaPlayers[currentPlayerId].ObjectIndex].ModelIndex);
 		xwaObjects[xwaPlayers[currentPlayerId].ObjectIndex].PositionZ = hangarFloorPositionZ + elevation;
 	}
 	else
 	{
+		int elevation = g_modelIndexHangar.GetClosedSFoilsElevationInverted(xwaObjects[xwaPlayers[currentPlayerId].ObjectIndex].ModelIndex);
 		xwaObjects[xwaPlayers[currentPlayerId].ObjectIndex].PositionZ = hangarFloorPositionZ - elevation;
 	}
 
@@ -2077,16 +2186,16 @@ int HangarReenterAnimation52Hook(int* params)
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
 
-	int elevation = GetCraftElevation(xwaObjects[hangarPlayerObjectIndex].ModelIndex, g_isHangarFloorInverted);
-
 	int ret;
 
 	if (!g_isHangarFloorInverted)
 	{
+		int elevation = g_modelIndexHangar.GetClosedSFoilsElevation(xwaObjects[hangarPlayerObjectIndex].ModelIndex);
 		ret = positionZ > hangarFloorPositionZ + elevation ? 1 : 0;
 	}
 	else
 	{
+		int elevation = g_modelIndexHangar.GetClosedSFoilsElevationInverted(xwaObjects[hangarPlayerObjectIndex].ModelIndex);
 		ret = positionZ < hangarFloorPositionZ - elevation ? 1 : 0;
 	}
 
@@ -2123,10 +2232,10 @@ int HangarReenterAnimation6Hook(int* params)
 	int& positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
 
-	int elevation = GetCraftElevation(xwaObjects[hangarPlayerObjectIndex].ModelIndex, g_isHangarFloorInverted);
-
 	if (!g_isHangarFloorInverted)
 	{
+		int elevation = g_modelIndexHangar.GetClosedSFoilsElevation(xwaObjects[hangarPlayerObjectIndex].ModelIndex);
+
 		if (positionZ > hangarFloorPositionZ + elevation)
 		{
 			positionZ -= esp1C;
@@ -2134,6 +2243,8 @@ int HangarReenterAnimation6Hook(int* params)
 	}
 	else
 	{
+		int elevation = g_modelIndexHangar.GetClosedSFoilsElevationInverted(xwaObjects[hangarPlayerObjectIndex].ModelIndex);
+
 		if (positionZ < hangarFloorPositionZ - elevation)
 		{
 			positionZ += esp1C;
@@ -2172,16 +2283,16 @@ int HangarReenterAnimation72Hook(int* params)
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
 
-	int elevation = GetCraftElevation(xwaObjects[hangarPlayerObjectIndex].ModelIndex, g_isHangarFloorInverted);
-
 	int ret;
 
 	if (!g_isHangarFloorInverted)
 	{
+		int elevation = g_modelIndexHangar.GetClosedSFoilsElevation(xwaObjects[hangarPlayerObjectIndex].ModelIndex);
 		ret = positionZ <= hangarFloorPositionZ + elevation ? 1 : 0;
 	}
 	else
 	{
+		int elevation = g_modelIndexHangar.GetClosedSFoilsElevationInverted(xwaObjects[hangarPlayerObjectIndex].ModelIndex);
 		ret = positionZ >= hangarFloorPositionZ - elevation ? 1 : 0;
 	}
 
@@ -2192,21 +2303,21 @@ int HangarReenterAnimation73Hook(int* params)
 {
 	const int modelIndex = params[0];
 
-	//const auto GetCraftElevation = (int(*)(int))0x00462640;
+	int elevation;
 
-	//int elevation = GetCraftElevation(modelIndex);
-
-	int elevation = GetCraftElevation(modelIndex, g_isHangarFloorInverted);
-
-	if (g_isHangarFloorInverted)
+	if (!g_isHangarFloorInverted)
 	{
-		elevation = -elevation;
+		elevation = g_modelIndexHangar.GetClosedSFoilsElevation(modelIndex);
+	}
+	else
+	{
+		elevation = -g_modelIndexHangar.GetClosedSFoilsElevationInverted(modelIndex);
 	}
 
 	return elevation;
 }
 
-int HangarShuttleLaunchReenterAnimationsHook(int* params)
+int HangarShuttleLaunchReenterAnimations4And6Hook(int* params)
 {
 	const int A4 = params[0];
 
@@ -2243,7 +2354,7 @@ int HangarShuttleLaunchReenterAnimationsHook(int* params)
 	return 0;
 }
 
-int HangarShuttleLaunchReenterAnimation3Hook(int* params)
+int HangarShuttleLaunchReenterAnimation3CheckHook(int* params)
 {
 	int& offset = params[0];
 
@@ -2258,15 +2369,142 @@ int HangarShuttleLaunchReenterAnimation3Hook(int* params)
 	return *(int*)0x07B33C4;
 }
 
-int HangarShuttleLaunchReenterAnimation9Hook(int* params)
+int HangarShuttleLaunchReenterAnimation1UpdateHook(int* params)
+{
+	const int A4 = params[0];
+
+	const S0x09C6780* s_V0x068BBC8 = (S0x09C6780*)0x068BBC8;
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	XwaObject* object = &xwaObjects[s_V0x068BBC8->ObjectIndex];
+
+	if (!g_isShuttleFloorInverted)
+	{
+		object->PositionZ += A4 * 2;
+	}
+	else
+	{
+		object->PositionZ -= A4 * 2;
+	}
+
+	return 0;
+}
+
+int HangarShuttleLaunchReenterAnimation1CheckHook(int* params)
 {
 	const S0x09C6780* s_V0x068BBC8 = (S0x09C6780*)0x068BBC8;
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	XwaObject* object = &xwaObjects[s_V0x068BBC8->ObjectIndex];
 
-	int elevation = GetCraftElevation(object->ModelIndex, false);
+	int shuttlePositionZ = g_hangarObjects.GetShuttlePositionZ();
 
-	return *(int*)0x068BC38 + elevation;
+	int positionZ = *(int*)0x068BC38;
+
+	if (!g_isShuttleFloorInverted)
+	{
+		positionZ += 0x161;
+	}
+	else
+	{
+		positionZ -= 0x161;
+	}
+
+	positionZ += shuttlePositionZ;
+
+	int ret;
+
+	if (!g_isShuttleFloorInverted)
+	{
+		ret = object->PositionZ > positionZ ? 0 : 1;
+	}
+	else
+	{
+		ret = object->PositionZ < positionZ ? 0 : 1;
+	}
+
+	return ret;
+}
+
+int HangarShuttleLaunchReenterAnimation7And10CheckHook(int* params)
+{
+	const int A4 = params[0];
+	int& offset = params[0];
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	int positionY = g_hangarObjects.GetShuttlePositionY();
+
+	offset = xwaObjects[A4].PositionY + positionY;
+
+	return 0;
+}
+
+int HangarShuttleLaunchReenterAnimation7And10SetHook(int* params)
+{
+	const S0x09C6780* s_V0x068BBC8 = (S0x09C6780*)0x068BBC8;
+	const int hangarObjectIndex = *(int*)0x068BCC4;
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+
+	xwaObjects[s_V0x068BBC8->ObjectIndex].PositionX = xwaObjects[hangarObjectIndex].PositionX + g_hangarObjects.GetShuttlePositionX();
+	xwaObjects[s_V0x068BBC8->ObjectIndex].PositionY = xwaObjects[hangarObjectIndex].PositionY + g_hangarObjects.GetShuttlePositionY();
+	xwaObjects[s_V0x068BBC8->ObjectIndex].m17 = 0;
+
+	return 0;
+}
+
+int HangarShuttleLaunchReenterAnimation9UpdateHook(int* params)
+{
+	const int A4 = params[0];
+
+	const S0x09C6780* s_V0x068BBC8 = (S0x09C6780*)0x068BBC8;
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	XwaObject* object = &xwaObjects[s_V0x068BBC8->ObjectIndex];
+
+	if (!g_isShuttleFloorInverted)
+	{
+		object->PositionZ -= A4 * 2;
+	}
+	else
+	{
+		object->PositionZ += A4 * 2;
+	}
+
+	return 0;
+}
+
+int HangarShuttleLaunchReenterAnimation9CheckHook(int* params)
+{
+	const S0x09C6780* s_V0x068BBC8 = (S0x09C6780*)0x068BBC8;
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	XwaObject* object = &xwaObjects[s_V0x068BBC8->ObjectIndex];
+
+	int shuttlePositionZ = g_hangarObjects.GetShuttlePositionZ();
+
+	int positionZ = *(int*)0x068BC38;
+
+	if (!g_isShuttleFloorInverted)
+	{
+		int elevation = g_modelIndexHangar.GetClosedSFoilsElevation(object->ModelIndex);
+		positionZ += elevation;
+	}
+	else
+	{
+		int elevation = g_modelIndexHangar.GetClosedSFoilsElevationInverted(object->ModelIndex);
+		positionZ -= elevation;
+	}
+
+	positionZ += shuttlePositionZ;
+
+	int ret;
+
+	if (!g_isShuttleFloorInverted)
+	{
+		ret = object->PositionZ <= positionZ ? 0 : 1;
+	}
+	else
+	{
+		ret = object->PositionZ >= positionZ ? 0 : 1;
+	}
+
+	return ret;
 }
 
 int HangarGetCraftIndexHook(int* params)

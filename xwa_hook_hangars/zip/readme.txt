@@ -133,7 +133,16 @@ At offset 05E598, replace 0FAFC301443507 with 53E8829914005B.
 At offset 05E76D, replace 0FAFC301443507 with 53E8AD9714005B.
 At offset 05E8E9, replace D80DF8955A00 with D80DD0955A00.
 At offset 05E4CF, replace A1C4337B008B4C010B with 51E85B9A1400599090.
+At offset 05E13C, replace 8D14098B0803CA8908 with 51E8DE9D1400599090.
+At offset 05E25F, replace 81C2610100003954300F0F8E870D0000 with E8CC9C14009085C090900F85870D0000.
+
+At offset 05E923, replace 7E03 with EB0F.
+At offset 05EAA6, replace 8B540A0B81C2BF030000 with 50E8749414005A909090.
+At offset 05EF69, replace 8B540A0B81C2BF030000 with 50E8B18F14005A909090.
+At offset 05EFB1, replace 66C74430170000 with E86A8F14009090.
+At offset 05EB99, replace F7D9D1E103D18910 with 51E8819314005990.
 At offset 05ECA1, replace 8B1538BC680081C28A000000 with 50E8899214008BD058909090.
+At offset 05ECAD, replace 3954300F0F8F3F030000 with 85D290900F853F030000.
 
 # To call the hook that gets the craft index
 At offset 0590BA, replace E871310800 with E871EE1400.
@@ -234,9 +243,15 @@ To remove an object, use an empty invisible opt.
 To not load the shuttle, set "LoadShuttle = 0".
 To set the shuttle model index, set "ShuttleModelIndex = value". value is an integer. The default value is 50 (Shuttle).
 To set the shuttle markings, set "ShuttleMarkings = value". value is an integer. The default value is 0.
+To set the shuttle x position, set "ShuttlePositionX = value". value is an integer. The default value is 1127.
+To set the shuttle y position, set "ShuttlePositionY = value". value is an integer. The default value is 959.
+To set the shuttle z position, set "ShuttlePositionZ = value". value is an integer. The default value is 0.
+To invert the hangar floor for the shuttle, set "IsShuttleFloorInverted = 1". When set to 0, the floor is below the player craft. When set to 1, the floor is above the player craft.
 To set the shuttle animation, set "ShuttleAnimation = value". value is "Right", "Top", or "Bottom". The default value is "Right".
 To set the shuttle straight line animation length, set "ShuttleAnimationStraightLine = value". value is an integer. The default value is 0.
 To not load the droids, set "LoadDroids = 0".
+To set the droids z position, set "DroidsPositionZ = value". value is an integer. The default value is 0.
+To invert the hangar floor for the droids, set "IsDroidsFloorInverted = 1". When set to 0, the floor is below the player craft. When set to 1, the floor is above the player craft.
 To set the Hangar Roof Crane position, set "HangarRoofCranePositionY = value Y" and "HangarRoofCranePositionZ = value Z". The values are integers. The default value for HangarRoofCranePositionY is 786. The default value for HangarRoofCranePositionZ is -282.
 To invert the hangar floor, set "IsHangarFloorInverted = 1". When set to 0, the floor is below the player craft. When set to 1, the floor is above the player craft.
 To set the elevation delta of the player craft animation, set "PlayerAnimationElevation = value". value is an integer. The default value is 0.
@@ -368,4 +383,4 @@ Key 5 is related to the player model.
 
 *** Credits ***
 
-- J√©r√©my Ansel (JeremyaFr)
+- J ©r ©my Ansel (JeremyaFr)

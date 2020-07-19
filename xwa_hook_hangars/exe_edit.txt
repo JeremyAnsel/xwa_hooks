@@ -485,7 +485,7 @@ E81ECB1400              call 005A8B30, 005A8B30 - 0045C012 = 0014CB1E
 
 
 ; from L0045EC70
-; hook for shuttle launch and re-enter animations
+; hook for shuttle launch and re-enter animations 4 and 6
 :0045F198 - 0x05E598
 0FAFC3                  imul eax, ebx
 01443507                add dword ptr [ebp+esi+07], eax
@@ -502,7 +502,7 @@ E882991400              call 005A8B20, 005A8B20 - 0045F19E = 00149982
 E8AD971400              call 005A8B20, 005A8B20 - 0045F373 = 001497AD
 5B                      pop ebx
 
-; hook for shuttle straight line animation
+; hook for shuttle straight line animation 3 check
 :0045F4E9 - 0x05E8E9
 D80DF8955A00            fmul dword ptr [005A95F8]
 
@@ -517,6 +517,72 @@ E85B9A1400              call 005A8B30, 005A8B30 - 0045F0D5 = 00149A5B
 59                      pop ecx
 9090                    nop
 
+; hook for shuttle animation 1 update
+:0045ED3C - 0x05E13C
+8D1409                  lea edx, dword ptr [ecx+ecx]
+8B08                    mov ecx, dword ptr [eax]
+03CA                    add ecx, edx
+8908                    mov dword ptr [eax], ecx
+
+51                      push ecx
+E8DE9D1400              call 005A8B20, 005A8B20 - 0045ED42 = 00149DDE
+59                      pop ecx
+9090                    nop
+
+; hook for shuttle animation 1 check
+:0045EE5F - 0x05E25F
+81C261010000            add edx, 00000161
+3954300F                cmp dword ptr [eax+esi+0F], edx
+0F8E870D0000            jle 0045FBF6
+
+E8CC9C1400              call 005A8B30, 005A8B30 - 0045EE64 = 00149CCC
+90                      nop
+85C0                    test eax, eax
+9090                    nop
+0F85870D0000            jne 0045FBF6
+
+; hook for shuttle animation 7 check
+:0045F523 - 0x05E923
+7E03                    jle 0045F528
+
+EB0F                    jmp 0045F534, 0045F534 - 0045F525 = 0F
+
+:0045F6A6 - 0x05EAA6
+8B540A0B                mov edx, dword ptr [edx+ecx+0B]
+81C2BF030000            add edx, 000003BF
+
+50                      push eax
+E874941400              call 005A8B20, 005A8B20 - 0045F6AC = 00149474
+5A                      pop edx
+909090                  nop
+
+:0045FB69 - 0x05EF69
+8B540A0B                mov edx, dword ptr [edx+ecx+0B]
+81C2BF030000            add edx, 000003BF
+
+50                      push eax
+E8B18F1400              call 005A8B20, 005A8B20 - 0045FB6F = 00148FB1
+5A                      pop edx
+909090                  nop
+
+:0045FBB1 - 0x05EFB1
+66C74430170000          mov [eax+esi+17], 0000
+
+E86A8F1400              call 005A8B20, 005A8B20 - 0045FBB6 = 00148F6A
+9090                    nop
+
+; hook for shuttle animation 9 update
+:0045F799 - 0x05EB99
+F7D9                    neg ecx
+D1E1                    shl ecx, 1
+03D1                    add edx, ecx
+8910                    mov dword ptr [eax], edx
+
+51                      push ecx
+E881931400              call 005A8B20, 005A8B20 - 0045F79F = 00149381
+59                      pop ecx
+90                      nop
+
 ; hook for shuttle animation 9
 :0045F8A1 - 0x05ECA1
 8B1538BC6800            mov edx, dword ptr [0068BC38]
@@ -528,6 +594,13 @@ E889921400              call 005A8B30, 005A8B30 - 0045F8A7 = 00149289
 58                      pop eax
 909090                  nop
 
+:0045F8AD - 0x05ECAD
+3954300F                cmp dword ptr [eax+esi+0F], edx
+0F8F3F030000            jg 0045FBF6
+
+85D2                    test edx, edx
+9090                    nop
+0F853F030000            jne 0045FBF6
 
 ; from L004598E0
 ; get craft index

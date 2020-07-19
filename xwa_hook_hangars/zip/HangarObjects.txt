@@ -1,9 +1,15 @@
 LoadShuttle = 1
 ShuttleModelIndex = 50
 ShuttleMarkings = 0
+ShuttlePositionX = 1127
+ShuttlePositionY = 959
+ShuttlePositionZ = 0
+IsShuttleFloorInverted = 0
 ShuttleAnimation = Right
 ShuttleAnimationStraightLine = 0
 LoadDroids = 1
+DroidsPositionZ = 0
+IsDroidsFloorInverted = 0
 HangarRoofCranePositionY = 786
 HangarRoofCranePositionZ = -282
 IsHangarFloorInverted = 0
