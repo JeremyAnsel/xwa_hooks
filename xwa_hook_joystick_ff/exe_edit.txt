@@ -34,3 +34,10 @@ C3                      ret
 7E3E                    jle 0050BB8B
 
 9090
+
+
+:0050B961 - 0x10AD61
+8915C4337700            mov dword ptr [007733C4], edx
+
+E8BAD10900              call 005A8B20, 005A8B20 - 0050B966 = 0009D1BA
+90

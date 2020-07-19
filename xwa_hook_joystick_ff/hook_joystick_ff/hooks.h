@@ -6,6 +6,7 @@
 static const HookFunction g_hookFunctions[] =
 {
 	{ 0x4355D5, JoystickEnumHook },
+	{ 0x50B966, JoystickSmallMovementHook },
 };
 
 static const HookPatchItem g_joystickEnumPatch[] =
@@ -16,10 +17,11 @@ static const HookPatchItem g_joystickEnumPatch[] =
 static const HookPatchItem g_joystickSmallMovementsPatch[] =
 {
 	{ 0x0338A0, "51", "C3" },
-	{ 0x10AE69, "7E22", "9090" },
-	{ 0x10AEAE, "7E2F", "9090" },
-	{ 0x10AF00, "7E28", "9090" },
-	{ 0x10AF4B, "7E3E", "9090" },
+	//{ 0x10AE69, "7E22", "9090" },
+	//{ 0x10AEAE, "7E2F", "9090" },
+	//{ 0x10AF00, "7E28", "9090" },
+	//{ 0x10AF4B, "7E3E", "9090" },
+	{ 0x10AD61, "8915C4337700", "E8BAD1090090" },
 };
 
 static const HookPatch g_patches[] =
