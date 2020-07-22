@@ -10,7 +10,12 @@ class Config
 public:
 	Config()
 	{
-		const auto lines = GetFileLines("hook_joystick_ff.cfg");
+		auto lines = GetFileLines("hooks.ini", "hook_joystick_ff");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_joystick_ff.cfg");
+		}
 
 		this->JoystickDeviceIndex = GetFileKeyValueInt(lines, "JoystickDeviceIndex", 0);
 		this->EnableSmallMovement = GetFileKeyValueInt(lines, "EnableSmallMovement", 1) != 0;

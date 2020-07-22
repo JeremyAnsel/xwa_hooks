@@ -10,7 +10,12 @@ class Config
 public:
 	Config()
 	{
-		const auto lines = GetFileLines("hook_d3d.cfg");
+		auto lines = GetFileLines("hooks.ini", "hook_d3d");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_d3d.cfg");
+		}
 
 		this->IsHookD3DEnabled = GetFileKeyValueInt(lines, "IsHookD3DEnabled", 1) != 0;
 	}

@@ -136,7 +136,7 @@ The default value is "1".
 See "EscortShuttleTurrets.txt".
 
 By default, the turrets lasers are unlimited. They can be made limited by setting "UnlimitedTurretLaser = 0".
-See "hook_mission_objects.cfg"
+See the "hook_mission_objects.cfg" file or the "hook_mission_objects" section of "hooks.ini".
 
 
 *** Credits ***

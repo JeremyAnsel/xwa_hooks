@@ -22,7 +22,12 @@ class Config
 public:
 	Config()
 	{
-		const auto lines = GetFileLines("hook_weapon_color.cfg");
+		auto lines = GetFileLines("hooks.ini", "hook_weapon_color");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_weapon_color.cfg");
+		}
 
 		this->WeaponSwitchBasedOnIff = GetFileKeyValueInt(lines, "WeaponSwitchBasedOnIff", 0) != 0;
 

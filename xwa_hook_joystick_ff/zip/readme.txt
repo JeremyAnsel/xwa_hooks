@@ -33,7 +33,7 @@ At offset 10AD61, replace 8915C4337700 with E8BAD1090090.
 
 *** Usage ***
 
-To select a joystick with force feedback, set JoystickDeviceIndex in "hook_joystick_ff.cfg".
+To configure the hook, use the "hook_joystick_ff.cfg" file or the "hook_joystick_ff" section of "hooks.ini".
 
 The format is:
 JoystickDeviceIndex = device index

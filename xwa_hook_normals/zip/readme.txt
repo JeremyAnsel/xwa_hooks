@@ -17,7 +17,7 @@ This dll requires:
 
 *** Setup ***
 
-Place hook_normals.dll next to xwingalliance.exe
+Place hook_normals.dll and hook_normals.cfg next to xwingalliance.exe
 
 
 *** Patch ***
@@ -37,6 +37,11 @@ At offset 4281B, replace E8100C0000 with E800571600.
 At offset 4285D, replace E88E190000 with E8BE561600.
 At offset 4289F, replace E85C270000 with E87C561600.
 At offset 428E2, replace E8E9340000 with E839561600.
+
+
+*** Usage ***
+
+See the "hook_normals.cfg" file or the "hook_normals" section of "hooks.ini".
 
 
 *** Credits ***

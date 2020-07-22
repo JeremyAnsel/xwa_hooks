@@ -154,8 +154,9 @@ At offset 05A319, replace E8D2870200 with E802DC1400.
 
 *** Usage ***
 
-# hook_hangars.cfg:
-hook_hangars.cfg is a config file.
+# config file:
+
+Use the "hook_hangars.cfg" file or the "hook_hangars" section in "hooks.ini" to configure the hook.
 
 The SelectionMode option determines how a hangar is selected.
 The possible values are:
@@ -187,6 +188,15 @@ The default value is "" or "FlightModels\".
 Example:
 ProvingGroundHangarModel = FlightModels\ProvingGround.opt
 This will load "FlightModels\ProvingGroundHangar.opt" and "FlightModels\ProvingGround.ini" (or txt files). "FlightModels\ProvingGround.opt" may not exist.
+
+The DrawShadows option enables or disables the shadows drawing.
+The default value is 1.
+
+The ShadowLod option set the shadows level of details.
+0 means most detailed.
+1 means less detailled.
+The default value is 0.
+
 
 # hangar files:
 

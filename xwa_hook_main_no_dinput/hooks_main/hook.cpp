@@ -19,7 +19,12 @@ class Config
 public:
 	Config()
 	{
-		const auto lines = GetFileLines("dinput.cfg");
+		auto lines = GetFileLines("hooks.ini", "dinput");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("dinput.cfg");
+		}
 
 		this->OutputStats = GetFileKeyValueInt(lines, "OutputStats", 0) != 0;
 	}

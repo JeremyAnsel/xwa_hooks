@@ -20,7 +20,13 @@ class HitDataArray
 public:
 	HitDataArray()
 	{
-		const auto lines = GetFileLines("hook_opt_limit.cfg");
+		auto lines = GetFileLines("hooks.ini", "hook_opt_limit");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_opt_limit.cfg");
+		}
+
 		int count = abs(GetFileKeyValueInt(lines, "Size"));
 
 		if (count == 0)

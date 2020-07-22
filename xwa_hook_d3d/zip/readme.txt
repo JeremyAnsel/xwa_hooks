@@ -16,7 +16,7 @@ This dll requires:
 
 Place hook_d3d.dll and hook_d3d.cfg next to xwingalliance.exe
 
-Set "IsHookD3DEnabled = 1" in "hook_d3d.cfg".
+Set "IsHookD3DEnabled = 1" in "hook_d3d.cfg" or in the "hook_d3d" section of "hooks.ini".
 
 
 *** Patch ***

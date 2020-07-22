@@ -9,7 +9,12 @@ class Config
 public:
 	Config()
 	{
-		const auto lines = GetFileLines("hook_textures_tag.cfg");
+		auto lines = GetFileLines("hooks.ini", "hook_textures_tag");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_textures_tag.cfg");
+		}
 
 		this->OutputDebugStrings = GetFileKeyValueInt(lines, "OutputDebugStrings") != 0;
 	}

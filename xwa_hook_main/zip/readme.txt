@@ -33,6 +33,7 @@ The hooks are downloadable from OneDrive (https://onedrive.live.com/redir?resid=
 Each hook is implemented in a separate dll. The name of the dll must begin with "hook_" or "Hook_".
 
 When the game's exe ends, statistics about the hooks are written to OutputDebugString.
+See the "dinput.cfg" file or the "dinput" section of "hooks.ini".
 
 If you use a custom Dinput.dll, it will conflict with this hook. In this case, use xwa_hook_main_no_dinput instead of xwa_hook_main.
 

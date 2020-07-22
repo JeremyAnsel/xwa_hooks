@@ -104,7 +104,12 @@ class Config
 public:
 	Config()
 	{
-		const auto lines = GetFileLines("hook_normals.cfg");
+		auto lines = GetFileLines("hooks.ini", "hook_normals");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_normals.cfg");
+		}
 
 		this->Output = GetFileKeyValueInt(lines, "Output");
 	}

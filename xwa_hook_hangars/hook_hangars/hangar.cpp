@@ -61,7 +61,12 @@ class Config
 public:
 	Config()
 	{
-		const auto lines = GetFileLines("hook_hangars.cfg");
+		auto lines = GetFileLines("hooks.ini", "hook_hangars");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_hangars.cfg");
+		}
 
 		this->SelectionMode = GetFileKeyValue(lines, "SelectionMode");
 		this->ProvingGroundHangarModel = GetFileKeyValue(lines, "ProvingGroundHangarModel");

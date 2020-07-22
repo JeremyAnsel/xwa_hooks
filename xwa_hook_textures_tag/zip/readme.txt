@@ -36,7 +36,7 @@ The format of the tag is:
 - for opt textures: "opt,optFileName,textureName,color,mipmapLevel" for color maps or "opt,optFileName,textureName,color-transparent,mipmapLevel" for transparent color maps or "opt,optFileName,textureName,light,mipmapLevel" for light maps
 
 To help debugging, the hook can optionally write the tags to the debug ouput that can be read with DebugView.
-See "hook_textures_tag.cfg".
+See the "hook_textures_tag.cfg" file or the "hook_textures_tag" section of "hooks.ini".
 
 
 *** Credits ***

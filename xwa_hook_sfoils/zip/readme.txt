@@ -109,7 +109,7 @@ To require landing gears being closed before enter hyperspace, set the CloseLang
 When set to 0, normal behavior
 When set to 1, landing gears must be closed before enter hyperspace
 
-See "hook_sfoils.cfg".
+See the "hook_sfoils.cfg" file or the "hook_sfoils" section of "hooks.ini".
 
 
 *** Credits ***

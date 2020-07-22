@@ -1,4 +1,4 @@
-﻿xwa_hook_d3dinfos_textures
+xwa_hook_d3dinfos_textures
 
 This hook increases the D3DTextures count limit.
 When there are more than 1624 textures, the game outputs "Not enough D3DTextures" and uses the last created texture. This hook fixes that.
@@ -31,7 +31,9 @@ At offset 040B50, replace 5657BAC3296600 with E8CB731600C390.
 
 The original D3DInfos count is 1624.
 By default, the dll will use a value of 10000.
-You can modify this value in hook_d3dinfos_textures.cfg (Size = value).
+You can modify this value in "hook_d3dinfos_textures.cfg" or in the "hook_d3dinfos_textures" section of "hooks.ini".
+The format is:
+Size = value
 
 
 *** Credits ***

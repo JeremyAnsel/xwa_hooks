@@ -8,7 +8,13 @@ class WindowConfig
 public:
 	WindowConfig()
 	{
-		const auto lines = GetFileLines("hook_windowed.cfg");
+		auto lines = GetFileLines("hooks.ini", "hook_windowed");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_windowed.cfg");
+		}
+
 		int x = GetFileKeyValueInt(lines, "X");
 		int y = GetFileKeyValueInt(lines, "Y");
 		int width = GetFileKeyValueInt(lines, "Width");

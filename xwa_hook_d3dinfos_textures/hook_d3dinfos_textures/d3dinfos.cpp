@@ -20,7 +20,13 @@ class D3DInfoArray
 public:
 	D3DInfoArray()
 	{
-		const auto lines = GetFileLines("hook_d3dinfos_textures.cfg");
+		auto lines = GetFileLines("hooks.ini", "hook_d3dinfos_textures");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_d3dinfos_textures.cfg");
+		}
+
 		int count = abs(GetFileKeyValueInt(lines, "Size"));
 
 		if (count == 0)

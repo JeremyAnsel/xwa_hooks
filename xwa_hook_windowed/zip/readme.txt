@@ -42,7 +42,7 @@ At offset 13FB6E, replace 6A006A00A30B7F9F00FF1574925A00 with 90909090A30B7F9F00
 
 *** Usage ***
 
-To set the window position and size, modify "hook_windowed.cfg":
+To set the window position and size, modify the "hook_windowed.cfg" file or the "hook_windowed" section of "hooks.ini":
 X = left value
 Y = top value
 Width = width value

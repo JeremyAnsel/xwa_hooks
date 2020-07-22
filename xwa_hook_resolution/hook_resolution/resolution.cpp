@@ -10,7 +10,12 @@ class Config
 public:
 	Config()
 	{
-		const auto lines = GetFileLines("hook_resolution.cfg");
+		auto lines = GetFileLines("hooks.ini", "hook_resolution");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_resolution.cfg");
+		}
 
 		this->IsAutoResolutionEnabled = GetFileKeyValueInt(lines, "IsAutoResolutionEnabled", 0) != 0;
 		this->ResolutionWidth = GetFileKeyValueInt(lines, "ResolutionWidth", 0);

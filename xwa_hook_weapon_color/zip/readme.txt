@@ -35,7 +35,7 @@ At offset 0F1CC2, replace 3D190100007F403D18010000 with 56E858620B005EE992020000
 
 Suppose that the craft is "FlightModels\[Model].opt".
 
-To enable weapon switch based on IFF, set "WeaponSwitchBasedOnIff = 1" in "hook_weapon_color.cfg".
+To enable weapon switch based on IFF, set "WeaponSwitchBasedOnIff = 1" in the "hook_weapon_color.cfg" file or the "hook_weapon_color" section of "hooks.ini".
 To disable it, set "WeaponSwitchBasedOnIff = 0".
 The default value is "0".
 You can override this value with a setting named "WeaponSwitchBasedOnIff" in the file named "FlightModels\[Model]WeaponColor.txt" or the section named "[WeaponColor]" in "FlightModels\[Model].ini".
@@ -78,13 +78,13 @@ XXX in WeaponColorXXX goes from 280 to 307. When present, this overrides the def
 The default value is 0.
 
 XXX in WeaponImpactColorXXX goes from 280 to 307. When present, this overrides the default impact color.  If it is set to 0, the default value will be used. You can define a different impact color for all weapons.
-The default impact colors are defined in "hook_weapon_color.cfg".
+The default impact colors are defined in the "hook_weapon_color.cfg" file or the "hook_weapon_color" section of "hooks.ini".
 
 EnergyBarColorLaserHigh and EnergyBarColorLaserLow define the color of the laser energy bar.
 EnergyBarColorIonHigh and EnergyBarColorIonLow define the color of the ion energy bar.
 
 XXX in WeaponLightColorXXX goes from 280 to 307. When present, this overrides the default lighting effect color.  If it is set to 0, the default value will be used. You can define a different light color for all weapons.
-The default light colors are defined in "hook_weapon_color.cfg".
+The default light colors are defined in the "hook_weapon_color.cfg" file or the "hook_weapon_color" section of "hooks.ini".
 
 FG in _fgFG_ defines the flight group markings.
 

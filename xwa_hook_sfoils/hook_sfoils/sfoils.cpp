@@ -61,7 +61,12 @@ class Config
 public:
 	Config()
 	{
-		const auto lines = GetFileLines("hook_sfoils.cfg");
+		auto lines = GetFileLines("hooks.ini", "hook_sfoils");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_sfoils.cfg");
+		}
 
 		this->CloseSFoilsAndOpenLangingGearsBeforeEnterHangar = GetFileKeyValueInt(lines, "CloseSFoilsAndOpenLangingGearsBeforeEnterHangar") != 0;
 		this->CloseLangingGearsBeforeEnterHyperspace = GetFileKeyValueInt(lines, "CloseLangingGearsBeforeEnterHyperspace") != 0;

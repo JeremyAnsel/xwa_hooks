@@ -60,7 +60,12 @@ class Config
 public:
 	Config()
 	{
-		const auto lines = GetFileLines("hook_mission_objects.cfg");
+		auto lines = GetFileLines("hooks.ini", "hook_mission_objects");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_mission_objects.cfg");
+		}
 
 		this->UnlimitedTurretLaser = GetFileKeyValueInt(lines, "UnlimitedTurretLaser", 1) != 0;
 	}

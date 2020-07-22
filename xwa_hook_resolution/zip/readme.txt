@@ -34,7 +34,7 @@ At offset 10A41E, replace E8FD0B0000 with E80DDB0900.
 To enable the auto resolution setting, set the IsAutoResolutionEnabled setting.
 To define the resolution, set the ResolutionWidth and ResolutionHeight settings.
 
-See hook_resolution.cfg
+See the "hook_resolution.cfg" file or the "hook_resolution" section of "hooks.ini".
 
 
 *** Credits ***

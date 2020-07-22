@@ -76,7 +76,9 @@ At offset 0415D0, replace C705B4465B0000000045C3 with C705B4465B0000008042C3.
 
 The original vertices count limit is 512 per mesh.
 By default, the dll will use a value of 65536.
-You can modify this value in hook_opt_limit.cfg (Size = value).
+You can modify this value in the "hook_opt_limit.cfg" file or the "hook_opt_limit" section of "hooks.ini".
+The format is:
+Size = value
 
 The size of the execute buffer is increased from 0x10000 to 0x200000.
 
