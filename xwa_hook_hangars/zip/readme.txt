@@ -194,7 +194,7 @@ The default value is 1.
 
 The ShadowLod option set the shadows level of details.
 0 means most detailed.
-1 means less detailled.
+1 means less detailed.
 The default value is 0.
 
 
