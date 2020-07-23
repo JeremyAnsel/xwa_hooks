@@ -4,6 +4,19 @@
 
 #include <Windows.h>
 
+bool StringEndsWith(const char* str, const char* suffix)
+{
+	size_t strLength = strlen(str);
+	size_t suffixLength = strlen(suffix);
+
+	if (strLength < suffixLength)
+	{
+		return false;
+	}
+
+	return _stricmp(str + strLength - suffixLength, suffix) == 0;
+}
+
 class Config
 {
 public:
@@ -122,7 +135,10 @@ int OptReadHook(int* params)
 
 	if (!result)
 	{
-		MessageBox(nullptr, (g_currentOptFileName + " was not found").c_str(), "OPT read", MB_OK | MB_ICONERROR);
+		if (!StringEndsWith(fileName, "Cockpit.opt") && !StringEndsWith(fileName, "Exterior.opt"))
+		{
+			MessageBox(nullptr, (g_currentOptFileName + " was not found").c_str(), "OPT read", MB_OK | MB_ICONERROR);
+		}
 	}
 
 	return result;
