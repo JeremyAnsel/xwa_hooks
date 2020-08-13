@@ -24,7 +24,8 @@ At offset 1521A, replace E8E1A40000 with E8112D1900.
 At offset 1C6FF, replace 668B442428 with E82CB81800.
 
 # 'crafts count per region' patch
-At offset 14C2E, replace 60000000C1E305 with C0000000C1E306.
+At offset 014C28, replace C705944B7D0060000000C1E305 with C705944B7D00C0000000C1E306.
+At offset 014BF2, replace 8D1CF633D2C1E302 with 8D1C7633D2C1E306.
 
 
 *** Usage ***

@@ -11,6 +11,18 @@ E82CB81800              call 005A8B30, 005A8B30 - 0041D304 = 0018B82C
 
 
 ; crafts count per region
-:0041582E - 0x014C2E
-60000000C1E305
-C0000000C1E306
+:00415828 - 0x014C28
+C705944B7D0060000000    mov dword ptr [007D4B94], 00000060
+C1E305                  shl ebx, 05
+
+C705944B7D00C0000000    mov dword ptr [007D4B94], 000000C0
+C1E306                  shl ebx, 06
+
+:004157F2 - 0x014BF2
+8D1CF6                  lea ebx, dword ptr [esi+8*esi]
+33D2                    xor edx, edx
+C1E302                  shl ebx, 02
+
+8D1C76                  lea ebx, dword ptr [esi+2*esi]
+33D2                    xor edx, edx
+C1E306                  shl ebx, 06

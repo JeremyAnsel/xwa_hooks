@@ -17,7 +17,8 @@ static const HookPatchItem g_overrideTiePatch[] =
 
 static const HookPatchItem g_craftsCountPerRegionPatch[] =
 {
-	{ 0x014C2E, "60000000C1E305", "C0000000C1E306" },
+	{ 0x014C28, "C705944B7D0060000000C1E305", "C705944B7D00C0000000C1E306" },
+	{ 0x014BF2, "8D1CF633D2C1E302", "8D1C7633D2C1E306" },
 };
 
 static const HookPatch g_patches[] =
