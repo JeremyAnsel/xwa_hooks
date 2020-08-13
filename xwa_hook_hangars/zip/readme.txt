@@ -116,6 +116,7 @@ At offset 05ACFA, replace 81C2F70000003BC20F8ED9070000 with E831D214009085C00F84
 # To call the hook that sets the hangar objects elevation
 At offset 056314, replace 8B15C4337B0003C18944320F with 5055E8051C150083C4089090.
 At offset 0551B8, replace 2BF8893D38BC6800 with 50E8622D15005890.
+At offset 055223, replace 66A154679C00 with E8082D150090.
 At offset 05BDC4, replace 8B15C4337B0003C18944320F with 50E856C11400589090909090.
 
 # To call the hook that sets the hangar re-enter animation
@@ -123,6 +124,7 @@ At offset 0576EF, replace A138BC68008D8823020000 with E83C0815008BC890909090.
 At offset 05AF69, replace 81C2930000003954350F7E7A with E8C2CF140090909085C0747A.
 At offset 05AFAC, replace 8B1538BC68008B7C350F03C23BF87E33 with 50E87ECF14008B7C350F85C058907433.
 At offset 05AFE3, replace 2BF8897C350F8B2DC4337B00 with 50E837CF1400589090909090.
+At offset 05B0B0, replace 05E0FCFFFF with E87BCE1400.
 At offset 05B223, replace 8B1538BC68008B4C370F with 50E8F7CC140058EB1590.
 At offset 05B30C, replace 2BCA894C300F with E80FCC140090.
 At offset 05B370, replace 8B1538BC680003C28B54310F3BD00F8F5F010000 with 50E8BACB140083C40490909085C00F845F010000.
@@ -135,7 +137,6 @@ At offset 05E8E9, replace D80DF8955A00 with D80DD0955A00.
 At offset 05E4CF, replace A1C4337B008B4C010B with 51E85B9A1400599090.
 At offset 05E13C, replace 8D14098B0803CA8908 with 51E8DE9D1400599090.
 At offset 05E25F, replace 81C2610100003954300F0F8E870D0000 with E8CC9C14009085C090900F85870D0000.
-
 At offset 05E923, replace 7E03 with EB0F.
 At offset 05EAA6, replace 8B540A0B81C2BF030000 with 50E8749414005A909090.
 At offset 05EF69, replace 8B540A0B81C2BF030000 with 50E8B18F14005A909090.
@@ -143,6 +144,17 @@ At offset 05EFB1, replace 66C74430170000 with E86A8F14009090.
 At offset 05EB99, replace F7D9D1E103D18910 with 51E8819314005990.
 At offset 05ECA1, replace 8B1538BC680081C28A000000 with 50E8899214008BD058909090.
 At offset 05ECAD, replace 3954300F0F8F3F030000 with 85D290900F853F030000.
+At offset 05E29C, replace D1E2660110 with E87F9C1400.
+At offset 05E33C, replace A1C4337B0066817C3013204E0F83A80C0000 with E8EF9B140085C0A1C4337B000F85A80C0000.
+At offset 05EACB, replace D1E1660108 with E850941400.
+At offset 05EB71, replace 66817C321380A80F8278040000 with E8BA93140085C00F8578040000.
+
+# To call the hook that sets the shuttle animation sounds
+At offset 05E1A8, replace 8B44300F2BC283E840 with E8839D140085C09090.
+At offset 05E443, replace 2BC20560090000 with E8E89A140085C0.
+At offset 05E9D9, replace 2BC20560090000 with E85295140085C0.
+At offset 05EC1D, replace 8B44300F2BC283E820 with E80E93140085C09090.
+At offset 05EEA0, replace 2BC20560090000 with E88B90140085C0.
 
 # To call the hook that gets the craft index
 At offset 0590BA, replace E871310800 with E871EE1400.
@@ -256,15 +268,21 @@ To set the shuttle markings, set "ShuttleMarkings = value". value is an integer.
 To set the shuttle x position, set "ShuttlePositionX = value". value is an integer. The default value is 1127.
 To set the shuttle y position, set "ShuttlePositionY = value". value is an integer. The default value is 959.
 To set the shuttle z position, set "ShuttlePositionZ = value". value is an integer. The default value is 0.
-To invert the hangar floor for the shuttle, set "IsShuttleFloorInverted = 1". When set to 0, the floor is below the player craft. When set to 1, the floor is above the player craft.
+To set the shuttle orientation, set "ShuttleOrientation = value". value is an unsigned integer. The default value is 43136.
+To invert the hangar floor for the shuttle, set "IsShuttleFloorInverted = 1". When set to 0, the floor is below the shuttle. When set to 1, the floor is above the shuttle.
 To set the shuttle animation, set "ShuttleAnimation = value". value is "Right", "Top", or "Bottom". The default value is "Right".
 To set the shuttle straight line animation length, set "ShuttleAnimationStraightLine = value". value is an integer. The default value is 0.
 To not load the droids, set "LoadDroids = 0".
 To set the droids z position, set "DroidsPositionZ = value". value is an integer. The default value is 0.
-To invert the hangar floor for the droids, set "IsDroidsFloorInverted = 1". When set to 0, the floor is below the player craft. When set to 1, the floor is above the player craft.
+To invert the hangar floor for the droids, set "IsDroidsFloorInverted = 1". When set to 0, the floor is below the droids. When set to 1, the floor is above the droids.
 To set the Hangar Roof Crane position, set "HangarRoofCranePositionY = value Y" and "HangarRoofCranePositionZ = value Z". The values are integers. The default value for HangarRoofCranePositionY is 786. The default value for HangarRoofCranePositionZ is -282.
-To invert the hangar floor, set "IsHangarFloorInverted = 1". When set to 0, the floor is below the player craft. When set to 1, the floor is above the player craft.
+To invert the hangar floor, set "IsHangarFloorInverted = 1". When set to 0, the floor is below the static crafts. When set to 1, the floor is above the static crafts.
+To set the hangar flightgroup color, set "HangarIff = value". value is an integer. The default value is -1. -1 means that the IFF of the command ship is used.
 To set the elevation delta of the player craft animation, set "PlayerAnimationElevation = value". value is an integer. The default value is 0.
+To set the x position offset of the player craft, set "PlayerOffsetX = value". value is an integer. The default value is 0.
+To set the y position offset of the player craft, set "PlayerOffsetY = value". value is an integer. The default value is 0.
+To set the z position offset of the player craft, set "PlayerOffsetZ = value". value is an integer. The default value is 0.
+To invert the hangar floor for the player craft, set "IsPlayerFloorInverted = 1". When set to 0, the floor is below the player craft. When set to 1, the floor is above the player craft.
 See "HangarObjects.txt".
 
 Apply to hangar:
@@ -350,6 +368,10 @@ or : model index, markings, position X, position Y, position Z, heading XY, head
 The numbers can be  written in decimal or hexadecimal (0x) notation.
 When position Z is set to 0x7FFFFFFF, this means that the object stands at the ground.
 See "FamHangarMap.txt".
+
+To load a file based on the IFF of the arrival craft, append the IFF index (starting at 0) to the file name.
+This apply to HangarObjects, HangarCamera, FamHangarCamera, HangarMap, FamHangarMap.
+For instance, if the IFF index is 1 and the file name is HangarObjects, then the name of the section in the ini file will be HangarObjects1. If HangarObjects1 doesn't exist then HangarObjects is used.
 
 To set the elevation of the craft with closed S-Foils, create a file named "FlightModels\[Player]Size.txt".
 Or create a section named "[Size]" in "FlightModels\[Player].ini".

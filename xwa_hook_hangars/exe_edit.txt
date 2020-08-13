@@ -381,6 +381,14 @@ E8622D1500              call 005A8B20, 005A8B20 - 00455DBE = 00152D62
 58                      pop eax
 90                      nop
 
+; from L004554F0
+; hook for hangar position x and y
+:00455E23 - 0x055223
+66A154679C00            mov ax, word ptr [009C6754]
+
+E8082D1500              call 005A8B30, 005A8B30 - 00455E28 = 00152D08
+90                      nop
+
 ; from L0045C680
 ; hook for player craft elevation
 :0045C9C4 - 0x05BDC4
@@ -442,6 +450,13 @@ E87ECF1400              call 005A8B30, 005A8B30 - 0045BBB2 = 0014CF7E
 E837CF1400              call 005A8B20, 005A8B20 - 0045BBE9 = 0014CF37
 58                      pop eax
 9090909090              nop
+
+; s_V0x0686B94 = 5
+; positionY check
+:0045BCB0 - 0x05B0B0
+05E0FCFFFF              add eax, FFFFFCE0
+
+E87BCE1400              call 005A8B30, 005A8B30 - 0045BCB5 = 0014CE7B
 
 ; s_V0x0686B94 = 6
 :0045BE23 - 0x05B223
@@ -583,7 +598,7 @@ E881931400              call 005A8B20, 005A8B20 - 0045F79F = 00149381
 59                      pop ecx
 90                      nop
 
-; hook for shuttle animation 9
+; hook for shuttle animation 9 check
 :0045F8A1 - 0x05ECA1
 8B1538BC6800            mov edx, dword ptr [0068BC38]
 81C28A000000            add edx, 0000008A
@@ -601,6 +616,88 @@ E889921400              call 005A8B30, 005A8B30 - 0045F8A7 = 00149289
 85D2                    test edx, edx
 9090                    nop
 0F853F030000            jne 0045FBF6
+
+
+; hook for shuttle animation 2 update
+:0045EE9C - 0x05E29C
+D1E2                    shl edx, 1
+660110                  add word ptr [eax], dx
+
+E87F9C1400              call 005A8B20, 005A8B20 - 0045EEA1 = 00149C7F
+
+; hook for shuttle animation 2 check
+:0045EF3C - 0x05E33C
+A1C4337B00              mov eax, dword ptr [007B33C4]
+66817C3013204E          cmp word ptr [eax+esi+13], 4E20
+0F83A80C0000            jnb 0045FBF6
+
+E8EF9B1400              call 005A8B30, 005A8B30 - 0045EF41 = 00149BEF
+85C0                    test eax, eax
+A1C4337B00              mov eax, dword ptr [007B33C4]
+0F85A80C0000            jne 0045FBF6
+
+; hook for shuttle animation 8 update
+:0045F6CB - 0x05EACB
+D1E1                    shl ecx, 1
+660108                  add word ptr [eax], cx
+
+E850941400              call 005A8B20, 005A8B20 - 0045F6D0 = 00149450
+
+; hook for shuttle animation 8 check
+:0045F771 - 0x05EB71
+66817C321380A8          cmp word ptr [edx+esi+13], A880
+0F8278040000            jb 0045FBF6
+
+E8BA931400              call 005A8B30, 005A8B30 - 0045F776 = 001493BA
+85C0                    test eax, eax
+0F8578040000            jne 0045FBF6
+
+
+; from L0045EC70
+; hook for shuttle animation sound 1
+:0045EDA8 - 0x05E1A8
+8B44300F                mov eax, dword ptr [eax+esi+0F]
+2BC2                    sub eax, edx
+83E840                  sub eax, 00000040
+
+E8839D1400              call 005A8B30, 005A8B30 - 0045EDAD = 00149D83
+85C0                    test eax, eax
+9090                    nop
+
+; hook for shuttle animation sound 3
+:0045F043 - 0x05E443
+2BC2                    sub eax, edx
+0560090000              add eax, 00000960
+
+E8E89A1400              call 005A8B30, 005A8B30 - 0045F048 = 00149AE8
+85C0                    test eax, eax
+
+; hook for shuttle animation sound 7
+:0045F5D9 - 0x05E9D9
+2BC2                    sub eax, edx
+0560090000              add eax, 00000960
+
+E852951400              call 005A8B30, 005A8B30 - 0045F5DE = 00149552
+85C0                    test eax, eax
+
+; hook for shuttle animation sound 9
+:0045F81D - 0x05EC1D
+8B44300F                mov eax, dword ptr [eax+esi+0F]
+2BC2                    sub eax, edx
+83E820                  sub eax, 00000020
+
+E80E931400              call 005A8B30, 005A8B30 - 0045F822 = 0014930E
+85C0                    test eax, eax
+9090                    nop
+
+; hook for shuttle animation sound 10
+:0045FAA0 - 0x05EEA0
+2BC2                    sub eax, edx
+0560090000              add eax, 00000960
+
+E88B901400              call 005A8B30, 005A8B30 - 0045FAA5 = 0014908B
+85C0                    test eax, eax
+
 
 ; from L004598E0
 ; get craft index

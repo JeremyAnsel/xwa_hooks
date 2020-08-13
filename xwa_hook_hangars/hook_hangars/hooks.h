@@ -28,11 +28,13 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x45B8FF, HangarLaunchAnimation2Hook },
 	{ 0x456F1B, HangarObjectsElevationHook },
 	{ 0x455DBE, HangarFloorElevationHook },
+	{ 0x455E28, HangarPositionXYHook },
 	{ 0x45C9CA, HangarPlayerCraftElevationHook },
 	{ 0x4582F4, HangarReenterInitPositionZHook },
 	{ 0x45BB6E, HangarReenterAnimation51Hook },
 	{ 0x45BBB2, HangarReenterAnimation52Hook },
 	{ 0x45BBE9, HangarReenterAnimation53Hook },
+	{ 0x45BCB5, HangarReenterAnimation5YCheckHook },
 	{ 0x45BE29, HangarReenterAnimation6Hook },
 	{ 0x45BF11, HangarReenterAnimation71Hook },
 	{ 0x45BF76, HangarReenterAnimation72Hook },
@@ -47,6 +49,15 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x45FBB6, HangarShuttleLaunchReenterAnimation7And10SetHook },
 	{ 0x45F79F, HangarShuttleLaunchReenterAnimation9UpdateHook },
 	{ 0x45F8A7, HangarShuttleLaunchReenterAnimation9CheckHook },
+	{ 0x45EEA1, HangarShuttleLaunchReenterAnimation2UpdateHook },
+	{ 0x45EF41, HangarShuttleLaunchReenterAnimation2CheckHook },
+	{ 0x45F6D0, HangarShuttleLaunchReenterAnimation8UpdateHook },
+	{ 0x45F776, HangarShuttleLaunchReenterAnimation8CheckHook },
+	{ 0x45EDAD, HangarShuttleAnimationSound1Hook },
+	{ 0x45F048, HangarShuttleAnimationSound3Hook },
+	{ 0x45F5DE, HangarShuttleAnimationSound7Hook },
+	{ 0x45F822, HangarShuttleAnimationSound9Hook },
+	{ 0x45FAA5, HangarShuttleAnimationSound10Hook },
 	{ 0x459CBF, HangarGetCraftIndexHook },
 	{ 0x45AF1E, HangarDisableShadowWhenInvertedHook },
 };
@@ -184,6 +195,7 @@ static const HookPatchItem g_hangarObjectsElevationPatch[] =
 {
 	{ 0x056314, "8B15C4337B0003C18944320F", "5055E8051C150083C4089090" },
 	{ 0x0551B8, "2BF8893D38BC6800", "50E8622D15005890" },
+	{ 0x055223, "66A154679C00", "E8082D150090" },
 	{ 0x05BDC4, "8B15C4337B0003C18944320F", "50E856C11400589090909090" },
 };
 
@@ -193,6 +205,7 @@ static const HookPatchItem g_hangarReenterAnimationPatch[] =
 	{ 0x05AF69, "81C2930000003954350F7E7A", "E8C2CF140090909085C0747A" },
 	{ 0x05AFAC, "8B1538BC68008B7C350F03C23BF87E33", "50E87ECF14008B7C350F85C058907433" },
 	{ 0x05AFE3, "2BF8897C350F8B2DC4337B00", "50E837CF1400589090909090" },
+	{ 0x05B0B0, "05E0FCFFFF", "E87BCE1400" },
 	{ 0x05B223, "8B1538BC68008B4C370F", "50E8F7CC140058EB1590" },
 	{ 0x05B30C, "2BCA894C300F", "E80FCC140090" },
 	{ 0x05B370, "8B1538BC680003C28B54310F3BD00F8F5F010000", "50E8BACB140083C40490909085C00F845F010000" },
@@ -214,6 +227,19 @@ static const HookPatchItem g_hangarShuttleLaunchReenterAnimationsPatch[] =
 	{ 0x05EB99, "F7D9D1E103D18910", "51E8819314005990" },
 	{ 0x05ECA1, "8B1538BC680081C28A000000", "50E8899214008BD058909090" },
 	{ 0x05ECAD, "3954300F0F8F3F030000", "85D290900F853F030000" },
+	{ 0x05E29C, "D1E2660110", "E87F9C1400" },
+	{ 0x05E33C, "A1C4337B0066817C3013204E0F83A80C0000", "E8EF9B140085C0A1C4337B000F85A80C0000" },
+	{ 0x05EACB, "D1E1660108", "E850941400" },
+	{ 0x05EB71, "66817C321380A80F8278040000", "E8BA93140085C00F8578040000" },
+};
+
+static const HookPatchItem g_hangarShuttleAnimationSoundsPatch[] =
+{
+	{ 0x05E1A8, "8B44300F2BC283E840", "E8839D140085C09090" },
+	{ 0x05E443, "2BC20560090000", "E8E89A140085C0" },
+	{ 0x05E9D9, "2BC20560090000", "E85295140085C0" },
+	{ 0x05EC1D, "8B44300F2BC283E820", "E80E93140085C09090" },
+	{ 0x05EEA0, "2BC20560090000", "E88B90140085C0" },
 };
 
 static const HookPatchItem g_hangarGetCraftIndexPatch[] =
@@ -252,6 +278,7 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar objects elevation", g_hangarObjectsElevationPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the hangar re-enter animation", g_hangarReenterAnimationPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the shuttle launch and re-enter animations", g_hangarShuttleLaunchReenterAnimationsPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the shuttle animation sounds", g_hangarShuttleAnimationSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that gets the craft index", g_hangarGetCraftIndexPatch),
 	MAKE_HOOK_PATCH("To call the hook that disable shadow when inverted", g_hangarDisableShadowWhenInvertedPatch),
 };
