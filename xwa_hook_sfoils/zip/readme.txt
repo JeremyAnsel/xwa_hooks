@@ -87,7 +87,7 @@ See XWingSFoils.txt, BWingSFoils.txt, ShuttleSFoils.txt.
 
 To create landing gears, create a file named "FlightModels\[Model]SFoilsLandingGears.txt" or create a section named "[SFoilsLandingGears]" in "FlightModels\[Model].ini".
 The format is a line per mesh:
-mesh index, angle, closing speed, opening speed.
+mesh index, angle, opening speed, closing speed.
 
 Landing gears are deployed when a craft in is the hangar. When the s-foils are closed in space, the landing gears are not deployed.
 
