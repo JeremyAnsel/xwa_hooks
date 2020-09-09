@@ -16,6 +16,9 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x45860A, HangarShuttleOptReadInfosHook },
 	{ 0x456312, HangarLoadDroidsHook },
 	{ 0x45643A, HangarLoadHangarRoofCraneHook },
+	{ 0x4605FC, HangarRoofCraneInitHook },
+	{ 0x4604D0, HangarRoofCraneUpdateHook },
+	{ 0x45999C, HangarRoofCraneCameraHook },
 	{ 0x455F4B, HangarMapHook },
 	{ 0x456479, FamHangarMapHook },
 	{ 0x57EB9D, SelectHangarTypeHook },
@@ -156,6 +159,9 @@ static const HookPatchItem g_loadDroidsPatch[] =
 static const HookPatchItem g_loadHangarRoofCranePatch[] =
 {
 	{ 0x055835, "E8A6060000", "E8F6261500" },
+	{ 0x05F9F6, "A1C4BC68008D14B6C1E203", "57E8248514005FEB449090" },
+	{ 0x05F8C8, "8B4411078D7C11078B0D4C6D6800", "83EC08E8508614005F598B079090" },
+	{ 0x058D97, "899028A08B00", "E884F1140090" },
 };
 
 static const HookPatchItem g_setHangarMapPatch[] =

@@ -89,7 +89,11 @@ struct XwaPlayer
 	int ObjectIndex;
 	char m004[79];
 	short m053;
-	char m055[2938];
+	char m055[2803];
+	int CameraPositionX;
+	int CameraPositionY;
+	int CameraPositionZ;
+	char mB54[123];
 };
 
 static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
@@ -167,9 +171,9 @@ struct S0x09C6780
 	int m08;
 	int m0C;
 	int m10;
-	int m14;
-	int m18;
-	int m1C;
+	int TargetPositionX;
+	int TargetPositionY;
+	int TargetPositionZ;
 	short m20;
 	float m22;
 	int m26;
@@ -605,6 +609,12 @@ public:
 		return this->IsDroidsFloorInverted;
 	}
 
+	int GetHangarRoofCranePositionX()
+	{
+		this->UpdateIfChanged();
+		return this->HangarRoofCranePositionX;
+	}
+
 	int GetHangarRoofCranePositionY()
 	{
 		this->UpdateIfChanged();
@@ -615,6 +625,24 @@ public:
 	{
 		this->UpdateIfChanged();
 		return this->HangarRoofCranePositionZ;
+	}
+
+	int GetHangarRoofCraneAxis()
+	{
+		this->UpdateIfChanged();
+		return this->HangarRoofCraneAxis;
+	}
+
+	int GetHangarRoofCraneLowOffset()
+	{
+		this->UpdateIfChanged();
+		return this->HangarRoofCraneLowOffset;
+	}
+
+	int GetHangarRoofCraneHighOffset()
+	{
+		this->UpdateIfChanged();
+		return this->HangarRoofCraneHighOffset;
 	}
 
 	bool GetIsHangarFloorInverted()
@@ -679,8 +707,12 @@ private:
 			this->LoadDroids = GetFileKeyValueInt(lines, "LoadDroids", 1) == 1;
 			this->DroidsPositionZ = GetFileKeyValueInt(lines, "DroidsPositionZ", 0);
 			this->IsDroidsFloorInverted = GetFileKeyValueInt(lines, "IsDroidsFloorInverted", 0) != 0;
+			this->HangarRoofCranePositionX = GetFileKeyValueInt(lines, "HangarRoofCranePositionX", -1400);
 			this->HangarRoofCranePositionY = GetFileKeyValueInt(lines, "HangarRoofCranePositionY", 786);
 			this->HangarRoofCranePositionZ = GetFileKeyValueInt(lines, "HangarRoofCranePositionZ", -282);
+			this->HangarRoofCraneAxis = GetFileKeyValueInt(lines, "HangarRoofCraneAxis", 0);
+			this->HangarRoofCraneLowOffset = GetFileKeyValueInt(lines, "HangarRoofCraneLowOffset", -1400 + 1400);
+			this->HangarRoofCraneHighOffset = GetFileKeyValueInt(lines, "HangarRoofCraneHighOffset", 1400 + 1400);
 			this->IsHangarFloorInverted = GetFileKeyValueInt(lines, "IsHangarFloorInverted", 0) != 0;
 			this->HangarIff = (unsigned char)GetFileKeyValueInt(lines, "HangarIff", -1);
 			this->PlayerAnimationElevation = GetFileKeyValueInt(lines, "PlayerAnimationElevation", 0);
@@ -705,8 +737,12 @@ private:
 	bool LoadDroids;
 	int DroidsPositionZ;
 	bool IsDroidsFloorInverted;
+	int HangarRoofCranePositionX;
 	int HangarRoofCranePositionY;
 	int HangarRoofCranePositionZ;
+	int HangarRoofCraneAxis;
+	int HangarRoofCraneLowOffset;
+	int HangarRoofCraneHighOffset;
 	bool IsHangarFloorInverted;
 	unsigned char HangarIff;
 	int PlayerAnimationElevation;
@@ -1766,11 +1802,135 @@ int HangarLoadHangarRoofCraneHook(int* params)
 {
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 
+	const int positionX = g_hangarObjects.GetHangarRoofCranePositionX();
 	const int positionY = g_hangarObjects.GetHangarRoofCranePositionY();
 	const int positionZ = g_hangarObjects.GetHangarRoofCranePositionZ();
 
 	// ModelIndex_316_1_38_HangarRoofCrane
-	return AddObject(316, -1400, positionY, positionZ, 0, 0);
+	return AddObject(316, positionX, positionY, positionZ, 0, 0);
+}
+
+int HangarRoofCraneInitHook(int* params)
+{
+	const int edi = params[0];
+
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	S0x09C6780* s_V0x0686D38 = (S0x09C6780*)0x0686D38;
+	const int hangarObjectIndex = *(int*)0x068BCC4;
+
+	int axis = g_hangarObjects.GetHangarRoofCraneAxis();
+	int lowOffset = g_hangarObjects.GetHangarRoofCraneLowOffset();
+	int highOffset = g_hangarObjects.GetHangarRoofCraneHighOffset();
+
+	int edx;
+	int eax;
+	int init;
+
+	switch (axis)
+	{
+	case 0:
+	default:
+		edx = xwaObjects[s_V0x0686D38->ObjectIndex].PositionX;
+		eax = xwaObjects[hangarObjectIndex].PositionX;
+		init = g_hangarObjects.GetHangarRoofCranePositionX();
+		break;
+
+	case 1:
+		edx = xwaObjects[s_V0x0686D38->ObjectIndex].PositionY;
+		eax = xwaObjects[hangarObjectIndex].PositionY;
+		init = g_hangarObjects.GetHangarRoofCranePositionY();
+		break;
+
+	case 2:
+		edx = xwaObjects[s_V0x0686D38->ObjectIndex].PositionZ;
+		eax = xwaObjects[hangarObjectIndex].PositionZ;
+		init = g_hangarObjects.GetHangarRoofCranePositionZ();
+		break;
+	}
+
+	int ecx;
+
+	if (edx + edi > eax + init + highOffset)
+	{
+		ecx = -edi;
+	}
+	else if (edx + edi < eax + init + lowOffset)
+	{
+		ecx = -edi;
+	}
+	else
+	{
+		ecx = edi;
+	}
+
+	switch (axis)
+	{
+	case 0:
+	default:
+		s_V0x0686D38->TargetPositionX = edx + ecx;
+		break;
+
+	case 1:
+		s_V0x0686D38->TargetPositionY = edx + ecx;
+		break;
+
+	case 2:
+		s_V0x0686D38->TargetPositionZ = edx + ecx;
+		break;
+	}
+
+	s_V0x0686D38->m04 = 1;
+
+	return 0;
+}
+
+int HangarRoofCraneUpdateHook(int* params)
+{
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	S0x09C6780* s_V0x0686D38 = (S0x09C6780*)0x0686D38;
+
+	int axis = g_hangarObjects.GetHangarRoofCraneAxis();
+
+	int edi;
+	int ecx;
+
+	switch (axis)
+	{
+	case 0:
+	default:
+		edi = (int)&xwaObjects[s_V0x0686D38->ObjectIndex].PositionX;
+		ecx = s_V0x0686D38->TargetPositionX;
+		break;
+
+	case 1:
+		edi = (int)&xwaObjects[s_V0x0686D38->ObjectIndex].PositionY;
+		ecx = s_V0x0686D38->TargetPositionY;
+		break;
+
+	case 2:
+		edi = (int)&xwaObjects[s_V0x0686D38->ObjectIndex].PositionZ;
+		ecx = s_V0x0686D38->TargetPositionZ;
+		break;
+	}
+
+	params[0] = edi;
+	params[1] = ecx;
+
+	return 0;
+}
+
+int HangarRoofCraneCameraHook(int* params)
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
+	const int currentPlayerId = *(int*)0x08C1CC8;
+	const int V0x068BCC0 = *(int*)0x068BCC0;
+
+	xwaPlayers[currentPlayerId].CameraPositionX = xwaObjects[V0x068BCC0].PositionX;
+	xwaPlayers[currentPlayerId].CameraPositionY = xwaObjects[V0x068BCC0].PositionY + 0x28E;
+	xwaPlayers[currentPlayerId].CameraPositionZ = xwaObjects[V0x068BCC0].PositionZ - 0x08;
+
+	return 0;
 }
 
 int HangarMapHook(int* params)

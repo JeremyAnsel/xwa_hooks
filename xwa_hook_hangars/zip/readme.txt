@@ -89,6 +89,9 @@ At offset 557CC, replace 899E88679C00891510BC6800 with 909090909090909090909090.
 
 # To call the hook that loads the Hangar Roof Crane
 At offset 55835, replace E8A6060000 with E8F6261500.
+At offset 5F9F6, replace A1C4BC68008D14B6C1E203 with 57E8248514005FEB449090.
+At offset 5F8C8, replace 8B4411078D7C11078B0D4C6D6800 with 83EC08E8508614005F598B079090.
+At offset 58D97, replace 899028A08B00 with E884F1140090.
 
 # To call the hook that sets the hangar map
 At offset 55345, replace 68C896000068FFFFFF7F68 with 58E8D52B1500E9BD030000.
@@ -275,7 +278,9 @@ To set the shuttle straight line animation length, set "ShuttleAnimationStraight
 To not load the droids, set "LoadDroids = 0".
 To set the droids z position, set "DroidsPositionZ = value". value is an integer. The default value is 0.
 To invert the hangar floor for the droids, set "IsDroidsFloorInverted = 1". When set to 0, the floor is below the droids. When set to 1, the floor is above the droids.
-To set the Hangar Roof Crane position, set "HangarRoofCranePositionY = value Y" and "HangarRoofCranePositionZ = value Z". The values are integers. The default value for HangarRoofCranePositionY is 786. The default value for HangarRoofCranePositionZ is -282.
+To set the Hangar Roof Crane position, set "HangarRoofCranePositionX = value X", "HangarRoofCranePositionY = value Y" and "HangarRoofCranePositionZ = value Z". The values are integers. The default value for HangarRoofCranePositionX is -1400. The default value for HangarRoofCranePositionY is 786. The default value for HangarRoofCranePositionZ is -282.
+To set the Hangar Roof Crane axis, set "HangarRoofCraneAxis = value". 0 means the X axis. 1 means the Y axis. 2 means the Z axis. The default value is 0.
+To define the range of Hangar Roof Crane animation, set "HangarRoofCraneLowOffset = value" and "HangarRoofCraneHighOffset = value". The values are relative to the Hangar Roof Crane initial position.
 To invert the hangar floor, set "IsHangarFloorInverted = 1". When set to 0, the floor is below the static crafts. When set to 1, the floor is above the static crafts.
 To set the hangar flightgroup color, set "HangarIff = value". value is an integer. The default value is -1. -1 means that the IFF of the command ship is used.
 To set the elevation delta of the player craft animation, set "PlayerAnimationElevation = value". value is an integer. The default value is 0.

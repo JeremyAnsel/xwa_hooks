@@ -184,6 +184,39 @@ E8A6060000              call 00456AE0
 
 E8F6261500              call 005A8B30, 005A8B30 - 0045643A = 001526F6
 
+; from L00460490
+; hook for Hangar Roof Crane update
+:004605F6 - 0x05F9F6
+A1C4BC6800              mov eax, dword ptr [0068BCC4]
+8D14B6                  lea edx, dword ptr [esi+4*esi]
+C1E203                  shl edx, 03
+
+57                      push edi
+E824851400              call 005A8B20, 005A8B20 - 004605FC = 00148524
+5F                      pop edi
+EB44                    jmp 00460643, 00460643 - 004605FF = 44
+9090                    nop
+
+:004604C8 - 0x05F8C8
+8B441107                mov eax, dword ptr [ecx+edx+07]
+8D7C1107                lea edi, dword ptr [ecx+edx+07]
+8B0D4C6D6800            mov ecx, dword ptr [00686D4C]
+
+83EC08                  sub esp, 00000008
+E850861400              call 005A8B20, 005A8B20 - 004604D0 = 00148650
+5F                      pop edi
+59                      pop ecx
+8B07                    mov eax, dword ptr [edi]
+9090                    nop
+
+; from L004598E0
+; hook for Hangar Roof Crane camera
+:00459997 - 0x058D97
+899028A08B00            mov dword ptr [eax+008BA028], edx
+
+E884F11400              call 005A8B20, 005A8B20 - 0045999C = 0014F184
+90                      nop
+
 
 ; from L004554F0
 ; hook for hangar map
