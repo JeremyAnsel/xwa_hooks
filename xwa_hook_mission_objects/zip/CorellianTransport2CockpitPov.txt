@@ -1,0 +1,4 @@
+
+CockpitPovX = 174
+CockpitPovY = -121
+CockpitPovZ = 33

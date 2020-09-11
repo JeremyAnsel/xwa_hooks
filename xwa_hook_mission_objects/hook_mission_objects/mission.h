@@ -1,6 +1,7 @@
 #pragma once
 
 int MissionObjectsHook(int* params);
+int MissionObjectsStatsHook(int* params);
 int CraftTurretHook(int* params);
 
 int LaserShootHook(int* params);

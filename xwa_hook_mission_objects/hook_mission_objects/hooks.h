@@ -11,6 +11,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x43185E, MissionObjectsHook },
 	{ 0x43190A, MissionObjectsHook },
 	{ 0x431AAD, MissionObjectsHook },
+	{ 0x431E4B, MissionObjectsStatsHook },
 	{ 0x501D95, CraftTurretHook },
 
 	{ 0x491057, LaserShootHook },
@@ -58,6 +59,7 @@ static const HookPatchItem g_loadMissionObjectsPatch[] =
 	{ 0x030C59, "E8E2B00900", "E8D2721700" },
 	{ 0x030D05, "E836B00900", "E826721700" },
 	{ 0x030EA8, "E893AE0900", "E883701700" },
+	{ 0x031246, "66898AE0A67C00", "E8D56C17009090" },
 };
 
 static const HookPatchItem g_setCraftTurretPatch[] =

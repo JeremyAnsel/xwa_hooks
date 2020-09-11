@@ -26,6 +26,7 @@ At offset 30A1A, replace E821B30900 with E811751700.
 At offset 30C59, replace E8E2B00900 with E8D2721700.
 At offset 30D05, replace E836B00900 with E826721700.
 At offset 30EA8, replace E893AE0900 with E883701700.
+At offset 31246, replace 66898AE0A67C00 with E8D56C17009090.
 
 # To call the hook that set crafts turret
 At offset 101190, replace 535556578B7C2414 with E88B6D0A00C39090.
@@ -106,6 +107,10 @@ The dll searches a "Objects.txt" file in this order (from first to last):
 If a "Objects.txt" file doesn't exist, no model is replaced.
 The format is a line per object: "FlightModels\ObjectA = FlightModels\NewObjA"
 See "Objects.txt".
+
+Suppose that the new craft is "FlightModels\[Model].opt".
+To define the cockpit POV, set CockpitPovX, CockpitPovY and CockpitPovZ in a file named "FlightModels\[Model]CockpitPov.txt" or create a section named "[CockpitPov]" in "FlightModels\[Model].ini".
+See "CorellianTransport2CockpitPov.txt"
 
 # crafts turrets
 The craft turrets are no longer limited to CorellianTransport2, MilleniumFalcon2, and FamilyTransport. You can now enable turrets for any craft.

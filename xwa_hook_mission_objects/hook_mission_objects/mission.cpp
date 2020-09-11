@@ -139,7 +139,10 @@ struct ExeCraftEntry
 	unsigned short LaserTypeId[3];
 	char Unk0138[9];
 	unsigned char LaserSequence[3];
-	char Unk0144[250];
+	char Unk0144[244];
+	short CockpitPositionY;
+	short CockpitPositionZ;
+	short CockpitPositionX;
 	short TurretPositionX[2];
 	short TurretPositionZ[2];
 	short TurretPositionY[2];
@@ -506,6 +509,79 @@ int MissionObjectsHook(int* params)
 	}
 
 	return OptLoad(argOpt);
+}
+
+int MissionObjectsStatsHook(int* params)
+{
+	static bool s_init = false;
+	static short s_CockpitPositionX[265];
+	static short s_CockpitPositionY[265];
+	static short s_CockpitPositionZ[265];
+
+	if (!s_init)
+	{
+		s_init = true;
+
+		ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+
+		for (int i = 0; i < 265; i++)
+		{
+			s_CockpitPositionX[i] = ExeCraftTable[i].CockpitPositionX;
+			s_CockpitPositionY[i] = ExeCraftTable[i].CockpitPositionY;
+			s_CockpitPositionZ[i] = ExeCraftTable[i].CockpitPositionZ;
+		}
+	}
+
+	const int esp1C = params[7];
+	const short esp24 = (short)params[9];
+	const char* esp144 = (const char*)&params[81];
+
+	short* s_XwaOptModelFileMemHandles = (short*)0x007CA6E0;
+	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+	ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+
+	s_XwaOptModelFileMemHandles[esp1C] = esp24;
+
+	const auto objectLines = GetCustomFileLines("Objects");
+	std::string objectValue = GetFileKeyValue(objectLines, esp144);
+
+	if (objectValue.empty() || !std::ifstream(objectValue))
+	{
+		objectValue = esp144;
+	}
+
+	const short craftIndex = ExeEnableTable[esp1C].CraftIndex;
+
+	if (craftIndex == -1)
+	{
+		return 0;
+	}
+
+	ExeCraftEntry& craftEntry = ExeCraftTable[craftIndex];
+
+	const std::string shipPath = GetStringWithoutExtension(objectValue);
+
+	auto lines = GetFileLines(shipPath + "CockpitPov.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", "CockpitPov");
+	}
+
+	if (!GetFileKeyValue(lines, "CockpitPovX").empty() && !GetFileKeyValue(lines, "CockpitPovY").empty() && !GetFileKeyValue(lines, "CockpitPovZ").empty())
+	{
+		craftEntry.CockpitPositionX = (short)GetFileKeyValueInt(lines, "CockpitPovX", 0);
+		craftEntry.CockpitPositionY = (short)GetFileKeyValueInt(lines, "CockpitPovY", 0);
+		craftEntry.CockpitPositionZ = (short)GetFileKeyValueInt(lines, "CockpitPovZ", 0);
+	}
+	else
+	{
+		craftEntry.CockpitPositionX = s_CockpitPositionX[craftIndex];
+		craftEntry.CockpitPositionY = s_CockpitPositionY[craftIndex];
+		craftEntry.CockpitPositionZ = s_CockpitPositionZ[craftIndex];
+	}
+
+	return 0;
 }
 
 void TurretOptReload(int gunnerModelIndex, int playerModelIndex, int turretIndex)
