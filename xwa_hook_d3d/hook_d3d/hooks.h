@@ -12,6 +12,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x59510E, ExecuteBufferProcessVerticesHook },
 	{ 0x59519C, ExecuteBufferAddTrianglesHook },
 	{ 0x5954E1, ExecuteBufferUnlockAndExecuteHook },
+	{ 0x5951F3, ExecuteBufferTriangleInstructionCount1Hook },
+	{ 0x595365, ExecuteBufferTriangleInstructionCount2Hook },
 };
 
 static const HookPatchItem g_disableFlushTextureCacheInflightPatch[] =
@@ -38,6 +40,8 @@ static const HookPatchItem g_scenePatch[] =
 	{ 0x1946F7, "A1CC1C7B008B4DE8", "9090909090909090" },
 	{ 0x194707, "A1CC1C7B00", "9090909090" },
 	{ 0x194712, "8B0DCC1C7B00", "8BC890909090" },
+	{ 0x1945EE, "8B45EC83781000", "E83D39010085C0" },
+	{ 0x194760, "8B55EC8B42103B45F8", "E8CB37010085C09090" },
 };
 
 static const HookPatch g_patches[] =

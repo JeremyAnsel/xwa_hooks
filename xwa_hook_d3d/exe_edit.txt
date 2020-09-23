@@ -136,3 +136,21 @@ A1CC1C7B00              mov eax, dword ptr [007B1CCC]
 
 8BC8                    mov ecx, eax
 90909090                nop
+
+; L00595191 XwaD3dExecuteBufferAddTriangles
+; D3DOP_TRIANGLE count
+:005951EE - 0x1945EE
+8B45EC                  mov eax, dword ptr [ebp-14]
+83781000                cmp dword ptr [eax+10], 00000000
+
+E83D390100              call 005A8B30, 005A8B30 - 005951F3 = 0001393D
+85C0                    test eax, eax
+
+:00595360 - 0x194760
+8B55EC                  mov edx, dword ptr [ebp-14]
+8B4210                  mov eax, dword ptr [edx+10]
+3B45F8                  cmp eax, dword ptr [ebp-08]
+
+E8CB370100              call 005A8B30, 005A8B30 - 00595365 = 000137CB
+85C0                    test eax, eax
+9090                    nop

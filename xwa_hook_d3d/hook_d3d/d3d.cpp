@@ -211,3 +211,40 @@ int ExecuteBufferUnlockAndExecuteHook(int* params)
 	(*(char**)0x007B1CCC)[1] = 0x00;
 	return 1;
 }
+
+int ExecuteBufferTriangleInstructionCount1Hook(int* params)
+{
+	const XwaD3dTriangle* ebp14 = (XwaD3dTriangle*)params[3];
+	const int ebp20 = params[0];
+
+	if (ebp20 >= 65535)
+	{
+		return 1;
+	}
+
+	if (ebp14->pTexture != 0)
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+int ExecuteBufferTriangleInstructionCount2Hook(int* params)
+{
+	const XwaD3dTriangle* ebp14 = (XwaD3dTriangle*)params[3];
+	const int ebp08 = params[6];
+	const int ebp20 = params[0];
+
+	if (ebp20 >= 65535)
+	{
+		return 1;
+	}
+
+	if (ebp14->pTexture != ebp08)
+	{
+		return 1;
+	}
+
+	return 0;
+}
