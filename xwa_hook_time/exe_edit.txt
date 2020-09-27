@@ -104,12 +104,12 @@ XwaRunGameStateLoop
 :00458C05 - 0x058005
 83FA08                  cmp edx, 00000008
 
-83FA01                  cmp edx, 00000001
+83FA04                  cmp edx, 00000004
 
 :00458C27 - 0x058027
 83F908                  cmp ecx, 00000008
 
-83F901                  cmp ecx, 00000001
+83F904                  cmp ecx, 00000004
 
 
 ; remove fps limit of 59

@@ -36,8 +36,8 @@ At offset 10FBD2, replace 83FA08 with 83FA01.
 At offset 10FBF6, replace 83F808 with 83F801.
 At offset 10FC8A, replace 83FA08 with 83FA01.
 At offset 10FCB2, replace 83F808 with 83F801.
-At offset 58005, replace 83FA08 with 83FA01.
-At offset 58027, replace 83F908 with 83F901.
+At offset 58005, replace 83FA08 with 83FA04.
+At offset 58027, replace 83F908 with 83F904.
 At offset 0F739C, replace 730A with EB0A.
 At offset 10FD86, replace 7D07 with EB07.
 At offset 11034C, replace 7D07 with EB07.
