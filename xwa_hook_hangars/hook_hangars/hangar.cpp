@@ -603,6 +603,18 @@ public:
 		return this->DroidsPositionZ;
 	}
 
+	int GetDroid1PositionZ()
+	{
+		this->UpdateIfChanged();
+		return this->Droid1PositionZ;
+	}
+
+	int GetDroid2PositionZ()
+	{
+		this->UpdateIfChanged();
+		return this->Droid2PositionZ;
+	}
+
 	bool GetIsDroidsFloorInverted()
 	{
 		this->UpdateIfChanged();
@@ -706,6 +718,8 @@ private:
 			this->ShuttleAnimationStraightLine = GetFileKeyValueInt(lines, "ShuttleAnimationStraightLine", 0);
 			this->LoadDroids = GetFileKeyValueInt(lines, "LoadDroids", 1) == 1;
 			this->DroidsPositionZ = GetFileKeyValueInt(lines, "DroidsPositionZ", 0);
+			this->Droid1PositionZ = GetFileKeyValueInt(lines, "Droid1PositionZ", this->DroidsPositionZ);
+			this->Droid2PositionZ = GetFileKeyValueInt(lines, "Droid2PositionZ", this->DroidsPositionZ);
 			this->IsDroidsFloorInverted = GetFileKeyValueInt(lines, "IsDroidsFloorInverted", 0) != 0;
 			this->HangarRoofCranePositionX = GetFileKeyValueInt(lines, "HangarRoofCranePositionX", -1400);
 			this->HangarRoofCranePositionY = GetFileKeyValueInt(lines, "HangarRoofCranePositionY", 786);
@@ -736,6 +750,8 @@ private:
 	int ShuttleAnimationStraightLine;
 	bool LoadDroids;
 	int DroidsPositionZ;
+	int Droid1PositionZ;
+	int Droid2PositionZ;
 	bool IsDroidsFloorInverted;
 	int HangarRoofCranePositionX;
 	int HangarRoofCranePositionY;
@@ -1767,7 +1783,6 @@ int HangarLoadDroidsHook(int* params)
 	S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
 
 	const bool value = g_hangarObjects.GetLoadDroids();
-	const int droidsPositionZ = g_hangarObjects.GetDroidsPositionZ();
 
 	if (value)
 	{
@@ -1780,7 +1795,7 @@ int HangarLoadDroidsHook(int* params)
 		V0x09C6780[V0x068BC10].m26 = 0;
 		V0x09C6780[V0x068BC10].m22 = 0;
 		V0x09C6780[V0x068BC10].m08 = 0;
-		HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, droidsPositionZ);
+		HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, g_hangarObjects.GetDroid1PositionZ());
 		V0x068BC10++;
 
 		// ModelIndex_312_1_34_HangarDroid2
@@ -1789,7 +1804,7 @@ int HangarLoadDroidsHook(int* params)
 		V0x09C6780[V0x068BC10].m26 = 0;
 		V0x09C6780[V0x068BC10].m22 = 0;
 		V0x09C6780[V0x068BC10].m08 = 0;
-		HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, droidsPositionZ);
+		HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, g_hangarObjects.GetDroid2PositionZ());
 		V0x068BC10++;
 
 		g_isHangarFloorInverted = isHangarFloorInverted;

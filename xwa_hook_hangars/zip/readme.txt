@@ -277,6 +277,8 @@ To set the shuttle animation, set "ShuttleAnimation = value". value is "Right", 
 To set the shuttle straight line animation length, set "ShuttleAnimationStraightLine = value". value is an integer. The default value is 0.
 To not load the droids, set "LoadDroids = 0".
 To set the droids z position, set "DroidsPositionZ = value". value is an integer. The default value is 0.
+To set the first droid z position, set "Droid1PositionZ = value". value is an integer. The default value is the DroidsPositionZ value.
+To set the second droid z position, set "Droid2PositionZ = value". value is an integer. The default value is the DroidsPositionZ value.
 To invert the hangar floor for the droids, set "IsDroidsFloorInverted = 1". When set to 0, the floor is below the droids. When set to 1, the floor is above the droids.
 To set the Hangar Roof Crane position, set "HangarRoofCranePositionX = value X", "HangarRoofCranePositionY = value Y" and "HangarRoofCranePositionZ = value Z". The values are integers. The default value for HangarRoofCranePositionX is -1400. The default value for HangarRoofCranePositionY is 786. The default value for HangarRoofCranePositionZ is -282.
 To set the Hangar Roof Crane axis, set "HangarRoofCraneAxis = value". 0 means the X axis. 1 means the Y axis. 2 means the Z axis. The default value is 0.
