@@ -1102,6 +1102,8 @@ int HangarReloadHook(int* params)
 
 	SetShipCategoryObjectsRanges(xwaObjects[hangarObjectIndex].Region);
 
+	V0x068BC10 = 0;
+
 	if (hangarModelIndex == 0x134)
 	{
 		HangarMapHook(nullptr);
@@ -1126,8 +1128,6 @@ int HangarReloadHook(int* params)
 	else
 	{
 		FamHangarMapHook(nullptr);
-
-		V0x068BC10 = 0;
 
 		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(0x1E9, 0x4B8, -0x1B47, -0x12DF, 0, 0); // ModelIndex_489_1_157_WorkDroid1
 		V0x09C6780[V0x068BC10].m04 = 0;
