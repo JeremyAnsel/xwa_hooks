@@ -280,9 +280,48 @@ std::string GetFileNameWithoutExtension(const std::string& str)
 	return str.substr(a, str.size() - a);
 }
 
+std::vector<std::string> GetCustomFileLines(const std::string& name)
+{
+	static std::vector<std::string> _lines;
+	static std::string _name;
+	static std::string _mission;
+
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	if (_name != name || _mission != xwaMissionFileName)
+	{
+		_name = name;
+		_mission = xwaMissionFileName;
+
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		_lines = GetFileLines(mission + "_" + name + ".txt");
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines(mission + ".ini", name);
+		}
+
+		if (!_lines.size())
+		{
+			const std::string path = "FlightModels\\";
+			_lines = GetFileLines(path + name + ".txt");
+		}
+	}
+
+	return _lines;
+}
+
 std::vector<TurretData> GetTurretDataList(int modelIndex)
 {
-	const std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	const auto objectLines = GetCustomFileLines("Objects");
+	const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		shipPath = GetStringWithoutExtension(objectValue);
+	}
 
 	auto lines = GetFileLines(shipPath + "Turrets.txt");
 
@@ -401,7 +440,15 @@ std::vector<TurretData> GetTurretDataList(int modelIndex)
 
 bool GetTurretForwardFire(int modelIndex)
 {
-	const std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	const auto objectLines = GetCustomFileLines("Objects");
+	const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		shipPath = GetStringWithoutExtension(objectValue);
+	}
 
 	auto lines = GetFileLines(shipPath + "Turrets.txt");
 
@@ -418,6 +465,8 @@ class ModelIndexTurrets
 public:
 	std::vector<TurretData>& GetTurrets(int modelIndex)
 	{
+		this->UpdateIfChanged();
+
 		auto it = this->_turrets.find(modelIndex);
 
 		if (it != this->_turrets.end())
@@ -440,6 +489,8 @@ public:
 
 	bool GetForwardFire(int modelIndex)
 	{
+		this->UpdateIfChanged();
+
 		auto it = this->_turretsForwardFire.find(modelIndex);
 
 		if (it != this->_turretsForwardFire.end())
@@ -455,6 +506,21 @@ public:
 	}
 
 private:
+	void UpdateIfChanged()
+	{
+		static std::string _mission;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+
+		if (_mission != xwaMissionFileName)
+		{
+			_mission = xwaMissionFileName;
+
+			this->_turrets.clear();
+			this->_turretsForwardFire.clear();
+		}
+	}
+
 	std::map<int, std::vector<TurretData>> _turrets;
 	std::map<int, bool> _turretsForwardFire;
 };
@@ -462,37 +528,6 @@ private:
 ModelIndexTurrets g_modelIndexTurrets;
 
 std::vector<std::vector<CraftData>> g_craftsData;
-
-std::vector<std::string> GetCustomFileLines(const std::string& name)
-{
-	static std::vector<std::string> _lines;
-	static std::string _name;
-	static std::string _mission;
-
-	const char* xwaMissionFileName = (const char*)0x06002E8;
-
-	if (_name != name || _mission != xwaMissionFileName)
-	{
-		_name = name;
-		_mission = xwaMissionFileName;
-
-		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
-		_lines = GetFileLines(mission + "_" + name + ".txt");
-
-		if (!_lines.size())
-		{
-			_lines = GetFileLines(mission + ".ini", name);
-		}
-
-		if (!_lines.size())
-		{
-			const std::string path = "FlightModels\\";
-			_lines = GetFileLines(path + name + ".txt");
-		}
-	}
-
-	return _lines;
-}
 
 int MissionObjectsHook(int* params)
 {
