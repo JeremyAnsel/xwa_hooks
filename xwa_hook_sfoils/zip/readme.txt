@@ -82,6 +82,7 @@ mesh index, angle, closing speed, opening speed.
 
 To enable or disable the S-Foils closing/opening in before/after hyperspace, create a setting named "CloseSFoilsInHyperspace". To enable, set "1". To disable, set "0". The default value is "0".
 To slow down the animation, create a setting named "SFoilsAnimationSpeed". For instance, if you set "2", the animation will be slowed down by a factor of 2. The default value is "1" (normal speed).
+To allow fire when s-foils are closed, set the AllowFireWhenSFoilsAreClosed setting. When set to 0, fire is not allowed. When set to 1, fire is allowed. The default value is 0.
 
 See XWingSFoils.txt, BWingSFoils.txt, ShuttleSFoils.txt.
 
@@ -108,6 +109,11 @@ When set to 1, s-foils must be closed and landing gears opened before enter hang
 To require landing gears being closed before enter hyperspace, set the CloseLangingGearsBeforeEnterHyperspace setting.
 When set to 0, normal behavior
 When set to 1, landing gears must be closed before enter hyperspace
+
+To manualy control the s-foils and landing gears, set the AutoClosseteSFoils setting.
+When set to 0, s-foils and landing gears are manualy closed
+When set to 1, s-foils and landing gears are automaticaly closed
+The default value is 1.
 
 See the "hook_sfoils.cfg" file or the "hook_sfoils" section of "hooks.ini".
 

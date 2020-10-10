@@ -4,3 +4,4 @@
 
 CloseSFoilsInHyperspace = 0
 SFoilsAnimationSpeed = 1
+AllowFireWhenSFoilsAreClosed = 0

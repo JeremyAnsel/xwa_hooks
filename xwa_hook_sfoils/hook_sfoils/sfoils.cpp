@@ -70,10 +70,12 @@ public:
 
 		this->CloseSFoilsAndOpenLangingGearsBeforeEnterHangar = GetFileKeyValueInt(lines, "CloseSFoilsAndOpenLangingGearsBeforeEnterHangar") != 0;
 		this->CloseLangingGearsBeforeEnterHyperspace = GetFileKeyValueInt(lines, "CloseLangingGearsBeforeEnterHyperspace") != 0;
+		this->AutoCloseSFoils = GetFileKeyValueInt(lines, "AutoCloseSFoils", 1) != 0;
 	}
 
 	bool CloseSFoilsAndOpenLangingGearsBeforeEnterHangar;
 	bool CloseLangingGearsBeforeEnterHyperspace;
+	bool AutoCloseSFoils;
 };
 
 Config g_config;
@@ -151,6 +153,7 @@ struct CraftSettings
 {
 	bool CloseSFoilsInHyperspace;
 	int SFoilsAnimationSpeed;
+	bool AllowFireWhenSFoilsAreClosed;
 };
 
 std::vector<SFoil> GetFileListSFoils(const std::vector<std::string>& lines)
@@ -284,6 +287,7 @@ CraftSettings GetSFoilsSettings(int modelIndex)
 	CraftSettings settings;
 	settings.CloseSFoilsInHyperspace = GetFileKeyValueInt(lines, "CloseSFoilsInHyperspace", 0) == 0 ? false : true;
 	settings.SFoilsAnimationSpeed = std::max(GetFileKeyValueInt(lines, "SFoilsAnimationSpeed", 1), 1);
+	settings.AllowFireWhenSFoilsAreClosed = GetFileKeyValueInt(lines, "AllowFireWhenSFoilsAreClosed", 0) == 0 ? false : true;
 
 	return settings;
 }
@@ -486,7 +490,13 @@ void SetSFoilsText()
 int SFoilsFilterHook(int* params)
 {
 	const XwaObject* object = (XwaObject*)params[0];
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
+	const int currentPlayerId = *(int*)0x08C1CC8;
 	const unsigned short modelIndex = object->ModelIndex;
+	const int objectIndex = object - xwaObjects;
+	const int playerObjectIndex = xwaPlayers[currentPlayerId].ObjectIndex;
 
 	const char** s_StringsMessageLines = (const char**)0x009B6400;
 	const int StringsMessageLine_MSG_SFOILS_NO_FIRE = 138;
@@ -584,9 +594,38 @@ int SFoilsFilterHook(int* params)
 		bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(modelIndex).size() != 0;
 		bool areLandingGearsClosed = g_modelIndexSFoils.AreLandingGearsClosed(object);
 
+		const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
+
 		if (!hasSFoils && hasLandingGears && areLandingGearsClosed)
 		{
 			sfoils.clear();
+		}
+
+		if (objectIndex == playerObjectIndex && !g_config.AutoCloseSFoils)
+		{
+			sfoils.clear();
+		}
+		else if (params[-1] == 0x508DE6)
+		{
+			// player enter hyperspace
+
+			if (!settings.CloseSFoilsInHyperspace)
+			{
+				sfoils.clear();
+			}
+		}
+		else if (params[-1] == 0x403AF2)
+		{
+			// player exit hyperspace
+
+			if (object->pMobileObject->pCraft->SFoilsState == 0)
+			{
+				sfoils.clear();
+			}
+			else
+			{
+				object->pMobileObject->pCraft->SFoilsState = 2;
+			}
 		}
 	}
 
@@ -1139,17 +1178,19 @@ int NoFireMessageHook(int* params)
 	bool areSFoilsOpened = g_modelIndexSFoils.AreSFoilsOpened(object);
 	bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(object->ModelIndex).size() != 0;
 	bool areLandingGearsClosed = g_modelIndexSFoils.AreLandingGearsClosed(object);
+	const auto settings = g_modelIndexSFoils.GetSettings(object->ModelIndex);
 
 	int ret = 0;
 
 	if (hasSFoils && !areSFoilsOpened)
 	{
-		ret = 1;
+		ret = settings.AllowFireWhenSFoilsAreClosed ? 0 : 1;
 	}
-	else if (hasLandingGears && !areLandingGearsClosed)
+
+	if (hasLandingGears && !areLandingGearsClosed)
 	{
 		ret = 1;
 	}
 
-	return currentCraft->SFoilsState != 0 || ret;
+	return (currentCraft->SFoilsState & 1) != 0 || ret;
 }
