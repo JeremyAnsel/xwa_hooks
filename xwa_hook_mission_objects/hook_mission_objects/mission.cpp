@@ -277,7 +277,7 @@ std::string GetFileNameWithoutExtension(const std::string& str)
 {
 	auto a = str.find_last_of('\\');
 
-	return str.substr(a, str.size() - a);
+	return a == -1 ? str : str.substr(a + 1, -1);
 }
 
 std::vector<std::string> GetCustomFileLines(const std::string& name)
