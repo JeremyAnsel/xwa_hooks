@@ -177,6 +177,31 @@ E986000000  jmp 0045639D, 0045639D - 00456317 = 00000086
 909090909090
 
 
+; from L0045D910
+; hook for droids update
+:0045D952 - 0x05CD52
+EB16                    jmp 0045D96A
+
+9090                    nop
+
+:0045D954 - 0x05CD54
+8B15946B6800            mov edx, dword ptr [00686B94]
+8B2DC4337B00            mov ebp, dword ptr [007B33C4]
+8B442410                mov eax, dword ptr [esp+10]
+8B0D08BC6800            mov ecx, dword ptr [0068BC08]
+
+83EC18                  sub esp, 00000018
+E8D4B11400              call 005A8B30, 005A8B30 - 0045D95C = 0014B1D4
+85C0                    test eax, eax
+5A                      pop edx
+5D                      pop ebp
+58                      pop eax
+59                      pop ecx
+5E                      pop esi
+5B                      pop ebx
+0F84BF070000            je 0045E129, 0045E129 - 0045D96A = 000007BF
+
+
 ; from L004554F0
 ; hook for Hangar Roof Crane loading
 :00456435 - 0x55835

@@ -10,6 +10,7 @@ int HangarShuttleUpdateHook(int* params);
 int HangarShuttleReenterPositionHook(int* params);
 int HangarShuttleOptReadInfosHook(int* params);
 int HangarLoadDroidsHook(int* params);
+int HangarDroidsUpdateHook(int* params);
 int HangarLoadHangarRoofCraneHook(int* params);
 int HangarRoofCraneInitHook(int* params);
 int HangarRoofCraneUpdateHook(int* params);

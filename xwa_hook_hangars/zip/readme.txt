@@ -87,6 +87,10 @@ At offset 557B9, replace 899EA6679C00 with 909090909090.
 At offset 557C4, replace 899EA2679C00 with 909090909090.
 At offset 557CC, replace 899E88679C00891510BC6800 with 909090909090909090909090.
 
+# To call the hook that updates the droids
+At offset 05CD52, replace EB16 with 9090.
+At offset 05CD54, replace 8B15946B68008B2DC4337B008B4424108B0D08BC6800 with 83EC18E8D4B1140085C05A5D58595E5B0F84BF070000.
+
 # To call the hook that loads the Hangar Roof Crane
 At offset 55835, replace E8A6060000 with E8F6261500.
 At offset 5F9F6, replace A1C4BC68008D14B6C1E203 with 57E8248514005FEB449090.
@@ -280,6 +284,8 @@ To set the droids z position, set "DroidsPositionZ = value". value is an integer
 To set the first droid z position, set "Droid1PositionZ = value". value is an integer. The default value is the DroidsPositionZ value.
 To set the second droid z position, set "Droid2PositionZ = value". value is an integer. The default value is the DroidsPositionZ value.
 To invert the hangar floor for the droids, set "IsDroidsFloorInverted = 1". When set to 0, the floor is below the droids. When set to 1, the floor is above the droids.
+To not update the first droid, set "Droid1Update = 0".
+To not update the second droid, set "Droid2Update = 0".
 To set the Hangar Roof Crane position, set "HangarRoofCranePositionX = value X", "HangarRoofCranePositionY = value Y" and "HangarRoofCranePositionZ = value Z". The values are integers. The default value for HangarRoofCranePositionX is -1400. The default value for HangarRoofCranePositionY is 786. The default value for HangarRoofCranePositionZ is -282.
 To set the Hangar Roof Crane axis, set "HangarRoofCraneAxis = value". 0 means the X axis. 1 means the Y axis. 2 means the Z axis. The default value is 0.
 To define the range of Hangar Roof Crane animation, set "HangarRoofCraneLowOffset = value" and "HangarRoofCraneHighOffset = value". The values are relative to the Hangar Roof Crane initial position.

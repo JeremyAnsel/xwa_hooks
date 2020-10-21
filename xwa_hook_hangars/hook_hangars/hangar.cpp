@@ -621,6 +621,18 @@ public:
 		return this->IsDroidsFloorInverted;
 	}
 
+	bool GetDroid1Update()
+	{
+		this->UpdateIfChanged();
+		return this->Droid1Update;
+	}
+
+	bool GetDroid2Update()
+	{
+		this->UpdateIfChanged();
+		return this->Droid2Update;
+	}
+
 	int GetHangarRoofCranePositionX()
 	{
 		this->UpdateIfChanged();
@@ -721,6 +733,8 @@ private:
 			this->Droid1PositionZ = GetFileKeyValueInt(lines, "Droid1PositionZ", this->DroidsPositionZ);
 			this->Droid2PositionZ = GetFileKeyValueInt(lines, "Droid2PositionZ", this->DroidsPositionZ);
 			this->IsDroidsFloorInverted = GetFileKeyValueInt(lines, "IsDroidsFloorInverted", 0) != 0;
+			this->Droid1Update = GetFileKeyValueInt(lines, "Droid1Update", 1) != 0;
+			this->Droid2Update = GetFileKeyValueInt(lines, "Droid2Update", 1) != 0;
 			this->HangarRoofCranePositionX = GetFileKeyValueInt(lines, "HangarRoofCranePositionX", -1400);
 			this->HangarRoofCranePositionY = GetFileKeyValueInt(lines, "HangarRoofCranePositionY", 786);
 			this->HangarRoofCranePositionZ = GetFileKeyValueInt(lines, "HangarRoofCranePositionZ", -282);
@@ -753,6 +767,8 @@ private:
 	int Droid1PositionZ;
 	int Droid2PositionZ;
 	bool IsDroidsFloorInverted;
+	bool Droid1Update;
+	bool Droid2Update;
 	int HangarRoofCranePositionX;
 	int HangarRoofCranePositionY;
 	int HangarRoofCranePositionZ;
@@ -1811,6 +1827,37 @@ int HangarLoadDroidsHook(int* params)
 	}
 
 	return 0;
+}
+
+int HangarDroidsUpdateHook(int* params)
+{
+	int& edx = params[0];
+	int& ebp = params[1];
+	int& eax = params[2];
+	int& ecx = params[3];
+	int& esi = params[4];
+	int& ebx = params[5];
+	int& esp10 = params[6 + 4];
+	int& esp20 = params[6 + 8];
+
+	edx = *(int*)0x00686B94;
+	ebp = *(int*)0x007B33C4;
+	eax = esp10;
+	ecx = *(int*)0x0068BC08;
+	esi = esp10;
+	esp20 = *(int*)(0x009C6780 + esp10 * 0x2E);
+	ebx = esp20;
+
+	switch (esp10)
+	{
+	case 0:
+		return g_hangarObjects.GetDroid1Update() ? 1 : 0;
+
+	case 1:
+		return g_hangarObjects.GetDroid2Update() ? 1 : 0;
+	}
+
+	return 1;
 }
 
 int HangarLoadHangarRoofCraneHook(int* params)
