@@ -1,6 +1,7 @@
 #include "targetver.h"
 #include "pilot.h"
 #include "config.h"
+#include <fstream>
 #include <map>
 #include <utility>
 
@@ -94,6 +95,64 @@ struct PilotMesh
 	int behavior;
 };
 
+std::vector<std::string> GetCustomFileLines(const std::string& name)
+{
+	static std::vector<std::string> _lines;
+	static std::string _name;
+	static std::string _mission;
+
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	if (_name != name || _mission != xwaMissionFileName)
+	{
+		_name = name;
+		_mission = xwaMissionFileName;
+
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		_lines = GetFileLines(mission + "_" + name + ".txt");
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines(mission + ".ini", name);
+		}
+
+		if (!_lines.size())
+		{
+			const std::string path = "FlightModels\\";
+			_lines = GetFileLines(path + name + ".txt");
+		}
+	}
+
+	return _lines;
+}
+
+std::string GetShipPath(int modelIndex)
+{
+	const std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	{
+		const auto objectLines = GetCustomFileLines("Objects");
+		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+		if (!objectValue.empty() && std::ifstream(objectValue))
+		{
+			return GetStringWithoutExtension(objectValue);
+		}
+	}
+
+	{
+		const auto objectLines = GetCustomFileLines("HangarObjects");
+		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+		if (!objectValue.empty() && std::ifstream(objectValue))
+		{
+			return GetStringWithoutExtension(objectValue);
+		}
+	}
+
+	return shipPath;
+}
+
 std::vector<PilotMesh> GetFileListPilotMeshes(const std::vector<std::string>& lines)
 {
 	const auto pilotMeshes = GetFileListValues(lines);
@@ -181,7 +240,7 @@ std::vector<PilotMesh> GetDefaultPilotMeshes(int modelIndex, bool isCockpit)
 
 std::vector<PilotMesh> GetPilotMeshes(int modelIndex)
 {
-	const std::string pilot = g_flightModelsList.GetLstLine(modelIndex);
+	const std::string pilot = GetShipPath(modelIndex);
 
 	auto lines = GetFileLines(pilot + "Pilot.txt");
 
@@ -206,7 +265,7 @@ std::vector<PilotMesh> GetPilotMeshes(int modelIndex)
 
 std::vector<PilotMesh> GetPilotCockpitMeshes(int modelIndex)
 {
-	const std::string pilot = g_flightModelsList.GetLstLine(modelIndex);
+	const std::string pilot = GetShipPath(modelIndex);
 
 	auto lines = GetFileLines(pilot + "PilotCockpit.txt");
 
@@ -245,6 +304,8 @@ class ModelIndexPilotMeshes
 public:
 	std::vector<PilotMesh> GetMeshes(int modelIndex)
 	{
+		this->UpdateIfChanged();
+
 		auto it = this->_meshes.find(modelIndex);
 
 		if (it != this->_meshes.end())
@@ -261,6 +322,8 @@ public:
 
 	std::vector<PilotMesh> GetMeshesCockpit(int modelIndex)
 	{
+		this->UpdateIfChanged();
+
 		auto it = this->_meshesCockpit.find(modelIndex);
 
 		if (it != this->_meshesCockpit.end())
@@ -276,6 +339,21 @@ public:
 	}
 
 private:
+	void UpdateIfChanged()
+	{
+		static std::string _mission;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+
+		if (_mission != xwaMissionFileName)
+		{
+			_mission = xwaMissionFileName;
+
+			this->_meshes.clear();
+			this->_meshesCockpit.clear();
+		}
+	}
+
 	std::map<int, std::vector<PilotMesh>> _meshes;
 	std::map<int, std::vector<PilotMesh>> _meshesCockpit;
 };
