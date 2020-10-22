@@ -1,6 +1,7 @@
 #include "targetver.h"
 #include "sfoils.h"
 #include "config.h"
+#include <fstream>
 #include <map>
 #include <algorithm>
 #include <utility>
@@ -156,6 +157,64 @@ struct CraftSettings
 	bool AllowFireWhenSFoilsAreClosed;
 };
 
+std::vector<std::string> GetCustomFileLines(const std::string& name)
+{
+	static std::vector<std::string> _lines;
+	static std::string _name;
+	static std::string _mission;
+
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	if (_name != name || _mission != xwaMissionFileName)
+	{
+		_name = name;
+		_mission = xwaMissionFileName;
+
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		_lines = GetFileLines(mission + "_" + name + ".txt");
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines(mission + ".ini", name);
+		}
+
+		if (!_lines.size())
+		{
+			const std::string path = "FlightModels\\";
+			_lines = GetFileLines(path + name + ".txt");
+		}
+	}
+
+	return _lines;
+}
+
+std::string GetShipPath(int modelIndex)
+{
+	const std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	{
+		const auto objectLines = GetCustomFileLines("Objects");
+		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+		if (!objectValue.empty() && std::ifstream(objectValue))
+		{
+			return GetStringWithoutExtension(objectValue);
+		}
+	}
+
+	{
+		const auto objectLines = GetCustomFileLines("HangarObjects");
+		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+		if (!objectValue.empty() && std::ifstream(objectValue))
+		{
+			return GetStringWithoutExtension(objectValue);
+		}
+	}
+
+	return shipPath;
+}
+
 std::vector<SFoil> GetFileListSFoils(const std::vector<std::string>& lines)
 {
 	const auto sfoils = GetFileListValues(lines);
@@ -214,7 +273,7 @@ std::vector<SFoil> GetDefaultSFoils(int modelIndex)
 
 std::vector<SFoil> GetSFoilsList(int modelIndex)
 {
-	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+	const std::string ship = GetShipPath(modelIndex);
 
 	auto lines = GetFileLines(ship + "SFoils.txt");
 
@@ -239,7 +298,7 @@ std::vector<SFoil> GetSFoilsList(int modelIndex)
 
 std::vector<SFoil> GetLandingGearsList(int modelIndex)
 {
-	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+	const std::string ship = GetShipPath(modelIndex);
 
 	auto lines = GetFileLines(ship + "SFoilsLandingGears.txt");
 
@@ -275,7 +334,7 @@ std::vector<SFoil> GetLandingGearsList(int modelIndex)
 
 CraftSettings GetSFoilsSettings(int modelIndex)
 {
-	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+	const std::string ship = GetShipPath(modelIndex);
 
 	auto lines = GetFileLines(ship + "SFoils.txt");
 
@@ -297,6 +356,8 @@ class ModelIndexSFoils
 public:
 	std::vector<SFoil> GetSFoils(int modelIndex)
 	{
+		this->UpdateIfChanged();
+
 		auto it = this->_sfoils.find(modelIndex);
 
 		if (it != this->_sfoils.end())
@@ -313,6 +374,8 @@ public:
 
 	std::vector<SFoil> GetLandingGears(int modelIndex)
 	{
+		this->UpdateIfChanged();
+
 		auto it = this->_landingGears.find(modelIndex);
 
 		if (it != this->_landingGears.end())
@@ -338,6 +401,8 @@ public:
 
 	CraftSettings GetSettings(int modelIndex)
 	{
+		this->UpdateIfChanged();
+
 		auto it = this->_settings.find(modelIndex);
 
 		if (it != this->_settings.end())
@@ -407,6 +472,22 @@ public:
 	}
 
 private:
+	void UpdateIfChanged()
+	{
+		static std::string _mission;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+
+		if (_mission != xwaMissionFileName)
+		{
+			_mission = xwaMissionFileName;
+
+			this->_sfoils.clear();
+			this->_landingGears.clear();
+			this->_settings.clear();
+		}
+	}
+
 	std::map<int, std::vector<SFoil>> _sfoils;
 	std::map<int, std::vector<SFoil>> _landingGears;
 	std::map<int, CraftSettings> _settings;
