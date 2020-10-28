@@ -36,6 +36,10 @@ This hook increases the D3DTextures count limit. When there are more than 1624 t
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=10&t=11274
 
+## xwa_hook_dock
+
+This hook fixes the docking position.
+
 ## xwa_hook_engine_sound
 
 This hook enables setting engine sound and weapon sound behavior for any craft.
