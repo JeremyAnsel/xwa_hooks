@@ -27,3 +27,32 @@ E8067F0F00              call 005A8B20, 005A8B20 - 004B0C1A = 000F7F06
 E8D1C90000              call 004A2FB0
 
 E841251100              call 005A8B20, 005A8B20 - 004965DF = 00112541
+
+
+
+; L004B65E0
+
+:004B67AF - 0x0B5BAF
+E8FCC7FEFF              call 004A2FB0
+
+E86C230F00              call 005A8B20, 005A8B20 - 004B67B4 = 000F236C
+
+:004B6770 - 0x0B5B70
+742B                    je 004B679D
+
+9090                    nop
+
+:004B678D - 0x0B5B8D
+8B9C49EEB65B00          mov ebx, dword ptr [ecx+2*ecx+005BB6EE]
+2BD3                    sub edx, ebx
+
+50                      push eax
+E88D230F00              call 005A8B20, 005A8B20 - 004B6793 = 000F238D
+5A                      pop edx
+9090                    nop
+
+:004B6AF7 - 0x0B5EF7
+8996EC000000            mov dword ptr [esi+000000EC], edx
+
+E824200F00              call 005A8B20, 005A8B20 - 004B6AFC = 000F2024
+90                      nop
