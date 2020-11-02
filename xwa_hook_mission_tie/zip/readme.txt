@@ -1,6 +1,7 @@
 xwa_hook_mission_tie
 
 This hook permits to override the data of mission files.
+It fixes a bug with music state at mission start.
 
 
 *** Requirements ***

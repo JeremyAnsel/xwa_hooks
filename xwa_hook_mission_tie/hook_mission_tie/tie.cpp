@@ -56,6 +56,10 @@ std::vector<std::vector<std::string>> g_tieLines;
 
 int TieHook(int* params)
 {
+	// init music state
+	// fix a bug where a mission starts with wait state instead of intro state
+	*(unsigned char*)0x0069406C = 0;
+
 	g_tieLines.clear();
 
 	const auto LoadMission = (int(*)(const char*))0x420300;
