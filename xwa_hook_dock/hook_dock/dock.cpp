@@ -3,6 +3,7 @@
 #include "config.h"
 #include <map>
 #include <utility>
+#include <algorithm>
 
 class FlightModelsList
 {
@@ -254,6 +255,8 @@ int PLayerDockElevationHook(int* params)
 	const int esp24 = (short)params[10];
 
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+	const XwaCraft* s_pXwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 
 	int elevation;
 
@@ -264,7 +267,13 @@ int PLayerDockElevationHook(int* params)
 	else
 	{
 		short modelIndex = XwaObjects[esp24].ModelIndex;
-		elevation = g_modelIndexDock.GetDockElevation(modelIndex);
+		int elevationSetting = g_modelIndexDock.GetDockElevation(modelIndex);
+
+		int elevationExeBottom = ExeCraftTable[XwaObjects[esp24].pMobileObject->pCraft->CraftIndex].DockFromBigPositionZ;
+		int elevationExeTop = ExeCraftTable[s_pXwaCurrentCraft->CraftIndex].DockToBigPositionZ;
+		int elevationExe = elevationExeBottom - elevationExeTop;
+
+		elevation = std::min(elevationSetting, elevationExe);
 	}
 
 	params[0] = elevation / 2;
