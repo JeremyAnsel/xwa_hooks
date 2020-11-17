@@ -338,14 +338,22 @@ std::string GetCommandShipLstLine()
 	if (mothershipObjectIndex == 0)
 	{
 		const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
-		const int commandShipFlightGroupIndex = xwaTieFlightGroups[playerFlightGroupIndex].m0C4;
-		const int commandShipEnabled = xwaTieFlightGroups[playerFlightGroupIndex].m0C5;
 
-		if (commandShipEnabled)
+		int commandShipModelIndex = -1;
+
+		if (xwaTieFlightGroups[playerFlightGroupIndex].m0C3)
 		{
-			const int commandShipCraftId = xwaTieFlightGroups[commandShipFlightGroupIndex].CraftId;
-			const int commandShipModelIndex = exeSpecies[commandShipCraftId];
+			const int commandShipCraftId = xwaTieFlightGroups[xwaTieFlightGroups[playerFlightGroupIndex].m0C2].CraftId;
+			commandShipModelIndex = exeSpecies[commandShipCraftId];
+		}
+		else if (xwaTieFlightGroups[playerFlightGroupIndex].m0C5)
+		{
+			const int commandShipCraftId = xwaTieFlightGroups[xwaTieFlightGroups[playerFlightGroupIndex].m0C4].CraftId;
+			commandShipModelIndex = exeSpecies[commandShipCraftId];
+		}
 
+		if (commandShipModelIndex != -1)
+		{
 			std::string lstLine = g_flightModelsList.GetLstLine(commandShipModelIndex);
 			return lstLine;
 		}
@@ -382,12 +390,14 @@ unsigned char GetCommandShipIff()
 	if (mothershipObjectIndex == 0)
 	{
 		const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
-		const int commandShipFlightGroupIndex = xwaTieFlightGroups[playerFlightGroupIndex].m0C4;
-		const int commandShipEnabled = xwaTieFlightGroups[playerFlightGroupIndex].m0C5;
 
-		if (commandShipEnabled)
+		if (xwaTieFlightGroups[playerFlightGroupIndex].m0C3)
 		{
-			return xwaTieFlightGroups[commandShipFlightGroupIndex].Iff;
+			return xwaTieFlightGroups[xwaTieFlightGroups[playerFlightGroupIndex].m0C2].Iff;
+		}
+		else if (xwaTieFlightGroups[playerFlightGroupIndex].m0C5)
+		{
+			return xwaTieFlightGroups[xwaTieFlightGroups[playerFlightGroupIndex].m0C4].Iff;
 		}
 
 		return 0;
