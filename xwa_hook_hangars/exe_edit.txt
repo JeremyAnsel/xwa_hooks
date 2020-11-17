@@ -776,3 +776,21 @@ EB67                    je 00459D32
 E8D2870200              call 004836F0
 
 E802DC1400              call 005A8B20, 005A8B20 - 0045AF1E = 0014DC02
+
+
+; from L004B8F70
+; fold outside
+:004B9156 - 0x0B8556
+E805A5FEFF              call 004A3660
+
+E8C5F90E00              call 005A8B20, 005A8B20 - 004B915B = 000EF9C5
+
+; from L004B9220
+; fold inside
+:004B9462 - 0x0B8862
+8A4227                  mov al, byte ptr [edx+27]
+3C02                    cmp al, 02
+7417                    je 004B9480
+
+E8B9F60E00              call 005A8B20, 005A8B20 - 004B9467 = 000EF6B9
+EB17                    jmp 004B9480

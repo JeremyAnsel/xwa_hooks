@@ -108,6 +108,22 @@ struct ExeEnableEntry
 
 static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24");
 
+struct XwaCraft
+{
+	char unk000[4];
+	unsigned short CraftIndex;
+	int LeaderObjectIndex;
+	char unk00A[29];
+	char SFoilsState;
+	char unk028[355];
+	unsigned char m18B;
+	char unk18C[212];
+	unsigned char MeshRotationAngles[50];
+	char unk292[359];
+};
+
+static_assert(sizeof(XwaCraft) == 1017, "size of XwaCraft must be 1017");
+
 struct XwaMobileObject
 {
 	char Unk0000[10];
@@ -118,7 +134,9 @@ struct XwaMobileObject
 	unsigned short ModelIndex;
 	char Unk0097[2];
 	unsigned char Markings;
-	char Unk009A[75];
+	char Unk009A[67];
+	XwaCraft* pCraft;
+	char Unk00E1[4];
 };
 
 static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 229");
@@ -856,6 +874,19 @@ void ReadIsHangarFloorInverted()
 	g_isPlayerFloorInverted = g_hangarObjects.GetIsPlayerFloorInverted();
 }
 
+bool GetCraftFoldOutside(unsigned short modelIndex)
+{
+	const std::string lstLine = g_flightModelsList.GetLstLine(modelIndex);
+	auto lines = GetFileLines(lstLine + "HangarObjects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(lstLine + ".ini", "HangarObjects");
+	}
+
+	return GetFileKeyValueInt(lines, "FoldOutside", 0) != 0;
+}
+
 int GetCraftElevation(unsigned short modelIndex, bool isHangarFloorInverted)
 {
 	const auto ModelGetSizeZ = (int(*)(unsigned int))0x0485820;
@@ -910,6 +941,22 @@ int GetCraftElevation(unsigned short modelIndex, bool isHangarFloorInverted)
 class ModelIndexHangar
 {
 public:
+	bool GetFoldOutside(int modelIndex)
+	{
+		auto it = this->_foldOutside.find(modelIndex);
+
+		if (it != this->_foldOutside.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			bool value = GetCraftFoldOutside(modelIndex);
+			this->_foldOutside.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
 	int GetClosedSFoilsElevation(int modelIndex)
 	{
 		auto it = this->_closedSFoilsElevation.find(modelIndex);
@@ -943,6 +990,7 @@ public:
 	}
 
 private:
+	std::map<int, bool> _foldOutside;
 	std::map<int, int> _closedSFoilsElevation;
 	std::map<int, int> _closedSFoilsElevationInverted;
 };
@@ -3122,6 +3170,78 @@ int HangarDisableShadowWhenInvertedHook(int* params)
 		L004836F0(A4);
 
 		s_XwaOptCurrentLodDistance = lodDistance;
+	}
+
+	return 0;
+}
+
+int HangarFoldOutsideHook(int* params)
+{
+	const auto L004A3660 = (void(*)())0x004A3660;
+
+	L004A3660();
+
+	int distance = *(int*)0x07D4B60;
+
+	if (distance >= 0x1800)
+	{
+		return 0;
+	}
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	short hangarObjectIndex = *(short*)(*(int*)(0x07CA1A0 + 0x10) + 0x38);
+	unsigned short hangarModelIndex = xwaObjects[hangarObjectIndex].ModelIndex;
+
+	bool foldOutside = g_modelIndexHangar.GetFoldOutside(hangarModelIndex);
+
+	if (foldOutside)
+	{
+		for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x07CA3B8; objectIndex++)
+		{
+			if (xwaObjects[objectIndex].ModelIndex == 0)
+			{
+				continue;
+			}
+
+			if (xwaObjects[objectIndex].TieFlightGroupIndex != *(int*)(0x07CA1A0 + 0x1C))
+			{
+				continue;
+			}
+
+			XwaCraft* craft = xwaObjects[objectIndex].pMobileObject->pCraft;
+
+			if (craft->SFoilsState != 0x02)
+			{
+				craft->SFoilsState = 0x03;
+			}
+		}
+	}
+
+	return 0;
+}
+
+int HangarFoldInsideHook(int* params)
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+
+	for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x07CA3B8; objectIndex++)
+	{
+		if (xwaObjects[objectIndex].ModelIndex == 0)
+		{
+			continue;
+		}
+
+		if (xwaObjects[objectIndex].TieFlightGroupIndex != *(int*)(0x07CA1A0 + 0x1C))
+		{
+			continue;
+		}
+
+		XwaCraft* craft = xwaObjects[objectIndex].pMobileObject->pCraft;
+
+		if (craft->SFoilsState != 0x02)
+		{
+			craft->SFoilsState = 0x03;
+		}
 	}
 
 	return 0;

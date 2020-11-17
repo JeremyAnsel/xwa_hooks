@@ -57,3 +57,5 @@ int HangarShuttleAnimationSound9Hook(int* params);
 int HangarShuttleAnimationSound10Hook(int* params);
 int HangarGetCraftIndexHook(int* params);
 int HangarDisableShadowWhenInvertedHook(int* params);
+int HangarFoldOutsideHook(int* params);
+int HangarFoldInsideHook(int* params);
