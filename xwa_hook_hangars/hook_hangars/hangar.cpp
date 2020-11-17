@@ -415,7 +415,15 @@ std::string GetCustomFilePath(const std::string& name)
 		if (!ship.empty())
 		{
 			ship = GetStringWithoutExtension(ship);
-			ship.append(name);
+
+			if (_stricmp(name.c_str(), "Hangar.opt") == 0 && _stricmp(ship.c_str(), "FlightModels\\FamilyBase") == 0)
+			{
+				ship.append(".opt");
+			}
+			else
+			{
+				ship.append(name);
+			}
 
 			if (std::ifstream(ship))
 			{
@@ -442,7 +450,14 @@ std::string GetCustomFilePath(const std::string& name)
 
 		if (!ship.empty())
 		{
-			ship.append(name);
+			if (_stricmp(name.c_str(), "Hangar.opt") == 0 && _stricmp(ship.c_str(), "FlightModels\\FamilyBase") == 0)
+			{
+				ship.append(".opt");
+			}
+			else
+			{
+				ship.append(name);
+			}
 
 			if (std::ifstream(ship))
 			{
