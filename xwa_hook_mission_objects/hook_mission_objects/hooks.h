@@ -49,6 +49,8 @@ static const HookFunction g_hookFunctions[] =
 
 	{ 0x480D29, TurretIndex2TransformHook },
 	{ 0x490EF9, TurretIndex2BlockedHook },
+
+	{ 0x41C92C, ObjectProfileHook },
 };
 
 static const HookPatchItem g_loadMissionObjectsPatch[] =
@@ -132,6 +134,11 @@ static const HookPatchItem g_setTurretIndexPatch[] =
 	{ 0x0902F3, "8BAEE0948B0081FDFFFF0000", "53E8377C11005D85C0909090" },
 };
 
+static const HookPatchItem g_objectProfilePatch[] =
+{
+	{ 0x01BD27, "803D04979E00050F85A7000000", "E8F4C11800909090E9A7000000" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that loads mission objects", g_loadMissionObjectsPatch),
@@ -140,4 +147,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that set turrets data", g_setTurretDataPatch),
 	MAKE_HOOK_PATCH("To call the hook that read exe crafts turrets data", g_readExeCraftsTurretsPatch),
 	MAKE_HOOK_PATCH("To call the hook that set turret index", g_setTurretIndexPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines object profile", g_objectProfilePatch),
 };

@@ -185,7 +185,11 @@ struct XwaCraft
 	char WeaponRacksCount;
 	char Unk01AF[7];
 	char XwaCraft_m1B6[3];
-	char Unk01B9[294];
+	char Unk01B9[117];
+	char XwaCraft_m22E[50];
+	char XwaCraft_m260[50];
+	char XwaCraft_m292[50];
+	char Unk02C4[27];
 	XwaCraftWeaponRack WeaponRacks[16];
 	char Unk03BF[2];
 	short m03C1[2];
@@ -526,6 +530,85 @@ private:
 };
 
 ModelIndexTurrets g_modelIndexTurrets;
+
+std::vector<int> GetModelObjectProfileIndices(int modelIndex, const std::string& profile)
+{
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	const auto objectLines = GetCustomFileLines("Objects");
+	const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		shipPath = GetStringWithoutExtension(objectValue);
+	}
+
+	auto lines = GetFileLines(shipPath + "ObjectProfiles.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", "ObjectProfiles");
+	}
+
+	const auto values = Tokennize(GetFileKeyValue(lines, profile));
+	std::vector<int> indices;
+
+	for (const std::string& value : values)
+	{
+		int index = std::stoi(value);
+
+		if (index < 0 || index >= 50)
+		{
+			continue;
+		}
+
+		indices.push_back(index);
+	}
+
+	return indices;
+}
+
+class ModelIndexProfiles
+{
+public:
+	std::vector<int>& GetProfileIndices(int modelIndex, const std::string& profile)
+	{
+		this->UpdateIfChanged();
+
+		auto it = this->_profiles.find(std::make_pair(modelIndex, profile));
+
+		if (it != this->_profiles.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetModelObjectProfileIndices(modelIndex, profile);
+			this->_profiles.insert(std::make_pair(std::make_pair(modelIndex, profile), value));
+			//return value;
+			return this->_profiles.find(std::make_pair(modelIndex, profile))->second;
+		}
+	}
+
+private:
+	void UpdateIfChanged()
+	{
+		static std::string _mission;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+
+		if (_mission != xwaMissionFileName)
+		{
+			_mission = xwaMissionFileName;
+
+			this->_profiles.clear();
+		}
+	}
+
+	std::map<std::pair<int, std::string>, std::vector<int>> _profiles;
+};
+
+ModelIndexProfiles g_modelIndexProfiles;
 
 std::vector<std::vector<CraftData>> g_craftsData;
 
@@ -1470,4 +1553,30 @@ int TurretIndex2BlockedHook(int* params)
 	}
 
 	return 1;
+}
+
+int ObjectProfileHook(int* params)
+{
+	const unsigned short modelIndex = *(unsigned short*)0x09E96F2;
+	const unsigned short flightgroupIndex = *(unsigned short*)0x09E9708;
+	XwaCraft* s_pXwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+
+	const auto objectLines = GetCustomFileLines("Objects");
+
+	std::string profile = GetFileKeyValue(objectLines, "ObjectProfile_fg_" + std::to_string(flightgroupIndex));
+
+	if (profile.empty())
+	{
+		profile = "Full";
+	}
+
+	const auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, profile);
+
+	for (const int index : indices)
+	{
+		s_pXwaCurrentCraft->XwaCraft_m292[index] = 0;
+		s_pXwaCurrentCraft->XwaCraft_m22E[index] = 4;
+	}
+
+	return 0;
 }

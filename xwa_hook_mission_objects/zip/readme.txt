@@ -88,6 +88,9 @@ At offset 080124, replace 6683B8F9968B0002 with E8077E120085C090.
 At offset 09038D, replace 7546 with EB46.
 At offset 0902F3, replace 8BAEE0948B0081FDFFFF0000 with 53E8377C11005D85C0909090.
 
+# To call the hook that defines object profile
+At offset 01BD27, replace 803D04979E00050F85A7000000 with E8F4C11800909090E9A7000000.
+
 
 *** Usage ***
 
@@ -142,6 +145,22 @@ See "EscortShuttleTurrets.txt".
 
 By default, the turrets lasers are unlimited. They can be made limited by setting "UnlimitedTurretLaser = 0".
 See the "hook_mission_objects.cfg" file or the "hook_mission_objects" section of "hooks.ini".
+
+# object profiles
+Suppose that the new craft is "FlightModels\[Model].opt".
+To hide meshes for a craft, create a file named "FlightModels\[Model]ObjectProfiles.txt" or create a section named "[ObjectProfiles]" in "FlightModels\[Model].ini".
+The format is:
+ProfileName = indices
+indices are a comma separated list.
+See "ModelObjectProfiles.txt"
+
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+To define an object profile for a flightgroup, create a file named "[MissionDir]\[Mission]_Objects.txt" or create a section named "[Objects]" in "[MissionDir]\[Mission].ini".
+The format is
+ObjectProfile_fg_# = ProfileName
+Replace # with the flightgroup index.
+The default ProfileName is "Full".
+See "Objects.txt"
 
 
 *** Credits ***

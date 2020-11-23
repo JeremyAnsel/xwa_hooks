@@ -1,1 +1,3 @@
 FlightModels\ImperialStarDestroyer2.opt = FlightModels\IndustrialComplex.opt
+
+ObjectProfile_fg_0 = Full

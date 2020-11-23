@@ -32,3 +32,5 @@ int ReadL004C3EF0HasTurretHook(int* params);
 
 int TurretIndex2TransformHook(int* params);
 int TurretIndex2BlockedHook(int* params);
+
+int ObjectProfileHook(int* params);
