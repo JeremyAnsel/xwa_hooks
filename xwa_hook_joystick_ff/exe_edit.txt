@@ -1,4 +1,5 @@
 
+; ff device enum
 :004355D0 - 0x0349D0
 83EC10                  sub esp, 00000010
 8B442414                mov eax, dword ptr [esp+14]
@@ -9,31 +10,40 @@ C20800                  ret 0008
 
 
 ; allow small movements
+;:004344A0 - 0x0338A0
+;51                      push ecx
+;
+;C3                      ret
+
+
 :004344A0 - 0x0338A0
 51                      push ecx
+66A1C21C8C00            mov ax, word ptr [008C1CC2]
 
+E87B461700              call 005A8B20, 005A8B20 - 004344A5 = 0017467B
 C3                      ret
+90                      nop
 
 
-:0050BA69 - 0x10AE69
-7E22                    jle 0050BA8D
+;:0050BA69 - 0x10AE69
+;7E22                    jle 0050BA8D
+;
+;9090
 
-9090
+;:0050BAAE - 0x10AEAE
+;7E2F                    jle 0050BADF
+;
+;9090
 
-:0050BAAE - 0x10AEAE
-7E2F                    jle 0050BADF
+;:0050BB00 - 0x10AF00
+;7E28                    jle 0050BB2A
+;
+;9090
 
-9090
-
-:0050BB00 - 0x10AF00
-7E28                    jle 0050BB2A
-
-9090
-
-:0050BB4B - 0x10AF4B
-7E3E                    jle 0050BB8B
-
-9090
+;:0050BB4B - 0x10AF4B
+;7E3E                    jle 0050BB8B
+;
+;9090
 
 
 :0050B961 - 0x10AD61
@@ -41,3 +51,89 @@ C3                      ret
 
 E8BAD10900              call 005A8B20, 005A8B20 - 0050B966 = 0009D1BA
 90
+
+
+; main controller index
+; L00540D40
+:00540DB6 - 0x1401B6
+A01E699F00              mov al, byte ptr [009F691E]
+
+E8757D0600              call 005A8B30, 005A8B30 - 00540DBB = 00067D75
+
+; multiple devices
+; L0050B790
+
+; joyGetDevCapsA
+:0050B7F4 - 0x10ABF4
+7526                    jne 0050B81C
+55                      push ebp
+E8445A0300              call 00541240
+
+9090                    nop
+55                      push ebp
+E834D30900              call 005A8B30, 005A8B30 - 0050B7FC = 0009D334
+
+; joyGetPosEx
+:0050BA4B - 0x10AE4B
+0F8586010000            jne 0050BBD7
+
+E8D0D00900              call 005A8B20, 005A8B20 - 0050BA50 = 0009D0D0
+90                      nop
+
+
+; pressed button
+; L00434570
+
+:0043467E - 0x033A7E
+B901000000              mov ecx, 00000001
+BF91C8B000              mov edi, 00B0C891
+668B37                  mov si, word ptr [edi]
+
+55                      push ebp
+E89C441700              call 005A8B20, 005A8B20 - 00434684 = 0017449C
+5D                      pop ebp
+E9AF000000              jmp 00434739, 00434739 - 0043468A = 000000AF
+90                      nop
+
+
+; L004ED7F0
+:004ED7F6 - 0x0ECBF6
+E8756DF4FF              call 00434570
+
+E825B30B00              call 005A8B20, 005A8B20 - 004ED7FB = 000BB325
+
+
+; joystick remap menu
+; L0051F300
+
+:0051F541 - 0x11E941
+E80AD60300              call 0055CB50
+
+E8EA950800              call 005A8B30, 005A8B30 - 0051F546 = 000895EA
+
+:0051F5E3 - 0x11E9E3
+C705B82978000D000000    mov dword ptr [007829B8], 0000000D
+891DA0297800            mov dword ptr [007829A0], ebx
+
+E838950800              call 005A8B20, 005A8B20 - 0051F5E8 = 00089538
+9090909090              nop
+909090909090            nop
+
+:0051F7CF - 0x11EBCF
+891DB8297800            mov dword ptr [007829B8], ebx
+
+E84C930800              call 005A8B20, 005A8B20 - 0051F7D4 = 0008934C
+90                      nop
+
+
+; look move
+L004F9320
+:004F9AB7 - 0x0F8EB7
+668B0DC0538000          mov cx, word ptr [008053C0]
+84C0                    test al, al
+A100A05A00              mov eax, dword ptr [005AA000]
+
+51                      push ecx
+E873F00A00              call 005A8B30, 005A8B30 - 004F9ABD = 000AF073
+59                      pop ecx
+803D6B959E0000          cmp byte ptr [009E956B], 00

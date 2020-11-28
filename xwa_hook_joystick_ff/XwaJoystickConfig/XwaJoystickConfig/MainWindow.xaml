@@ -1,0 +1,97 @@
+﻿<Window x:Class="XwaJoystickConfig.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:XwaJoystickConfig"
+        mc:Ignorable="d"
+        Title="Xwa Joystick Config"
+        Height="700" Width="700"
+        UseLayoutRounding="True"
+        Closed="Window_Closed">
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True">
+            <Button x:Name="openConfigButton" Content="Open..." Click="OpenConfigButton_Click" />
+            <Button x:Name="saveConfigButton" Content="Save..." Click="SaveConfigButton_Click" />
+            <Separator />
+            <Button x:Name="setDefaultConfigButton" Content="Set default" Click="SetDefaultConfigButton_Click" />
+            <Separator />
+            <Button x:Name="initButtonsButton" Content="Init buttons" Click="InitButtonsButton_Click" />
+        </ToolBar>
+        <TabControl>
+            <TabItem Header="Settings">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock />
+                        <TextBlock Text="; Select a joystick with force feedback" />
+                        <TextBlock Text="; 0 to select the first device" />
+                        <TextBlock Text="; -1 to select the last device" />
+                        <TextBlock Text="; integer value to select a device by its index" />
+                        <TextBox Text="{Binding JoystickSettingFFDeviceIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock />
+                        <TextBlock Text="; Enable small joystick movement" />
+                        <TextBlock Text="; 0 to disable small movement" />
+                        <TextBlock Text="; 1 to enable small movement" />
+                        <CheckBox IsChecked="{Binding JoystickSettingEnableSmallMovement}" />
+                        <TextBlock />
+                        <TextBlock Text="; Select the controller used for the main axis and buttons" />
+                        <TextBox Text="{Binding JoystickSettingMainControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock />
+                        <TextBlock Text="; Select the controller used for throttle" />
+                        <TextBox Text="{Binding JoystickSettingThrottleControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock />
+                        <TextBlock Text="; Select the controller axis used for throttle" />
+                        <TextBox Text="{Binding JoystickSettingThrottleControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock />
+                        <TextBlock Text="; Select the controller used for rudder" />
+                        <TextBox Text="{Binding JoystickSettingRudderControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock />
+                        <TextBlock Text="; Select the controller axis used for rudder" />
+                        <TextBox Text="{Binding JoystickSettingRudderControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock />
+                        <TextBlock Text="; Use the POV as regular buttons" />
+                        <TextBlock Text="; 0 to continious movement" />
+                        <TextBlock Text="; 1 to enable regular buttons" />
+                        <CheckBox IsChecked="{Binding JoystickSettingUsePovControllerAsButtons}" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Buttons">
+                <ListView ItemsSource="{Binding JoystickConfigButtons}" SelectionMode="Single">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Key" Width="150" DisplayMemberBinding="{Binding Key}" />
+                            <GridViewColumn Header="Value" Width="450">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox Width="400" ItemsSource="{x:Static local:JoystickKeys.Keys}" SelectedIndex="{Binding Value, Converter={x:Static local:DictionaryKeyConverter.Default}, ConverterParameter={x:Static local:JoystickKeys.Keys}}">
+                                            <ComboBox.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <VirtualizingStackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ComboBox.ItemsPanel>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+            <TabItem Header="System Controllers">
+                <ListView ItemsSource="{Binding JoystickControllers}" SelectionMode="Single">
+                    <ListView.View>
+                        <GridView>
+                            <GridView.Columns>
+                                <GridViewColumn Header="Index" DisplayMemberBinding="{Binding ControllerIndex}" />
+                                <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Header="Axes Count" DisplayMemberBinding="{Binding AxesCount}" />
+                                <GridViewColumn Header="Buttons Count" DisplayMemberBinding="{Binding ButtonsCount}" />
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>
