@@ -1730,6 +1730,7 @@ int HangarLoadShuttleHook(int* params)
 {
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
+	const auto SetSFoils = (void(*)(int))0x004016B0;
 
 	//unsigned short a0 = (unsigned short)params[0];
 	//const int a1 = params[1];
@@ -1761,6 +1762,8 @@ int HangarLoadShuttleHook(int* params)
 		g_isHangarFloorInverted = g_isShuttleFloorInverted;
 
 		short objectIndex = AddObject(a0, a1, a2, a3, a4, a5);
+
+		SetSFoils(objectIndex);
 
 		g_isHangarFloorInverted = isHangarFloorInverted;
 

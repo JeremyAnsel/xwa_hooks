@@ -106,6 +106,15 @@ E803070000  call 00456AE0
 
 E853271500  call 005A8B30, 005A8B30 - 004563DD = 00152753
 
+:004563EA - 0x0557EA
+50                      push eax
+E8C0B2FAFF              call 004016B0
+83C404                  add esp, 00000004
+
+90
+9090909090
+909090
+
 
 ; from L0045B0D0
 ; hook for shuttle update

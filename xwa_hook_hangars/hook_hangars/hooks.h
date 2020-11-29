@@ -132,6 +132,7 @@ static const HookPatchItem g_setHangarCameraPatch[] =
 static const HookPatchItem g_loadShuttlePatch[] =
 {
 	{ 0x557D8, "E803070000", "E853271500" },
+	{ 0x557EA, "50E8C0B2FAFF83C404", "909090909090909090" },
 };
 
 static const HookPatchItem g_updateShuttlePatch[] =

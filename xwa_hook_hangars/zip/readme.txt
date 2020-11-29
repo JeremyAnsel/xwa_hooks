@@ -69,6 +69,7 @@ At offset 5F88C, replace 6F024600 with 7EFC4500.
 
 # To call the hook that loads the shuttle
 At offset 557D8, replace E803070000 with E853271500.
+At offset 557EA, replace 50E8C0B2FAFF83C404 with 909090909090909090.
 
 # To call the hook that updates the shuttle
 At offset 5B5A5, replace E8C62A0000 with E876C91400.
