@@ -93,7 +93,9 @@ public:
 
 			std::array<short, 32 + 4> buttons;
 
-			for (int index = 0; index < 32; index++)
+			int numButtons = min(caps.wNumButtons, 32);
+
+			for (int index = 0; index < numButtons; index++)
 			{
 				std::string key = std::string("joybutton_") + std::to_string(controllerIndex) + std::string("_") + std::to_string(index + 1);
 				int defaultValue = GetDefaultConfigButton(buttonIndex + 1);
@@ -102,13 +104,16 @@ public:
 				buttons[index] = (short)GetFileKeyValueInt(lines, key, defaultValue);
 			}
 
-			for (int index = 0; index < 4; index++)
+			if (caps.wCaps & JOYCAPS_HASPOV)
 			{
-				std::string key = std::string("joybutton_") + std::to_string(controllerIndex) + std::string("_pov") + std::to_string(index + 1);
-				int defaultValue = GetDefaultConfigPov(povIndex + 1);
-				povIndex++;
+				for (int index = 0; index < 4; index++)
+				{
+					std::string key = std::string("joybutton_") + std::to_string(controllerIndex) + std::string("_pov") + std::to_string(index + 1);
+					int defaultValue = GetDefaultConfigPov(povIndex + 1);
+					povIndex++;
 
-				buttons[32 + index] = (short)GetFileKeyValueInt(lines, key, defaultValue);
+					buttons[32 + index] = (short)GetFileKeyValueInt(lines, key, defaultValue);
+				}
 			}
 
 			this->_buttons.insert(std::make_pair(controllerIndex, buttons));
