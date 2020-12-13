@@ -1567,7 +1567,7 @@ int ObjectProfileHook(int* params)
 
 	if (profile.empty())
 	{
-		profile = "Full";
+		profile = "Default";
 	}
 
 	const auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, profile);

@@ -159,7 +159,7 @@ To define an object profile for a flightgroup, create a file named "[MissionDir]
 The format is
 ObjectProfile_fg_# = ProfileName
 Replace # with the flightgroup index.
-The default ProfileName is "Full".
+The default ProfileName is "Default".
 See "Objects.txt"
 
 
