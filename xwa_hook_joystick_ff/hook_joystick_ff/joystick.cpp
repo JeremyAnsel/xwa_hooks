@@ -10,6 +10,10 @@
 
 #pragma comment(lib, "Winmm.lib")
 
+const auto& g_joyGetNumDevs = *(decltype(joyGetNumDevs)**)0x005A92B4;
+const auto& g_joyGetDevCapsA = *(decltype(joyGetDevCapsA)**)0x005A92A8;
+const auto& g_joyGetPosEx = *(decltype(joyGetPosEx)**)0x005A92A4;
+
 enum KeyEnum : unsigned short
 {
 	Key_None = 0,
@@ -40,20 +44,36 @@ public:
 		this->JoystickFFDeviceIndex = GetFileKeyValueInt(lines, "JoystickFFDeviceIndex", 0);
 		this->EnableSmallMovement = GetFileKeyValueInt(lines, "EnableSmallMovement", 1) != 0;
 		this->MainControllerIndex = GetFileKeyValueInt(lines, "MainControllerIndex", 0);
+		this->YawControllerIndex = GetFileKeyValueInt(lines, "YawControllerIndex", 0);
+		this->YawControllerAxisIndex = GetFileKeyValueInt(lines, "YawControllerAxisIndex", 0);
+		this->InvertYaw = GetFileKeyValueInt(lines, "InvertYaw", 0) != 0;
+		this->PitchControllerIndex = GetFileKeyValueInt(lines, "PitchControllerIndex", 0);
+		this->PitchControllerAxisIndex = GetFileKeyValueInt(lines, "PitchControllerAxisIndex", 1);
+		this->InvertPitch = GetFileKeyValueInt(lines, "InvertPitch", 0) != 0;
 		this->ThrottleControllerIndex = GetFileKeyValueInt(lines, "ThrottleControllerIndex", 0);
 		this->ThrottleControllerAxisIndex = GetFileKeyValueInt(lines, "ThrottleControllerAxisIndex", 2);
+		this->InvertThrottle = GetFileKeyValueInt(lines, "InvertThrottle", 0) != 0;
 		this->RudderControllerIndex = GetFileKeyValueInt(lines, "RudderControllerIndex", 0);
 		this->RudderControllerAxisIndex = GetFileKeyValueInt(lines, "RudderControllerAxisIndex", 3);
+		this->InvertRudder = GetFileKeyValueInt(lines, "InvertRudder", 0) != 0;
 		this->UsePovControllerAsButtons = GetFileKeyValueInt(lines, "UsePovControllerAsButtons", 0) != 0;
 	}
 
 	int JoystickFFDeviceIndex;
 	bool EnableSmallMovement;
 	int MainControllerIndex;
+	int YawControllerIndex;
+	int YawControllerAxisIndex;
+	bool InvertYaw;
+	int PitchControllerIndex;
+	int PitchControllerAxisIndex;
+	bool InvertPitch;
 	int ThrottleControllerIndex;
 	int ThrottleControllerAxisIndex;
+	bool InvertThrottle;
 	int RudderControllerIndex;
 	int RudderControllerAxisIndex;
+	bool InvertRudder;
 	bool UsePovControllerAsButtons;
 };
 
@@ -69,14 +89,12 @@ public:
 
 	void Load()
 	{
-		this->_buttons.clear();
-		this->_buttonsIsPressed.clear();
+		this->_deviceCount = 0;
 
 		auto lines = GetFileLines("JoystickConfig.txt");
 
-		int deviceCount = joyGetNumDevs();
+		int deviceCount = g_joyGetNumDevs();
 		int controllerIndex = -1;
-
 		int buttonIndex = 0;
 		int povIndex = 0;
 
@@ -84,11 +102,13 @@ public:
 		{
 			JOYCAPS caps{};
 
-			if (joyGetDevCapsA(deviceIndex, &caps, sizeof(JOYCAPS)) != JOYERR_NOERROR)
+			if (g_joyGetDevCapsA(deviceIndex, &caps, sizeof(JOYCAPS)) != JOYERR_NOERROR)
 			{
+				this->_isConnected[deviceIndex] = false;
 				continue;
 			}
 
+			this->_isConnected[deviceIndex] = true;
 			controllerIndex++;
 
 			std::array<short, 32 + 4> buttons;
@@ -116,13 +136,15 @@ public:
 				}
 			}
 
-			this->_buttons.insert(std::make_pair(controllerIndex, buttons));
-
-			std::array<bool, 32 + 4> buttonsIsPressed;
-			this->_buttonsIsPressed.insert(std::make_pair(controllerIndex, buttonsIsPressed));
+			this->_buttons[deviceIndex] = buttons;
+			this->_buttonsIsPressed[deviceIndex].fill(false);
+			this->_caps[deviceIndex] = caps;
 		}
+
+		this->_deviceCount = deviceCount;
 	}
 
+private:
 	static int GetDefaultConfigButton(int index)
 	{
 		int value;
@@ -207,51 +229,51 @@ public:
 		return value;
 	}
 
-	short GetKey(int controllerIndex, int buttonIndex)
+public:
+	int GetDeviceCount()
 	{
-		auto it = this->_buttons.find(controllerIndex);
-
-		if (it != this->_buttons.end())
-		{
-			return it->second[buttonIndex];
-		}
-
-		return 0;
+		return this->_deviceCount;
 	}
 
-	bool IsPressed(int controllerIndex, int buttonIndex)
+	bool IsConnected(int deviceIndex)
 	{
-		auto it = this->_buttonsIsPressed.find(controllerIndex);
-
-		if (it != this->_buttonsIsPressed.end())
-		{
-			return it->second[buttonIndex];
-		}
-
-		return false;
+		return this->_isConnected[deviceIndex];
 	}
 
-	void SetIsPressed(int controllerIndex, int buttonIndex, bool isPressed)
+	short GetKey(int deviceIndex, int buttonIndex)
 	{
-		auto it = this->_buttonsIsPressed.find(controllerIndex);
+		return this->_buttons[deviceIndex][buttonIndex];
+	}
 
-		if (it != this->_buttonsIsPressed.end())
-		{
-			it->second[buttonIndex] = isPressed;
-		}
+	bool IsPressed(int deviceIndex, int buttonIndex)
+	{
+		return this->_buttonsIsPressed[deviceIndex][buttonIndex];
+	}
+
+	void SetIsPressed(int deviceIndex, int buttonIndex, bool isPressed)
+	{
+		this->_buttonsIsPressed[deviceIndex][buttonIndex] = isPressed;
 	}
 
 	void ClearIsPressed()
 	{
 		for (auto& buttons : this->_buttonsIsPressed)
 		{
-			buttons.second.fill(false);
+			buttons.fill(false);
 		}
 	}
 
+	const JOYCAPS& GetCaps(int deviceIndex)
+	{
+		return this->_caps[deviceIndex];
+	}
+
 private:
-	std::map<int, std::array<short, 32 + 4>> _buttons;
-	std::map<int, std::array<bool, 32 + 4>> _buttonsIsPressed;
+	int _deviceCount;
+	std::array<bool, 16> _isConnected;
+	std::array<std::array<short, 32 + 4>, 16> _buttons;
+	std::array<std::array<bool, 32 + 4>, 16> _buttonsIsPressed;
+	std::array<JOYCAPS, 16> _caps;
 };
 
 ButtonsConfig& GetGlobalButtonsConfig()
@@ -384,24 +406,100 @@ int InitControllerHook(int* params)
 		return 0;
 	}
 
+	int yawControllerIndex = g_config.YawControllerIndex;
+	int yawControllerAxisIndex = g_config.YawControllerAxisIndex;
+	int pitchControllerIndex = g_config.PitchControllerIndex;
+	int pitchControllerAxisIndex = g_config.PitchControllerAxisIndex;
 	int throttleControllerIndex = g_config.ThrottleControllerIndex;
 	int throttleControllerAxisIndex = g_config.ThrottleControllerAxisIndex;
 	int rudderControllerIndex = g_config.RudderControllerIndex;
 	int rudderControllerAxisIndex = g_config.RudderControllerAxisIndex;
 
-	int deviceCount = joyGetNumDevs();
+	int deviceCount = GetGlobalButtonsConfig().GetDeviceCount();
 	int controllerIndex = -1;
 
 	for (int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
 	{
-		JOYCAPS caps{};
-
-		if (joyGetDevCapsA(deviceIndex, &caps, sizeof(JOYCAPS)) != JOYERR_NOERROR)
+		if (!GetGlobalButtonsConfig().IsConnected(deviceIndex))
 		{
 			continue;
 		}
 
+		const JOYCAPS& caps = GetGlobalButtonsConfig().GetCaps(deviceIndex);
+
 		controllerIndex++;
+
+		if (controllerIndex == yawControllerIndex)
+		{
+			switch (yawControllerAxisIndex)
+			{
+			case 0:
+				esp44.wXmin = caps.wXmin;
+				esp44.wXmax = caps.wXmax;
+				break;
+
+			case 1:
+				esp44.wXmin = caps.wYmin;
+				esp44.wXmax = caps.wYmax;
+				break;
+
+			case 2:
+				esp44.wXmin = caps.wZmin;
+				esp44.wXmax = caps.wZmax;
+				break;
+
+			case 3:
+				esp44.wXmin = caps.wRmin;
+				esp44.wXmax = caps.wRmax;
+				break;
+
+			case 4:
+				esp44.wXmin = caps.wUmin;
+				esp44.wXmax = caps.wUmax;
+				break;
+
+			case 5:
+				esp44.wXmin = caps.wVmin;
+				esp44.wXmax = caps.wVmax;
+				break;
+			}
+		}
+
+		if (controllerIndex == pitchControllerIndex)
+		{
+			switch (pitchControllerAxisIndex)
+			{
+			case 0:
+				esp44.wYmin = caps.wXmin;
+				esp44.wYmax = caps.wXmax;
+				break;
+
+			case 1:
+				esp44.wYmin = caps.wYmin;
+				esp44.wYmax = caps.wYmax;
+				break;
+
+			case 2:
+				esp44.wYmin = caps.wZmin;
+				esp44.wYmax = caps.wZmax;
+				break;
+
+			case 3:
+				esp44.wYmin = caps.wRmin;
+				esp44.wYmax = caps.wRmax;
+				break;
+
+			case 4:
+				esp44.wYmin = caps.wUmin;
+				esp44.wYmax = caps.wUmax;
+				break;
+
+			case 5:
+				esp44.wYmin = caps.wVmin;
+				esp44.wYmax = caps.wVmax;
+				break;
+			}
+		}
 
 		if (controllerIndex == throttleControllerIndex)
 		{
@@ -496,53 +594,272 @@ int UpdateControllerHook(int* params)
 		return 0;
 	}
 
+	int yawControllerIndex = g_config.YawControllerIndex;
+	int yawControllerAxisIndex = g_config.YawControllerAxisIndex;
+	int pitchControllerIndex = g_config.PitchControllerIndex;
+	int pitchControllerAxisIndex = g_config.PitchControllerAxisIndex;
 	int throttleControllerIndex = g_config.ThrottleControllerIndex;
 	int throttleControllerAxisIndex = g_config.ThrottleControllerAxisIndex;
 	int rudderControllerIndex = g_config.RudderControllerIndex;
 	int rudderControllerAxisIndex = g_config.RudderControllerAxisIndex;
 
-	int deviceCount = joyGetNumDevs();
+	int deviceCount = GetGlobalButtonsConfig().GetDeviceCount();
 	int controllerIndex = -1;
 
 	for (int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
 	{
+		if (!GetGlobalButtonsConfig().IsConnected(deviceIndex))
+		{
+			continue;
+		}
+
 		JOYINFOEX info{};
 		info.dwSize = sizeof(JOYINFOEX);
 		info.dwFlags = JOY_RETURNX | JOY_RETURNY | JOY_RETURNZ | JOY_RETURNR | JOY_RETURNU | JOY_RETURNV | JOY_RETURNPOV | JOY_RETURNBUTTONS | JOY_RETURNCENTERED;
 
-		if (joyGetPosEx(deviceIndex, &info) != JOYERR_NOERROR)
+		if (g_joyGetPosEx(deviceIndex, &info) != JOYERR_NOERROR)
 		{
 			continue;
 		}
 
 		controllerIndex++;
 
+		const auto& caps = GetGlobalButtonsConfig().GetCaps(deviceIndex);
+		bool isYawInverted = g_config.InvertYaw;
+		bool isPitchInverted = g_config.InvertPitch;
+		bool isThrottleInverted = g_config.InvertThrottle;
+		bool isRudderInverted = g_config.InvertRudder;
+
+		if (controllerIndex == yawControllerIndex)
+		{
+			switch (yawControllerAxisIndex)
+			{
+			case 0:
+				if (isYawInverted)
+				{
+					esp10.dwXpos = caps.wXmax + caps.wXmin - info.dwXpos;
+				}
+				else
+				{
+					esp10.dwXpos = info.dwXpos;
+				}
+
+				break;
+
+			case 1:
+				if (isYawInverted)
+				{
+					esp10.dwXpos = caps.wYmax + caps.wYmin - info.dwYpos;
+				}
+				else
+				{
+					esp10.dwXpos = info.dwYpos;
+				}
+
+				break;
+
+			case 2:
+				if (isYawInverted)
+				{
+					esp10.dwXpos = caps.wZmax + caps.wZmin - info.dwZpos;
+				}
+				else
+				{
+					esp10.dwXpos = info.dwZpos;
+				}
+
+				break;
+
+			case 3:
+				if (isYawInverted)
+				{
+					esp10.dwXpos = caps.wRmax + caps.wRmin - info.dwRpos;
+				}
+				else
+				{
+					esp10.dwXpos = info.dwRpos;
+				}
+
+				break;
+
+			case 4:
+				if (isYawInverted)
+				{
+					esp10.dwXpos = caps.wUmax + caps.wUmin - info.dwUpos;
+				}
+				else
+				{
+					esp10.dwXpos = info.dwUpos;
+				}
+
+				break;
+
+			case 5:
+				if (isYawInverted)
+				{
+					esp10.dwXpos = caps.wVmax + caps.wVmin - info.dwVpos;
+				}
+				else
+				{
+					esp10.dwXpos = info.dwVpos;
+				}
+
+				break;
+			}
+		}
+
+		if (controllerIndex == pitchControllerIndex)
+		{
+			switch (pitchControllerAxisIndex)
+			{
+			case 0:
+				if (isPitchInverted)
+				{
+					esp10.dwYpos = caps.wXmax + caps.wXmin - info.dwXpos;
+				}
+				else
+				{
+					esp10.dwYpos = info.dwXpos;
+				}
+
+				break;
+
+			case 1:
+				if (isPitchInverted)
+				{
+					esp10.dwYpos = caps.wYmax + caps.wYmin - info.dwYpos;
+				}
+				else
+				{
+					esp10.dwYpos = info.dwYpos;
+				}
+
+				break;
+
+			case 2:
+				if (isPitchInverted)
+				{
+					esp10.dwYpos = caps.wZmax + caps.wZmin - info.dwZpos;
+				}
+				else
+				{
+					esp10.dwYpos = info.dwZpos;
+				}
+
+				break;
+
+			case 3:
+				if (isPitchInverted)
+				{
+					esp10.dwYpos = caps.wRmax + caps.wRmin - info.dwRpos;
+				}
+				else
+				{
+					esp10.dwYpos = info.dwRpos;
+				}
+
+				break;
+
+			case 4:
+				if (isPitchInverted)
+				{
+					esp10.dwYpos = caps.wUmax + caps.wUmin - info.dwUpos;
+				}
+				else
+				{
+					esp10.dwYpos = info.dwUpos;
+				}
+
+				break;
+
+			case 5:
+				if (isPitchInverted)
+				{
+					esp10.dwYpos = caps.wVmax + caps.wVmin - info.dwVpos;
+				}
+				else
+				{
+					esp10.dwYpos = info.dwVpos;
+				}
+
+				break;
+			}
+		}
+
 		if (controllerIndex == throttleControllerIndex)
 		{
 			switch (throttleControllerAxisIndex)
 			{
 			case 0:
-				esp10.dwZpos = info.dwXpos;
+				if (isThrottleInverted)
+				{
+					esp10.dwZpos = caps.wXmax + caps.wXmin - info.dwXpos;
+				}
+				else
+				{
+					esp10.dwZpos = info.dwXpos;
+				}
+
 				break;
 
 			case 1:
-				esp10.dwZpos = info.dwYpos;
+				if (isThrottleInverted)
+				{
+					esp10.dwZpos = caps.wYmax + caps.wYmin - info.dwYpos;
+				}
+				else
+				{
+					esp10.dwZpos = info.dwYpos;
+				}
+
 				break;
 
 			case 2:
-				esp10.dwZpos = info.dwZpos;
+				if (isThrottleInverted)
+				{
+					esp10.dwZpos = caps.wZmax + caps.wZmin - info.dwZpos;
+				}
+				else
+				{
+					esp10.dwZpos = info.dwZpos;
+				}
+
 				break;
 
 			case 3:
-				esp10.dwZpos = info.dwRpos;
+				if (isThrottleInverted)
+				{
+					esp10.dwZpos = caps.wRmax + caps.wRmin - info.dwRpos;
+				}
+				else
+				{
+					esp10.dwZpos = info.dwRpos;
+				}
+
 				break;
 
 			case 4:
-				esp10.dwZpos = info.dwUpos;
+				if (isThrottleInverted)
+				{
+					esp10.dwZpos = caps.wUmax + caps.wUmin - info.dwUpos;
+				}
+				else
+				{
+					esp10.dwZpos = info.dwUpos;
+				}
+
 				break;
 
 			case 5:
-				esp10.dwZpos = info.dwVpos;
+				if (isThrottleInverted)
+				{
+					esp10.dwZpos = caps.wVmax + caps.wVmin - info.dwVpos;
+				}
+				else
+				{
+					esp10.dwZpos = info.dwVpos;
+				}
+
 				break;
 			}
 		}
@@ -552,27 +869,75 @@ int UpdateControllerHook(int* params)
 			switch (rudderControllerAxisIndex)
 			{
 			case 0:
-				esp10.dwRpos = info.dwXpos;
+				if (isRudderInverted)
+				{
+					esp10.dwRpos = caps.wXmax + caps.wXmin - info.dwXpos;
+				}
+				else
+				{
+					esp10.dwRpos = info.dwXpos;
+				}
+
 				break;
 
 			case 1:
-				esp10.dwRpos = info.dwYpos;
+				if (isRudderInverted)
+				{
+					esp10.dwRpos = caps.wYmax + caps.wYmin - info.dwYpos;
+				}
+				else
+				{
+					esp10.dwRpos = info.dwYpos;
+				}
+
 				break;
 
 			case 2:
-				esp10.dwRpos = info.dwZpos;
+				if (isRudderInverted)
+				{
+					esp10.dwRpos = caps.wZmax + caps.wZmin - info.dwZpos;
+				}
+				else
+				{
+					esp10.dwRpos = info.dwZpos;
+				}
+
 				break;
 
 			case 3:
-				esp10.dwRpos = info.dwRpos;
+				if (isRudderInverted)
+				{
+					esp10.dwRpos = caps.wRmax + caps.wRmin - info.dwRpos;
+				}
+				else
+				{
+					esp10.dwRpos = info.dwRpos;
+				}
+
 				break;
 
 			case 4:
-				esp10.dwRpos = info.dwUpos;
+				if (isRudderInverted)
+				{
+					esp10.dwRpos = caps.wUmax + caps.wUmin - info.dwUpos;
+				}
+				else
+				{
+					esp10.dwRpos = info.dwUpos;
+				}
+
 				break;
 
 			case 5:
-				esp10.dwRpos = info.dwVpos;
+				if (isRudderInverted)
+				{
+					esp10.dwRpos = caps.wVmax + caps.wVmin - info.dwVpos;
+				}
+				else
+				{
+					esp10.dwRpos = info.dwVpos;
+				}
+
 				break;
 			}
 		}
@@ -607,17 +972,22 @@ int SetControllerPressedButtonHook(int* params)
 		return 0;
 	}
 
-	int deviceCount = joyGetNumDevs();
+	int deviceCount = GetGlobalButtonsConfig().GetDeviceCount();
 	int controllerIndex = -1;
 	bool buttonSet = false;
 
 	for (int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
 	{
+		if (!GetGlobalButtonsConfig().IsConnected(deviceIndex))
+		{
+			continue;
+		}
+
 		JOYINFOEX info{};
 		info.dwSize = sizeof(JOYINFOEX);
 		info.dwFlags = JOY_RETURNPOV | JOY_RETURNBUTTONS | JOY_RETURNCENTERED;
 
-		if (joyGetPosEx(deviceIndex, &info) != JOYERR_NOERROR)
+		if (g_joyGetPosEx(deviceIndex, &info) != JOYERR_NOERROR)
 		{
 			continue;
 		}
@@ -626,7 +996,7 @@ int SetControllerPressedButtonHook(int* params)
 
 		for (int i = 0; i < 32; i++)
 		{
-			short button = GetGlobalButtonsConfig().GetKey(controllerIndex, i);
+			short button = GetGlobalButtonsConfig().GetKey(deviceIndex, i);
 
 			if (button == 0)
 			{
@@ -635,7 +1005,7 @@ int SetControllerPressedButtonHook(int* params)
 
 			if ((info.dwButtons & (1U << i)) != 0)
 			{
-				if (!GetGlobalButtonsConfig().IsPressed(controllerIndex, i))
+				if (!GetGlobalButtonsConfig().IsPressed(deviceIndex, i))
 				{
 					if (!buttonSet)
 					{
@@ -658,7 +1028,7 @@ int SetControllerPressedButtonHook(int* params)
 				}
 			}
 
-			GetGlobalButtonsConfig().SetIsPressed(controllerIndex, i, (info.dwButtons & (1U << i)) != 0);
+			GetGlobalButtonsConfig().SetIsPressed(deviceIndex, i, (info.dwButtons & (1U << i)) != 0);
 		}
 
 		if (g_config.UsePovControllerAsButtons)
@@ -676,11 +1046,11 @@ int SetControllerPressedButtonHook(int* params)
 
 			if (povIndex != -1)
 			{
-				short button = GetGlobalButtonsConfig().GetKey(controllerIndex, 32 + povIndex);
+				short button = GetGlobalButtonsConfig().GetKey(deviceIndex, 32 + povIndex);
 
 				if (button != 0)
 				{
-					if (!GetGlobalButtonsConfig().IsPressed(controllerIndex, 32 + povIndex))
+					if (!GetGlobalButtonsConfig().IsPressed(deviceIndex, 32 + povIndex))
 					{
 						if (!buttonSet)
 						{
@@ -693,12 +1063,12 @@ int SetControllerPressedButtonHook(int* params)
 
 			for (int i = 0; i < 4; i++)
 			{
-				GetGlobalButtonsConfig().SetIsPressed(controllerIndex, 32 + i, false);
+				GetGlobalButtonsConfig().SetIsPressed(deviceIndex, 32 + i, false);
 			}
 
 			if (povIndex != -1)
 			{
-				GetGlobalButtonsConfig().SetIsPressed(controllerIndex, 32 + povIndex, true);
+				GetGlobalButtonsConfig().SetIsPressed(deviceIndex, 32 + povIndex, true);
 			}
 		}
 		else
@@ -706,7 +1076,7 @@ int SetControllerPressedButtonHook(int* params)
 			if (info.dwPOV != JOY_POVCENTERED)
 			{
 				int povIndex = info.dwPOV / 9000;
-				short button = GetGlobalButtonsConfig().GetKey(controllerIndex, 32 + povIndex);
+				short button = GetGlobalButtonsConfig().GetKey(deviceIndex, 32 + povIndex);
 
 				if (button != 0 && !buttonSet)
 				{

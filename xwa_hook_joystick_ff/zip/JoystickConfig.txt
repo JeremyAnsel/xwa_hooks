@@ -13,17 +13,41 @@ EnableSmallMovement = 1
 ; Select the controller used for the main axis and buttons
 MainControllerIndex = 0
 
+; Select the controller used for yaw
+YawControllerIndex = 0
+
+; Select the controller axis used for yaw
+YawControllerAxisIndex = 0
+
+; Invert yaw axis
+InvertYaw = 0
+
+; Select the controller used for pitch
+PitchControllerIndex = 0
+
+; Select the controller axis used for pitch
+PitchControllerAxisIndex = 1
+
+; Invert pitch axis
+InvertPitch = 0
+
 ; Select the controller used for throttle
 ThrottleControllerIndex = 0
 
 ; Select the controller axis used for throttle
 ThrottleControllerAxisIndex = 2
 
+; Invert throttle axis
+InvertThrottle = 0
+
 ; Select the controller used for rudder
 RudderControllerIndex = 0
 
 ; Select the controller axis used for rudder
 RudderControllerAxisIndex = 3
+
+; Invert rudder axis
+InvertRudder = 0
 
 ; Use the POV as regular buttons
 ; 0 to continious movement

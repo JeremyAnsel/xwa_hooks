@@ -54,13 +54,29 @@ namespace XwaJoystickConfig
 
         public int JoystickSettingMainControllerIndex { get; set; }
 
+        public int JoystickSettingYawControllerIndex { get; set; }
+
+        public int JoystickSettingYawControllerAxisIndex { get; set; }
+
+        public bool JoystickSettingInvertYaw { get; set; }
+
+        public int JoystickSettingPitchControllerIndex { get; set; }
+
+        public int JoystickSettingPitchControllerAxisIndex { get; set; }
+
+        public bool JoystickSettingInvertPitch { get; set; }
+
         public int JoystickSettingThrottleControllerIndex { get; set; }
 
         public int JoystickSettingThrottleControllerAxisIndex { get; set; }
 
+        public bool JoystickSettingInvertThrottle { get; set; }
+
         public int JoystickSettingRudderControllerIndex { get; set; }
 
         public int JoystickSettingRudderControllerAxisIndex { get; set; }
+
+        public bool JoystickSettingInvertRudder { get; set; }
 
         public bool JoystickSettingUsePovControllerAsButtons { get; set; }
 
@@ -230,10 +246,18 @@ namespace XwaJoystickConfig
             this.JoystickSettingFFDeviceIndex = 0;
             this.JoystickSettingEnableSmallMovement = true;
             this.JoystickSettingMainControllerIndex = 0;
+            this.JoystickSettingYawControllerIndex = 0;
+            this.JoystickSettingYawControllerAxisIndex = 0;
+            this.JoystickSettingInvertYaw = false;
+            this.JoystickSettingPitchControllerIndex = 0;
+            this.JoystickSettingPitchControllerAxisIndex = 1;
+            this.JoystickSettingInvertPitch = false;
             this.JoystickSettingThrottleControllerIndex = 0;
             this.JoystickSettingThrottleControllerAxisIndex = 2;
+            this.JoystickSettingInvertThrottle = false;
             this.JoystickSettingRudderControllerIndex = 0;
             this.JoystickSettingRudderControllerAxisIndex = 3;
+            this.JoystickSettingInvertRudder = false;
             this.JoystickSettingUsePovControllerAsButtons = false;
         }
 
@@ -349,10 +373,18 @@ namespace XwaJoystickConfig
             this.JoystickSettingFFDeviceIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "JoystickFFDeviceIndex", 0);
             this.JoystickSettingEnableSmallMovement = XwaHooksConfig.GetFileKeyValueInt(lines, "EnableSmallMovement", 1) != 0;
             this.JoystickSettingMainControllerIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "MainControllerIndex", 0);
+            this.JoystickSettingYawControllerIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "YawControllerIndex", 0);
+            this.JoystickSettingYawControllerAxisIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "YawControllerAxisIndex", 0);
+            this.JoystickSettingInvertYaw = XwaHooksConfig.GetFileKeyValueInt(lines, "InvertYaw", 0) != 0;
+            this.JoystickSettingPitchControllerIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "PitchControllerIndex", 0);
+            this.JoystickSettingPitchControllerAxisIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "PitchControllerAxisIndex", 1);
+            this.JoystickSettingInvertPitch = XwaHooksConfig.GetFileKeyValueInt(lines, "InvertPitch", 0) != 0;
             this.JoystickSettingThrottleControllerIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "ThrottleControllerIndex", 0);
             this.JoystickSettingThrottleControllerAxisIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "ThrottleControllerAxisIndex", 2);
+            this.JoystickSettingInvertThrottle = XwaHooksConfig.GetFileKeyValueInt(lines, "InvertThrottle", 0) != 0;
             this.JoystickSettingRudderControllerIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "RudderControllerIndex", 0);
             this.JoystickSettingRudderControllerAxisIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "RudderControllerAxisIndex", 3);
+            this.JoystickSettingInvertRudder = XwaHooksConfig.GetFileKeyValueInt(lines, "InvertRudder", 0) != 0;
             this.JoystickSettingUsePovControllerAsButtons = XwaHooksConfig.GetFileKeyValueInt(lines, "UsePovControllerAsButtons", 0) != 0;
 
             this.JoystickConfigButtons.Clear();
@@ -396,17 +428,41 @@ namespace XwaJoystickConfig
                 writer.WriteLine("; Select the controller used for the main axis and buttons");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "MainControllerIndex = {0}", this.JoystickSettingMainControllerIndex));
                 writer.WriteLine();
+                writer.WriteLine("; Select the controller used for yaw");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "YawControllerIndex = {0}", this.JoystickSettingYawControllerIndex));
+                writer.WriteLine();
+                writer.WriteLine("; Select the controller axis used for yaw");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "YawControllerAxisIndex = {0}", this.JoystickSettingYawControllerAxisIndex));
+                writer.WriteLine();
+                writer.WriteLine("; Invert yaw axis");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "InvertYaw = {0}", this.JoystickSettingInvertYaw ? 1 : 0));
+                writer.WriteLine();
+                writer.WriteLine("; Select the controller used for pitch");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "PitchControllerIndex = {0}", this.JoystickSettingPitchControllerIndex));
+                writer.WriteLine();
+                writer.WriteLine("; Select the controller axis used for pitch");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "PitchControllerAxisIndex = {0}", this.JoystickSettingPitchControllerAxisIndex));
+                writer.WriteLine();
+                writer.WriteLine("; Invert pitch axis");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "InvertPitch = {0}", this.JoystickSettingInvertPitch ? 1 : 0));
+                writer.WriteLine();
                 writer.WriteLine("; Select the controller used for throttle");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "ThrottleControllerIndex = {0}", this.JoystickSettingThrottleControllerIndex));
                 writer.WriteLine();
                 writer.WriteLine("; Select the controller axis used for throttle");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "ThrottleControllerAxisIndex = {0}", this.JoystickSettingThrottleControllerAxisIndex));
                 writer.WriteLine();
+                writer.WriteLine("; Invert throttle axis");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "InvertThrottle = {0}", this.JoystickSettingInvertThrottle ? 1 : 0));
+                writer.WriteLine();
                 writer.WriteLine("; Select the controller used for rudder");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "RudderControllerIndex = {0}", this.JoystickSettingRudderControllerIndex));
                 writer.WriteLine();
                 writer.WriteLine("; Select the controller axis used for rudder");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "RudderControllerAxisIndex = {0}", this.JoystickSettingRudderControllerAxisIndex));
+                writer.WriteLine();
+                writer.WriteLine("; Invert rudder axis");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "InvertRudder = {0}", this.JoystickSettingInvertRudder ? 1 : 0));
                 writer.WriteLine();
                 writer.WriteLine("; Use the POV as regular buttons");
                 writer.WriteLine("; 0 to continious movement");

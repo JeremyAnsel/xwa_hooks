@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:XwaJoystickConfig"
         mc:Ignorable="d"
         Title="Xwa Joystick Config"
-        Height="700" Width="700"
+        Height="650" Width="600"
         UseLayoutRounding="True"
         Closed="Window_Closed">
     <DockPanel>
@@ -23,36 +23,86 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel>
                         <TextBlock />
-                        <TextBlock Text="; Select a joystick with force feedback" />
-                        <TextBlock Text="; 0 to select the first device" />
-                        <TextBlock Text="; -1 to select the last device" />
-                        <TextBlock Text="; integer value to select a device by its index" />
-                        <TextBox Text="{Binding JoystickSettingFFDeviceIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <GroupBox>
+                            <StackPanel>
+                                <TextBlock Text="; Select a joystick with force feedback" />
+                                <TextBlock Text="; 0 to select the first device ; -1 to select the last device" />
+                                <TextBlock Text="; integer value to select a device by its index" />
+                                <TextBox Text="{Binding JoystickSettingFFDeviceIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </GroupBox>
                         <TextBlock />
-                        <TextBlock Text="; Enable small joystick movement" />
-                        <TextBlock Text="; 0 to disable small movement" />
-                        <TextBlock Text="; 1 to enable small movement" />
-                        <CheckBox IsChecked="{Binding JoystickSettingEnableSmallMovement}" />
+                        <GroupBox>
+                            <StackPanel>
+                                <CheckBox IsChecked="{Binding JoystickSettingEnableSmallMovement}" Content="Enable small joystick movement" />
+                            </StackPanel>
+                        </GroupBox>
                         <TextBlock />
-                        <TextBlock Text="; Select the controller used for the main axis and buttons" />
-                        <TextBox Text="{Binding JoystickSettingMainControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <GroupBox>
+                            <StackPanel>
+                                <TextBlock Text="; Select the controller used for the main axis and buttons" />
+                                <TextBox Text="{Binding JoystickSettingMainControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                        </GroupBox>
                         <TextBlock />
-                        <TextBlock Text="; Select the controller used for throttle" />
-                        <TextBox Text="{Binding JoystickSettingThrottleControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <GroupBox Header="Yaw axis">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Controller index:" />
+                                    <TextBox Width="100" Text="{Binding JoystickSettingYawControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Axis index:" />
+                                    <TextBox Width="100" Text="{Binding JoystickSettingYawControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <CheckBox IsChecked="{Binding JoystickSettingInvertYaw}" Content="Invert axis" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Pitch axis">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Controller index:" />
+                                    <TextBox Width="100" Text="{Binding JoystickSettingPitchControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Axis index:" />
+                                    <TextBox Width="100" Text="{Binding JoystickSettingPitchControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <CheckBox IsChecked="{Binding JoystickSettingInvertPitch}" Content="Invert axis" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Throttle axis">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Controller index:" />
+                                    <TextBox Width="100" Text="{Binding JoystickSettingThrottleControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Axis index:" />
+                                    <TextBox Width="100" Text="{Binding JoystickSettingThrottleControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <CheckBox IsChecked="{Binding JoystickSettingInvertThrottle}" Content="Invert axis" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Roll axis">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Controller index:" />
+                                    <TextBox Width="100" Text="{Binding JoystickSettingRudderControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Axis index:" />
+                                    <TextBox Width="100" Text="{Binding JoystickSettingRudderControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <CheckBox IsChecked="{Binding JoystickSettingInvertRudder}" Content="Invert axis" />
+                            </StackPanel>
+                        </GroupBox>
                         <TextBlock />
-                        <TextBlock Text="; Select the controller axis used for throttle" />
-                        <TextBox Text="{Binding JoystickSettingThrottleControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock />
-                        <TextBlock Text="; Select the controller used for rudder" />
-                        <TextBox Text="{Binding JoystickSettingRudderControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock />
-                        <TextBlock Text="; Select the controller axis used for rudder" />
-                        <TextBox Text="{Binding JoystickSettingRudderControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        <TextBlock />
-                        <TextBlock Text="; Use the POV as regular buttons" />
-                        <TextBlock Text="; 0 to continious movement" />
-                        <TextBlock Text="; 1 to enable regular buttons" />
-                        <CheckBox IsChecked="{Binding JoystickSettingUsePovControllerAsButtons}" />
+                        <GroupBox>
+                            <StackPanel>
+                                <CheckBox IsChecked="{Binding JoystickSettingUsePovControllerAsButtons}" Content="Use the POV as regular buttons" />
+                            </StackPanel>
+                        </GroupBox>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -61,10 +111,10 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Key" Width="150" DisplayMemberBinding="{Binding Key}" />
-                            <GridViewColumn Header="Value" Width="450">
+                            <GridViewColumn Header="Value" Width="400">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox Width="400" ItemsSource="{x:Static local:JoystickKeys.Keys}" SelectedIndex="{Binding Value, Converter={x:Static local:DictionaryKeyConverter.Default}, ConverterParameter={x:Static local:JoystickKeys.Keys}}">
+                                        <ComboBox Width="380" ItemsSource="{x:Static local:JoystickKeys.Keys}" SelectedIndex="{Binding Value, Converter={x:Static local:DictionaryKeyConverter.Default}, ConverterParameter={x:Static local:JoystickKeys.Keys}}">
                                             <ComboBox.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <VirtualizingStackPanel />
