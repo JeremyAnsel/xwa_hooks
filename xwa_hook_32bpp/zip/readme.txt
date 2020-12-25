@@ -3,6 +3,7 @@ xwa_hook_32bpp
 This hook enables 32-bit mode.
 8-bit OPTs are converted to 32 bits and the game can load 32-bit OPTs.
 The game can load 32-bit DAT images. Existing DAT images are converted to 32 bits.
+Skins are supported to customize the appearence of the 3d models.
 
 For more informations, please see the following thread at xwaupgrade.com:
 https://www.xwaupgrade.com/phpBB3/viewtopic.php?f=33&t=12257
@@ -17,12 +18,15 @@ This dll requires:
 
 *** Setup ***
 
-Place hook_32bpp.dll next to xwingalliance.exe
+Place hook_32bpp.dll, hook_32bpp_net.dll, JeremyAnsel.ColorQuant.dll, JeremyAnsel.Xwa.Opt.dll next to xwingalliance.exe
 
 
 *** Patch ***
 
 The following modifications are applied at runtime to xwingalliance.exe:
+
+# To call the hook that set the opt name
+At offset 0CBF18, replace E82370F6FF with E803C00D00.
 
 # To call the hook that set textures bpp 8 to 32
 At offset 1964C5, replace 8A028801 with 8B028901.
@@ -62,6 +66,26 @@ At offset 0319EB, replace C744243C02000000 with C744243C00000000.
 At offset 031552, replace 744081E3FFFF00008D1C5BC1E303668B8B50B25F00 with 33C06681FBA201740340EB0383C00489442410EB0B.
 At offset 031572, replace 8BC12500400000F7D81BC024FD83C006 with 81E3FFFF00008D1C5BC1E303EB479090.
 At offset 0CD847, replace E8A4000000 with E8D4A60D00.
+
+
+*** Usage ***
+
+# Skins
+
+Suppose that the craft is "FlightModels\[Model].opt".
+To create a skin named "[Skin1]", create a folder named "FlightModels\Skins\[Model]\[Skin1]\".
+To replace a texture, place it in the skins folder with the same name and dimensions of the original texture.
+The supported image formats are bmp, png, jpg. Use the png format to get transparency.
+See "Skins\XWing\Default\Tex00033.png" for an example for the vanilla X-Wing.
+
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+To define a skin for a craft, create a file named "[MissionDir]\[Mission]_Skins.txt" or create a section named "[Skins]" in "[MissionDir]\[Mission].ini".
+The format is
+CraftOptName = SkinNameA, SkinNameB
+CraftOptName_fg_# = SkinName1, SkinName2, SkinName3
+# in CraftOptName_fg_# is an integer for the opt color marking index, starting at 0.
+The default SkinName is "Default".
+See "Skins.txt"
 
 
 *** Credits ***

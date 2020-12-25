@@ -1,6 +1,7 @@
 #include "targetver.h"
 #include "32bpp.h"
 #include <vector>
+#include <Windows.h>
 
 #pragma pack(push, 1)
 
@@ -94,9 +95,55 @@ public:
 
 ColorConvert g_colorConvert;
 
+std::string g_optName;
 std::vector<unsigned char> g_lightMapBuffer;
 std::vector<unsigned char> g_colorMapBuffer;
 std::vector<unsigned char> g_illumMapBuffer;
+
+class NetFunctions
+{
+public:
+	typedef int(_cdecl * readOptFunction)(const char*);
+
+	NetFunctions()
+	{
+		_module = LoadLibrary("hook_32bpp_net.dll");
+
+		_readOptFunction = (readOptFunction)GetProcAddress(_module, "ReadOptFunction");
+	}
+
+	~NetFunctions()
+	{
+		FreeLibrary(_module);
+	}
+
+	HMODULE _module;
+	readOptFunction _readOptFunction;
+};
+
+NetFunctions g_netFunctions;
+
+int SetOptNameHook(int* params)
+{
+	const char* name = (const char*)params[0];
+	const int A8 = params[1];
+	const int AC = params[2];
+	const int A10 = params[3];
+
+	const auto XwaIOOpenFile = (int(*)(const char*, int, int, int))0x00433B40;
+
+	g_optName = name;
+
+	int result = g_netFunctions._readOptFunction(name);
+
+	if (result)
+	{
+		name = "temp.opt";
+	}
+
+	XwaIOOpenFile(name, A8, AC, A10);
+	return 0;
+}
 
 int SetAlphaMaskHook(int* params)
 {

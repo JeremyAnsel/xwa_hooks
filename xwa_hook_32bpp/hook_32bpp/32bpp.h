@@ -1,5 +1,7 @@
 #pragma once
 
+int SetOptNameHook(int* params);
+
 int SetAlphaMaskHook(int* params);
 
 int CreateLightMapHook(int* params);

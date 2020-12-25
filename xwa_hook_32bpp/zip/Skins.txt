@@ -1,0 +1,3 @@
+
+XWing = Default
+XWing_fg_0 = Skin1, Skin2

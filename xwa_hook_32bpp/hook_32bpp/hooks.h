@@ -5,11 +5,17 @@
 
 static const HookFunction g_hookFunctions[] =
 {
+	{ 0x4CCB1D, SetOptNameHook },
 	{ 0x441DD0, SetAlphaMaskHook },
 	{ 0x441B40, CreateLightMapHook },
 	{ 0x441A07, ConvertColorMapHook },
 	{ 0x4CE44C, DatImage32Hook },
 	{ 0x4424CA, ComputeGlobalLightsHook },
+};
+
+static const HookPatchItem g_setOptNamePatch[] =
+{
+	{ 0x0CBF18, "E82370F6FF", "E803C00D00" },
 };
 
 static const HookPatchItem g_setTexturesBpp8To32Patch[] =
@@ -64,6 +70,7 @@ static const HookPatchItem g_dat32bppPatch[] =
 
 static const HookPatch g_patches[] =
 {
+	MAKE_HOOK_PATCH("To call the hook that set the opt name", g_setOptNamePatch),
 	MAKE_HOOK_PATCH("To call the hook that set textures bpp 8 to 32", g_setTexturesBpp8To32Patch),
 	MAKE_HOOK_PATCH("To call the hook that set TextureAlphaMask", g_setTextureAlphaMaskPatch),
 	MAKE_HOOK_PATCH("To call the hook that creates LightMap", g_createLightMapPatch),
