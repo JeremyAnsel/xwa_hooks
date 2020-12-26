@@ -46,6 +46,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 	{
 		if (IsXwaExe())
 		{
+			SetProcessDPIAware();
+
 			if (MainPatchMemory())
 			{
 				LoadAndPatchHooks();
