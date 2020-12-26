@@ -2,6 +2,7 @@ xwa_hook_opt_limit
 
 This hook removes the opt limit of 512 vertices per mesh.
 It also generates the "spec.rci" file.
+The meshes count per opt is now 254.
 
 
 *** Requirements ***
@@ -71,6 +72,33 @@ At offset 127FCF, replace E87C0D0000 with E84CFF0700.
 At offset 0415C0, replace 8B442404A3B4465B00C390 with C705B4465B0000008042C3.
 At offset 0415D0, replace C705B4465B0000000045C3 with C705B4465B0000008042C3.
 
+# To call the hook that sets the craft size
+See "exe_edit_meshes.txt"
+
+# To call the hook that sets the craft offsets
+See "exe_edit_meshes.txt"
+
+# To call the hook that compares the meshes count
+See "exe_edit_meshes.txt"
+
+# To call the hook that sets the meshes info
+See "exe_edit_meshes.txt"
+
+# To call the hook that sets the cockpit opt meshes info
+See "exe_edit_meshes.txt"
+
+# To call the hook that sets the exterior opt meshes info
+See "exe_edit_meshes.txt"
+
+# To call the hook that inits the escape pod craft
+See "exe_edit_meshes.txt"
+
+# To call the hook that inits the current craft
+See "exe_edit_meshes.txt"
+
+# To call the hook that filters craft meshes
+See "exe_edit_meshes.txt"
+
 
 *** Usage ***
 
@@ -78,7 +106,7 @@ The original vertices count limit is 512 per mesh.
 By default, the dll will use a value of 65536.
 You can modify this value in the "hook_opt_limit.cfg" file or the "hook_opt_limit" section of "hooks.ini".
 The format is:
-Size = value
+HitDataArraySize = value
 
 The size of the execute buffer is increased from 0x10000 to 0x200000.
 
