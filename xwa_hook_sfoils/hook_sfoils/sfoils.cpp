@@ -81,6 +81,34 @@ public:
 
 Config g_config;
 
+class CraftConfig
+{
+public:
+	CraftConfig()
+	{
+		auto lines = GetFileLines("hooks.ini", "hook_opt_limit");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_opt_limit.cfg");
+		}
+
+		this->MeshesCount = GetFileKeyValueInt(lines, "MeshesCount", 0);
+		this->Craft_Size = 0x3F9 + GetFileKeyValueInt(lines, "Craft_ExtraSize", 0);
+		this->Craft_Offset_22E = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_22E", 0);
+		this->Craft_Offset_260 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_260", 0);
+		this->Craft_Offset_292 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_292", 0);
+	}
+
+	int MeshesCount;
+	int Craft_Size;
+	int Craft_Offset_22E;
+	int Craft_Offset_260;
+	int Craft_Offset_292;
+};
+
+CraftConfig g_craftConfig;
+
 #pragma pack(push, 1)
 
 struct XwaCraft
@@ -422,6 +450,8 @@ public:
 		const XwaCraft* craft = object->pMobileObject->pCraft;
 		const unsigned short modelIndex = object->ModelIndex;
 		const auto sfoils = this->GetSFoils(modelIndex);
+		
+		const unsigned char* craftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? craft->MeshRotationAngles : (unsigned char*)((int)craft + g_craftConfig.Craft_Offset_260);
 
 		if (!sfoils.size())
 		{
@@ -434,7 +464,7 @@ public:
 		{
 			const auto& sfoil = sfoils[i];
 
-			if (craft->MeshRotationAngles[sfoil.meshIndex] != 0)
+			if (craftMeshRotationAngles[sfoil.meshIndex] != 0)
 			{
 				ret = false;
 				break;
@@ -450,6 +480,8 @@ public:
 		const unsigned short modelIndex = object->ModelIndex;
 		const auto landingGears = this->GetLandingGears(modelIndex);
 
+		const unsigned char* craftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? craft->MeshRotationAngles : (unsigned char*)((int)craft + g_craftConfig.Craft_Offset_260);
+
 		if (!landingGears.size())
 		{
 			return true;
@@ -461,7 +493,7 @@ public:
 		{
 			const auto& landingGear = landingGears[i];
 
-			if (craft->MeshRotationAngles[landingGear.meshIndex] != 0)
+			if (craftMeshRotationAngles[landingGear.meshIndex] != 0)
 			{
 				ret = false;
 				break;
@@ -721,6 +753,8 @@ int SFoilsHook1(int* params)
 
 	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
 
+	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+
 	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex);
 
 	if (!sfoils.size())
@@ -733,7 +767,7 @@ int SFoilsHook1(int* params)
 	{
 		const auto& sfoil = sfoils[i];
 
-		currentCraft->MeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+		currentCraftMeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
 	}
 
 	currentCraft->SFoilsState = 2;
@@ -751,6 +785,8 @@ int SFoilsHook2(int* params)
 	short elapsedTime = *(short*)0x08C1640;
 	XwaAIData* aiData = (XwaAIData*)((int)currentCraft + 0x28);
 	int currentPlayerId = *(int*)0x008C1CC8;
+
+	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
 
 	std::vector<SFoil> sfoils;
 
@@ -811,13 +847,13 @@ int SFoilsHook2(int* params)
 		{
 			if ((currentCraft->SFoilsState & 2) != 0)
 			{
-				if (currentCraft->MeshRotationAngles[sfoil.meshIndex] < sfoil.angle)
+				if (currentCraftMeshRotationAngles[sfoil.meshIndex] < sfoil.angle)
 				{
-					currentCraft->MeshRotationAngles[sfoil.meshIndex] += sfoil.closingSpeed;
+					currentCraftMeshRotationAngles[sfoil.meshIndex] += sfoil.closingSpeed;
 
-					if (currentCraft->MeshRotationAngles[sfoil.meshIndex] > sfoil.angle)
+					if (currentCraftMeshRotationAngles[sfoil.meshIndex] > sfoil.angle)
 					{
-						currentCraft->MeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+						currentCraftMeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
 					}
 
 					ret = 1;
@@ -825,13 +861,13 @@ int SFoilsHook2(int* params)
 			}
 			else
 			{
-				if (currentCraft->MeshRotationAngles[sfoil.meshIndex] >= sfoil.openingSpeed)
+				if (currentCraftMeshRotationAngles[sfoil.meshIndex] >= sfoil.openingSpeed)
 				{
-					currentCraft->MeshRotationAngles[sfoil.meshIndex] -= sfoil.openingSpeed;
+					currentCraftMeshRotationAngles[sfoil.meshIndex] -= sfoil.openingSpeed;
 
-					if (currentCraft->MeshRotationAngles[sfoil.meshIndex] < sfoil.openingSpeed)
+					if (currentCraftMeshRotationAngles[sfoil.meshIndex] < sfoil.openingSpeed)
 					{
-						currentCraft->MeshRotationAngles[sfoil.meshIndex] = 0;
+						currentCraftMeshRotationAngles[sfoil.meshIndex] = 0;
 					}
 
 					ret = 1;
@@ -866,6 +902,8 @@ int SFoilsHangarShuttleHook(int* params)
 	int time = params[1];
 	bool closing = params[2] != 0;
 
+	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+
 	auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex);
 
 	if (!sfoils.size())
@@ -880,13 +918,13 @@ int SFoilsHangarShuttleHook(int* params)
 			const auto& sfoil = sfoils[i];
 			int speed = (sfoil.closingSpeed * time + 1) / 2;
 
-			if (currentCraft->MeshRotationAngles[sfoil.meshIndex] < sfoil.angle)
+			if (currentCraftMeshRotationAngles[sfoil.meshIndex] < sfoil.angle)
 			{
-				currentCraft->MeshRotationAngles[sfoil.meshIndex] += speed;
+				currentCraftMeshRotationAngles[sfoil.meshIndex] += speed;
 
-				if (currentCraft->MeshRotationAngles[sfoil.meshIndex] > sfoil.angle)
+				if (currentCraftMeshRotationAngles[sfoil.meshIndex] > sfoil.angle)
 				{
-					currentCraft->MeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+					currentCraftMeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
 				}
 			}
 		}
@@ -898,13 +936,13 @@ int SFoilsHangarShuttleHook(int* params)
 			const auto& sfoil = sfoils[i];
 			int speed = (sfoil.openingSpeed * time + 1) / 2;
 
-			if (currentCraft->MeshRotationAngles[sfoil.meshIndex] >= speed)
+			if (currentCraftMeshRotationAngles[sfoil.meshIndex] >= speed)
 			{
-				currentCraft->MeshRotationAngles[sfoil.meshIndex] -= speed;
+				currentCraftMeshRotationAngles[sfoil.meshIndex] -= speed;
 
-				if (currentCraft->MeshRotationAngles[sfoil.meshIndex] < speed)
+				if (currentCraftMeshRotationAngles[sfoil.meshIndex] < speed)
 				{
-					currentCraft->MeshRotationAngles[sfoil.meshIndex] = 0;
+					currentCraftMeshRotationAngles[sfoil.meshIndex] = 0;
 				}
 			}
 		}
@@ -923,6 +961,8 @@ int SFoilsAIOutOfHyperspace1Hook(int* params)
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const unsigned short modelIndex = xwaObjects[objectIndex].ModelIndex;
 
+	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+
 	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
 
 	L0049AE20(objectIndex);
@@ -931,7 +971,7 @@ int SFoilsAIOutOfHyperspace1Hook(int* params)
 	{
 		for (unsigned int i = 0; i < 50; i++)
 		{
-			currentCraft->MeshRotationAngles[i] = 0;
+			currentCraftMeshRotationAngles[i] = 0;
 		}
 
 		const auto sfoils = g_modelIndexSFoils.GetSFoils(modelIndex);
@@ -946,7 +986,7 @@ int SFoilsAIOutOfHyperspace1Hook(int* params)
 		{
 			const auto& sfoil = sfoils[i];
 
-			currentCraft->MeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+			currentCraftMeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
 		}
 
 		currentCraft->SFoilsState = 2;
@@ -1041,6 +1081,8 @@ int InitSFoilsLandingGearsHook(int* params)
 	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 
+	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+
 	if (_mission != xwaMissionFileName)
 	{
 		_mission = xwaMissionFileName;
@@ -1114,7 +1156,7 @@ int InitSFoilsLandingGearsHook(int* params)
 				{
 					const auto& sfoil = sfoils[i];
 
-					currentCraft->MeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+					currentCraftMeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
 				}
 			}
 		}
