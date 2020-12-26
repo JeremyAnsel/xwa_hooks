@@ -75,6 +75,34 @@ public:
 
 Config g_config;
 
+class CraftConfig
+{
+public:
+	CraftConfig()
+	{
+		auto lines = GetFileLines("hooks.ini", "hook_opt_limit");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_opt_limit.cfg");
+		}
+
+		this->MeshesCount = GetFileKeyValueInt(lines, "MeshesCount", 0);
+		this->Craft_Size = 0x3F9 + GetFileKeyValueInt(lines, "Craft_ExtraSize", 0);
+		this->Craft_Offset_22E = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_22E", 0);
+		this->Craft_Offset_260 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_260", 0);
+		this->Craft_Offset_292 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_292", 0);
+	}
+
+	int MeshesCount;
+	int Craft_Size;
+	int Craft_Offset_22E;
+	int Craft_Offset_260;
+	int Craft_Offset_292;
+};
+
+CraftConfig g_craftConfig;
+
 enum HardpointTypeEnum : unsigned int
 {
 	HardpointType_None = 0,
@@ -194,8 +222,8 @@ struct XwaCraft
 	char Unk03BF[2];
 	short m03C1[2];
 	short m03C5[2];
-	int m03C9[2];
-	int m03D1[2];
+	float m03C9[2];
+	float m03D1[2];
 	char Unk03D9[32];
 };
 
@@ -556,12 +584,6 @@ std::vector<int> GetModelObjectProfileIndices(int modelIndex, const std::string&
 	for (const std::string& value : values)
 	{
 		int index = std::stoi(value);
-
-		if (index < 0 || index >= 50)
-		{
-			continue;
-		}
-
 		indices.push_back(index);
 	}
 
@@ -715,7 +737,6 @@ void TurretOptReload(int gunnerModelIndex, int playerModelIndex, int turretIndex
 	int& s_V0x077333C = *(int*)0x0077333C;
 	unsigned short* OptModelFileMemHandles = (unsigned short*)0x007CA6E0;
 	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
-	OptModelMeshesInfo* OptModelMeshesInfos = (OptModelMeshesInfo*)0x008D9760;
 
 	if (OptModelFileMemHandles[gunnerModelIndex] != 0)
 	{
@@ -752,13 +773,35 @@ void TurretOptReload(int gunnerModelIndex, int playerModelIndex, int turretIndex
 
 	L004328B0(ExeEnableTable[gunnerModelIndex].CraftIndex, gunnerModelIndex);
 
-	int numMeshes = OptGetNumOfMeshes(gunnerModelIndex);
-	OptModelMeshesInfos[gunnerModelIndex].NumOfMeshes = numMeshes;
-
-	for (int i = 0; i < numMeshes; i++)
+	if (g_craftConfig.MeshesCount == 0)
 	{
-		OptModelMeshesInfos[gunnerModelIndex].MeshesType[i] = OptGetMeshType(gunnerModelIndex, i);
-		OptModelMeshesInfos[gunnerModelIndex].MeshesDescriptor[i] = OptGetMeshDescriptor(gunnerModelIndex, i);
+		OptModelMeshesInfo* OptModelMeshesInfos = (OptModelMeshesInfo*)0x008D9760;
+
+		int numMeshes = OptGetNumOfMeshes(gunnerModelIndex);
+		OptModelMeshesInfos[gunnerModelIndex].NumOfMeshes = numMeshes;
+
+		for (int i = 0; i < numMeshes; i++)
+		{
+			OptModelMeshesInfos[gunnerModelIndex].MeshesType[i] = OptGetMeshType(gunnerModelIndex, i);
+			OptModelMeshesInfos[gunnerModelIndex].MeshesDescriptor[i] = OptGetMeshDescriptor(gunnerModelIndex, i);
+		}
+	}
+	else
+	{
+		int OptModelMeshesInfosPtr = *(int*)0x008D9760;
+		OptModelMeshesInfosPtr += gunnerModelIndex * (4 + g_craftConfig.MeshesCount * 4 * 2);
+		int* NumOfMeshesPtr = (int*)(OptModelMeshesInfosPtr + 0);
+		int* MeshesTypePtr = (int*)(OptModelMeshesInfosPtr + 4);
+		void** MeshesDescriptorPtr = (void**)(OptModelMeshesInfosPtr + 4 + g_craftConfig.MeshesCount * 4);
+
+		int numMeshes = OptGetNumOfMeshes(gunnerModelIndex);
+		*NumOfMeshesPtr = numMeshes;
+
+		for (int i = 0; i < numMeshes; i++)
+		{
+			MeshesTypePtr[i] = OptGetMeshType(gunnerModelIndex, i);
+			MeshesDescriptorPtr[i] = OptGetMeshDescriptor(gunnerModelIndex, i);
+		}
 	}
 
 	s_V0x077333C = 0;
@@ -1120,7 +1163,7 @@ int SetXwaCraftsHook(int* params)
 
 int ClearCraftDataHook(int* params)
 {
-	const XwaCraft* s_XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int s_XwaCrafts = *(int*)0x009106A0;
 	XwaCraft* s_pXwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 	const short modelIndex = *(short*)0x009E96F2;
 
@@ -1132,7 +1175,7 @@ int ClearCraftDataHook(int* params)
 		s_pXwaCurrentCraft->m03D1[i] = 0;
 	}
 
-	int index = s_pXwaCurrentCraft - s_XwaCrafts;
+	int index = ((int)s_pXwaCurrentCraft - s_XwaCrafts) / g_craftConfig.Craft_Size;
 
 	if ((unsigned int)index < g_craftsData.size())
 	{
@@ -1145,24 +1188,49 @@ int ClearCraftDataHook(int* params)
 	return 0;
 }
 
+//int CloneObjectHook(int* params)
+//{
+//	int edi = params[0];
+//	int esi = params[1];
+//
+//	const int s_XwaCrafts = *(int*)0x009106A0;
+//
+//	int ediIndex = (edi - s_XwaCrafts) / g_craftConfig.Craft_Size;
+//	int esiIndex = (esi - s_XwaCrafts) / g_craftConfig.Craft_Size;
+//
+//	memcpy((void*)edi, (void*)esi, g_craftConfig.Craft_Size);
+//
+//	if ((unsigned int)ediIndex < g_craftsData.size() && (unsigned int)esiIndex < g_craftsData.size())
+//	{
+//		g_craftsData[ediIndex] = g_craftsData[esiIndex];
+//	}
+//
+//	return 0;
+//}
+
 int CloneObjectHook(int* params)
 {
-	XwaCraft* edi = (XwaCraft*)params[0];
-	XwaCraft* esi = (XwaCraft*)params[1];
+	int A4 = params[5];
+	int A8 = params[6];
 
-	const XwaCraft* s_XwaCrafts = *(XwaCraft**)0x009106A0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const int s_XwaCrafts = *(int*)0x009106A0;
 
-	int ediIndex = edi - s_XwaCrafts;
-	int esiIndex = esi - s_XwaCrafts;
+	int edi = (int)XwaObjects[A4].pMobileObject->pCraft;
+	int esi = (int)XwaObjects[A8].pMobileObject->pCraft;
 
-	*edi = *esi;
-
-	if ((unsigned int)ediIndex < g_craftsData.size() && (unsigned int)esiIndex < g_craftsData.size())
+	if (edi != 0 && esi != 0)
 	{
-		g_craftsData[ediIndex] = g_craftsData[esiIndex];
+		int ediIndex = (edi - s_XwaCrafts) / g_craftConfig.Craft_Size;
+		int esiIndex = (esi - s_XwaCrafts) / g_craftConfig.Craft_Size;
+
+		if ((unsigned int)ediIndex < g_craftsData.size() && (unsigned int)esiIndex < g_craftsData.size())
+		{
+			g_craftsData[ediIndex] = g_craftsData[esiIndex];
+		}
 	}
 
-	return 0;
+	return A4 * 0x27;
 }
 
 int ComputeCraftAnglesHook(int* params)
@@ -1172,10 +1240,10 @@ int ComputeCraftAnglesHook(int* params)
 
 	XwaPlayer* s_XwaPlayers = (XwaPlayer*)0x008B94E0;
 	const XwaObject* s_XwaObjects = *(XwaObject**)0x007B33C4;
-	const XwaCraft* s_XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int s_XwaCrafts = *(int*)0x009106A0;
 
 	XwaCraft* craft = (XwaCraft*)ebp[-5];
-	int craftIndex = craft - s_XwaCrafts;
+	int craftIndex = ((int)craft - s_XwaCrafts) / g_craftConfig.Craft_Size;
 	int turretIndex = ebp[-3];
 	int playerIndex = ebx / sizeof(XwaPlayer);
 	short modelIndex = s_XwaObjects[s_XwaPlayers[playerIndex].ObjectIndex].ModelIndex;
@@ -1220,10 +1288,10 @@ int SetRotationAngle1Hook(int* params)
 	int& angle = params[0];
 
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
-	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCrafts = *(int*)0x009106A0;
 	const int XwaCurrentPlayerId = *(int*)0x008C1CC8;
 
-	int craftIndex = craft - XwaCrafts;
+	int craftIndex = ((int)craft - XwaCrafts) / g_craftConfig.Craft_Size;
 	int turretIndex = XwaPlayers[XwaCurrentPlayerId].TurretIndex - 1;
 
 	angle = g_craftsData[craftIndex][turretIndex].m3C1;
@@ -1237,10 +1305,10 @@ int SetRotationAngle2Hook(int* params)
 	int& angle = params[0];
 
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
-	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCrafts = *(int*)0x009106A0;
 	const int XwaCurrentPlayerId = *(int*)0x008C1CC8;
 
-	int craftIndex = craft - XwaCrafts;
+	int craftIndex = ((int)craft - XwaCrafts) / g_craftConfig.Craft_Size;
 	int turretIndex = XwaPlayers[XwaCurrentPlayerId].TurretIndex - 1;
 
 	angle = g_craftsData[craftIndex][turretIndex].m3C5;
@@ -1256,11 +1324,11 @@ int SetL00491EB0Angle1Hook(int* params)
 	int playerIndex = ebp[5];
 
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
-	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCrafts = *(int*)0x009106A0;
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 
 	XwaCraft* craft = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].pMobileObject->pCraft;
-	int craftIndex = craft - XwaCrafts;
+	int craftIndex = ((int)craft - XwaCrafts) / g_craftConfig.Craft_Size;
 	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
 
 	angle = g_craftsData[craftIndex][turretIndex].m3C1;
@@ -1276,11 +1344,11 @@ int SetL00491EB0Angle2Hook(int* params)
 	int playerIndex = ebp[5];
 
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
-	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCrafts = *(int*)0x009106A0;
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 
 	XwaCraft* craft = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].pMobileObject->pCraft;
-	int craftIndex = craft - XwaCrafts;
+	int craftIndex = ((int)craft - XwaCrafts) / g_craftConfig.Craft_Size;
 	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
 
 	angle = g_craftsData[craftIndex][turretIndex].m3C5;
@@ -1295,9 +1363,9 @@ int SetL00497610Angle1Hook(int* params)
 	int& angle = params[0];
 
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
-	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCrafts = *(int*)0x009106A0;
 
-	int craftIndex = craft - XwaCrafts;
+	int craftIndex = ((int)craft - XwaCrafts) / g_craftConfig.Craft_Size;
 	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
 
 	angle = g_craftsData[craftIndex][turretIndex].m3C1;
@@ -1312,9 +1380,9 @@ int SetL00497610Angle2Hook(int* params)
 	int& angle = params[0];
 
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
-	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCrafts = *(int*)0x009106A0;
 
-	int craftIndex = craft - XwaCrafts;
+	int craftIndex = ((int)craft - XwaCrafts) / g_craftConfig.Craft_Size;
 	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
 
 	angle = g_craftsData[craftIndex][turretIndex].m3C5;
@@ -1328,10 +1396,10 @@ int SetL0040D410Angle1Hook(int* params)
 	int& angle = params[0];
 
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
-	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCrafts = *(int*)0x009106A0;
 	const int XwaCurrentPlayerId = *(int*)0x008C1CC8;
 
-	int craftIndex = craft - XwaCrafts;
+	int craftIndex = ((int)craft - XwaCrafts) / g_craftConfig.Craft_Size;
 	int turretIndex = XwaPlayers[XwaCurrentPlayerId].TurretIndex - 1;
 
 	angle = g_craftsData[craftIndex][turretIndex].m3C1;
@@ -1345,10 +1413,10 @@ int SetL0040D410Angle2Hook(int* params)
 	int& angle = params[0];
 
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
-	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCrafts = *(int*)0x009106A0;
 	const int XwaCurrentPlayerId = *(int*)0x008C1CC8;
 
-	int craftIndex = craft - XwaCrafts;
+	int craftIndex = ((int)craft - XwaCrafts) / g_craftConfig.Craft_Size;
 	int turretIndex = XwaPlayers[XwaCurrentPlayerId].TurretIndex - 1;
 
 	angle = g_craftsData[craftIndex][turretIndex].m3C5;
@@ -1362,12 +1430,12 @@ int SetL0043F8E0Angle1Hook(int* params)
 	int& angle = params[0];
 
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
-	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCrafts = *(int*)0x009106A0;
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 
 	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
 	XwaCraft* craft = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].pMobileObject->pCraft;
-	int craftIndex = craft - XwaCrafts;
+	int craftIndex = ((int)craft - XwaCrafts) / g_craftConfig.Craft_Size;
 
 	angle = g_craftsData[craftIndex][turretIndex].m3C1;
 
@@ -1380,12 +1448,12 @@ int SetL0043F8E0Angle2Hook(int* params)
 	int& angle = params[0];
 
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
-	const XwaCraft* XwaCrafts = *(XwaCraft**)0x009106A0;
+	const int XwaCrafts = *(int*)0x009106A0;
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 
 	int turretIndex = XwaPlayers[playerIndex].TurretIndex - 1;
 	XwaCraft* craft = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].pMobileObject->pCraft;
-	int craftIndex = craft - XwaCrafts;
+	int craftIndex = ((int)craft - XwaCrafts) / g_craftConfig.Craft_Size;
 
 	angle = g_craftsData[craftIndex][turretIndex].m3C5;
 
@@ -1570,12 +1638,26 @@ int ObjectProfileHook(int* params)
 		profile = "Default";
 	}
 
+	char* m292;
+	char* m22E;
+
+	if (g_craftConfig.MeshesCount == 0)
+	{
+		m292 = s_pXwaCurrentCraft->XwaCraft_m292;
+		m22E = s_pXwaCurrentCraft->XwaCraft_m22E;
+	}
+	else
+	{
+		m292 = (char*)((int)s_pXwaCurrentCraft + g_craftConfig.Craft_Offset_292);
+		m22E = (char*)((int)s_pXwaCurrentCraft + g_craftConfig.Craft_Offset_22E);
+	}
+
 	const auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, profile);
 
 	for (const int index : indices)
 	{
-		s_pXwaCurrentCraft->XwaCraft_m292[index] = 0;
-		s_pXwaCurrentCraft->XwaCraft_m22E[index] = 4;
+		m292[index] = 0;
+		m22E[index] = 4;
 	}
 
 	return 0;

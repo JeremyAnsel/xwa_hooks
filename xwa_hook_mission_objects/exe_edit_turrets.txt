@@ -16,17 +16,25 @@ EB41                    jmp 0041D2FF, 0041D2FF - 0041D2BE = 41
 9090                    nop
 
 // Clone Object
-:0041EE2F - 0x01E22F
-B9FE000000              mov ecx, 000000FE
-F3                      repz
-A5                      movsd
-A4                      movsb
-8B0DC4337B00            mov ecx, dword ptr [007B33C4]
+;:0041EE2F - 0x01E22F
+;B9FE000000              mov ecx, 000000FE
+;F3                      repz
+;A5                      movsd
+;A4                      movsb
+;8B0DC4337B00            mov ecx, dword ptr [007B33C4]
+;
+;56                      push esi
+;57                      push edi
+;E8EA9C1800              call 005A8B20, 005A8B20 - 0041EE36 = 00189CEA
+;83C408                  add esp, 00000008
+;90909090                nop
 
-56                      push esi
-57                      push edi
-E8EA9C1800              call 005A8B20, 005A8B20 - 0041EE36 = 00189CEA
-83C408                  add esp, 00000008
+:0041EDFE - 0x01E1FE
+8D44AD00                lea eax, dword ptr [ebp+4*ebp]
+C1E003                  shl eax, 03
+2BC5                    sub eax, ebp
+
+E82D9D1800              call 005A8B30, 005A8B30 - 0041EE03 = 00189D2D
 90909090                nop
 
 // Compute Craft Angles
