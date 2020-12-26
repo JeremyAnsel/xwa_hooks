@@ -40,8 +40,14 @@ public:
 			height = 0;
 		}
 
-		int cx = GetSystemMetrics(SM_CXSCREEN);
-		int cy = GetSystemMetrics(SM_CYSCREEN);
+		//int cx = GetSystemMetrics(SM_CXSCREEN);
+		//int cy = GetSystemMetrics(SM_CYSCREEN);
+
+		DEVMODE mode{};
+		mode.dmSize = sizeof(DEVMODE);
+		EnumDisplaySettings(nullptr, ENUM_CURRENT_SETTINGS, &mode);
+		int cx = mode.dmPelsWidth;
+		int cy = mode.dmPelsHeight;
 
 		bool isFullscreen;
 
