@@ -56,6 +56,34 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class CraftConfig
+{
+public:
+	CraftConfig()
+	{
+		auto lines = GetFileLines("hooks.ini", "hook_opt_limit");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hook_opt_limit.cfg");
+		}
+
+		this->MeshesCount = GetFileKeyValueInt(lines, "MeshesCount", 0);
+		this->Craft_Size = 0x3F9 + GetFileKeyValueInt(lines, "Craft_ExtraSize", 0);
+		this->Craft_Offset_22E = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_22E", 0);
+		this->Craft_Offset_260 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_260", 0);
+		this->Craft_Offset_292 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_292", 0);
+	}
+
+	int MeshesCount;
+	int Craft_Size;
+	int Craft_Offset_22E;
+	int Craft_Offset_260;
+	int Craft_Offset_292;
+};
+
+CraftConfig g_craftConfig;
+
 #pragma pack(push, 1)
 
 struct XwaCraft
@@ -369,6 +397,8 @@ int PilotHook(int* params)
 	const int objectIndex = params[7];
 	const int A8 = params[8];
 
+	char* craftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? craft->MeshRotationAngles : (char*)((int)craft + g_craftConfig.Craft_Offset_260);
+
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 
@@ -386,7 +416,7 @@ int PilotHook(int* params)
 	{
 		const auto& pilot = pilotMeshes[i];
 
-		char& meshRotation = craft->MeshRotationAngles[pilot.meshIndex];
+		char& meshRotation = craftMeshRotationAngles[pilot.meshIndex];
 
 		switch (pilot.behavior)
 		{
