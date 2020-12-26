@@ -2,6 +2,7 @@
 #include "hook.h"
 #include "hook_function.h"
 #include "hooks.h"
+#include <Windows.h>
 
 bool MainPatchMemory()
 {
@@ -20,6 +21,8 @@ extern "C" __declspec(dllexport) void CallHook(int* esp)
 {
 	if (esp == nullptr)
 	{
+		SetProcessDPIAware();
+
 		VirtualProtectHookMemoryWrite();
 
 		*(int*)0x005A8B60 = (int)CallHook;
