@@ -8,3 +8,9 @@ E8F4C11800              call 005A8B20, 005A8B20 - 0041C92C = 0018C1F4
 9090                    nop
 90                      nop
 E9A7000000              jmp 0041C9DB, 0041C9DB - 0041C934 = 000000A7
+
+; from L00456AE0
+:00456F51 - 0x056351
+E85AA7FAFF              call 004016B0
+
+E8CA1B1500              call 005A8B20, 005A8B20 - 00456F56 = 00151BCA

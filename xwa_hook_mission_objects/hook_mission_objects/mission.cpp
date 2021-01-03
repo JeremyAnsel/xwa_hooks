@@ -242,7 +242,9 @@ struct XwaObject
 {
 	char Unk0000[2];
 	short ModelIndex;
-	char Unk0004[27];
+	char Unk0004[1];
+	unsigned char TieFlightGroupIndex;
+	char Unk0006[25];
 	int PlayerIndex;
 	XwaMobileObject* pMobileObject;
 };
@@ -1623,12 +1625,8 @@ int TurretIndex2BlockedHook(int* params)
 	return 1;
 }
 
-int ObjectProfileHook(int* params)
+void ApplyProfile(unsigned short modelIndex, unsigned short flightgroupIndex, XwaCraft* s_pXwaCurrentCraft)
 {
-	const unsigned short modelIndex = *(unsigned short*)0x09E96F2;
-	const unsigned short flightgroupIndex = *(unsigned short*)0x09E9708;
-	XwaCraft* s_pXwaCurrentCraft = *(XwaCraft**)0x00910DFC;
-
 	const auto objectLines = GetCustomFileLines("Objects");
 
 	std::string profile = GetFileKeyValue(objectLines, "ObjectProfile_fg_" + std::to_string(flightgroupIndex));
@@ -1659,6 +1657,38 @@ int ObjectProfileHook(int* params)
 		m292[index] = 0;
 		m22E[index] = 4;
 	}
+}
+
+int ObjectProfileHook(int* params)
+{
+	const unsigned short modelIndex = *(unsigned short*)0x09E96F2;
+	const unsigned short flightgroupIndex = *(unsigned short*)0x09E9708;
+	XwaCraft* s_pXwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+
+	ApplyProfile(modelIndex, flightgroupIndex, s_pXwaCurrentCraft);
+
+	return 0;
+}
+
+int AddObjectProfileHook(int* params)
+{
+	const short objectIndex = (short)params[0];
+
+	const auto L004016B0 = (void(*)(int))0x004016B0;
+
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	XwaCraft* s_pXwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	unsigned short flightgroupIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+
+	L004016B0(objectIndex);
+
+	if (s_pXwaCurrentCraft == nullptr)
+	{
+		return 0;
+	}
+
+	ApplyProfile(modelIndex, flightgroupIndex, s_pXwaCurrentCraft);
 
 	return 0;
 }

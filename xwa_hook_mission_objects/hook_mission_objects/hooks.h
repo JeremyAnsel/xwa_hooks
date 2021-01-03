@@ -52,6 +52,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x490EF9, TurretIndex2BlockedHook },
 
 	{ 0x41C92C, ObjectProfileHook },
+	{ 0x456F56, AddObjectProfileHook },
 };
 
 static const HookPatchItem g_loadMissionObjectsPatch[] =
@@ -139,6 +140,7 @@ static const HookPatchItem g_setTurretIndexPatch[] =
 static const HookPatchItem g_objectProfilePatch[] =
 {
 	{ 0x01BD27, "803D04979E00050F85A7000000", "E8F4C11800909090E9A7000000" },
+	{ 0x056351, "E85AA7FAFF", "E8CA1B1500" },
 };
 
 static const HookPatch g_patches[] =

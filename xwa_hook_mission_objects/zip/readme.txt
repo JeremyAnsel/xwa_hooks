@@ -91,6 +91,7 @@ At offset 0902F3, replace 8BAEE0948B0081FDFFFF0000 with 53E8377C11005D85C0909090
 
 # To call the hook that defines object profile
 At offset 01BD27, replace 803D04979E00050F85A7000000 with E8F4C11800909090E9A7000000.
+At offset 056351, replace E85AA7FAFF with E8CA1B1500.
 
 
 *** Usage ***
