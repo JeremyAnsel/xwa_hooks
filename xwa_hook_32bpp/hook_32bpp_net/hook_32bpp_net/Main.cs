@@ -237,6 +237,8 @@ namespace hook_32bpp_net
 
                     CombineTextures(texture.Value, filename);
                 }
+
+                texture.Value.GenerateMipmaps();
             }
         }
 
