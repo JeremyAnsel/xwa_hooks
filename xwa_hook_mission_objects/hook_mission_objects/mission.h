@@ -35,3 +35,4 @@ int TurretIndex2BlockedHook(int* params);
 
 int ObjectProfileHook(int* params);
 int AddObjectProfileHook(int* params);
+int BriefingObjectProfileHook(int* params);

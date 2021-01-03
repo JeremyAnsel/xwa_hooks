@@ -1692,3 +1692,22 @@ int AddObjectProfileHook(int* params)
 
 	return 0;
 }
+
+int BriefingObjectProfileHook(int* params)
+{
+	*(short*)0x0078260F = 0;
+
+	bool s_XwaBriefingIsPlaying = *(short*)0x009EB826 != 0;
+	unsigned short modelIndex = *(unsigned short*)0x007827A8;
+	unsigned short flightgroupIndex = *(unsigned short*)0x009F4A04;
+	XwaCraft* craft = *(XwaCraft**)0x00782705;
+
+	if (!s_XwaBriefingIsPlaying)
+	{
+		flightgroupIndex = 0xffff;
+	}
+
+	ApplyProfile(modelIndex, flightgroupIndex, craft);
+
+	return 0;
+}
