@@ -40,6 +40,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x487521, CraftMeshesFilterHook },
 	{ 0x487E8F, CraftMeshesFilterHook },
 	{ 0x487F48, CraftMeshesFilterHook },
+	{ 0x405BF8, CraftZeroMemoryHook },
+	{ 0x41E85E, CraftZeroMemoryHook },
 };
 
 static const std::string g_hitDataArray0 = int_to_hex(GetHitDataArrayPtr());
@@ -58,7 +60,9 @@ static const std::string g_craftOffset_260__1 = int_to_hex(GetCraftOffset_260() 
 static const std::string g_craftOffset_260_0 = int_to_hex(GetCraftOffset_260());
 static const std::string g_craftOffset_260_1 = int_to_hex(GetCraftOffset_260() + 1);
 static const std::string g_craftOffset_260_2 = int_to_hex(GetCraftOffset_260() + 2);
+static const std::string g_craftOffset_260_3 = int_to_hex(GetCraftOffset_260() + 3);
 static const std::string g_craftOffset_260_4 = int_to_hex(GetCraftOffset_260() + 4);
+static const std::string g_craftOffset_260_6 = int_to_hex(GetCraftOffset_260() + 6);
 static const std::string g_craftOffset_292__1 = int_to_hex(GetCraftOffset_292() - 1);
 static const std::string g_craftOffset_292_0 = int_to_hex(GetCraftOffset_292());
 static const std::string g_craftOffset_292_1 = int_to_hex(GetCraftOffset_292() + 1);
@@ -184,6 +188,34 @@ static const HookPatchItem g_craftOffsetsPatch[] =
 	{ 0x0005EDDB, "A0FDFFFF", g_craftOffset_260_Neg.c_str() },
 	// :0045F9DF 8D9F60020000            lea ebx, dword ptr [edi+00000260]
 	{ 0x0005EDE1, "60020000", g_craftOffset_260_0.c_str() },
+
+	// :0040328D 8DB42A60020000          lea esi, dword ptr [edx+ebp+00000260]
+	{ 0x00002690, "60020000", g_craftOffset_260_0.c_str() },
+	// :004032E7 8DB42960020000          lea esi, dword ptr [ecx+ebp+00000260]
+	{ 0x000026EA, "60020000", g_craftOffset_260_0.c_str() },
+	// :0040335A 8DB562020000            lea esi, dword ptr [ebp+00000262]
+	{ 0x0000275C, "62020000", g_craftOffset_260_2.c_str() },
+	// :005029DC 8D9892020000            lea ebx, dword ptr [eax+00000292]
+	{ 0x00101DDE, "92020000", g_craftOffset_292_0.c_str() },
+	// :00519726 8D8663020000            lea eax, dword ptr [esi+00000263]
+	{ 0x00118B28, "63020000", g_craftOffset_260_3.c_str() },
+	// :00519E98 8D840F60020000          lea eax, dword ptr [edi+ecx+00000260]
+	{ 0x0011929B, "60020000", g_craftOffset_260_0.c_str() },
+	// :00519EF9 8DBC1760020000          lea edi, dword ptr [edi+edx+00000260]
+	{ 0x001192FC, "60020000", g_craftOffset_260_0.c_str() },
+	// :0051A02B 8DBC0F60020000          lea edi, dword ptr [edi+ecx+00000260]
+	{ 0x0011942E, "60020000", g_craftOffset_260_0.c_str() },
+	// :0051A10D 8DBC0760020000          lea edi, dword ptr [edi+eax+00000260]
+	{ 0x00119510, "60020000", g_craftOffset_260_0.c_str() },
+	// :0051A3F6 8D840760020000          lea eax, dword ptr [edi+eax+00000260]
+	{ 0x001197F9, "60020000", g_craftOffset_260_0.c_str() },
+
+	// :00518662 81C161020000            add ecx, 00000261
+	{ 0x00117A64, "61020000", g_craftOffset_260_1.c_str() },
+	// :00518749 81C161020000            add ecx, 00000261
+	{ 0x00117B4B, "61020000", g_craftOffset_260_1.c_str() },
+	// :00519758 81C663020000            add esi, 00000263
+	{ 0x00118B5A, "63020000", g_craftOffset_260_3.c_str() },
 
 	// :00401604 8A8C0592020000          mov cl, byte ptr [ebp+eax+00000292]
 	{ 0x00000A07, "92020000", g_craftOffset_292_0.c_str() },
@@ -319,12 +351,38 @@ static const HookPatchItem g_craftOffsetsPatch[] =
 	{ 0x0005D5C1, "62020000", g_craftOffset_260_2.c_str() },
 	// :0045E1CD 888862020000            mov byte ptr [eax+00000262], cl
 	{ 0x0005D5CF, "62020000", g_craftOffset_260_2.c_str() },
+	// :0045E1F5 8A8163020000            mov al, byte ptr [ecx+00000263]
+	{ 0x0005D5F7, "63020000", g_craftOffset_260_3.c_str() },
+	// :0045E201 888163020000            mov byte ptr [ecx+00000263], al
+	{ 0x0005D603, "63020000", g_craftOffset_260_3.c_str() },
+	// :0045E20D 80BA63020000F7          cmp byte ptr [edx+00000263], F7
+	{ 0x0005D60F, "63020000", g_craftOffset_260_3.c_str() },
+	// :0045E226 80806302000002          add byte ptr [eax+00000263], 02
+	{ 0x0005D628, "63020000", g_craftOffset_260_3.c_str() },
+	// :0045E232 80B863020000E1          cmp byte ptr [eax+00000263], E1
+	{ 0x0005D634, "63020000", g_craftOffset_260_3.c_str() },
+	// :0045E23B C68063020000E0          mov byte ptr [eax+00000263], E0
+	{ 0x0005D63D, "63020000", g_craftOffset_260_3.c_str() },
+	// :0045E246 888163020000            mov byte ptr [ecx+00000263], al
+	{ 0x0005D648, "63020000", g_craftOffset_260_3.c_str() },
+	// :0045E251 80B86302000004          cmp byte ptr [eax+00000263], 04
+	{ 0x0005D653, "63020000", g_craftOffset_260_3.c_str() },
+	// :0045E26A 808063020000FE          add byte ptr [eax+00000263], FE
+	{ 0x0005D66C, "63020000", g_craftOffset_260_3.c_str() },
+	// :0045E276 80B86302000020          cmp byte ptr [eax+00000263], 20
+	{ 0x0005D678, "63020000", g_craftOffset_260_3.c_str() },
+	// :0045E27F C6806302000021          mov byte ptr [eax+00000263], 21
+	{ 0x0005D681, "63020000", g_craftOffset_260_3.c_str() },
 	// :0045E2BB 8A8160020000            mov al, byte ptr [ecx+00000260]
 	{ 0x0005D6BD, "60020000", g_craftOffset_260_0.c_str() },
 	// :0045E2D4 888160020000            mov byte ptr [ecx+00000260], al
 	{ 0x0005D6D6, "60020000", g_craftOffset_260_0.c_str() },
 	// :0045E2F7 80B06002000001          xor byte ptr [eax+00000260], 01
 	{ 0x0005D6F9, "60020000", g_craftOffset_260_0.c_str() },
+	// :0045EA25 8A8863020000            mov cl, byte ptr [eax+00000263]
+	{ 0x0005DE27, "63020000", g_craftOffset_260_3.c_str() },
+	// :0045EA2D 888863020000            mov byte ptr [eax+00000263], cl
+	{ 0x0005DE2F, "63020000", g_craftOffset_260_3.c_str() },
 	// :0045EA40 8A8860020000            mov cl, byte ptr [eax+00000260]
 	{ 0x0005DE42, "60020000", g_craftOffset_260_0.c_str() },
 	// :0045EA4F 888860020000            mov byte ptr [eax+00000260], cl
@@ -351,6 +409,28 @@ static const HookPatchItem g_craftOffsetsPatch[] =
 	{ 0x0005DEFD, "64020000", g_craftOffset_260_4.c_str() },
 	// :0045EB04 C6816402000021          mov byte ptr [ecx+00000264], 21
 	{ 0x0005DF06, "64020000", g_craftOffset_260_4.c_str() },
+	// :0045EB11 8A8166020000            mov al, byte ptr [ecx+00000266]
+	{ 0x0005DF13, "66020000", g_craftOffset_260_6.c_str() },
+	// :0045EB1D 888166020000            mov byte ptr [ecx+00000266], al
+	{ 0x0005DF1F, "66020000", g_craftOffset_260_6.c_str() },
+	// :0045EB28 80B866020000F7          cmp byte ptr [eax+00000266], F7
+	{ 0x0005DF2A, "66020000", g_craftOffset_260_6.c_str() },
+	// :0045EB44 80806602000002          add byte ptr [eax+00000266], 02
+	{ 0x0005DF46, "66020000", g_craftOffset_260_6.c_str() },
+	// :0045EB50 80B866020000E1          cmp byte ptr [eax+00000266], E1
+	{ 0x0005DF52, "66020000", g_craftOffset_260_6.c_str() },
+	// :0045EB59 C68066020000E0          mov byte ptr [eax+00000266], E0
+	{ 0x0005DF5B, "66020000", g_craftOffset_260_6.c_str() },
+	// :0045EB64 888166020000            mov byte ptr [ecx+00000266], al
+	{ 0x0005DF66, "66020000", g_craftOffset_260_6.c_str() },
+	// :0045EB70 80B96602000004          cmp byte ptr [ecx+00000266], 04
+	{ 0x0005DF72, "66020000", g_craftOffset_260_6.c_str() },
+	// :0045EB8C 808066020000FE          add byte ptr [eax+00000266], FE
+	{ 0x0005DF8E, "66020000", g_craftOffset_260_6.c_str() },
+	// :0045EB98 80B86602000020          cmp byte ptr [eax+00000266], 20
+	{ 0x0005DF9A, "66020000", g_craftOffset_260_6.c_str() },
+	// :0045EBA1 C6806602000021          mov byte ptr [eax+00000266], 21
+	{ 0x0005DFA3, "66020000", g_craftOffset_260_6.c_str() },
 	// :0045EC14 8A8160020000            mov al, byte ptr [ecx+00000260]
 	{ 0x0005E016, "60020000", g_craftOffset_260_0.c_str() },
 	// :0045EC2D 888160020000            mov byte ptr [ecx+00000260], al
@@ -469,10 +549,14 @@ static const HookPatchItem g_craftOffsetsPatch[] =
 	{ 0x001034C3, "96020000", g_craftOffset_292_4.c_str() },
 	// :00509138 8A8661020000            mov al, byte ptr [esi+00000261]
 	{ 0x0010853A, "61020000", g_craftOffset_260_1.c_str() },
+	// :00509158 8A9663020000            mov dl, byte ptr [esi+00000263]
+	{ 0x0010855A, "63020000", g_craftOffset_260_3.c_str() },
 	// :0050917D 8A8662020000            mov al, byte ptr [esi+00000262]
 	{ 0x0010857F, "62020000", g_craftOffset_260_2.c_str() },
 	// :0050919B 8A8664020000            mov al, byte ptr [esi+00000264]
 	{ 0x0010859D, "64020000", g_craftOffset_260_4.c_str() },
+	// :005091A6 8A8E66020000            mov cl, byte ptr [esi+00000266]
+	{ 0x001085A8, "66020000", g_craftOffset_260_6.c_str() },
 	// :00513FF8 C6806402000020          mov byte ptr [eax+00000264], 20
 	{ 0x001133FA, "64020000", g_craftOffset_260_4.c_str() },
 	// :00514C08 C684069202000002        mov byte ptr [esi+eax+00000292], 02
@@ -568,6 +652,12 @@ static const HookPatchItem g_craftMeshesFilterPatch[] =
 	{ 0x087341, "83E07F80BC189202000000", "5053E8D80B12005B5885C0" },
 };
 
+static const HookPatchItem g_craftZeroMemoryPatch[] =
+{
+	{ 0x004FF2, "8BBADD000000F3ABAA", "52E8282F1A0083C404" },
+	{ 0x01DC58, "B9EA00000033C0F3ABAA", "51E8C2A2180083C40490" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
@@ -587,4 +677,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that inits the escape pod craft", g_escapePodCraftInitPatch),
 	MAKE_HOOK_PATCH("To call the hook that inits the current craft", g_currentCraftInitPatch),
 	MAKE_HOOK_PATCH("To call the hook that filters craft meshes", g_craftMeshesFilterPatch),
+	MAKE_HOOK_PATCH("To call the hook that zero inits the craft memory", g_craftZeroMemoryPatch),
 };

@@ -28,3 +28,4 @@ int ExteriorOptInfoGetDescriptorHook(int* params);
 int EscapePodCraftInitHook(int* params);
 int CurrentCraftInitHook(int* params);
 int CraftMeshesFilterHook(int* params);
+int CraftZeroMemoryHook(int* params);

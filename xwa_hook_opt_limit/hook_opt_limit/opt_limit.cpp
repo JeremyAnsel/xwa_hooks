@@ -49,6 +49,15 @@ public:
 		this->Craft_Offset_22E = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_22E", 0);
 		this->Craft_Offset_260 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_260", this->MeshesCount * 1);
 		this->Craft_Offset_292 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_292", this->MeshesCount * 2);
+
+		if (this->MeshesCount == 0)
+		{
+			this->MeshesCount = 50;
+			this->Craft_Size = 0;
+			this->Craft_Offset_22E = -459;
+			this->Craft_Offset_260 = -409;
+			this->Craft_Offset_292 = -359;
+		}
 	}
 
 	int MeshesCount;
@@ -406,5 +415,19 @@ int CraftMeshesFilterHook(int* params)
 	unsigned char value = array292[index];
 
 	params[1] = value == 0 ? 0 : 1;
+	return 0;
+}
+
+int CraftZeroMemoryHook(int* params)
+{
+	XwaMobileObject* pMobileObject = (XwaMobileObject*)params[0];
+	int pCraft = pMobileObject->pCraft;
+
+	int pObject = *(int*)(pCraft + 0x3F5);
+
+	memset((void*)pCraft, 0, GetConfig().Craft_Size);
+
+	*(int*)(pCraft + 0x3F5) = pObject;
+
 	return 0;
 }

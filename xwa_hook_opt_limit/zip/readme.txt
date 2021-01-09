@@ -99,6 +99,9 @@ See "exe_edit_meshes.txt"
 # To call the hook that filters craft meshes
 See "exe_edit_meshes.txt"
 
+# To call the hook that zero inits the craft memory
+See "exe_edit_meshes.txt"
+
 
 *** Usage ***
 
@@ -111,6 +114,8 @@ HitDataArraySize = value
 The size of the execute buffer is increased from 0x10000 to 0x200000.
 
 To regenerate the "spec.rci" file, delete it. The file will be generated when you launch the game.
+
+To use default values for the meshes count limit, set "MeshesCount = 0".
 
 
 *** Credits ***
