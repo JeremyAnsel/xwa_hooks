@@ -33,6 +33,8 @@ namespace XwaJoystickConfig
             Application.Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
 #endif
 
+            this.JoystickControllers = this.ReadJoystickControllers();
+
             if (System.IO.File.Exists("JoystickConfig.txt"))
             {
                 this.ReadJoystickConfig("JoystickConfig.txt");
@@ -42,8 +44,6 @@ namespace XwaJoystickConfig
                 this.SetDefaultSettings();
                 this.SetDefaultJoystickConfigButtons(0);
             }
-
-            this.JoystickControllers = this.ReadJoystickControllers();
 
             this.Update();
         }
@@ -196,7 +196,17 @@ namespace XwaJoystickConfig
             this.Update();
         }
 
-        private void InitButtonsButton_Click(object sender, RoutedEventArgs e)
+        private void InitButtonsIndexButton_Click(object sender, RoutedEventArgs e)
+        {
+            InitButtons(false);
+        }
+
+        private void InitButtonsIdButton_Click(object sender, RoutedEventArgs e)
+        {
+            InitButtons(true);
+        }
+
+        private void InitButtons(bool useIds)
         {
             this.JoystickConfigButtons.Clear();
 
@@ -216,13 +226,20 @@ namespace XwaJoystickConfig
 
                 controllerIndex++;
 
+                if (useIds)
+                {
+                    int id = caps.ManufacturerID << 16 | caps.ProductID;
+                    controllerIndex = id;
+                }
+
                 for (int i = 0; i < caps.wNumButtons; i++)
                 {
                     string key = string.Format(CultureInfo.InvariantCulture, "joybutton_{0}_{1}", controllerIndex, i + 1);
                     int value = GetDefaultConfigButton(buttonIndex + 1);
                     buttonIndex++;
 
-                    this.JoystickConfigButtons.Add(new JoystickConfigButton(key, value));
+                    string controller = (string)ControllerNameConverter.Default.Convert(new object[] { this.JoystickControllers, controllerIndex }, null, null, null);
+                    this.JoystickConfigButtons.Add(new JoystickConfigButton(controller, key, value));
                 }
 
                 if (caps.wCaps.HasFlag(JoyDriverCaps.HasPov))
@@ -233,7 +250,8 @@ namespace XwaJoystickConfig
                         int value = GetDefaultConfigPov(povIndex + 1);
                         povIndex++;
 
-                        this.JoystickConfigButtons.Add(new JoystickConfigButton(key, value));
+                        string controller = (string)ControllerNameConverter.Default.Convert(new object[] { this.JoystickControllers, controllerIndex }, null, null, null);
+                        this.JoystickConfigButtons.Add(new JoystickConfigButton(controller, key, value));
                     }
                 }
             }
@@ -270,7 +288,8 @@ namespace XwaJoystickConfig
                 string key = string.Format(CultureInfo.InvariantCulture, "joybutton_{0}_{1}", controllerIndex, i + 1);
                 int value = GetDefaultConfigButton(i + 1);
 
-                this.JoystickConfigButtons.Add(new JoystickConfigButton(key, value));
+                string controller = (string)ControllerNameConverter.Default.Convert(new object[] { this.JoystickControllers, controllerIndex }, null, null, null);
+                this.JoystickConfigButtons.Add(new JoystickConfigButton(controller, key, value));
             }
 
             for (int i = 0; i < 4; i++)
@@ -278,7 +297,8 @@ namespace XwaJoystickConfig
                 string key = string.Format(CultureInfo.InvariantCulture, "joybutton_{0}_pov{1}", controllerIndex, i + 1);
                 int value = GetDefaultConfigPov(i + 1);
 
-                this.JoystickConfigButtons.Add(new JoystickConfigButton(key, value));
+                string controller = (string)ControllerNameConverter.Default.Convert(new object[] { this.JoystickControllers, controllerIndex }, null, null, null);
+                this.JoystickConfigButtons.Add(new JoystickConfigButton(controller, key, value));
             }
         }
 
@@ -402,9 +422,23 @@ namespace XwaJoystickConfig
                 string valueString = line.Substring(pos + 1).Trim();
                 int value = int.Parse(valueString, CultureInfo.InvariantCulture);
 
-                if (key.StartsWith("joybutton_", StringComparison.OrdinalIgnoreCase))
+                string start = "joybutton_";
+                if (key.StartsWith(start, StringComparison.OrdinalIgnoreCase))
                 {
-                    this.JoystickConfigButtons.Add(new JoystickConfigButton(key, value));
+                    string indexString = key.Substring(start.Length, key.IndexOf('_', start.Length) - start.Length);
+                    int index;
+
+                    try
+                    {
+                        index = int.Parse(indexString, CultureInfo.InvariantCulture);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+
+                    string controller = (string)ControllerNameConverter.Default.Convert(new object[] { this.JoystickControllers, index }, null, null, null);
+                    this.JoystickConfigButtons.Add(new JoystickConfigButton(controller, key, value));
                 }
             }
         }

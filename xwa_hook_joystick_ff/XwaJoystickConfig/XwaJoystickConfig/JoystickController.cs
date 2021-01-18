@@ -12,6 +12,8 @@ namespace XwaJoystickConfig
     {
         internal JoystickController(int deviceIndex, int controllerIndex, JoyCaps caps)
         {
+            this.Id = caps.ManufacturerID << 16 | caps.ProductID;
+
             this.DeviceIndex = deviceIndex;
             this.ControllerIndex = controllerIndex;
             this.AxesCount = caps.wNumAxes;
@@ -20,6 +22,8 @@ namespace XwaJoystickConfig
             string name = this.ReadName(caps);
             this.Name = string.IsNullOrEmpty(name) ? caps.ProductName : name;
         }
+
+        public int Id { get; }
 
         public int DeviceIndex { get; }
 

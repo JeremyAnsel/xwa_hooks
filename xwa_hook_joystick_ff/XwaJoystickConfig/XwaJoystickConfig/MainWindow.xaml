@@ -6,9 +6,10 @@
         xmlns:local="clr-namespace:XwaJoystickConfig"
         mc:Ignorable="d"
         Title="Xwa Joystick Config"
-        Height="650" Width="600"
+        Height="650" Width="800"
         UseLayoutRounding="True"
-        Closed="Window_Closed">
+        Closed="Window_Closed"
+        x:Name="mainWindow">
     <DockPanel>
         <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True">
             <Button x:Name="openConfigButton" Content="Open..." Click="OpenConfigButton_Click" />
@@ -16,7 +17,8 @@
             <Separator />
             <Button x:Name="setDefaultConfigButton" Content="Set default" Click="SetDefaultConfigButton_Click" />
             <Separator />
-            <Button x:Name="initButtonsButton" Content="Init buttons" Click="InitButtonsButton_Click" />
+            <Button x:Name="initButtonsIndexButton" Content="Init buttons (Index)" Click="InitButtonsIndexButton_Click" />
+            <Button x:Name="initButtonsIdButton" Content="Init buttons (Id)" Click="InitButtonsIdButton_Click" />
         </ToolBar>
         <TabControl>
             <TabItem Header="Settings">
@@ -41,19 +43,35 @@
                         <GroupBox>
                             <StackPanel>
                                 <TextBlock Text="; Select the controller used for the main axis and buttons" />
-                                <TextBox Text="{Binding JoystickSettingMainControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox x:Name="JoystickSettingMainControllerIndexText" Text="{Binding JoystickSettingMainControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{x:Static local:ControllerNameConverter.Default}">
+                                            <Binding Path="JoystickControllers" />
+                                            <Binding Path="Text" ElementName="JoystickSettingMainControllerIndexText" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
                             </StackPanel>
                         </GroupBox>
                         <TextBlock />
                         <GroupBox Header="Yaw axis">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Width="100" Text="Controller index:" />
-                                    <TextBox Width="100" Text="{Binding JoystickSettingYawControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Width="120" Text="Controller index or Id:" />
+                                    <TextBox x:Name="JoystickSettingYawControllerIndexText" Width="120" Text="{Binding JoystickSettingYawControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Width="300" Margin="10 0">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{x:Static local:ControllerNameConverter.Default}">
+                                                <Binding Path="JoystickControllers" />
+                                                <Binding Path="Text" ElementName="JoystickSettingYawControllerIndexText" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Width="100" Text="Axis index:" />
-                                    <TextBox Width="100" Text="{Binding JoystickSettingYawControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Width="120" Text="Axis index:" />
+                                    <TextBox Width="120" Text="{Binding JoystickSettingYawControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <CheckBox IsChecked="{Binding JoystickSettingInvertYaw}" Content="Invert axis" />
                             </StackPanel>
@@ -61,12 +79,20 @@
                         <GroupBox Header="Pitch axis">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Width="100" Text="Controller index:" />
-                                    <TextBox Width="100" Text="{Binding JoystickSettingPitchControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Width="120" Text="Controller index or Id:" />
+                                    <TextBox x:Name="JoystickSettingPitchControllerIndexText" Width="120" Text="{Binding JoystickSettingPitchControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Width="300" Margin="10 0">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{x:Static local:ControllerNameConverter.Default}">
+                                                <Binding Path="JoystickControllers" />
+                                                <Binding Path="Text" ElementName="JoystickSettingPitchControllerIndexText" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Width="100" Text="Axis index:" />
-                                    <TextBox Width="100" Text="{Binding JoystickSettingPitchControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Width="120" Text="Axis index:" />
+                                    <TextBox Width="120" Text="{Binding JoystickSettingPitchControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <CheckBox IsChecked="{Binding JoystickSettingInvertPitch}" Content="Invert axis" />
                             </StackPanel>
@@ -74,12 +100,20 @@
                         <GroupBox Header="Throttle axis">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Width="100" Text="Controller index:" />
-                                    <TextBox Width="100" Text="{Binding JoystickSettingThrottleControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Width="120" Text="Controller index or Id:" />
+                                    <TextBox x:Name="JoystickSettingThrottleControllerIndexText" Width="120" Text="{Binding JoystickSettingThrottleControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Width="300" Margin="10 0">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{x:Static local:ControllerNameConverter.Default}">
+                                                <Binding Path="JoystickControllers" />
+                                                <Binding Path="Text" ElementName="JoystickSettingThrottleControllerIndexText" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Width="100" Text="Axis index:" />
-                                    <TextBox Width="100" Text="{Binding JoystickSettingThrottleControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Width="120" Text="Axis index:" />
+                                    <TextBox Width="120" Text="{Binding JoystickSettingThrottleControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <CheckBox IsChecked="{Binding JoystickSettingInvertThrottle}" Content="Invert axis" />
                             </StackPanel>
@@ -87,12 +121,20 @@
                         <GroupBox Header="Roll axis">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Width="100" Text="Controller index:" />
-                                    <TextBox Width="100" Text="{Binding JoystickSettingRudderControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Width="120" Text="Controller index or Id:" />
+                                    <TextBox x:Name="JoystickSettingRudderControllerIndexText" Width="120" Text="{Binding JoystickSettingRudderControllerIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Width="300" Margin="10 0">
+                                        <TextBlock.Text>
+                                            <MultiBinding Converter="{x:Static local:ControllerNameConverter.Default}">
+                                                <Binding Path="JoystickControllers" />
+                                                <Binding Path="Text" ElementName="JoystickSettingRudderControllerIndexText" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Width="100" Text="Axis index:" />
-                                    <TextBox Width="100" Text="{Binding JoystickSettingRudderControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Width="120" Text="Axis index:" />
+                                    <TextBox Width="120" Text="{Binding JoystickSettingRudderControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
                                 <CheckBox IsChecked="{Binding JoystickSettingInvertRudder}" Content="Invert axis" />
                             </StackPanel>
@@ -110,6 +152,7 @@
                 <ListView ItemsSource="{Binding JoystickConfigButtons}" SelectionMode="Single">
                     <ListView.View>
                         <GridView>
+                            <GridViewColumn Header="Controller" Width="200" DisplayMemberBinding="{Binding Controller}" />
                             <GridViewColumn Header="Key" Width="150" DisplayMemberBinding="{Binding Key}" />
                             <GridViewColumn Header="Value" Width="400">
                                 <GridViewColumn.CellTemplate>
@@ -133,7 +176,20 @@
                     <ListView.View>
                         <GridView>
                             <GridView.Columns>
-                                <GridViewColumn Header="Index" DisplayMemberBinding="{Binding ControllerIndex}" />
+                                <GridViewColumn Header="Index">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding ControllerIndex, Mode=OneWay}" IsReadOnly="True" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="ID">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox Text="{Binding Id, Mode=OneWay}" IsReadOnly="True" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
                                 <GridViewColumn Header="Axes Count" DisplayMemberBinding="{Binding AxesCount}" />
                                 <GridViewColumn Header="Buttons Count" DisplayMemberBinding="{Binding ButtonsCount}" />

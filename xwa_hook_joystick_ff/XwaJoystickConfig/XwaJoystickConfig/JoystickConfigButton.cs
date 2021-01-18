@@ -12,11 +12,14 @@ namespace XwaJoystickConfig
         {
         }
 
-        public JoystickConfigButton(string key, int value)
+        public JoystickConfigButton(string controller, string key, int value)
         {
+            this.Controller = controller;
             this.Key = key;
             this.Value = value;
         }
+
+        public string Controller { get; set; }
 
         public string Key { get; set; }
 

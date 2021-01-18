@@ -10,9 +10,9 @@ namespace XwaJoystickConfig
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     internal struct JoyCaps
     {
-        public short ManufacturerID;
+        public ushort ManufacturerID;
 
-        public short ProductID;
+        public ushort ProductID;
 
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
         public string ProductName;

@@ -110,6 +110,7 @@ public:
 
 			this->_isConnected[deviceIndex] = true;
 			controllerIndex++;
+			int controllerId = (int)((unsigned int)caps.wMid << 16 | (unsigned int)caps.wPid);
 
 			std::array<short, 32 + 4> buttons;
 
@@ -117,28 +118,61 @@ public:
 
 			for (int index = 0; index < numButtons; index++)
 			{
-				std::string key = std::string("joybutton_") + std::to_string(controllerIndex) + std::string("_") + std::to_string(index + 1);
-				int defaultValue = GetDefaultConfigButton(buttonIndex + 1);
-				buttonIndex++;
+				std::string key1 = std::string("joybutton_") + std::to_string(controllerIndex) + std::string("_") + std::to_string(index + 1);
+				std::string key2 = std::string("joybutton_") + std::to_string(controllerId) + std::string("_") + std::to_string(index + 1);
 
-				buttons[index] = (short)GetFileKeyValueInt(lines, key, defaultValue);
+				int value = GetDefaultConfigButton(buttonIndex + 1);
+				value = GetFileKeyValueInt(lines, key1, value);
+				value = GetFileKeyValueInt(lines, key2, value);
+
+				buttons[index] = (short)value;
+				buttonIndex++;
 			}
 
 			if (caps.wCaps & JOYCAPS_HASPOV)
 			{
 				for (int index = 0; index < 4; index++)
 				{
-					std::string key = std::string("joybutton_") + std::to_string(controllerIndex) + std::string("_pov") + std::to_string(index + 1);
-					int defaultValue = GetDefaultConfigPov(povIndex + 1);
-					povIndex++;
+					std::string key1 = std::string("joybutton_") + std::to_string(controllerIndex) + std::string("_pov") + std::to_string(index + 1);
+					std::string key2 = std::string("joybutton_") + std::to_string(controllerId) + std::string("_pov") + std::to_string(index + 1);
 
-					buttons[32 + index] = (short)GetFileKeyValueInt(lines, key, defaultValue);
+					int value = GetDefaultConfigPov(povIndex + 1);
+					value = GetFileKeyValueInt(lines, key1, value);
+					value = GetFileKeyValueInt(lines, key2, value);
+
+					buttons[32 + index] = (short)value;
+					povIndex++;
 				}
 			}
 
 			this->_buttons[deviceIndex] = buttons;
 			this->_buttonsIsPressed[deviceIndex].fill(false);
 			this->_caps[deviceIndex] = caps;
+
+			if (g_config.MainControllerIndex == controllerId)
+			{
+				g_config.MainControllerIndex = controllerIndex;
+			}
+
+			if (g_config.YawControllerIndex == controllerId)
+			{
+				g_config.YawControllerIndex = controllerIndex;
+			}
+
+			if (g_config.PitchControllerIndex == controllerId)
+			{
+				g_config.PitchControllerIndex = controllerIndex;
+			}
+
+			if (g_config.ThrottleControllerIndex == controllerId)
+			{
+				g_config.ThrottleControllerIndex = controllerIndex;
+			}
+
+			if (g_config.RudderControllerIndex == controllerId)
+			{
+				g_config.RudderControllerIndex = controllerIndex;
+			}
 		}
 
 		this->_deviceCount = deviceCount;
@@ -390,6 +424,13 @@ int JoystickSmallMovement2Hook(int* params)
 
 int MainControllerIndexHook(int* params)
 {
+	int deviceCount = GetGlobalButtonsConfig().GetDeviceCount();
+
+	if (deviceCount == 0)
+	{
+		return 1;
+	}
+
 	return g_config.MainControllerIndex + 1;
 }
 
@@ -406,6 +447,8 @@ int InitControllerHook(int* params)
 		return 0;
 	}
 
+	int deviceCount = GetGlobalButtonsConfig().GetDeviceCount();
+
 	int yawControllerIndex = g_config.YawControllerIndex;
 	int yawControllerAxisIndex = g_config.YawControllerAxisIndex;
 	int pitchControllerIndex = g_config.PitchControllerIndex;
@@ -415,7 +458,6 @@ int InitControllerHook(int* params)
 	int rudderControllerIndex = g_config.RudderControllerIndex;
 	int rudderControllerAxisIndex = g_config.RudderControllerAxisIndex;
 
-	int deviceCount = GetGlobalButtonsConfig().GetDeviceCount();
 	int controllerIndex = -1;
 
 	for (int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
@@ -594,6 +636,8 @@ int UpdateControllerHook(int* params)
 		return 0;
 	}
 
+	int deviceCount = GetGlobalButtonsConfig().GetDeviceCount();
+
 	int yawControllerIndex = g_config.YawControllerIndex;
 	int yawControllerAxisIndex = g_config.YawControllerAxisIndex;
 	int pitchControllerIndex = g_config.PitchControllerIndex;
@@ -603,7 +647,6 @@ int UpdateControllerHook(int* params)
 	int rudderControllerIndex = g_config.RudderControllerIndex;
 	int rudderControllerAxisIndex = g_config.RudderControllerAxisIndex;
 
-	int deviceCount = GetGlobalButtonsConfig().GetDeviceCount();
 	int controllerIndex = -1;
 
 	for (int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
