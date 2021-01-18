@@ -19,23 +19,35 @@ namespace hook_32bpp_net
         public static IList<string> GetCustomFileLines(string name)
         {
             string xwaMissionFileName = Marshal.PtrToStringAnsi(new IntPtr(0x06002E8));
+            int currentGameState = Marshal.ReadInt32(new IntPtr(0x09F60E0 + 0x25FA9));
+            int updateCallback = Marshal.ReadInt32(new IntPtr(0x09F60E0 + 0x25FB1 + currentGameState * 0x850 + 0x844));
+            bool isTechLibraryGameStateUpdate = updateCallback == 0x00574D70;
 
-            if (_getCustomFileLines_name != name || _getCustomFileLines_mission != xwaMissionFileName)
+            if (isTechLibraryGameStateUpdate)
             {
                 _getCustomFileLines_name = name;
-                _getCustomFileLines_mission = xwaMissionFileName;
-
-                string mission = XwaHooksConfig.GetStringWithoutExtension(xwaMissionFileName);
-                _getCustomFileLines_lines = XwaHooksConfig.GetFileLines(mission + "_" + name + ".txt");
-
-                if (_getCustomFileLines_lines.Count == 0)
+                _getCustomFileLines_mission = null;
+                _getCustomFileLines_lines = XwaHooksConfig.GetFileLines("FlightModels\\" + name + ".txt");
+            }
+            else
+            {
+                if (_getCustomFileLines_name != name || _getCustomFileLines_mission != xwaMissionFileName)
                 {
-                    _getCustomFileLines_lines = XwaHooksConfig.GetFileLines(mission + ".ini", name);
-                }
+                    _getCustomFileLines_name = name;
+                    _getCustomFileLines_mission = xwaMissionFileName;
 
-                if (_getCustomFileLines_lines.Count == 0)
-                {
-                    _getCustomFileLines_lines = XwaHooksConfig.GetFileLines("FlightModels\\" + name + ".txt");
+                    string mission = XwaHooksConfig.GetStringWithoutExtension(xwaMissionFileName);
+                    _getCustomFileLines_lines = XwaHooksConfig.GetFileLines(mission + "_" + name + ".txt");
+
+                    if (_getCustomFileLines_lines.Count == 0)
+                    {
+                        _getCustomFileLines_lines = XwaHooksConfig.GetFileLines(mission + ".ini", name);
+                    }
+
+                    if (_getCustomFileLines_lines.Count == 0)
+                    {
+                        _getCustomFileLines_lines = XwaHooksConfig.GetFileLines("FlightModels\\" + name + ".txt");
+                    }
                 }
             }
 
