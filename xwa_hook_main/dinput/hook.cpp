@@ -263,6 +263,16 @@ public:
 						continue;
 					}
 
+					if (this->_functions.data()[function.from - 0x401000] != nullptr)
+					{
+						std::string message;
+						message.append("\"");
+						message.append(this->_names[function.from - 0x401000]);
+						message.append("\" is duplicated.");
+						MessageBoxA(nullptr, message.c_str(), "xwa_hook_main (DInput.dll)", MB_OK | MB_ICONERROR);
+						continue;
+					}
+
 					this->_functions.data()[function.from - 0x401000] = function.function;
 					this->_names[function.from - 0x401000] = wrapper._name + " 0x" + int_to_hex(function.from);
 
