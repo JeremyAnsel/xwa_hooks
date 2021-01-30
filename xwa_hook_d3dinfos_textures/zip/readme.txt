@@ -26,6 +26,9 @@ The following modifications are applied at runtime to xwingalliance.exe:
 # To call the hook that removes D3DInfos count limit
 At offset 040B50, replace 5657BAC3296600 with E8CB731600C390.
 
+# To call the hook that tests the texture illumination
+At offset 042D1C, replace 0F8478020000 with E8FF51160090.
+
 
 *** Usage ***
 

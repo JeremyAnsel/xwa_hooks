@@ -8,3 +8,10 @@ BAC3296600              mov edx, 006629C3
 E8CB731600  call 005A8B20, 005A8B20 - 00441755 = 001673CB
 C3          ret
 90          nop
+
+; L00442F70 - texture illumination
+:0044391C - 0x042D1C
+0F8478020000            je 00443B9A
+
+E8FF511600              call 005A8B20, 005A8B20 - 00443921 = 001651FF
+90                      nop
