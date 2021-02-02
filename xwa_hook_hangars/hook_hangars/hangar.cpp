@@ -61,11 +61,11 @@ class Config
 public:
 	Config()
 	{
-		auto lines = GetFileLines("hooks.ini", "hook_hangars");
+		auto lines = GetFileLines("hook_hangars.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("hook_hangars.cfg");
+			lines = GetFileLines("hooks.ini", "hook_hangars");
 		}
 
 		this->SelectionMode = GetFileKeyValue(lines, "SelectionMode");

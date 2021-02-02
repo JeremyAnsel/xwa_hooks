@@ -61,11 +61,11 @@ class CraftConfig
 public:
 	CraftConfig()
 	{
-		auto lines = GetFileLines("hooks.ini", "hook_opt_limit");
+		auto lines = GetFileLines("hook_opt_limit.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("hook_opt_limit.cfg");
+			lines = GetFileLines("hooks.ini", "hook_opt_limit");
 		}
 
 		this->MeshesCount = GetFileKeyValueInt(lines, "MeshesCount", 0);
@@ -148,6 +148,11 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 		{
 			const std::string path = "FlightModels\\";
 			_lines = GetFileLines(path + name + ".txt");
+		}
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines("FlightModels\\default.ini", name);
 		}
 	}
 

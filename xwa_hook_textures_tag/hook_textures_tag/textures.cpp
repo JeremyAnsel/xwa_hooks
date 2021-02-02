@@ -22,11 +22,11 @@ class Config
 public:
 	Config()
 	{
-		auto lines = GetFileLines("hooks.ini", "hook_textures_tag");
+		auto lines = GetFileLines("hook_textures_tag.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("hook_textures_tag.cfg");
+			lines = GetFileLines("hooks.ini", "hook_textures_tag");
 		}
 
 		this->OutputDebugStrings = GetFileKeyValueInt(lines, "OutputDebugStrings") != 0;

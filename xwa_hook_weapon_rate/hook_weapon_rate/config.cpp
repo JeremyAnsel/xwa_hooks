@@ -1,7 +1,16 @@
 #include "config.h"
 #include <fstream>
-#include <algorithm>
-#include <cctype>
+
+std::string Trim(const std::string& str)
+{
+	const char* ws = " \t\n\r\f\v";
+	std::string s = str;
+
+	s.erase(str.find_last_not_of(ws) + 1);
+	s.erase(0, s.find_first_not_of(ws));
+
+	return s;
+}
 
 std::string GetStringWithoutExtension(const std::string& str)
 {
@@ -23,7 +32,7 @@ std::vector<std::string> GetFileLines(const std::string& path, const std::string
 
 		while (std::getline(file, line))
 		{
-			line.erase(std::remove_if(line.begin(), line.end(), std::isspace), line.end());
+			line = Trim(line);
 
 			if (!line.length())
 			{
@@ -72,7 +81,7 @@ std::string GetFileKeyValue(const std::vector<std::string>& lines, const std::st
 			continue;
 		}
 
-		std::string name = line.substr(0, pos);
+		std::string name = Trim(line.substr(0, pos));
 
 		if (!name.length())
 		{
@@ -81,7 +90,7 @@ std::string GetFileKeyValue(const std::vector<std::string>& lines, const std::st
 
 		if (_stricmp(name.c_str(), key.c_str()) == 0)
 		{
-			std::string value = line.substr(pos + 1);
+			std::string value = Trim(line.substr(pos + 1));
 			return value;
 		}
 	}
@@ -103,7 +112,7 @@ int GetFileKeyValueInt(const std::vector<std::string>& lines, const std::string&
 
 std::vector<std::string> Tokennize(const std::string& str)
 {
-	const std::string delimiters = ",;";
+	const char* delimiters = ",;";
 	std::vector<std::string> tokens;
 
 	std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
@@ -111,7 +120,7 @@ std::vector<std::string> Tokennize(const std::string& str)
 
 	while (std::string::npos != pos || std::string::npos != lastPos)
 	{
-		std::string value = str.substr(lastPos, pos - lastPos);
+		std::string value = Trim(str.substr(lastPos, pos - lastPos));
 		tokens.push_back(value);
 
 		lastPos = str.find_first_not_of(delimiters, pos);
@@ -139,7 +148,7 @@ std::vector<int> GetFileListIntValues(const std::vector<std::string>& lines)
 
 	for (const std::string& line : lines)
 	{
-		int value = std::stoi(line);
+		int value = std::stoi(Trim(line));
 		values.push_back(value);
 	}
 
@@ -152,7 +161,7 @@ std::vector<unsigned short> GetFileListUnsignedShortValues(const std::vector<std
 
 	for (const std::string& line : lines)
 	{
-		unsigned short value = (unsigned short)std::stoi(line);
+		unsigned short value = (unsigned short)std::stoi(Trim(line));
 		values.push_back(value);
 	}
 

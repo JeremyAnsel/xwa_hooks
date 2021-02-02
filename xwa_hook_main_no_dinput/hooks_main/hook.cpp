@@ -19,11 +19,11 @@ class Config
 public:
 	Config()
 	{
-		auto lines = GetFileLines("hooks.ini", "dinput");
+		auto lines = GetFileLines("dinput.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("dinput.cfg");
+			lines = GetFileLines("hooks.ini", "dinput");
 		}
 
 		this->OutputStats = GetFileKeyValueInt(lines, "OutputStats", 0) != 0;

@@ -104,11 +104,11 @@ class Config
 public:
 	Config()
 	{
-		auto lines = GetFileLines("hooks.ini", "hook_normals");
+		auto lines = GetFileLines("hook_normals.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("hook_normals.cfg");
+			lines = GetFileLines("hooks.ini", "hook_normals");
 		}
 
 		this->Output = GetFileKeyValueInt(lines, "Output");

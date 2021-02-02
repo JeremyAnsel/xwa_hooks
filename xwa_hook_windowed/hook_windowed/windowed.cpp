@@ -8,11 +8,11 @@ class WindowConfig
 public:
 	WindowConfig()
 	{
-		auto lines = GetFileLines("hooks.ini", "hook_windowed");
+		auto lines = GetFileLines("hook_windowed.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("hook_windowed.cfg");
+			lines = GetFileLines("hooks.ini", "hook_windowed");
 		}
 
 		int x = GetFileKeyValueInt(lines, "X");

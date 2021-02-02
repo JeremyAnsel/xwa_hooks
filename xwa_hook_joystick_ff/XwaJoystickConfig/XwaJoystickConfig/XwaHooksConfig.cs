@@ -62,7 +62,7 @@ namespace XwaJoystickConfig
 
                 while ((line = reader.ReadLine()) != null)
                 {
-                    line = RemoveWhitespaces(line);
+                    line = line.Trim();
 
                     if (line.Length == 0)
                     {
@@ -111,7 +111,7 @@ namespace XwaJoystickConfig
                     continue;
                 }
 
-                string name = line.Substring(0, pos);
+                string name = line.Substring(0, pos).Trim();
 
                 if (name.Length == 0)
                 {
@@ -120,7 +120,7 @@ namespace XwaJoystickConfig
 
                 if (string.Equals(name, key, StringComparison.OrdinalIgnoreCase))
                 {
-                    string value = line.Substring(pos + 1);
+                    string value = line.Substring(pos + 1).Trim();
                     return value;
                 }
             }
@@ -142,8 +142,23 @@ namespace XwaJoystickConfig
 
         public static IList<string> Tokennize(string str)
         {
+            str = str.Trim();
+
+            if (string.IsNullOrEmpty(str))
+            {
+                return new List<string>();
+            }
+
             string[] tokens = str.Split(',', ';');
-            return tokens.ToList();
+            var values = new List<string>(tokens.Length);
+
+            for (int i = 0; i < tokens.Length; i++)
+            {
+                string value = tokens[i].Trim();
+                values.Add(value);
+            }
+
+            return values;
         }
 
         public static IList<IList<string>> GetFileListValues(IList<string> lines)
@@ -164,7 +179,7 @@ namespace XwaJoystickConfig
 
             foreach (string line in lines)
             {
-                int value = int.Parse(line);
+                int value = int.Parse(line.Trim());
                 values.Add(value);
             }
 
@@ -177,30 +192,11 @@ namespace XwaJoystickConfig
 
             foreach (string line in lines)
             {
-                ushort value = ushort.Parse(line);
+                ushort value = ushort.Parse(line.Trim());
                 values.Add(value);
             }
 
             return values;
-        }
-
-        private static string RemoveWhitespaces(string str)
-        {
-            var sb = new StringBuilder(str.Length);
-            int c;
-
-            using (var reader = new StringReader(str))
-            {
-                while ((c = reader.Read()) != -1)
-                {
-                    if (!char.IsWhiteSpace((char)c))
-                    {
-                        sb.Append((char)c);
-                    }
-                }
-            }
-
-            return sb.ToString();
         }
     }
 }

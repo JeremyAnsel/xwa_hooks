@@ -22,11 +22,11 @@ class Config
 public:
 	Config()
 	{
-		auto lines = GetFileLines("hooks.ini", "hook_weapon_color");
+		auto lines = GetFileLines("hook_weapon_color.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("hook_weapon_color.cfg");
+			lines = GetFileLines("hooks.ini", "hook_weapon_color");
 		}
 
 		this->WeaponSwitchBasedOnIff = GetFileKeyValueInt(lines, "WeaponSwitchBasedOnIff", 0) != 0;

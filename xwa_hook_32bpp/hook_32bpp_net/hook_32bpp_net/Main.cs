@@ -28,6 +28,11 @@ namespace hook_32bpp_net
                 _getCustomFileLines_name = name;
                 _getCustomFileLines_mission = null;
                 _getCustomFileLines_lines = XwaHooksConfig.GetFileLines("FlightModels\\" + name + ".txt");
+
+                if (_getCustomFileLines_lines.Count == 0)
+                {
+                    _getCustomFileLines_lines = XwaHooksConfig.GetFileLines("FlightModels\\default.ini", name);
+                }
             }
             else
             {
@@ -47,6 +52,11 @@ namespace hook_32bpp_net
                     if (_getCustomFileLines_lines.Count == 0)
                     {
                         _getCustomFileLines_lines = XwaHooksConfig.GetFileLines("FlightModels\\" + name + ".txt");
+                    }
+
+                    if (_getCustomFileLines_lines.Count == 0)
+                    {
+                        _getCustomFileLines_lines = XwaHooksConfig.GetFileLines("FlightModels\\default.ini", name);
                     }
                 }
             }

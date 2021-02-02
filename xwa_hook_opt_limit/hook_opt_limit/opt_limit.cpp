@@ -37,11 +37,11 @@ class Config
 public:
 	Config()
 	{
-		auto lines = GetFileLines("hooks.ini", "hook_opt_limit");
+		auto lines = GetFileLines("hook_opt_limit.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("hook_opt_limit.cfg");
+			lines = GetFileLines("hooks.ini", "hook_opt_limit");
 		}
 
 		this->MeshesCount = GetFileKeyValueInt(lines, "MeshesCount", 255);
@@ -78,11 +78,11 @@ class HitDataArray
 public:
 	HitDataArray()
 	{
-		auto lines = GetFileLines("hooks.ini", "hook_opt_limit");
+		auto lines = GetFileLines("hook_opt_limit.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("hook_opt_limit.cfg");
+			lines = GetFileLines("hooks.ini", "hook_opt_limit");
 		}
 
 		int count = abs(GetFileKeyValueInt(lines, "HitDataArraySize"));

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+std::string Trim(const std::string& str);
 std::string GetStringWithoutExtension(const std::string& str);
 std::vector<std::string> GetFileLines(const std::string& path, const std::string& section = std::string());
 std::string GetFileKeyValue(const std::vector<std::string>& lines, const std::string& key);

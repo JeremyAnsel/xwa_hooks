@@ -10,11 +10,11 @@ class Config
 public:
 	Config()
 	{
-		auto lines = GetFileLines("hooks.ini", "hook_resolution");
+		auto lines = GetFileLines("hook_resolution.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("hook_resolution.cfg");
+			lines = GetFileLines("hooks.ini", "hook_resolution");
 		}
 
 		this->IsAutoResolutionEnabled = GetFileKeyValueInt(lines, "IsAutoResolutionEnabled", 0) != 0;

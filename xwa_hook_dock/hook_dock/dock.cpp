@@ -61,11 +61,11 @@ class Config
 public:
 	Config()
 	{
-		auto lines = GetFileLines("hooks.ini", "hook_dock");
+		auto lines = GetFileLines("hook_dock.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("hook_dock.cfg");
+			lines = GetFileLines("hooks.ini", "hook_dock");
 		}
 
 		this->ForceDockElevation = GetFileKeyValueInt(lines, "ForceDockElevation", -1);

@@ -54,11 +54,11 @@ class D3DInfoArray
 public:
 	D3DInfoArray()
 	{
-		auto lines = GetFileLines("hooks.ini", "hook_d3dinfos_textures");
+		auto lines = GetFileLines("hook_d3dinfos_textures.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("hook_d3dinfos_textures.cfg");
+			lines = GetFileLines("hooks.ini", "hook_d3dinfos_textures");
 		}
 
 		int count = abs(GetFileKeyValueInt(lines, "Size"));
