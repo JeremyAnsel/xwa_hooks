@@ -1811,7 +1811,7 @@ int HangarShuttleReenterPositionHook(int* params)
 	positionZ = V0x068BC38;
 
 	xwaObjects[hangarPlayerObjectIndex].m13 = 0;
-	xwaObjects[hangarPlayerObjectIndex].m15 = 0;
+	xwaObjects[hangarPlayerObjectIndex].m15 = 0x4000;
 	xwaObjects[hangarPlayerObjectIndex].m17 = 0;
 
 	const bool value = g_hangarObjects.GetLoadShuttle();
