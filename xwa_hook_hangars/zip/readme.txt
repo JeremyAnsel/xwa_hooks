@@ -284,6 +284,7 @@ To set the shuttle orientation, set "ShuttleOrientation = value". value is an un
 To invert the hangar floor for the shuttle, set "IsShuttleFloorInverted = 1". When set to 0, the floor is below the shuttle. When set to 1, the floor is above the shuttle.
 To set the shuttle animation, set "ShuttleAnimation = value". value is "Right", "Top", or "Bottom". The default value is "Right".
 To set the shuttle straight line animation length, set "ShuttleAnimationStraightLine = value". value is an integer. The default value is 0.
+To set the elevation delta of the shuttle animation, set "ShuttleAnimationElevation = value". value is an integer. The default value is 0.
 To not load the droids, set "LoadDroids = 0".
 To set the droids z position, set "DroidsPositionZ = value". value is an integer. The default value is 0.
 To set the first droid z position, set "Droid1PositionZ = value". value is an integer. The default value is the DroidsPositionZ value.

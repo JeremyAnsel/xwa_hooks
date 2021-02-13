@@ -8,6 +8,7 @@ ShuttleOrientation = 43136
 IsShuttleFloorInverted = 0
 ShuttleAnimation = Right
 ShuttleAnimationStraightLine = 0
+ShuttleAnimationElevation = 0
 LoadDroids = 1
 DroidsPositionZ = 0
 Droid1PositionZ = 0

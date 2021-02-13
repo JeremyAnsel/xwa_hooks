@@ -634,6 +634,12 @@ public:
 		return this->ShuttleAnimationStraightLine;
 	}
 
+	int GetShuttleAnimationElevation()
+	{
+		this->UpdateIfChanged();
+		return this->ShuttleAnimationElevation;
+	}
+
 	bool GetLoadDroids()
 	{
 		this->UpdateIfChanged();
@@ -771,6 +777,7 @@ private:
 			this->IsShuttleFloorInverted = GetFileKeyValueInt(lines, "IsShuttleFloorInverted", 0) != 0;
 			this->ShuttleAnimation = GetFileKeyValue(lines, "ShuttleAnimation");
 			this->ShuttleAnimationStraightLine = GetFileKeyValueInt(lines, "ShuttleAnimationStraightLine", 0);
+			this->ShuttleAnimationElevation = GetFileKeyValueInt(lines, "ShuttleAnimationElevation", 0);
 			this->LoadDroids = GetFileKeyValueInt(lines, "LoadDroids", 1) == 1;
 			this->DroidsPositionZ = GetFileKeyValueInt(lines, "DroidsPositionZ", 0);
 			this->Droid1PositionZ = GetFileKeyValueInt(lines, "Droid1PositionZ", this->DroidsPositionZ);
@@ -805,6 +812,7 @@ private:
 	bool IsShuttleFloorInverted;
 	std::string ShuttleAnimation;
 	int ShuttleAnimationStraightLine;
+	int ShuttleAnimationElevation;
 	bool LoadDroids;
 	int DroidsPositionZ;
 	int Droid1PositionZ;
@@ -1818,6 +1826,7 @@ int HangarShuttleReenterPositionHook(int* params)
 	const int shuttlePositionX = g_hangarObjects.GetShuttlePositionX();
 	const int shuttlePositionZ = g_hangarObjects.GetShuttlePositionZ();
 	const int shuttleAnimationStraightLine = g_hangarObjects.GetShuttleAnimationStraightLine();
+	const int shuttleAnimationElevation = g_hangarObjects.GetShuttleAnimationElevation();
 
 	if (value)
 	{
@@ -1826,11 +1835,11 @@ int HangarShuttleReenterPositionHook(int* params)
 
 		if (!g_isShuttleFloorInverted)
 		{
-			positionZ += 0x161;
+			positionZ += 0x161 + shuttleAnimationElevation;
 		}
 		else
 		{
-			positionZ -= 0x161;
+			positionZ -= 0x161 + shuttleAnimationElevation;
 		}
 
 		positionZ += shuttlePositionZ;
@@ -2902,16 +2911,17 @@ int HangarShuttleLaunchReenterAnimation1CheckHook(int* params)
 	XwaObject* object = &xwaObjects[s_V0x068BBC8->ObjectIndex];
 
 	int shuttlePositionZ = g_hangarObjects.GetShuttlePositionZ();
+	const int shuttleAnimationElevation = g_hangarObjects.GetShuttleAnimationElevation();
 
 	int positionZ = *(int*)0x068BC38;
 
 	if (!g_isShuttleFloorInverted)
 	{
-		positionZ += 0x161;
+		positionZ += 0x161 + shuttleAnimationElevation;
 	}
 	else
 	{
-		positionZ -= 0x161;
+		positionZ -= 0x161 + shuttleAnimationElevation;
 	}
 
 	positionZ += shuttlePositionZ;
