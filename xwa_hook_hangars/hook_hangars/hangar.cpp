@@ -736,6 +736,12 @@ public:
 		return this->PlayerAnimationElevation;
 	}
 
+	int GetPlayerAnimationStraightLine()
+	{
+		this->UpdateIfChanged();
+		return this->PlayerAnimationStraightLine;
+	}
+
 	int GetPlayerOffsetX()
 	{
 		this->UpdateIfChanged();
@@ -794,6 +800,7 @@ private:
 			this->IsHangarFloorInverted = GetFileKeyValueInt(lines, "IsHangarFloorInverted", 0) != 0;
 			this->HangarIff = (unsigned char)GetFileKeyValueInt(lines, "HangarIff", -1);
 			this->PlayerAnimationElevation = GetFileKeyValueInt(lines, "PlayerAnimationElevation", 0);
+			this->PlayerAnimationStraightLine = GetFileKeyValueInt(lines, "PlayerAnimationStraightLine", 0);
 			this->PlayerOffsetX = GetFileKeyValueInt(lines, "PlayerOffsetX", 0);
 			this->PlayerOffsetY = GetFileKeyValueInt(lines, "PlayerOffsetY", 0);
 			this->PlayerOffsetZ = GetFileKeyValueInt(lines, "PlayerOffsetZ", 0);
@@ -829,6 +836,7 @@ private:
 	bool IsHangarFloorInverted;
 	unsigned char HangarIff;
 	int PlayerAnimationElevation;
+	int PlayerAnimationStraightLine;
 	int PlayerOffsetX;
 	int PlayerOffsetY;
 	int PlayerOffsetZ;
@@ -2500,6 +2508,30 @@ int HangarLaunchAnimation2Hook(int* params)
 	return ret;
 }
 
+int HangarLaunchAnimation3Hook(int* params)
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarObjectIndex = *(int*)0x068BCC4;
+	const unsigned short hangarModelIndex = *(unsigned short*)0x09C6754;
+
+	const int straightLine = g_hangarObjects.GetPlayerAnimationStraightLine();
+
+	int ret;
+
+	if (hangarModelIndex == 0x134)
+	{
+		ret = 0x9C4;
+	}
+	else
+	{
+		ret = -0x384;
+	}
+
+	ret += straightLine;
+
+	return ret;
+}
+
 int HangarObjectsElevationHook(int* params)
 {
 	const int objectIndex = params[0];
@@ -2596,6 +2628,8 @@ int HangarPlayerCraftElevationHook(int* params)
 	return 0;
 }
 
+int g_hangarPlayerPositionY;
+
 int HangarReenterInitPositionZHook(int* params)
 {
 	ReadIsHangarFloorInverted();
@@ -2606,12 +2640,15 @@ int HangarReenterInitPositionZHook(int* params)
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
 
 	const int elevation = 0x223 + g_hangarObjects.GetPlayerAnimationElevation();
+	const int straightLine = g_hangarObjects.GetPlayerAnimationStraightLine();
 	const int playerOffsetX = g_hangarObjects.GetPlayerOffsetX();
 	const int playerOffsetY = g_hangarObjects.GetPlayerOffsetY();
 	const int playerOffsetZ = g_hangarObjects.GetPlayerOffsetZ();
 
 	xwaObjects[hangarPlayerObjectIndex].PositionX += playerOffsetX;
-	xwaObjects[hangarPlayerObjectIndex].PositionY += playerOffsetY;
+	xwaObjects[hangarPlayerObjectIndex].PositionY += playerOffsetY + straightLine;
+
+	g_hangarPlayerPositionY = xwaObjects[hangarPlayerObjectIndex].PositionY;
 
 	int positionZ;
 
@@ -2629,13 +2666,34 @@ int HangarReenterInitPositionZHook(int* params)
 
 int HangarReenterAnimation51Hook(int* params)
 {
+	const int esp1C = params[7];
+
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	const int positionY = xwaObjects[hangarPlayerObjectIndex].PositionY;
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	const int hangarFloorPositionZ = *(int*)0x068BC38;
+	const unsigned short hangarModelIndex = *(unsigned short*)0x09C6754;
+	float& s_V0x068BCA4 = *(float*)0x068BCA4;
 
 	const int elevation = 0x93 + g_hangarObjects.GetPlayerAnimationElevation();
+	const int straightLine = g_hangarObjects.GetPlayerAnimationStraightLine();
+	const int playerOffsetY = g_hangarObjects.GetPlayerOffsetY();
 	const int playerOffsetZ = g_hangarObjects.GetPlayerOffsetZ();
+
+	if (positionY > g_hangarPlayerPositionY - playerOffsetY - straightLine)
+	{
+		if (hangarModelIndex == 308)
+		{
+			s_V0x068BCA4 += esp1C * 0.16f;
+		}
+		else
+		{
+			s_V0x068BCA4 += esp1C * 0.085f;
+		}
+
+		return 0;
+	}
 
 	int ret;
 

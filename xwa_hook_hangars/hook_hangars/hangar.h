@@ -25,6 +25,7 @@ int CraftSelectionMissionHook(int* params);
 int CraftSelectionMeleeHook(int* params);
 int HangarLaunchAnimation1Hook(int* params);
 int HangarLaunchAnimation2Hook(int* params);
+int HangarLaunchAnimation3Hook(int* params);
 int HangarObjectsElevationHook(int* params);
 int HangarFloorElevationHook(int* params);
 int HangarPositionXYHook(int* params);

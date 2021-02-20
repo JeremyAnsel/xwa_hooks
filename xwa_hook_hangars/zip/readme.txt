@@ -120,6 +120,7 @@ At offset 54B39, replace 80FA02BE02000000755A6683F901740B with 525150E8DF3315005
 # To call the hook that sets the hangar launch animation
 At offset 05AC31, replace 03CB894C300F with E8EAD2140090.
 At offset 05ACFA, replace 81C2F70000003BC20F8ED9070000 with E831D214009085C00F84D9070000.
+At offset 05AEA8, replace 05C4090000 with E883D01400.
 
 # To call the hook that sets the hangar objects elevation
 At offset 056314, replace 8B15C4337B0003C18944320F with 5055E8051C150083C4089090.
@@ -298,6 +299,7 @@ To define the range of Hangar Roof Crane animation, set "HangarRoofCraneLowOffse
 To invert the hangar floor, set "IsHangarFloorInverted = 1". When set to 0, the floor is below the static crafts. When set to 1, the floor is above the static crafts.
 To set the hangar flightgroup color, set "HangarIff = value". value is an integer. The default value is -1. -1 means that the IFF of the command ship is used.
 To set the elevation delta of the player craft animation, set "PlayerAnimationElevation = value". value is an integer. The default value is 0.
+To set the player craft straight line animation length, set "PlayerAnimationStraightLine = value". value is an integer. The default value is 0.
 To set the x position offset of the player craft, set "PlayerOffsetX = value". value is an integer. The default value is 0.
 To set the y position offset of the player craft, set "PlayerOffsetY = value". value is an integer. The default value is 0.
 To set the z position offset of the player craft, set "PlayerOffsetZ = value". value is an integer. The default value is 0.

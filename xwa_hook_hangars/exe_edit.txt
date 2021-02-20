@@ -423,6 +423,11 @@ E831D21400              call 005A8B30, 005A8B30 - 0045B8FF = 0014D231
 85C0                    test eax, eax
 0F84D9070000            je 0045C0E1, 0045C0E1 - 0045B908 = 07D9
 
+:0045BAA8 - 0x05AEA8
+05C4090000              add eax, 000009C4
+
+E883D01400              call 005A8B30, 005A8B30 - 0045BAAD = 0014D083
+
 
 ; from L00456AE0
 ; hook for hangar objects elevation in add object

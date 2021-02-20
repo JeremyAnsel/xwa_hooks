@@ -25,6 +25,7 @@ HangarRoofCraneHighOffset = 2800
 IsHangarFloorInverted = 0
 HangarIff = -1
 PlayerAnimationElevation = 0
+PlayerAnimationStraightLine = 0
 PlayerOffsetX = 0
 PlayerOffsetY = 0
 PlayerOffsetZ = 0

@@ -30,6 +30,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x455741, CraftSelectionMeleeHook },
 	{ 0x45B836, HangarLaunchAnimation1Hook },
 	{ 0x45B8FF, HangarLaunchAnimation2Hook },
+	{ 0x45BAAD, HangarLaunchAnimation3Hook },
 	{ 0x456F1B, HangarObjectsElevationHook },
 	{ 0x455DBE, HangarFloorElevationHook },
 	{ 0x455E28, HangarPositionXYHook },
@@ -205,6 +206,7 @@ static const HookPatchItem g_hangarLaunchAnimationPatch[] =
 {
 	{ 0x05AC31, "03CB894C300F", "E8EAD2140090" },
 	{ 0x05ACFA, "81C2F70000003BC20F8ED9070000", "E831D214009085C00F84D9070000" },
+	{ 0x05AEA8, "05C4090000", "E883D01400" },
 };
 
 static const HookPatchItem g_hangarObjectsElevationPatch[] =
