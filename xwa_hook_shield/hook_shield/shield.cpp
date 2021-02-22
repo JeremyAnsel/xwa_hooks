@@ -55,6 +55,34 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class CraftConfig
+{
+public:
+	CraftConfig()
+	{
+		auto lines = GetFileLines("hook_opt_limit.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_opt_limit");
+		}
+
+		this->MeshesCount = GetFileKeyValueInt(lines, "MeshesCount", 0);
+		this->Craft_Size = 0x3F9 + GetFileKeyValueInt(lines, "Craft_ExtraSize", 0);
+		this->Craft_Offset_22E = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_22E", 0);
+		this->Craft_Offset_260 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_260", 0);
+		this->Craft_Offset_292 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_292", 0);
+	}
+
+	int MeshesCount;
+	int Craft_Size;
+	int Craft_Offset_22E;
+	int Craft_Offset_260;
+	int Craft_Offset_292;
+};
+
+CraftConfig g_craftConfig;
+
 #pragma pack(push, 1)
 
 enum ShipCategoryEnum : unsigned char
@@ -102,6 +130,8 @@ int GetShieldGeneratorCount(int modelIndex)
 
 	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 
+	unsigned char* craft_m292 = g_craftConfig.MeshesCount == 0 ? XwaCurrentCraft->XwaCraft_m292 : (unsigned char*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_292);
+
 	int count = 0;
 
 	int meshesCount = XwaOptGetMeshesCount(modelIndex);
@@ -112,7 +142,7 @@ int GetShieldGeneratorCount(int modelIndex)
 
 		if (meshType == 0x08) // MeshType_ShieldGen
 		{
-			if (XwaCurrentCraft->XwaCraft_m292[meshIndex] != 0)
+			if (craft_m292[meshIndex] != 0)
 			{
 				count++;
 			}
