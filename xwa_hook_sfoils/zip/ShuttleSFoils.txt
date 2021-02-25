@@ -5,3 +5,4 @@
 CloseSFoilsInHyperspace = 0
 SFoilsAnimationSpeed = 1
 AllowFireWhenSFoilsAreClosed = 0
+ParkOrderSFoilsClosed = 1

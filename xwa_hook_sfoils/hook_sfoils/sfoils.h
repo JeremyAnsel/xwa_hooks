@@ -12,3 +12,6 @@ int InitSFoilsLandingGearsHook(int* params);
 int EnterHangarHook(int* params);
 int EnterHyperspaceHook(int* params);
 int NoFireMessageHook(int* params);
+int AILookForParkOrderHook(int* params);
+int AIParkManrHook(int* params);
+int AIParkManrFunctionHook(int* params);

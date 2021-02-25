@@ -70,6 +70,11 @@ At offset 008D15, replace 8A8732958B00 with E816F2190090.
 # To call the hook that shows the no fire message
 At offset 09070D, replace 8A4127668B7104 with 56E81D7811005E.
 
+# To call the hook that set the park state
+At offset 0BD934, replace 8B0DB0A17C00894147 with 50E8E6A50E00589090.
+At offset 0B3580, replace A0F7538000 with E8AB490F00.
+At offset 0B428F, replace FEC088415D with E88C3C0F00.
+
 
 *** Usage ***
 
@@ -83,6 +88,7 @@ mesh index, angle, closing speed, opening speed.
 To enable or disable the S-Foils closing/opening in before/after hyperspace, create a setting named "CloseSFoilsInHyperspace". To enable, set "1". To disable, set "0". The default value is "0".
 To slow down the animation, create a setting named "SFoilsAnimationSpeed". For instance, if you set "2", the animation will be slowed down by a factor of 2. The default value is "1" (normal speed).
 To allow fire when s-foils are closed, set the AllowFireWhenSFoilsAreClosed setting. When set to 0, fire is not allowed. When set to 1, fire is allowed. The default value is 0.
+To close the S-Foils when the craft is parked, set the ParkOrderSFoilsClosed setting. To enable, set "1". To disable, set "0". The default value is "0".
 
 See XWingSFoils.txt, BWingSFoils.txt, ShuttleSFoils.txt.
 
@@ -110,7 +116,7 @@ To require landing gears being closed before enter hyperspace, set the CloseLang
 When set to 0, normal behavior
 When set to 1, landing gears must be closed before enter hyperspace
 
-To manualy control the s-foils and landing gears, set the AutoClosseteSFoils setting.
+To manualy control the s-foils and landing gears, set the AutoCloseSFoils setting.
 When set to 0, s-foils and landing gears are manualy closed
 When set to 1, s-foils and landing gears are automaticaly closed
 The default value is 1.

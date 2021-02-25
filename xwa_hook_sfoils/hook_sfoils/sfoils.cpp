@@ -149,7 +149,11 @@ static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 
 struct XwaAIData
 {
-	char unk00[92];
+	char unk00[63];
+	int PositionX;
+	int PositionY;
+	int PositionZ;
+	char unk4B[17];
 	unsigned char ManrId;
 	unsigned char m5D;
 	int m5E;
@@ -183,6 +187,7 @@ struct CraftSettings
 	bool CloseSFoilsInHyperspace;
 	int SFoilsAnimationSpeed;
 	bool AllowFireWhenSFoilsAreClosed;
+	bool ParkOrderSFoilsClosed;
 };
 
 std::vector<std::string> GetCustomFileLines(const std::string& name)
@@ -380,6 +385,7 @@ CraftSettings GetSFoilsSettings(int modelIndex)
 	settings.CloseSFoilsInHyperspace = GetFileKeyValueInt(lines, "CloseSFoilsInHyperspace", 0) == 0 ? false : true;
 	settings.SFoilsAnimationSpeed = std::max(GetFileKeyValueInt(lines, "SFoilsAnimationSpeed", 1), 1);
 	settings.AllowFireWhenSFoilsAreClosed = GetFileKeyValueInt(lines, "AllowFireWhenSFoilsAreClosed", 0) == 0 ? false : true;
+	settings.ParkOrderSFoilsClosed = GetFileKeyValueInt(lines, "ParkOrderSFoilsClosed", 0) == 0 ? false : true;
 
 	return settings;
 }
@@ -455,7 +461,7 @@ public:
 		const XwaCraft* craft = object->pMobileObject->pCraft;
 		const unsigned short modelIndex = object->ModelIndex;
 		const auto sfoils = this->GetSFoils(modelIndex);
-		
+
 		const unsigned char* craftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? craft->MeshRotationAngles : (unsigned char*)((int)craft + g_craftConfig.Craft_Offset_260);
 
 		if (!sfoils.size())
@@ -1321,4 +1327,91 @@ int NoFireMessageHook(int* params)
 	}
 
 	return (currentCraft->SFoilsState & 1) != 0 || ret;
+}
+
+int AILookForParkOrderHook(int* params)
+{
+	const int eax = params[0];
+
+	XwaObject* pObject = *(XwaObject**)(0x07CA1A0 + 0x04);
+	XwaCraft* pCraft = *(XwaCraft**)(0x07CA1A0 + 0x0C);
+	XwaAIData* pAIData = *(XwaAIData**)(0x07CA1A0 + 0x10);
+	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? pCraft->MeshRotationAngles : (unsigned char*)((int)pCraft + g_craftConfig.Craft_Offset_260);
+
+	pAIData->PositionZ = eax;
+
+	const auto settings = g_modelIndexSFoils.GetSettings(pObject->ModelIndex);
+	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(pObject->ModelIndex);
+
+	if (settings.ParkOrderSFoilsClosed)
+	{
+		if (!sfoils.size())
+		{
+			pCraft->SFoilsState = 0;
+		}
+		else
+		{
+			pCraft->SFoilsState = 3;
+		}
+	}
+
+	return 0;
+}
+
+int AIParkManrHook(int* params)
+{
+	XwaObject* pObject = *(XwaObject**)(0x07CA1A0 + 0x04);
+	XwaCraft* pCraft = *(XwaCraft**)(0x07CA1A0 + 0x0C);
+	XwaAIData* pAIData = *(XwaAIData**)(0x07CA1A0 + 0x10);
+	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? pCraft->MeshRotationAngles : (unsigned char*)((int)pCraft + g_craftConfig.Craft_Offset_260);
+
+	const auto settings = g_modelIndexSFoils.GetSettings(pObject->ModelIndex);
+	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(pObject->ModelIndex);
+
+	if (settings.ParkOrderSFoilsClosed)
+	{
+		if (!sfoils.size())
+		{
+			pCraft->SFoilsState = 0;
+		}
+		else
+		{
+			for (unsigned int i = 0; i < sfoils.size(); i++)
+			{
+				const auto& sfoil = sfoils[i];
+
+				currentCraftMeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+			}
+
+			pCraft->SFoilsState = 2;
+		}
+	}
+
+	return *(unsigned char*)0x08053F7;
+}
+
+int AIParkManrFunctionHook(int* params)
+{
+	XwaObject* pObject = *(XwaObject**)(0x07CA1A0 + 0x04);
+	XwaCraft* pCraft = *(XwaCraft**)(0x07CA1A0 + 0x0C);
+	XwaAIData* pAIData = *(XwaAIData**)(0x07CA1A0 + 0x10);
+
+	pAIData->m5D++;
+
+	const auto settings = g_modelIndexSFoils.GetSettings(pObject->ModelIndex);
+	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(pObject->ModelIndex);
+
+	if (settings.ParkOrderSFoilsClosed)
+	{
+		if (!sfoils.size())
+		{
+			pCraft->SFoilsState = 0;
+		}
+		else
+		{
+			pCraft->SFoilsState = 1;
+		}
+	}
+
+	return 0;
 }

@@ -299,3 +299,30 @@ L004912C0
 56                      push esi
 E81D781100              call 005A8B30, 005A8B30 - 00491313 = 0011781D
 5E                      pop esi
+
+
+# XwaAILookForParkOrder
+L004BE2B0
+:004BE534 - 0x0BD934
+8B0DB0A17C00            mov ecx, dword ptr [007CA1B0]
+894147                  mov dword ptr [ecx+47], eax
+
+50                      push eax
+E8E6A50E00              call 005A8B20, 005A8B20 - 004BE53A = 000EA5E6
+58                      pop eax
+9090                    nop
+
+// L004B4180
+void XwaAIParkManr(  )
+:004B4180 - 0x0B3580
+A0F7538000              mov al, byte ptr [008053F7]
+
+E8AB490F00              call 005A8B30, 005A8B30 - 004B4185 = 000F49AB
+
+// L004B4980
+byte XwaAIParkManrFunction(  )
+:004B4E8F - 0x0B428F
+FEC0                    inc al
+88415D                  mov byte ptr [ecx+5D], al
+
+E88C3C0F00              call 005A8B20, 005A8B20 - 004B4E94 = 000F3C8C

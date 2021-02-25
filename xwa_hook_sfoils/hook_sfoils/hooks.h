@@ -25,6 +25,9 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4097F8, EnterHangarHook },
 	{ 0x40991A, EnterHyperspaceHook },
 	{ 0x491313, NoFireMessageHook },
+	{ 0x4BE53A, AILookForParkOrderHook },
+	{ 0x4B4185, AIParkManrHook },
+	{ 0x4B4E94, AIParkManrFunctionHook },
 };
 
 static const HookPatchItem g_keysSFoilsLandingGearsPatch[] =
@@ -95,6 +98,13 @@ static const HookPatchItem g_noFireMesagePatch[] =
 	{ 0x09070D, "8A4127668B7104", "56E81D7811005E" },
 };
 
+static const HookPatchItem g_parkPatch[] =
+{
+	{ 0x0BD934, "8B0DB0A17C00894147", "50E8E6A50E00589090" },
+	{ 0x0B3580, "A0F7538000", "E8AB490F00" },
+	{ 0x0B428F, "FEC088415D", "E88C3C0F00" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("Keys for SFoils and LandingGears", g_keysSFoilsLandingGearsPatch),
@@ -107,4 +117,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that set enter hangar state", g_enterHangarPatch),
 	MAKE_HOOK_PATCH("To call the hook that set enter hyperspace state", g_enterHyperspacePatch),
 	MAKE_HOOK_PATCH("To call the hook that shows the no fire message", g_noFireMesagePatch),
+	MAKE_HOOK_PATCH("To call the hook that set the park state", g_parkPatch),
 };
