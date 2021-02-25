@@ -74,8 +74,9 @@ At offset 0CD847, replace E8A4000000 with E8D4A60D00.
 
 Suppose that the craft is "FlightModels\[Model].opt".
 To create a skin named "[Skin1]", create a folder named "FlightModels\Skins\[Model]\[Skin1]\".
-To replace a texture, place it in the skins folder with the same name and dimensions of the original texture.
+To replace a texture, place it in the skins folder with the same name, or the name of the skin appended, and dimensions of the original texture.
 The supported image formats are bmp, png, jpg. Use the png format to get transparency.
+For example, if the name of the skin is "Skin1", the name of the texture is "Tex00000", and the texture extension is ".png", then the texture filename can be "Tex00000_Skin1.png" or "Tex00000.png"
 See "Skins\XWing\Default\Tex00033.png" for an example for the vanilla X-Wing.
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".

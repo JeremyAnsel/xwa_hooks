@@ -115,7 +115,7 @@ namespace hook_32bpp_net
             List<List<string>> fgSkins = ReadFgSkins(optName, objectLines, baseSkins, fgCount);
             List<string> distinctSkins = fgSkins.SelectMany(t => t).Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
             List<string> texturesExist = GetTexturesExist(optName, opt, distinctSkins);
-            CreateSwitchTextures(opt, texturesExist, fgCount);
+            CreateSwitchTextures(opt, texturesExist, fgSkins);
             UpdateSkins(optName, opt, fgSkins);
         }
 
@@ -150,7 +150,7 @@ namespace hook_32bpp_net
                 {
                     string baseFilename = $"FlightModels\\Skins\\{optName}\\{skin}\\{textureName}";
 
-                    if (File.Exists(baseFilename + ".bmp") || File.Exists(baseFilename + ".png") || File.Exists(baseFilename + ".jpg"))
+                    if (TextureExists(baseFilename, skin) != null)
                     {
                         texturesExist.Add(textureName);
                         break;
@@ -161,8 +161,10 @@ namespace hook_32bpp_net
             return texturesExist;
         }
 
-        private static void CreateSwitchTextures(OptFile opt, List<string> texturesExist, int fgCount)
+        private static void CreateSwitchTextures(OptFile opt, List<string> texturesExist, List<List<string>> fgSkins)
         {
+            int fgCount = fgSkins.Count;
+
             if (fgCount == 0)
             {
                 return;
@@ -182,7 +184,7 @@ namespace hook_32bpp_net
                 for (int i = 0; i < fgCount; i++)
                 {
                     Texture newTexture = texture.Value.Clone();
-                    newTexture.Name += "_fg_" + i.ToString(CultureInfo.InvariantCulture);
+                    newTexture.Name += "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]);
                     newTextures.Add(newTexture);
                 }
             }
@@ -214,7 +216,7 @@ namespace hook_32bpp_net
 
                         for (int i = 0; i < fgCount; i++)
                         {
-                            faceGroup.Textures.Add(name + "_fg_" + i.ToString(CultureInfo.InvariantCulture));
+                            faceGroup.Textures.Add(name + "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]));
                         }
                     }
                 }
@@ -233,26 +235,14 @@ namespace hook_32bpp_net
                 }
 
                 string textureName = texture.Key.Substring(0, position);
-                int fgIndex = int.Parse(texture.Key.Substring(position + 4), CultureInfo.InvariantCulture);
+                int fgIndex = int.Parse(texture.Key.Substring(position + 4, texture.Key.IndexOf('_', position + 4) - position - 4), CultureInfo.InvariantCulture);
 
                 foreach (string skin in fgSkins[fgIndex])
                 {
                     string baseFilename = $"FlightModels\\Skins\\{optName}\\{skin}\\{textureName}";
-                    string filename;
+                    string filename = TextureExists(baseFilename, skin);
 
-                    if (File.Exists(baseFilename + ".bmp"))
-                    {
-                        filename = baseFilename + ".bmp";
-                    }
-                    else if (File.Exists(baseFilename + ".png"))
-                    {
-                        filename = baseFilename + ".png";
-                    }
-                    else if (File.Exists(baseFilename + ".jpg"))
-                    {
-                        filename = baseFilename + ".jpg";
-                    }
-                    else
+                    if (filename == null)
                     {
                         continue;
                     }
@@ -287,6 +277,33 @@ namespace hook_32bpp_net
                 dst[i * 4 + 1] = (byte)(dst[i * 4 + 1] * (255 - a) / 255 + src[i * 4 + 1] * a / 255);
                 dst[i * 4 + 2] = (byte)(dst[i * 4 + 2] * (255 - a) / 255 + src[i * 4 + 2] * a / 255);
             }
+        }
+
+        private static string TextureExists(string baseFilename, string skin)
+        {
+            var extensions = new string[] { ".bmp", ".png", ".jpg" };
+
+            foreach (string ext in extensions)
+            {
+                string filename = baseFilename + "_" + skin + ext;
+
+                if (File.Exists(filename))
+                {
+                    return filename;
+                }
+            }
+
+            foreach (string ext in extensions)
+            {
+                string filename = baseFilename + ext;
+
+                if (File.Exists(filename))
+                {
+                    return filename;
+                }
+            }
+
+            return null;
         }
     }
 }
