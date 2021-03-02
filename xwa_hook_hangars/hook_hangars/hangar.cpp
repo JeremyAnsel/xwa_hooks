@@ -4,6 +4,7 @@
 #include <fstream>
 #include <map>
 #include <utility>
+#include <algorithm>
 
 class FlightModelsList
 {
@@ -2017,6 +2018,9 @@ int HangarRoofCraneInitHook(int* params)
 	{
 		ecx = edi;
 	}
+
+	ecx = std::min(ecx, eax + init + highOffset - edx);
+	ecx = std::max(ecx, eax + init + lowOffset - edx);
 
 	switch (axis)
 	{
