@@ -29,8 +29,8 @@ At offset 1A7F70, replace 000000000000000000000000000000000000000000000000000000
 The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the main hook
-At offset 1A7F20, replace 00000000000000000000000000000000 with 506054FF15608B5A0083C4046158C390.
-At offset 1A7F30, replace 00000000000000000000000000000000 with 536054FF15608B5A0083C404615BC390.
+At offset 1A7F20, replace 00000000000000000000000000000000 with 9C6054FF15608B5A0083C404619DC390.
+At offset 1A7F30, replace 00000000000000000000000000000000 with 9C6054FF15608B5A0083C404619DC390.
 
 The first modification calls a hook and ignores the return value.
 The second modification calls a hook and preserves the return value.

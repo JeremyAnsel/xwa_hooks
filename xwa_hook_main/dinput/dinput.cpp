@@ -44,7 +44,12 @@ extern "C" HRESULT WINAPI DirectInputCreateA(
 	{
 		int* esp = (int*)punkOuter;
 
-		esp[7] = Hook(esp[9], esp + 10);
+		int result = Hook(esp[9], esp + 10);
+
+		if (esp[-5] == 0x5A8B3D)
+		{
+			esp[7] = result;
+		}
 
 		return 0;
 	}

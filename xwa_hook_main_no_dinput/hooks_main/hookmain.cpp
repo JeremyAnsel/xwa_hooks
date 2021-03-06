@@ -36,6 +36,11 @@ extern "C" __declspec(dllexport) void CallHook(int* esp)
 	}
 	else
 	{
-		esp[7] = Hook(esp[9], esp + 10);
+		int result = Hook(esp[9], esp + 10);
+
+		if (esp[-2] == 0x5A8B39)
+		{
+			esp[7] = result;
+		}
 	}
 }

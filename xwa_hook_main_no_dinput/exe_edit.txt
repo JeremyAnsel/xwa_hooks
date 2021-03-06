@@ -4,13 +4,13 @@
 :005A8B20 - 0x1A7F20
 00000000000000000000    BYTE 10 DUP(0)
 
-50                      push eax
+9C                      pushfd
 60                      pushad
 54                      push esp
 FF15608B5A00            Call dword ptr [005A8B60]
 83C404                  add esp, 00000004
 61                      popad
-58                      pop eax
+9D                      popfd
 C3                      ret
 90
 
@@ -20,13 +20,13 @@ C3                      ret
 :005A8B30 - 0x1A7F30
 00000000000000000000    BYTE 10 DUP(0)
 
-53                      push ebx
+9C                      pushfd
 60                      pushad
 54                      push esp
 FF15608B5A00            Call dword ptr [005A8B60]
 83C404                  add esp, 00000004
 61                      popad
-5B                      pop ebx
+9D                      popfd
 C3                      ret
 90
 
