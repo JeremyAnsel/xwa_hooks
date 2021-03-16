@@ -1,6 +1,7 @@
 #include "targetver.h"
 #include "sfoils.h"
 #include "config.h"
+#include "translate.h"
 #include <fstream>
 #include <map>
 #include <algorithm>
@@ -72,11 +73,13 @@ public:
 		this->CloseSFoilsAndOpenLangingGearsBeforeEnterHangar = GetFileKeyValueInt(lines, "CloseSFoilsAndOpenLangingGearsBeforeEnterHangar") != 0;
 		this->CloseLangingGearsBeforeEnterHyperspace = GetFileKeyValueInt(lines, "CloseLangingGearsBeforeEnterHyperspace") != 0;
 		this->AutoCloseSFoils = GetFileKeyValueInt(lines, "AutoCloseSFoils", 1) != 0;
+		this->Language = GetFileKeyValue(lines, "Language");
 	}
 
 	bool CloseSFoilsAndOpenLangingGearsBeforeEnterHangar;
 	bool CloseLangingGearsBeforeEnterHyperspace;
 	bool AutoCloseSFoils;
+	std::string Language;
 };
 
 Config g_config;
@@ -590,24 +593,24 @@ void SetSFoilsText()
 
 	if (g_keySFoils)
 	{
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSING] = "\03S-Foils closing";
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPENING] = "\03S-Foils opening";
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSED] = "\03S-Foils have reached [closed] position";
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPEN] = "\03S-Foils have reached [open] position";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSING] = Translate(g_config.Language, ID_MSG_SFOILS_CLOSING_1); // "\03S-Foils closing";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPENING] = Translate(g_config.Language, ID_MSG_SFOILS_OPENING_1); // "\03S-Foils opening";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSED] = Translate(g_config.Language, ID_MSG_SFOILS_CLOSED_1); // "\03S-Foils have reached [closed] position";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPEN] = Translate(g_config.Language, ID_MSG_SFOILS_OPEN_1); // "\03S-Foils have reached [open] position";
 	}
 	else if (g_keyLandingGears)
 	{
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSING] = "\03Landing Gears opening";
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPENING] = "\03Landing Gears closing";
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSED] = "\03Landing Gears have reached [open] position";
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPEN] = "\03Landing Gears have reached [closed] position";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSING] = Translate(g_config.Language, ID_MSG_SFOILS_CLOSING_2); // "\03Landing Gears opening";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPENING] = Translate(g_config.Language, ID_MSG_SFOILS_OPENING_2); // "\03Landing Gears closing";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSED] = Translate(g_config.Language, ID_MSG_SFOILS_CLOSED_2); // "\03Landing Gears have reached [open] position";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPEN] = Translate(g_config.Language, ID_MSG_SFOILS_OPEN_2); // "\03Landing Gears have reached [closed] position";
 	}
 	else
 	{
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSING] = "\03S-Foils closing";
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPENING] = "\03S-Foils opening";
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSED] = "\03S-Foils have reached [closed] position";
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPEN] = "\03S-Foils have reached [open] position";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSING] = Translate(g_config.Language, ID_MSG_SFOILS_CLOSING_1); // "\03S-Foils closing";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPENING] = Translate(g_config.Language, ID_MSG_SFOILS_OPENING_1); // "\03S-Foils opening";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_CLOSED] = Translate(g_config.Language, ID_MSG_SFOILS_CLOSED_1); // "\03S-Foils have reached [closed] position";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_OPEN] = Translate(g_config.Language, ID_MSG_SFOILS_OPEN_1); // "\03S-Foils have reached [open] position";
 	}
 }
 
@@ -634,7 +637,7 @@ int SFoilsFilterHook(int* params)
 		bool areSFoilsOpened = g_modelIndexSFoils.AreSFoilsOpened(object);
 		bool areLandingGearsClosed = g_modelIndexSFoils.AreLandingGearsClosed(object);
 
-		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_NO_FIRE] = "\03Cannons cannot fire with S-Foils closed or Landing Gears opened";
+		s_StringsMessageLines[StringsMessageLine_MSG_SFOILS_NO_FIRE] = Translate(g_config.Language, ID_MSG_SFOILS_NO_FIRE); // "\03Cannons cannot fire with S-Foils closed or Landing Gears opened";
 
 		unsigned short key = *(unsigned short*)0x08053C0;
 
@@ -646,16 +649,16 @@ int SFoilsFilterHook(int* params)
 			if (g_keyLandingGears)
 			{
 				sfoils.clear();
-				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = "\03[Landing Gears] are already opening or closing";
+				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = Translate(g_config.Language, ID_MSG_NOT_EQUIPPED_SFOIL_2); // "\03[Landing Gears] are already opening or closing";
 			}
 			else if (sfoils.size() && !areSFoilsOpened && !areLandingGearsClosed)
 			{
 				sfoils.clear();
-				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = "\03Close [Landing Gear] before engaging [S-Foils]";
+				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = Translate(g_config.Language, ID_MSG_NOT_EQUIPPED_SFOIL_3); // "\03Close [Landing Gear] before engaging [S-Foils]";
 			}
 			else
 			{
-				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = "\03Your craft is not equipped with [S-Foils]";
+				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = Translate(g_config.Language, ID_MSG_NOT_EQUIPPED_SFOIL_1); // "\03Your craft is not equipped with [S-Foils]";
 
 				if (sfoils.size())
 				{
@@ -680,16 +683,16 @@ int SFoilsFilterHook(int* params)
 			if (g_keySFoils)
 			{
 				sfoils.clear();
-				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = "\03[S-Foils] are already opening or closing";
+				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = Translate(g_config.Language, ID_MSG_NOT_EQUIPPED_LANDINGGEARS_2); // "\03[S-Foils] are already opening or closing";
 			}
 			else if (sfoils.size() && areSFoilsOpened && areLandingGearsClosed)
 			{
 				sfoils.clear();
-				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = "\03Close [S-Foils] before engaging [Landing Gears]";
+				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = Translate(g_config.Language, ID_MSG_NOT_EQUIPPED_LANDINGGEARS_3); // "\03Close [S-Foils] before engaging [Landing Gears]";
 			}
 			else
 			{
-				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = "\03Your craft is not equipped with [Landing Gears]";
+				s_StringsMessageLines[StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL] = Translate(g_config.Language, ID_MSG_NOT_EQUIPPED_LANDINGGEARS_1); // "\03Your craft is not equipped with [Landing Gears]";
 
 				if (sfoils.size())
 				{
@@ -1212,7 +1215,7 @@ int EnterHangarHook(int* params)
 	{
 		if (playerIndex == currentPlayerId)
 		{
-			s_StringsMessageLines[StringsMessageLine_MSG_HANGAR_TRACTOR] = "\04Close S-Foils and open Landing Gears before enter hangar";
+			s_StringsMessageLines[StringsMessageLine_MSG_HANGAR_TRACTOR] = Translate(g_config.Language, ID_MSG_HANGAR_TRACTOR_1); // "\04Close S-Foils and open Landing Gears before enter hangar";
 			DisplayMessage(StringsMessageLine_MSG_HANGAR_TRACTOR, currentPlayerId);
 		}
 
@@ -1222,7 +1225,7 @@ int EnterHangarHook(int* params)
 	{
 		if (playerIndex == currentPlayerId)
 		{
-			s_StringsMessageLines[StringsMessageLine_MSG_HANGAR_TRACTOR] = "\04Close S-Foils before enter hangar";
+			s_StringsMessageLines[StringsMessageLine_MSG_HANGAR_TRACTOR] = Translate(g_config.Language, ID_MSG_HANGAR_TRACTOR_2); // "\04Close S-Foils before enter hangar";
 			DisplayMessage(StringsMessageLine_MSG_HANGAR_TRACTOR, currentPlayerId);
 		}
 
@@ -1232,7 +1235,7 @@ int EnterHangarHook(int* params)
 	{
 		if (playerIndex == currentPlayerId)
 		{
-			s_StringsMessageLines[StringsMessageLine_MSG_HANGAR_TRACTOR] = "\04Open Landing Gears before enter hangar";
+			s_StringsMessageLines[StringsMessageLine_MSG_HANGAR_TRACTOR] = Translate(g_config.Language, ID_MSG_HANGAR_TRACTOR_3); // "\04Open Landing Gears before enter hangar";
 			DisplayMessage(StringsMessageLine_MSG_HANGAR_TRACTOR, currentPlayerId);
 		}
 
@@ -1240,7 +1243,7 @@ int EnterHangarHook(int* params)
 	}
 	else
 	{
-		s_StringsMessageLines[StringsMessageLine_MSG_HANGAR_TRACTOR] = "\04Hit [Space] to activate tractor beam and enter hangar";
+		s_StringsMessageLines[StringsMessageLine_MSG_HANGAR_TRACTOR] = Translate(g_config.Language, ID_MSG_HANGAR_TRACTOR_4); // "\04Hit [Space] to activate tractor beam and enter hangar";
 		ret = 0;
 	}
 
@@ -1283,7 +1286,7 @@ int EnterHyperspaceHook(int* params)
 	{
 		if (playerIndex == currentPlayerId)
 		{
-			s_StringsMessageLines[StringsMessageLine_MSG_ASK_ABOUT_HYPER] = "\03Close Landing Gears before enter hyperspace";
+			s_StringsMessageLines[StringsMessageLine_MSG_ASK_ABOUT_HYPER] = Translate(g_config.Language, ID_MSG_ASK_ABOUT_HYPER_1); // "\03Close Landing Gears before enter hyperspace";
 			DisplayMessage(StringsMessageLine_MSG_ASK_ABOUT_HYPER, currentPlayerId);
 		}
 
@@ -1291,7 +1294,7 @@ int EnterHyperspaceHook(int* params)
 	}
 	else
 	{
-		s_StringsMessageLines[StringsMessageLine_MSG_ASK_ABOUT_HYPER] = "\03Press [SPACE] to hyperspace to [*]";
+		s_StringsMessageLines[StringsMessageLine_MSG_ASK_ABOUT_HYPER] = Translate(g_config.Language, ID_MSG_ASK_ABOUT_HYPER_2); // "\03Press [SPACE] to hyperspace to [*]";
 		ret = 0;
 	}
 

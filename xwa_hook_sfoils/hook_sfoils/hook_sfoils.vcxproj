@@ -158,11 +158,13 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="sfoils.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="translate.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="config.cpp" />
     <ClCompile Include="hookmain.cpp" />
     <ClCompile Include="sfoils.cpp" />
+    <ClCompile Include="translate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="hook_sfoils.rc" />

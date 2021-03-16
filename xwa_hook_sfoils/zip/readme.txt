@@ -121,6 +121,10 @@ When set to 0, s-foils and landing gears are manualy closed
 When set to 1, s-foils and landing gears are automaticaly closed
 The default value is 1.
 
+To set the language of the messages, set the Language setting.
+Possible values are: it, es, fr, de, en
+The default value is en.
+
 See the "hook_sfoils.cfg" file or the "hook_sfoils" section of "hooks.ini".
 
 
