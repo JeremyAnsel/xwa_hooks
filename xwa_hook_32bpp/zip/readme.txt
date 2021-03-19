@@ -83,8 +83,8 @@ Suppose that the mission is "[MissionDir]\[Mission].tie".
 To define a skin for a craft, create a file named "[MissionDir]\[Mission]_Skins.txt" or create a section named "[Skins]" in "[MissionDir]\[Mission].ini".
 The format is
 CraftOptName = SkinNameA, SkinNameB
-CraftOptName_fg_# = SkinName1, SkinName2, SkinName3
-# in CraftOptName_fg_# is an integer for the opt color marking index, starting at 0.
+CraftOptName_fgc_# = SkinName1, SkinName2, SkinName3
+# in CraftOptName_fgc_# is an integer for the opt color marking index, starting at 0.
 The default SkinName is "Default".
 See "Skins.txt"
 

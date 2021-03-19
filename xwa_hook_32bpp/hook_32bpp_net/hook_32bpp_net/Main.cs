@@ -70,7 +70,7 @@ namespace hook_32bpp_net
 
             for (int index = 255; index >= 0; index--)
             {
-                string key = optName + "_fg_" + index.ToString(CultureInfo.InvariantCulture);
+                string key = optName + "_fgc_" + index.ToString(CultureInfo.InvariantCulture);
                 string value = XwaHooksConfig.GetFileKeyValue(objectLines, key);
 
                 if (!string.IsNullOrEmpty(value))
@@ -126,7 +126,7 @@ namespace hook_32bpp_net
             for (int i = 0; i < fgCount; i++)
             {
                 var skins = new List<string>(baseSkins);
-                string fgKey = optName + "_fg_" + i.ToString(CultureInfo.InvariantCulture);
+                string fgKey = optName + "_fgc_" + i.ToString(CultureInfo.InvariantCulture);
                 skins.AddRange(XwaHooksConfig.Tokennize(XwaHooksConfig.GetFileKeyValue(objectLines, fgKey)));
 
                 if (skins.Count == 0)
