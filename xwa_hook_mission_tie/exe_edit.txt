@@ -26,3 +26,281 @@ C1E302                  shl ebx, 02
 8D1C76                  lea ebx, dword ptr [esi+2*esi]
 33D2                    xor edx, edx
 C1E306                  shl ebx, 06
+
+
+; Stats Profiles
+
+; L0041FA00 : Speed
+:0041FF43 - 0x01F343
+E838250800              call 004A2480
+
+E8D88B1800              call 005A8B20, 005A8B20 - 0041FF48 = 00188BD8
+
+; L004B8A60 : Speed
+:004B8CDA - 0x0B80DA
+668BB440A0B45B00        mov si, word ptr [eax+2*eax+005BB4A0]
+
+668BB2C4000000          mov si, word ptr [edx+000000C4]
+90                      nop
+
+:004B8D0E - 0x0B810E
+8D0CD0                  lea ecx, dword ptr [eax+8*edx]
+8D04C8                  lea eax, dword ptr [eax+8*ecx]
+668BBC40A0B45B00        mov di, word ptr [eax+2*eax+005BB4A0]
+
+909090                  nop
+909090                  nop
+668BB9C4000000          mov di, word ptr [ecx+000000C4]
+90                      nop
+
+; L0042CF90 : Acceleration
+:0042CFE2 - 0x02C3E2
+668B8440A2B45B00        mov ax, word ptr [eax+2*eax+005BB4A2]
+
+E849BB1700              call 005A8B30, 005A8B30 - 0042CFE7 = 0017BB49
+909090                  nop
+
+:0042D01B - 0x02C41B
+668B9440A2B45B00        mov dx, word ptr [eax+2*eax+005BB4A2]
+
+E810BB1700              call 005A8B30, 005A8B30 - 0042D020 = 0017BB10
+8BD0                    mov edx, eax
+90                      nop
+
+; L0042CF90 : Deceleration
+:0042D118 - 0x02C518
+668B9440A4B45B00        mov dx, word ptr [eax+2*eax+005BB4A4]
+
+E813BA1700              call 005A8B30, 005A8B30 - 0042D11D = 0017BA13
+8BD0                    mov edx, eax
+90                      nop
+
+:0042D158 - 0x02C558
+668B8440A4B45B00        mov ax, word ptr [eax+2*eax+005BB4A4]
+
+E8D3B91700              call 005A8B30, 005A8B30 - 0042D15D = 0017B9D3
+909090                  nop
+
+; L0042CF90 : Speed Increment
+:0042D0B6 - 0x02C4B6
+66FF8285000000          inc word ptr [edx+00000085]
+
+E865BA1700              call 005A8B20, 005A8B20 - 0042D0BB = 0017BA65
+9090                    nop
+
+; L0042CF90 : Speed Decrement
+:0042D1E3 - 0x02C5E3
+66FF8885000000          dec word ptr [eax+00000085]
+
+E838B91700              call 005A8B20, 005A8B20 - 0042D1E8 = 0017B938
+9090                    nop
+
+; L0040B4F0 : HullStrength
+:0040B889 - 0x00AC89
+8B844095B45B00          mov eax, dword ptr [eax+2*eax+005BB495]
+
+E8A2D21900              call 005A8B30, 005A8B30 - 0040B88E = 0019D2A2
+9090                    nop
+
+; L0040F230 : SystemStrength
+:00410635 - 0x00FA35
+8D04D0                  lea eax, dword ptr [eax+8*edx]
+668B84409DB45B00        mov ax, word ptr [eax+2*eax+005BB49D]
+
+8B4508                  mov eax, dword ptr [ebp+08]
+50                      push eax
+E8F2841900              call 005A8B30, 005A8B30 - 0041063E = 001984F2
+5A                      pop edx
+90                      nop
+
+:004107BA - 0x00FBBA
+8D04D0                  lea eax, dword ptr [eax+8*edx]
+668B84409DB45B00        mov ax, word ptr [eax+2*eax+005BB49D]
+
+8B4508                  mov eax, dword ptr [ebp+08]
+50                      push eax
+E86D831900              call 005A8B30, 005A8B30 - 004107C3 = 0019836D
+5A                      pop edx
+90                      nop
+
+; L00473590 : SystemStrength
+:00473B4A - 0x072F4A
+668B84409DB45B00        mov ax, word ptr [eax+2*eax+005BB49D]
+
+55                      push ebp
+E8E04F1300              call 005A8B30, 005A8B30 - 00473B50 = 00134FE0
+5A                      pop edx
+90                      nop
+
+; L004A75B0 : SystemStrength
+:004A7CEE - 0x0A70EE
+8D3CF8                  lea edi, dword ptr [eax+8*edi]
+896C2430                mov dword ptr [esp+30], ebp
+8D04F8                  lea eax, dword ptr [eax+8*edi]
+668B84409DB45B00        mov ax, word ptr [eax+2*eax+005BB49D]
+
+896C2430                mov dword ptr [esp+30], ebp
+A1A0A17C00              mov eax, dword ptr [007CA1A0]
+50                      push eax
+E8330E1000              call 005A8B30, 005A8B30 - 004A7CFD = 00100E33
+5F                      pop edi
+9090                    nop
+
+; L004F3A80 : SystemStrength
+:004F3B57 - 0x0F2F57
+8D04D0                  lea eax, dword ptr [eax+8*edx]
+663B8C409DB45B00        cmp cx, word ptr [eax+2*eax+005BB49D]
+
+57                      push edi
+E8D34F0B00              call 005A8B30, 005A8B30 - 004F3B5D = 000B4FD3
+5A                      pop edx
+663BC8                  cmp cx, ax
+90                      nop
+
+; L0041EF60 : ShieldStrength
+:0041F36E - 0x01E76E
+8B8C408FB45B00          mov ecx, dword ptr [eax+2*eax+005BB48F]
+
+53                      push ebx
+E8AC971800              call 005A8B20, 005A8B20 - 0041F374 = 001897AC
+59                      pop ecx
+
+; L00460650 : ShieldStrength
+:004606D8 - 0x05FAD8
+8B8C408FB45B00          mov ecx, dword ptr [eax+2*eax+005BB48F]
+898BA2010000            mov dword ptr [ebx+000001A2], ecx
+8D84408FB45B00          lea eax, dword ptr [eax+2*eax+005BB48F]
+8B00                    mov eax, dword ptr [eax]
+8983A6010000            mov dword ptr [ebx+000001A6], eax
+
+A108BC6800              mov eax, dword ptr [0068BC08]
+50                      push eax
+E83D841400              call 005A8B20, 005A8B20 - 004606E3 = 0014843D
+59                      pop ecx
+898BA2010000            mov dword ptr [ebx+000001A2], ecx
+898BA6010000            mov dword ptr [ebx+000001A6], ecx
+90909090                nop
+
+; L00473590 : ShieldStrength
+:00473AA5 - 0x072EA5
+8B84408FB45B00          mov eax, dword ptr [eax+2*eax+005BB48F]
+
+55                      push ebp
+E875501300              call 005A8B20, 005A8B20 - 00473AAB = 00135075
+58                      pop eax
+
+; L0048FC00 : ShieldStrength
+:00490492 - 0x08F892
+8B84408FB45B00          mov eax, dword ptr [eax+2*eax+005BB48F]
+
+53                      push ebx //* 0x27
+E888861100              call 005A8B20, 005A8B20 - 00490498 = 00118688
+58                      pop eax
+
+:00490701 - 0x08FB01
+8B84408FB45B00          mov eax, dword ptr [eax+2*eax+005BB48F]
+
+55                      push ebp //* 0x27
+E819841100              call 005A8B20, 005A8B20 - 00490707 = 00118419
+58                      pop eax
+
+:00490765 - 0x08FB65
+8B84408FB45B00          mov eax, dword ptr [eax+2*eax+005BB48F]
+
+55                      push ebp //* 0x27
+E8B5831100              call 005A8B20, 005A8B20 - 0049076B = 001183B5
+58                      pop eax
+
+:004907C4 - 0x08FBC4
+8BB4408FB45B00          mov esi, dword ptr [eax+2*eax+005BB48F]
+
+55                      push ebp //* 0x27
+E856831100              call 005A8B20, 005A8B20 - 004907CA = 00118356
+5E                      pop esi
+
+:00490825 - 0x08FC25
+8B84408FB45B00          mov eax, dword ptr [eax+2*eax+005BB48F]
+
+55                      push ebp //* 0x27
+E8F5821100              call 005A8B20, 005A8B20 - 0049082B = 001182F5
+58                      pop eax
+
+; L00490E70 : ShieldStrength
+:00490E74 - 0x090274
+8B15C4337B00            mov edx, dword ptr [007B33C4]
+25FFFF0000              and eax, 0000FFFF
+
+50                      push eax
+E8A67C1100              call 005A8B20, 005A8B20 - 00490E7A = 00117CA6
+58                      pop eax
+D1E0                    shl eax, 1
+C3                      ret
+90                      nop
+
+; L004D5AE0 : ShieldStrength
+// esp4C = object ptr
+:004D5FAD - 0x0D53AD
+8B868FB45B00            mov eax, dword ptr [esi+005BB48F]
+
+E87E2B0D00              call 005A8B30, 005A8B30 - 004D5FB2 = 000D2B7E
+90                      nop
+
+; L004FBA80 : ShieldStrength
+:004FD000 - 0x0FC400
+8D14C8                  lea edx, dword ptr [eax+8*ecx]
+8D04D0                  lea eax, dword ptr [eax+8*edx]
+8B84408FB45B00          mov eax, dword ptr [eax+2*eax+005BB48F]
+
+8B86E0948B00            mov eax, dword ptr [esi+008B94E0]
+50                      push eax
+E814BB0A00              call 005A8B20, 005A8B20 - 004FD00C = 000ABB14
+58                      pop eax
+
+:004FD28A - 0x0FC68A
+8D0C80                  lea ecx, dword ptr [eax+4*eax]
+8D14C8                  lea edx, dword ptr [eax+8*ecx]
+8B8BA6010000            mov ecx, dword ptr [ebx+000001A6]
+8D04D0                  lea eax, dword ptr [eax+8*edx]
+8B93A2010000            mov edx, dword ptr [ebx+000001A2]
+8B84408FB45B00          mov eax, dword ptr [eax+2*eax+005BB48F]
+
+8B86E0948B00            mov eax, dword ptr [esi+008B94E0]
+8B8BA6010000            mov ecx, dword ptr [ebx+000001A6]
+909090                  nop
+8B93A2010000            mov edx, dword ptr [ebx+000001A2]
+50                      push eax
+E87BB80A00              call 005A8B20, 005A8B20 - 004FD2A5 = 000AB87B
+58                      pop eax
+
+; L0041A960 : HasHyperdrive
+:0041C461 - 0x01B861
+7529                    jne 0041C48C
+
+EB29                    jmp 0041C48C
+
+; L004BA6F0 : HasHyperdrive
+:004BA8AA - 0x0B9CAA
+389C408CB45B00          cmp byte ptr [eax+2*eax+005BB48C], bl
+
+E881E20E00              call 005A8B30, 005A8B30 - 004BA8AF = 000EE281
+3AC3                    cmp al, bl
+
+; L004BCA30 : HasHyperdrive
+:004BCA6A - 0x0BBE6A
+8A94408CB45B00          mov dl, byte ptr [eax+2*eax+005BB48C]
+
+E8C1C00E00              call 005A8B30, 005A8B30 - 004BCA6F = 000EC0C1
+8AD0                    mov dl, al
+
+; L004BDDF0 : HasHyperdrive
+:004BDE0C - 0x0BD20C
+8A8C408CB45B00          mov cl, byte ptr [eax+2*eax+005BB48C]
+
+E81FAD0E00              call 005A8B30, 005A8B30 - 004BDE11 = 000EAD1F
+8AC8                    mov cl, al
+
+; L0041A960 : HasShieldGenerator
+:0041C63D - 0x01BA3D
+754F                    jne 0041C68E
+
+EB4F                    jmp 0041C68E

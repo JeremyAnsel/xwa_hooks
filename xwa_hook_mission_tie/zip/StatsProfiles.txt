@@ -1,0 +1,14 @@
+
+XWing_fgc_0 = Profile1
+XWing_fg_player = Profile2
+
+PlayerSpeedPercent = 100
+PlayerAccelerationPercent = 100
+PlayerDecelerationPercent = 100
+PlayerPitchPercent = 100
+PlayerRollPercent = 100
+PlayerYawPercent = 100
+PlayerExplosionStrengthPercent = 100
+PlayerHullStrengthPercent = 100
+PlayerSystemStrengthPercent = 100
+PlayerShieldStrengthPercent = 100
