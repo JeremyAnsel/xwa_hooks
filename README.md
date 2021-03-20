@@ -14,7 +14,7 @@ If you use a custom Dinput.dll, it will conflict with this hook. In this case, u
 
 ## xwa_hook_32bpp
 
-This hook enables 32-bit mode.
+This hook enables 32-bit mode and adds skins profiles.
 
 See https://www.xwaupgrade.com/phpBB3/viewtopic.php?f=33&t=12257
 
@@ -82,11 +82,11 @@ This hook replaces a static buffer by a dynamic one in lightmaps loading.
 
 ## xwa_hook_mission_objects
 
-This hook permits to replace mission objects and to enable crafts turrets.
+This hook permits to replace mission objects and to enable crafts turrets and adds objects profiles.
 
 ## xwa_hook_mission_tie
 
-This hook permits to override the data of mission files.
+This hook permits to override the data of mission files and adds stats profiles.
 
 ## xwa_hook_music
 
