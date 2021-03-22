@@ -84,10 +84,10 @@ int MusicPlayHook(int* params)
 
 	//s_V0x07B0F04->Play(0, 0, DSBPLAY_LOOPING);
 
-	if (FAILED(g_comInit.hr))
-	{
-		return 0;
-	}
+	//if (FAILED(g_comInit.hr))
+	//{
+	//	return 0;
+	//}
 
 	if (FAILED(XAudio2Create(&g_pXAudio2)))
 	{
@@ -184,6 +184,11 @@ int MusicLockHook(int* params)
 
 int MusicUnlockHook(int* params)
 {
+	if (!g_pSourceVoice)
+	{
+		return S_OK;
+	}
+
 	*(int*)0x0789224 = 0;
 
 	//LPDIRECTSOUNDBUFFER& s_V0x07B0F04 = *(LPDIRECTSOUNDBUFFER*)0x07B0F04;
