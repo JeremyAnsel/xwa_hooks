@@ -108,11 +108,11 @@ The format is a line per replacement.
 To replace the flight group s-foils state, the format is: "fg", fg number, "close_SFoils", 1.
 To replace the flight group landing gears state, the format is: "fg", fg number, "open_LandingGears", 1.
 
-To require s-foils being closed before enter hangar, set the CloseSFoilsAndOpenLangingGearsBeforeEnterHangar setting.
+To require s-foils being closed before enter hangar, set the CloseSFoilsAndOpenLandingGearsBeforeEnterHangar setting.
 When set to 0, normal behavior
 When set to 1, s-foils must be closed and landing gears opened before enter hangar
 
-To require landing gears being closed before enter hyperspace, set the CloseLangingGearsBeforeEnterHyperspace setting.
+To require landing gears being closed before enter hyperspace, set the CloseLandingGearsBeforeEnterHyperspace setting.
 When set to 0, normal behavior
 When set to 1, landing gears must be closed before enter hyperspace
 

@@ -70,14 +70,14 @@ public:
 			lines = GetFileLines("hooks.ini", "hook_sfoils");
 		}
 
-		this->CloseSFoilsAndOpenLangingGearsBeforeEnterHangar = GetFileKeyValueInt(lines, "CloseSFoilsAndOpenLangingGearsBeforeEnterHangar") != 0;
-		this->CloseLangingGearsBeforeEnterHyperspace = GetFileKeyValueInt(lines, "CloseLangingGearsBeforeEnterHyperspace") != 0;
+		this->CloseSFoilsAndOpenLandingGearsBeforeEnterHangar = GetFileKeyValueInt(lines, "CloseSFoilsAndOpenLandingGearsBeforeEnterHangar") != 0;
+		this->CloseLandingGearsBeforeEnterHyperspace = GetFileKeyValueInt(lines, "CloseLandingGearsBeforeEnterHyperspace") != 0;
 		this->AutoCloseSFoils = GetFileKeyValueInt(lines, "AutoCloseSFoils", 1) != 0;
 		this->Language = GetFileKeyValue(lines, "Language");
 	}
 
-	bool CloseSFoilsAndOpenLangingGearsBeforeEnterHangar;
-	bool CloseLangingGearsBeforeEnterHyperspace;
+	bool CloseSFoilsAndOpenLandingGearsBeforeEnterHangar;
+	bool CloseLandingGearsBeforeEnterHyperspace;
 	bool AutoCloseSFoils;
 	std::string Language;
 };
@@ -1194,7 +1194,7 @@ int EnterHangarHook(int* params)
 
 	const XwaObject* object = &xwaObjects[xwaPlayers[playerIndex].ObjectIndex];
 
-	if (!g_config.CloseSFoilsAndOpenLangingGearsBeforeEnterHangar)
+	if (!g_config.CloseSFoilsAndOpenLandingGearsBeforeEnterHangar)
 	{
 		return xwaPlayers[playerIndex].m052;
 	}
@@ -1265,7 +1265,7 @@ int EnterHyperspaceHook(int* params)
 
 	const XwaObject* object = &xwaObjects[xwaPlayers[playerIndex].ObjectIndex];
 
-	if (!g_config.CloseLangingGearsBeforeEnterHyperspace)
+	if (!g_config.CloseLandingGearsBeforeEnterHyperspace)
 	{
 		return xwaPlayers[playerIndex].m052;
 	}
