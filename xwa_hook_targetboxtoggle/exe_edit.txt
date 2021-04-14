@@ -1,0 +1,12 @@
+
+:004FBA9C - 0x0FAE9C
+8B86E0948B00            mov eax, dword ptr [esi+008B94E0]
+
+E87FD00A00              call 005A8B20, 005A8B20 - 004FBAA1 = 000AD07F
+90                      nop
+
+:00503A30 - 0x102E30
+83EC08                  sub esp, 00000008
+
+C3                      ret
+9090                    nop

@@ -138,6 +138,10 @@ This hook enables the SLAM system when the K key pressed.
 
 See http://www.xwaupgrade.com/phpBB3/viewtopic.php?f=9&t=12050
 
+## xwa_hook_targetboxtoggle
+
+This hook toggles targetbox on Ctrl+T key.
+
 ## xwa_hook_textures_tag
 
 This hook set a tag to the textures. The tag can then be read from ddraw.dll.
