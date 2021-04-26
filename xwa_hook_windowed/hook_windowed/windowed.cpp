@@ -134,7 +134,7 @@ int KeyboardIsAnyKeyPressedHook(int* params)
 {
 	const auto XwaDIKeyboardIsAnyKeyPressed = (int(*)())0x0042B520;
 
-	if (IsWindowInBackground())
+	if (IsWindowInBackground() || *(int*)0x006343CC == 0)
 	{
 		*(int*)0x006343DC = 0;
 		*(int*)0x006343E0 = 0;
@@ -150,7 +150,7 @@ int KeyboardGetPressedKeyHook(int* params)
 {
 	const auto XwaDIKeyboardGetPressedKey = (unsigned short(*)())0x0042B740;
 
-	if (IsWindowInBackground())
+	if (IsWindowInBackground() || *(int*)0x006343CC == 0)
 	{
 		*(int*)0x006343DC = 0;
 		*(int*)0x006343E0 = 0;
@@ -166,7 +166,7 @@ int KeyboardTryUpdateShiftControlAltKeysPressedStateHook(int* params)
 {
 	const auto XwaDIKeyboardTryUpdateShiftControlAltKeysPressedState = (int(*)())0x0042B680;
 
-	if (IsWindowInBackground())
+	if (IsWindowInBackground() || *(int*)0x006343CC == 0)
 	{
 		*(int*)0x006343DC = 0;
 		*(int*)0x006343E0 = 0;
@@ -184,7 +184,7 @@ int RetrieveKeyboardStateHook(int* params)
 
 	memset((void*)0x009E9520, 0, 0x100);
 
-	if (IsWindowInBackground())
+	if (IsWindowInBackground() || *(int*)0x006343CC == 0)
 	{
 		return 0;
 	}
@@ -198,7 +198,7 @@ int RetrieveMouseStateHook(int* params)
 
 	memset((void*)0x009E9620, 0, 0x10);
 
-	if (IsWindowInBackground())
+	if (IsWindowInBackground() || *(int*)0x006343D0 == 0)
 	{
 		return 0;
 	}
