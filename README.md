@@ -162,6 +162,10 @@ See http://www.xwaupgrade.com/phpBB3/viewtopic.php?p=156215#p156215
 
 This hook permits to define weapon decharge and recharge rates for any craft.
 
+## xwa_hook_weapon_type
+
+This hook fix the warheads selection for crafts that have dual warheads.
+
 ## xwa_hook_windowed
 
 This hook enables windowed mode.

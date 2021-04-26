@@ -1,0 +1,78 @@
+
+; secondary warhead menu
+:00461398 - 0x060798
+0F872D020000            ja 004615CB
+
+0F8711000000            ja 004613AF, 004613AF - 0046139E = 00000011
+
+; selected warhead in menu
+:00461485 - 0x060885
+8B0DFC0D9100            mov ecx, dword ptr [00910DFC]
+
+E896761400              call 005A8B20, 005A8B20 - 0046148A = 00147696
+90                      nop
+
+; warhead type count in menu
+:0045CBCB - 0x05BFCB
+7516                    jne 0045CBE3
+
+EB16                    jmp 0045CBE3
+
+:0045CAA8 - 0x05BEA8
+A1FC0D9100              mov eax, dword ptr [00910DFC]
+
+E873C01400              call 005A8B20, 005A8B20 - 0045CAAD = 0014C073
+
+:0045CB04 - 0x05BF04
+FEC1                    inc cl
+
+9090                    nop
+
+; board to reload
+:004B1401 - 0x0B0801
+7505                    jne 004B1408
+
+EB05                    jmp 004B1408
+
+:004B13F8 - 0x0B07F8
+660FB63455EEDC8000      movzx si, byte ptr [2*edx+0080DCEE]
+
+E823770F00              call 005A8B20, 005A8B20 - 004B13FD = 000F7723
+90909090                nop
+
+; update HUD text
+;:0047476A - 0x073B6A
+;03C1                    add eax, ecx
+;
+;03C8                    add ecx, eax
+;
+;:00474775 - 0x073B75
+;6685C0                  test ax, ax
+;
+;6685C9                  test cx, cx
+;
+;:0047477E - 0x073B7E
+;6683FE01                cmp si, 0001
+;
+;6685C0                  test ax, ax
+;90                      nop
+;
+;:00474782 - 0x073B82
+;0F8542010000            jne 004748CA
+;
+;0F854C010000            jne 004748D4, 004748D4 - 00474788 = 0000014C
+
+; weapon switch: warhead count
+:004FC687 - 0x0FBA87
+3A83D1010000            cmp al, byte ptr [ebx+000001D1]
+7218                    jb 004FC6A7
+
+E894C40A00              call 005A8B20, 005A8B20 - 004FC68C = 000AC494
+90                      nop
+EB18                    jmp 004FC6A7
+
+:004FC6A0 - 0x0FBAA0
+C68613958B0000          mov byte ptr [esi+008B9513], 00
+
+E87BC40A00              call 005A8B20, 005A8B20 - 004FC6A5 = 000AC47B
+9090                    nop
