@@ -25,35 +25,6 @@ static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 #pragma pack(pop)
 
-class SoundEffectBufferArray
-{
-public:
-	SoundEffectBufferArray()
-	{
-		this->_buffer.reserve(2872 * 201);
-	}
-
-	int Data()
-	{
-		return (int)this->_buffer.data();
-	}
-
-private:
-	std::vector<unsigned char> _buffer;
-};
-
-int GetSoundEffectBufferArrayCount()
-{
-	return 2872;
-}
-
-int GetSoundEffectBufferArrayPtr()
-{
-	static SoundEffectBufferArray g_SoundEffectBufferArray;
-
-	return g_SoundEffectBufferArray.Data();
-}
-
 int WingmenVoicesHook(int* params)
 {
 	const TieFlightGroupEx* flightGroups = (TieFlightGroupEx*)0x080DC80;
