@@ -55,6 +55,30 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class SoundsConfig
+{
+public:
+	SoundsConfig()
+	{
+		this->SoundsCountHookExists = std::ifstream("Hook_Sounds_Count.dll") ? true : false;
+		this->SoundEffectIds = this->SoundsCountHookExists ? *(int**)0x00917E80 : (int*)0x00917E80;
+
+		if (this->SoundsCountHookExists)
+		{
+			auto lines = GetFileLines("Hook_Sounds_Count.txt");
+		}
+	}
+
+	bool SoundsCountHookExists;
+	int* SoundEffectIds;
+};
+
+SoundsConfig& GetSoundsConfig()
+{
+	static SoundsConfig g_soundsConfig;
+	return g_soundsConfig;
+}
+
 #pragma pack(push, 1)
 
 struct XwaObject
@@ -583,7 +607,7 @@ int StopInteriorSoundHook(int* params)
 void SetFlyBySound(int& slot, int modelIndex)
 {
 	const char xwaSound3dEnabled = *(char*)0x5BA990;
-	const int* xwaSoundEffectsBufferId = (int*)0x917E80;
+	const int* xwaSoundEffectsBufferId = GetSoundsConfig().SoundEffectIds;
 
 	const int type = g_modelIndexSound.GetEngineTypeFlyBy(modelIndex);
 
