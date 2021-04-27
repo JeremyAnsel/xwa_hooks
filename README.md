@@ -138,6 +138,10 @@ This hook enables the SLAM system when the K key pressed.
 
 See http://www.xwaupgrade.com/phpBB3/viewtopic.php?f=9&t=12050
 
+## xwa_hook_sounds_count
+
+This hook increases the sounds count.
+
 ## xwa_hook_targetboxtoggle
 
 This hook toggles targetbox on Ctrl+T key.
