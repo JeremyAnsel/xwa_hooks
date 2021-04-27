@@ -56,6 +56,30 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class SoundsConfig
+{
+public:
+	SoundsConfig()
+	{
+		this->SoundsCountHookExists = std::ifstream("Hook_Sounds_Count.dll") ? true : false;
+		this->SoundEffectIds = this->SoundsCountHookExists ? *(int**)0x00917E80 : (int*)0x00917E80;
+
+		if (this->SoundsCountHookExists)
+		{
+			auto lines = GetFileLines("Hook_Sounds_Count.txt");
+		}
+	}
+
+	bool SoundsCountHookExists;
+	int* SoundEffectIds;
+};
+
+SoundsConfig& GetSoundsConfig()
+{
+	static SoundsConfig g_soundsConfig;
+	return g_soundsConfig;
+}
+
 #pragma pack(push, 1)
 
 struct XwaCraft
@@ -155,7 +179,6 @@ int SlamHook(int* params)
 	const int objectIndex = params[69];
 
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-	int* XwaSoundEffectsBufferId = (int*)0x00917E80;
 	const auto ShowMessage = (void(*)(int, int))0x00497D40;
 	const auto PlaySound = (int(*)(int, int, int))0x0043BF90;
 	const auto LoadSfxLst = (short(*)(const char*, unsigned short, const char*))0x0043A150;
@@ -187,7 +210,7 @@ int SlamHook(int* params)
 
 		if (useOverdriveSounds)
 		{
-			if (XwaSoundEffectsBufferId[1] == -1)
+			if (GetSoundsConfig().SoundEffectIds[1] == -1)
 			{
 				LoadSfxLst("wave\\overdrive.lst", 1, "wave\\overdrive\\");
 			}
