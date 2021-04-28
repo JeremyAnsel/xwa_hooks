@@ -299,6 +299,37 @@ int GetEngineSoundTypeWash(int modelIndex)
 	return type;
 }
 
+int GetEngineSoundTypeTakeOff(int modelIndex)
+{
+	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(path + "Sound.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(path + ".ini", "Sound");
+	}
+
+	int type = GetFileKeyValueInt(lines, "EngineSoundTakeOff");
+
+	if (type == 0)
+	{
+		switch (modelIndex)
+		{
+		case 58: // ModelIndex_058_0_45_CorellianTransport2
+		case 59: // ModelIndex_059_0_46_MilleniumFalcon2
+		case 65: // ModelIndex_065_0_52_FamilyTransport
+			type = 2;
+			break;
+
+		default:
+			type = 1;
+		}
+	}
+
+	return type;
+}
+
 std::string GetWeaponSoundBehavior(int modelIndex)
 {
 	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
@@ -423,6 +454,22 @@ public:
 		}
 	}
 
+	int GetEngineTypeTakeOff(int modelIndex)
+	{
+		auto it = this->_typeTakeOff.find(modelIndex);
+
+		if (it != this->_typeTakeOff.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetEngineSoundTypeTakeOff(modelIndex);
+			this->_typeTakeOff.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
 	std::string GetWeaponBehavior(int modelIndex)
 	{
 		auto it = this->_weaponBehavior.find(modelIndex);
@@ -459,6 +506,7 @@ private:
 	std::map<int, int> _typeInterior;
 	std::map<int, int> _typeFlyBy;
 	std::map<int, int> _typeWash;
+	std::map<int, int> _typeTakeOff;
 	std::map<int, std::string> _weaponBehavior;
 	std::map<int, int> _hyperBehavior;
 };
@@ -802,6 +850,27 @@ int WashSoundHook(int* params)
 	}
 
 	return soundIndex;
+}
+
+int TakeOffSoundHook(int* params)
+{
+	const int modelIndex = (short)params[0];
+
+	const int type = g_modelIndexSound.GetEngineTypeTakeOff(modelIndex);
+
+	int value;
+
+	if (type == 2)
+	{
+		value = 0;
+	}
+	else
+	{
+		value = 1;
+	}
+
+	params[0] = value;
+	return 0;
 }
 
 int WeaponSoundHook(int* params)

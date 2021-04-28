@@ -36,6 +36,7 @@ At offset 05826F, replace 4983F9400F87CF00000033D28A9178964500 with 5051E8AAFC14
 At offset 039725, replace 7515 with 9090.
 At offset 039733, replace 7726 with EB26.
 At offset 03CC6F, replace 3D89000000741A3D8A000000 with 50E8BBB216008BF858EB1B90.
+At offset 05ABD0, replace 6683F93A74266683F941 with 51E84AD314005985C990.
 
 # To call the hook that defines weapon sounds
 At offset 03B5DE, replace 8DB8E8FEFFFF83FF190F870801000033D28A972CC34300FF2495FCC24300 with 8B56230FBF929500000050525551E83FC9160083C4105F5E5DC390909090.
@@ -65,10 +66,12 @@ The format is:
 EngineSoundInterior = interior sound type
 EngineSoundFlyBy = flyby sound type
 EngineSoundWash = wash sound type
+EngineSoundTakeOff = take off sound type
 WeaponSoundBehavior = behavior value
 Use a value of 0 to not select a sound.
 For engine sounds, it means that no sound is played.
 For wash sounds, it means that the default sound is played.
+For take off sounds, it means that the default sound is played.
 For weapon sounds, it means that a default sound is played (based on weapon type).
 
 Add a line whith "EngineSoundInterior = value". The value is between 0 and 7:
@@ -111,6 +114,10 @@ Add a line with "EngineSoundFlyBy = value". The value is between 0 and 8, 11 and
 Add a line with "EngineSoundWash = value". The value is between 1 and 2:
 - 1 means EngineWash
 - 2 means EngineWashSD
+
+Add a line with "EngineSoundTakeOff = value". The value is between 1 and 2:
+- 1 means LandingGearUp
+- 2 means MfTakeOff
 
 Add a line with "WeaponSoundBehavior = value". The value is 0, CorellianTransport, TieFighter, TieFighterWithIon, Rebel, RebelTurbo, Empire, EmpireTurbo, Falcon, FalconTurbo, Ion or IonTurbo.
 0 means that a default sound is played.
@@ -218,6 +225,14 @@ type 2:
 - ModelIndex_138_0_92_VictoryStarDestroyer2
 - ModelIndex_139_0_93_ImperialStarDestroyer2
 - ModelIndex_140_0_94_SuperStarDestroyer
+type 1:
+other crafts
+
+Take Off sound:
+type 2:
+- ModelIndex_058_0_45_CorellianTransport2
+- ModelIndex_059_0_46_MilleniumFalcon2
+- ModelIndex_065_0_52_FamilyTransport
 type 1:
 other crafts
 

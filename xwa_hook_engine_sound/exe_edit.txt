@@ -128,6 +128,19 @@ EB1B                    jmp 0043D895, 0043D895 - 0043D87A = 1B
 90                      nop
 
 
+// Engine Take Off sound
+:0045B7D0 - 0x05ABD0
+6683F93A                cmp cx, 003A
+7426                    je 0045B7FC
+6683F941                cmp cx, 0041
+
+51                      push ecx
+E84AD31400              call 005A8B20, 005A8B20 - 0045B7D6 = 0014D34A
+59                      pop ecx
+85C9                    test ecx, ecx
+90                      nop
+
+
 // Weapon sounds
 :0043C1DE - 0x03B5DE
 8DB8E8FEFFFF            lea edi, dword ptr [eax+FFFFFEE8]

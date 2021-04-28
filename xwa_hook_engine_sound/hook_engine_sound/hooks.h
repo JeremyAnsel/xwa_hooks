@@ -12,6 +12,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x43DA01, FlyBySoundHook },
 	{ 0x458E76, LaunchSoundHook },
 	{ 0x43D875, WashSoundHook },
+	{ 0x45B7D6, TakeOffSoundHook },
 
 	{ 0x43C1F1, WeaponSoundHook },
 
@@ -36,6 +37,7 @@ static const HookPatchItem g_defineEngineSoundsPatch[] =
 	{ 0x039725, "7515", "9090" },
 	{ 0x039733, "7726", "EB26" },
 	{ 0x03CC6F, "3D89000000741A3D8A000000", "50E8BBB216008BF858EB1B90" },
+	{ 0x05ABD0, "6683F93A74266683F941", "51E84AD314005985C990" },
 };
 
 static const HookPatchItem g_defineWeaponSoundsPatch[] =

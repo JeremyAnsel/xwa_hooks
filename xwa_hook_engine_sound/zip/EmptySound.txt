@@ -4,6 +4,8 @@ EngineSoundFlyBy = 0
 
 EngineSoundWash = 0
 
+EngineSoundTakeOff = 0
+
 WeaponSoundBehavior = 0
 
 HyperSoundBehavior = -1
