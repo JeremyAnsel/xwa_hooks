@@ -4,6 +4,18 @@
 #include <map>
 #include <utility>
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 class FlightModelsList
 {
 public:
@@ -72,7 +84,10 @@ struct XwaCraft
 {
 	char Unk0000[430];
 	char WeaponRacksCount;
-	char Unk01AF[304];
+	char Unk01AF[16];
+	short m1BF[3];
+	int m1C5[3];
+	char Unk01D1[270];
 	XwaCraftWeaponRack WeaponRacks[16];
 	char Unk03BF[58];
 };
@@ -101,13 +116,9 @@ int GetWeaponDechargeRate(int modelIndex)
 		lines = GetFileLines(ship + ".ini", "WeaponRate");
 	}
 
-	int rate = 0;
+	int rate = GetFileKeyValueInt(lines, "DechargeRate", -1);
 
-	if (lines.size())
-	{
-		rate = GetFileKeyValueInt(lines, "DechargeRate");
-	}
-	else
+	if (rate == -1)
 	{
 		const int xwaObjectStats = 0x05FB240;
 		const char category = *(char*)(xwaObjectStats + modelIndex * 0x18 + 0x03);
@@ -147,13 +158,9 @@ int GetWeaponRechargeRate(int modelIndex)
 		lines = GetFileLines(ship + ".ini", "WeaponRate");
 	}
 
-	int rate = 0;
+	int rate = GetFileKeyValueInt(lines, "RechargeRate", -1);
 
-	if (lines.size())
-	{
-		rate = GetFileKeyValueInt(lines, "RechargeRate");
-	}
-	else
+	if (rate == -1)
 	{
 		switch (modelIndex)
 		{
@@ -167,6 +174,22 @@ int GetWeaponRechargeRate(int modelIndex)
 			break;
 		}
 	}
+
+	return rate;
+}
+
+int GetWeaponCooldownTime(int modelIndex)
+{
+	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(ship + "WeaponRate.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", "WeaponRate");
+	}
+
+	int rate = GetFileKeyValueInt(lines, "CooldownTimeFactor", 0x2F);
 
 	return rate;
 }
@@ -206,9 +229,26 @@ public:
 		}
 	}
 
+	int GetCooldownTime(int modelIndex)
+	{
+		auto it = this->_weaponCooldownTime.find(modelIndex);
+
+		if (it != this->_weaponCooldownTime.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetWeaponCooldownTime(modelIndex);
+			this->_weaponCooldownTime.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
 private:
 	std::map<int, int> _weaponDechargeRate;
 	std::map<int, int> _weaponRechargeRate;
+	std::map<int, int> _weaponCooldownTime;
 };
 
 ModelIndexWeapon g_modelIndexWeapon;
@@ -238,6 +278,33 @@ int WeaponRechargeHook(int* params)
 
 	int rechargeRate = g_modelIndexWeapon.GetRechargeRate(modelIndex);
 	params[0] = rechargeRate;
+
+	return 0;
+}
+
+int WeaponCooldownTimeHook(int* params)
+{
+	const int esp10 = params[4];
+	const int A4 = params[12];
+	const int A8 = params[13];
+	const int AC = params[Params_EBX];
+
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+
+	unsigned short modelIndex = XwaObjects[A4].ModelIndex;
+	int rate = g_modelIndexWeapon.GetCooldownTime(modelIndex);
+
+	if (AC != -1)
+	{
+		XwaCurrentCraft->m1BF[0] += esp10 * rate + 0x02;
+		XwaCurrentCraft->m1C5[0] += esp10 * rate + 0x02;
+	}
+	else
+	{
+		XwaCurrentCraft->m1BF[A8] += esp10 * rate + 0x02;
+		XwaCurrentCraft->m1C5[A8] += esp10 * rate + 0x02;
+	}
 
 	return 0;
 }

@@ -1,4 +1,5 @@
 
+// weapon decharge
 :00491651 - 0x090A51
 A1C4337B00              mov eax, dword ptr [007B33C4]
 8A540804                mov dl, byte ptr [eax+ecx+04]
@@ -9,6 +10,7 @@ E980000000              jmp 004916DB
 90                      nop
 
 
+// weapon recharge
 :004908CE - 0x08FCCE
 6683FA05                cmp dx, 0005
 7409                    je 004908DD
@@ -20,4 +22,14 @@ E84C821100              call 005A8B20, 005A8B20 - 004908D4 = 0011824C
 5A                      pop edx
 0FAFD6                  imul edx, esi
 EB06                    jmp 004908E0
+90                      nop
+
+
+// cooldown time
+:00491866 - 0x090C66
+A1FC0D9100              mov eax, dword ptr [00910DFC]
+83FBFF                  cmp ebx, FFFFFFFF
+
+E8B5721100              call 005A8B20, 005A8B20 - 0049186B = 001172B5
+EB29                    jmp 00491896, 00491896 - 0049186D = 29
 90                      nop

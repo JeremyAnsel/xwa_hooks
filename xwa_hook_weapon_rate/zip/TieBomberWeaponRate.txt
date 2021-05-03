@@ -1,2 +1,3 @@
 DechargeRate = 3
 RechargeRate = 3
+CooldownTimeFactor = 47
