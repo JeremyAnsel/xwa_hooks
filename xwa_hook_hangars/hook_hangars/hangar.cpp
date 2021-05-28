@@ -6,6 +6,18 @@
 #include <utility>
 #include <algorithm>
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 class FlightModelsList
 {
 public:
@@ -56,6 +68,35 @@ private:
 };
 
 FlightModelsList g_flightModelsList;
+
+class SoundsConfig
+{
+public:
+	SoundsConfig()
+	{
+		this->SoundsCountHookExists = std::ifstream("Hook_Sounds_Count.dll") ? true : false;
+		this->SoundEffectIds = this->SoundsCountHookExists ? *(int**)0x00917E80 : (int*)0x00917E80;
+
+		if (this->SoundsCountHookExists)
+		{
+			auto lines = GetFileLines("Hook_Sounds_Count.txt");
+
+			this->SfxHangarAmbientIndex = GetFileKeyValueInt(lines, "sfx_hangarambient_index");
+			this->SfxHangarAmbientCount = GetFileKeyValueInt(lines, "sfx_hangarambient_count");
+		}
+	}
+
+	bool SoundsCountHookExists;
+	int* SoundEffectIds;
+	int SfxHangarAmbientIndex;
+	int SfxHangarAmbientCount;
+};
+
+SoundsConfig& GetSoundsConfig()
+{
+	static SoundsConfig g_soundsConfig;
+	return g_soundsConfig;
+}
 
 class Config
 {
@@ -314,6 +355,52 @@ public:
 };
 
 CraftSelectionValues g_craftSelectionValues;
+
+int GetCommandShipModelIndex()
+{
+	const unsigned short* exeSpecies = (unsigned short*)0x05B0F70;
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const TieFlightGroupEx* xwaTieFlightGroups = (TieFlightGroupEx*)0x080DC80;
+	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
+	const int playerObjectIndex = *(int*)0x068BC08;
+	const int currentPlayerId = *(int*)0x08C1CC8;
+
+	if (playerObjectIndex == 0xffff)
+	{
+		return -1;
+	}
+
+	const short mothershipObjectIndex = xwaPlayers[currentPlayerId].m053;
+
+	if (mothershipObjectIndex == -1)
+	{
+		return -1;
+	}
+
+	if (mothershipObjectIndex == 0)
+	{
+		const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
+
+		int commandShipModelIndex = -1;
+
+		if (xwaTieFlightGroups[playerFlightGroupIndex].m0C3)
+		{
+			const int commandShipCraftId = xwaTieFlightGroups[xwaTieFlightGroups[playerFlightGroupIndex].m0C2].CraftId;
+			commandShipModelIndex = exeSpecies[commandShipCraftId];
+		}
+		else if (xwaTieFlightGroups[playerFlightGroupIndex].m0C5)
+		{
+			const int commandShipCraftId = xwaTieFlightGroups[xwaTieFlightGroups[playerFlightGroupIndex].m0C4].CraftId;
+			commandShipModelIndex = exeSpecies[commandShipCraftId];
+		}
+
+		return commandShipModelIndex;
+	}
+
+	const int mothershipModelIndex = xwaObjects[mothershipObjectIndex].ModelIndex;
+
+	return mothershipModelIndex;
+}
 
 std::string GetCommandShipLstLine()
 {
@@ -3343,6 +3430,28 @@ int HangarFoldInsideHook(int* params)
 			craft->SFoilsState = 0x03;
 		}
 	}
+
+	return 0;
+}
+
+int HangarAmbientSoundHook(int* params)
+{
+	const int selectedSoundIndex = params[Params_EDX];
+	int hangarShipModelIndex = GetCommandShipModelIndex();
+	const auto& soundConfig = GetSoundsConfig();
+
+	if (soundConfig.SoundsCountHookExists && soundConfig.SfxHangarAmbientCount)
+	{
+		if (hangarShipModelIndex != -1 && hangarShipModelIndex < soundConfig.SfxHangarAmbientCount / 10)
+		{
+			int soundIndex = soundConfig.SfxHangarAmbientIndex + hangarShipModelIndex * 10 + selectedSoundIndex;
+			params[Params_EDX] = soundIndex;
+
+			return 0;
+		}
+	}
+
+	params[Params_EDX] = 0x97 + selectedSoundIndex;
 
 	return 0;
 }

@@ -808,3 +808,11 @@ E8C5F90E00              call 005A8B20, 005A8B20 - 004B915B = 000EF9C5
 
 E8B9F60E00              call 005A8B20, 005A8B20 - 004B9467 = 000EF6B9
 EB17                    jmp 004B9480
+
+
+; hangar ambient sounds
+:0045C53F - 0x05B93F
+81C297000000            add edx, 00000097
+
+E8DCC51400              call 005A8B20, 005A8B20 - 0045C544 = 0014C5DC
+90                      nop

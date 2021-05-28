@@ -19,6 +19,20 @@ This dll requires:
 
 Place hook_hangars.dll and hook_hangars.cfg next to xwingalliance.exe
 
+To setup Sfx_HangarAmbient, copy the following files to WAVE\Sfx_HangarAmbient\
+From WAVE\FE_HIGH_RES\
+Copy files:
+HNGRAMB0.WAV
+HNGRAMB1.WAV
+HNGRAMB2.WAV
+HNGRAMB3.WAV
+HNGRAMB4.WAV
+HNGRAMB5.WAV
+HNGRAMB6.WAV
+HNGRAMB7.WAV
+HNGRAMB8.WAV
+HNGRAMB9.WAV
+
 
 *** Patch ***
 
@@ -175,6 +189,9 @@ At offset 05A319, replace E8D2870200 with E802DC1400.
 # To call the hook that set hangar fold outside and inside
 At offset 0B8556, replace E805A5FEFF with E8C5F90E00.
 At offset 0B8862, replace 8A42273C027417 with E8B9F60E00EB17.
+
+# To call the hook that defines hangar ambient sounds
+At offset 05B93F, replace 81C297000000 with E8DCC5140090.
 
 
 *** Usage ***
@@ -416,6 +433,11 @@ CraftSelectionTransports define the crafts that appear when the mission player c
 CraftSelectionFighters define the crafts that appear when the mission player craft is a fighter.
 CraftSelectionCrafts define the crafts that appear in the Proving Ground.
 See "CraftSelectionTransports.txt", "CraftSelectionFighters.txt", "CraftSelectionCrafts.txt"
+
+# Hangar ambient sounds
+
+The ambient sounds are defined in "Wave\Sfx_HangarAmbient.lst" if the lst file exists, else default values are used.
+For each craft, there are 10 items.
 
 
 *** Notes ***
