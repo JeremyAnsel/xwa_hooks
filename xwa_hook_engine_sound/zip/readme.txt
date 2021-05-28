@@ -17,6 +17,49 @@ This dll requires:
 
 Place hook_engine_sound.dll next to xwingalliance.exe
 
+To setup Sfx_EngineWash, copy the following files to WAVE\Sfx_EngineWash\
+From WAVE\FE_HIGH_RES\
+Copy files:
+EngineWash.wav
+EngineWashSD.wav
+
+To setup Sfx_FlyBy, copy the following files to WAVE\Sfx_FlyBy\
+From WAVE\FE_HIGH_RES\
+Copy files:
+FlyByAG.wav
+FlyByAW.wav
+FlyByCORT.wav
+FlyByTI.wav
+FlyByXW.wav
+FlyByYW.wav
+
+To setup Sfx_Interior, copy the following files to WAVE\Sfx_Interior\
+From WAVE\FE_HIGH_RES\
+Copy files:
+EngineIntAG.wav
+EngineIntAW.wav
+EngineIntCORT.wav
+EngineIntFALC.wav
+EngineIntTI.wav
+EngineIntXW.wav
+EngineIntYW.wav
+
+To setup Sfx_Weapon, copy the following files to WAVE\Sfx_Weapon\
+From WAVE\FE_HIGH_RES\
+Copy files:
+EmpireLaser.wav
+EmpireLaserChChChhh.wav
+EmpireLaserStarship.wav
+EmpireLaserTurbo.wav
+FalconLaser.wav
+FalconLaserTurbo.wav
+IonCannon.wav
+IonCannonStarship.wav
+IonCannonTurbo.wav
+RebelLaser.wav
+RebelLaserStarship.wav
+RebelLaserTurbo.wav
+
 
 *** Patch ***
 
@@ -36,6 +79,7 @@ At offset 05826F, replace 4983F9400F87CF00000033D28A9178964500 with 5051E8AAFC14
 At offset 039725, replace 7515 with 9090.
 At offset 039733, replace 7726 with EB26.
 At offset 03CC6F, replace 3D89000000741A3D8A000000 with 50E8BBB216008BF858EB1B90.
+At offset 03CD3C, replace 52E80EEF090083C404 with E8DFB11600EB369090.
 At offset 05ABD0, replace 6683F93A74266683F941 with 51E84AD314005985C990.
 
 # To call the hook that defines weapon sounds
@@ -69,7 +113,7 @@ EngineSoundWash = wash sound type
 EngineSoundTakeOff = take off sound type
 WeaponSoundBehavior = behavior value
 Use a value of 0 to not select a sound.
-For engine sounds, it means that no sound is played.
+For interior and flyby sounds, it means that no sound is played.
 For wash sounds, it means that the default sound is played.
 For take off sounds, it means that the default sound is played.
 For weapon sounds, it means that a default sound is played (based on weapon type).
@@ -236,7 +280,6 @@ type 2:
 type 1:
 other crafts
 
-
 For the tie fighters (TieFighter, TieInterceptor, TieBomber, TieAdvanced, TieDefender, TieBizarro, TieBigGun, TieWarheads, TieBomb, TieBooster), laser sounds are replaced with "EmpireLaserChChChhh.wav".
 For the Corellian transports (CorellianTransport2, FamilyTransport, MilleniumFalcon2), "LaserRebel" is replaced with "FalconLaser.wav" and "LaserRebelTurbo" is replaced with "FalconLaserTurbo.wav".
 
@@ -248,6 +291,14 @@ A value of 2 means that the "HyperStartImp" and the "HyperZoomImp" sounds are pl
 
 
 See EmptySound.txt and Examples\*Sound.txt.
+
+
+For Interior sounds, when the type is 0, sounds defined in "Wave\Sfx_Interior.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+For FlyBy sounds, when the type is 0, sounds defined in "Wave\Sfx_FlyBy.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+For EngineWash sounds, when the type is 0, sounds defined in "Wave\Sfx_EngineWash.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+
+For weapon sounds, when the behavior is empty, sounds defined in "Wave\Sfx_Weapon.lst" are used if the lst file exists.
+For each craft, there are 10 items. The last item is for the open weapon.
 
 
 *** Credits ***

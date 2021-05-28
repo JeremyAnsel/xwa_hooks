@@ -66,11 +66,28 @@ public:
 		if (this->SoundsCountHookExists)
 		{
 			auto lines = GetFileLines("Hook_Sounds_Count.txt");
+
+			this->SfxInteriorIndex = GetFileKeyValueInt(lines, "sfx_interior_index");
+			this->SfxInteriorCount = GetFileKeyValueInt(lines, "sfx_interior_count");
+			this->SfxFlyByIndex = GetFileKeyValueInt(lines, "sfx_flyby_index");
+			this->SfxFlyByCount = GetFileKeyValueInt(lines, "sfx_flyby_count");
+			this->SfxEngineWashIndex = GetFileKeyValueInt(lines, "sfx_enginewash_index");
+			this->SfxEngineWashCount = GetFileKeyValueInt(lines, "sfx_enginewash_count");
+			this->SfxWeaponIndex = GetFileKeyValueInt(lines, "sfx_weapon_index");
+			this->SfxWeaponCount = GetFileKeyValueInt(lines, "sfx_weapon_count");
 		}
 	}
 
 	bool SoundsCountHookExists;
 	int* SoundEffectIds;
+	int SfxInteriorIndex;
+	int SfxInteriorCount;
+	int SfxFlyByIndex;
+	int SfxFlyByCount;
+	int SfxEngineWashIndex;
+	int SfxEngineWashCount;
+	int SfxWeaponIndex;
+	int SfxWeaponCount;
 };
 
 SoundsConfig& GetSoundsConfig()
@@ -121,6 +138,13 @@ int GetEngineSoundTypeInterior(int modelIndex)
 	}
 	else
 	{
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxInteriorCount)
+		{
+			return 0;
+		}
+
 		switch (modelIndex)
 		{
 		case 1: // ModelIndex_001_0_0_Xwing
@@ -196,6 +220,13 @@ int GetEngineSoundTypeFlyBy(int modelIndex)
 	}
 	else
 	{
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxFlyByCount)
+		{
+			return 0;
+		}
+
 		switch (modelIndex)
 		{
 		case 1: // ModelIndex_001_0_0_Xwing
@@ -282,6 +313,13 @@ int GetEngineSoundTypeWash(int modelIndex)
 	}
 	else
 	{
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxEngineWashCount)
+		{
+			return 0;
+		}
+
 		switch (modelIndex)
 		{
 		case 137: // ModelIndex_137_0_91_Interdictor2
@@ -349,6 +387,13 @@ std::string GetWeaponSoundBehavior(int modelIndex)
 	}
 	else
 	{
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxWeaponCount)
+		{
+			return std::string();
+		}
+
 		switch (modelIndex)
 		{
 		case 58: // ModelIndex_058_0_45_CorellianTransport2
@@ -562,6 +607,27 @@ int InteriorSoundHook(int* params)
 
 	const int type = g_modelIndexSound.GetEngineTypeInterior(modelIndex);
 
+	if (type == 0)
+	{
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxInteriorCount)
+		{
+			if (modelIndex < soundConfig.SfxInteriorCount)
+			{
+				esi = soundConfig.SfxInteriorIndex + modelIndex;
+				ebp = 0x2AF8;
+
+				if (sfx_quality != 0)
+				{
+					ebx = 0x01;
+				}
+			}
+
+			return 0;
+		}
+	}
+
 	switch (type)
 	{
 	case 1:
@@ -618,6 +684,21 @@ int StopInteriorSoundHook(int* params)
 
 	const int type = g_modelIndexSound.GetEngineTypeInterior(modelIndex);
 
+	if (type == 0)
+	{
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxInteriorCount)
+		{
+			if (modelIndex < soundConfig.SfxInteriorCount)
+			{
+				esi = soundConfig.SfxInteriorIndex + modelIndex;
+			}
+
+			return 0;
+		}
+	}
+
 	switch (type)
 	{
 	case 1:
@@ -658,6 +739,21 @@ void SetFlyBySound(int& slot, int modelIndex)
 	const int* xwaSoundEffectsBufferId = GetSoundsConfig().SoundEffectIds;
 
 	const int type = g_modelIndexSound.GetEngineTypeFlyBy(modelIndex);
+
+	if (type == 0)
+	{
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxFlyByCount)
+		{
+			if (modelIndex < soundConfig.SfxFlyByCount)
+			{
+				slot = soundConfig.SfxFlyByIndex + modelIndex;
+			}
+
+			return;
+		}
+	}
 
 	switch (type)
 	{
@@ -832,6 +928,19 @@ int WashSoundHook(int* params)
 
 	const int type = g_modelIndexSound.GetEngineTypeWash(modelIndex);
 
+	if (type == 0)
+	{
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxEngineWashCount)
+		{
+			if (modelIndex < soundConfig.SfxEngineWashCount)
+			{
+				return soundConfig.SfxEngineWashIndex + modelIndex;
+			}
+		}
+	}
+
 	int soundIndex;
 
 	switch (type)
@@ -850,6 +959,41 @@ int WashSoundHook(int* params)
 	}
 
 	return soundIndex;
+}
+
+int WashSoundStopHook(int* params)
+{
+	const auto XwaGetPlayingSoundsCount = (int(*)(int))0x004DC850;
+	const auto XwaStopSound = (char(*)(int))0x004DC400;
+
+	const auto& soundConfig = GetSoundsConfig();
+	const int* xwaSoundEffectsBufferId = GetSoundsConfig().SoundEffectIds;
+
+	if (XwaGetPlayingSoundsCount(xwaSoundEffectsBufferId[0x71]) != 0)
+	{
+		XwaStopSound(xwaSoundEffectsBufferId[0x71]);
+	}
+
+	if (XwaGetPlayingSoundsCount(xwaSoundEffectsBufferId[0x72]) != 0)
+	{
+		XwaStopSound(xwaSoundEffectsBufferId[0x72]);
+	}
+
+	if (soundConfig.SoundsCountHookExists && soundConfig.SfxEngineWashCount)
+	{
+		int start = soundConfig.SfxEngineWashIndex;
+		int end = soundConfig.SfxEngineWashIndex + soundConfig.SfxEngineWashCount;
+
+		for (int id = start; id < end; id++)
+		{
+			if (XwaGetPlayingSoundsCount(xwaSoundEffectsBufferId[id]) != 0)
+			{
+				XwaStopSound(xwaSoundEffectsBufferId[id]);
+			}
+		}
+	}
+
+	return 0;
 }
 
 int TakeOffSoundHook(int* params)
@@ -873,6 +1017,40 @@ int TakeOffSoundHook(int* params)
 	return 0;
 }
 
+int WeaponModelIndexToSoundIndex(int weaponIndex)
+{
+	switch (weaponIndex)
+	{
+	case 280: // ModelIndex_280_1_17_LaserRebel
+	case 281: // ModelIndex_281_1_18_LaserRebelTurbo
+	case 282: // ModelIndex_282_1_19_LaserImp
+	case 283: // ModelIndex_283_1_20_LaserImpTurbo
+	case 284: // ModelIndex_284_1_22_LaserIon
+	case 285: // ModelIndex_285_1_23_LaserIonTurbo
+		return weaponIndex - 280;
+
+	case 288: // ModelIndex_288_1_18_LaserRebelTurbo
+	case 297: // ModelIndex_297_1_18_LaserRebelTurbo
+	case 301: // ModelIndex_301_1_18_LaserRebelTurbo
+	case 302: // ModelIndex_302_1_18_LaserRebelTurbo
+		return 6; // RebelLaserStarship
+
+	case 289: // ModelIndex_289_1_20_LaserImpTurbo
+	case 303: // ModelIndex_303_1_20_LaserImpTurbo
+	case 304: // ModelIndex_304_1_20_LaserImpTurbo
+	case 305: // ModelIndex_305_1_20_LaserImpTurbo
+		return 7; // EmpireLaserStarship
+
+	case 290: // ModelIndex_290_1_23_LaserIonTurbo
+		return 8; // IonCannonStarship
+
+	case 307: // ModelIndex_307__1_0, open weapon
+		return 9;
+	}
+
+	return -1;
+}
+
 int WeaponSoundHook(int* params)
 {
 	const int A4 = params[0];
@@ -881,6 +1059,23 @@ int WeaponSoundHook(int* params)
 	const int weaponIndex = params[3];
 
 	const auto playSound = (int(*)(int, int, int))0x0043BF90;
+
+	if (g_modelIndexSound.GetWeaponBehavior(modelIndex).empty())
+	{
+		int weaponSoundIndex = WeaponModelIndexToSoundIndex(weaponIndex);
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (weaponSoundIndex != -1 && soundConfig.SoundsCountHookExists && soundConfig.SfxWeaponCount)
+		{
+			if (modelIndex < soundConfig.SfxWeaponCount / 10)
+			{
+				int soundIndex = soundConfig.SfxWeaponIndex + modelIndex * 10 + weaponSoundIndex;
+				playSound(soundIndex, A4, A8);
+			}
+
+			return 0;
+		}
+	}
 
 	switch (weaponIndex)
 	{

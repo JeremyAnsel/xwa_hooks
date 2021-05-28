@@ -1,0 +1,8 @@
+
+To setup Sfx_EngineWash, copy the following files to WAVE\Sfx_EngineWash\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+EngineWash.wav
+EngineWashSD.wav

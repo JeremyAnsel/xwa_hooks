@@ -1,0 +1,13 @@
+
+To setup Sfx_Interior, copy the following files to WAVE\Sfx_Interior\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+EngineIntAG.wav
+EngineIntAW.wav
+EngineIntCORT.wav
+EngineIntFALC.wav
+EngineIntTI.wav
+EngineIntXW.wav
+EngineIntYW.wav

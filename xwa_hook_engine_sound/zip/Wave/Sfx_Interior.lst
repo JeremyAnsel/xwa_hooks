@@ -1,0 +1,223 @@
+unused ; 000__1_0
+EngineIntXW.wav			76 2000 ; 001_0_0_Xwing
+EngineIntYW.wav			76 2000 ; 002_0_1_Ywing
+EngineIntAW.wav			76 2000 ; 003_0_2_Awing
+EngineIntXW.wav			76 2000 ; 004_0_3_Bwing
+EngineIntTI.wav			76 2000 ; 005_0_4_TieFighter
+EngineIntTI.wav			76 2000 ; 006_0_5_TieInterceptor
+EngineIntTI.wav			76 2000 ; 007_0_6_TieBomber
+EngineIntTI.wav			76 2000 ; 008_0_7_TieAdvanced
+EngineIntTI.wav			76 2000 ; 009_0_8_TieDefender
+EngineIntAW.wav			76 2000 ; 010_0_9_IrdFighter
+EngineIntYW.wav			76 2000 ; 011_0_10_ToscanFighter
+EngineIntAG.wav			60 2000 ; 012_0_11_MissileBoat
+EngineIntAW.wav			76 2000 ; 013_0_12_Twing
+EngineIntXW.wav			76 2000 ; 014_0_13_Z_95
+EngineIntXW.wav			76 2000 ; 015_0_14_R41
+EngineIntAG.wav			60 2000 ; 016_0_15_AssaultGunboat
+EngineIntCort.wav		76 2000 ; 017_0_16_SkiprayBlastBoat
+unused ; 018_0_17_TieBizarro
+unused ; 019_0_18_TieBigGun
+unused ; 020_0_19_TieWarheads
+unused ; 021_0_20_TieBomb
+unused ; 022_0_21_TieBooster
+EngineIntYW.wav			76 2000 ; 023_0_22_CloakshapeFighter
+EngineIntAG.wav			60 2000 ; 024_0_23_RazorFighter
+EngineIntAG.wav			60 2000 ; 025_0_24_PlanetaryFighter
+EngineIntFalc.wav		76 2000 ; 026_0_25_SupaFighter
+EngineIntAW.wav			76 2000 ; 027_0_26_Piggyback
+unused ; 028_0_27_Booster
+EngineIntAG.wav			60 2000 ; 029_0_28_PreybirdFighter
+unused ; 030_0_29_Xwing
+EngineIntXW.wav			76 2000 ; 031_0_30_SlaveOne
+EngineIntFalc.wav		76 2000 ; 032_0_31_SlaveTwo
+unused ; 033__1_0
+unused ; 034__1_0
+unused ; 035__1_0
+unused ; 036__1_0
+unused ; 037__1_0
+unused ; 038__1_0
+unused ; 039__1_0
+unused ; 040__1_0
+unused ; 041__1_0
+unused ; 042__1_0
+unused ; 043_0_32_Tug
+unused ; 044_0_33_CombatUtilityVehicle
+unused ; 045_0_34_HeavyLifter
+unused ; 046_0_35_MoleMiner
+unused ; 047_0_36_EscapePod
+unused ; 048_0_153_EscapePodA
+unused ; 049__1_0
+unused ; 050_0_37_Shuttle
+unused ; 051_0_38_EscortShuttle
+unused ; 052_0_39_StormtrooperTransport
+unused ; 053_0_40_AssaultTransport
+unused ; 054_0_41_EscortTransport
+unused ; 055_0_42_SystemPatrolCraft
+unused ; 056_0_43_ScoutCraft
+unused ; 057_0_44_MuurianTransport
+EngineIntCort.wav		76 2000 ; 058_0_45_CorellianTransport2
+EngineIntFalc.wav		76 2000 ; 059_0_46_MilleniumFalcon2
+unused ; 060_0_47_Outrider
+unused ; 061_0_48_ImpLandingCraft
+unused ; 062_0_49_AssaultShuttle
+unused ; 063_0_50_LuxuryYacht
+unused ; 064_0_51_FerryboatLiner
+EngineIntCort.wav		76 2000 ; 065_0_52_FamilyTransport
+unused ; 066__1_0
+unused ; 067__1_0
+unused ; 068__1_0
+unused ; 069__1_0
+unused ; 070__1_0
+unused ; 071_0_53_ContainerBrick
+unused ; 072_0_54_ContainerHexBox
+unused ; 073_0_55_ContainerTube
+unused ; 074_0_56_ContainerPronged
+unused ; 075_0_57_ContainerHemisphere
+unused ; 076_0_58_ContainerSlotted
+unused ; 077_0_59_ContainerHourglass
+unused ; 078_0_60_ContainerGem
+unused ; 079_0_61_ContainerYshaped
+unused ; 080_0_62_CargoCanister
+unused ; 081_0_63_PropaneTank
+unused ; 082_0_64_ContainerGrande
+unused ; 083_0_65_ContainerBox
+unused ; 084_0_66_ContainerSphere
+unused ; 085_0_67_ContainerHanger
+unused ; 086__1_0
+unused ; 087__1_0
+unused ; 088__1_0
+unused ; 089__1_0
+unused ; 090__1_0
+unused ; 091_0_68_BulkFreighter
+unused ; 092_0_69_CargoFerry
+unused ; 093_0_70_ModularConveyor
+unused ; 094_0_71_ContainerTransport
+unused ; 095_0_72_TunaBoat2
+unused ; 096_0_73_StarGalleon
+unused ; 097_0_74_ModActionTransport
+unused ; 098_0_75_MobquetTransport
+unused ; 099_0_76_XiytiarTransport
+unused ; 100_0_77_FreighterConB
+unused ; 101_0_78_FreighterConG
+unused ; 102_0_79_FreighterBox
+unused ; 103_0_0_Xwing
+unused ; 104_0_0_Xwing
+unused ; 105_0_136_CrewCabinFront
+unused ; 106_0_137_ConnectorRod
+unused ; 107_0_138_EngineBack
+unused ; 108_0_0_Xwing
+unused ; 109_0_0_Xwing
+unused ; 110_0_139_EngineFront
+unused ; 111_0_140_CrewCabinBack
+unused ; 112_0_0_Xwing
+unused ; 113_0_0_Xwing
+unused ; 114_0_0_Xwing
+unused ; 115_0_142_Suprosa
+unused ; 116__1_0
+unused ; 117__1_0
+unused ; 118__1_0
+unused ; 119__1_0
+unused ; 120__1_0
+unused ; 121__1_0
+unused ; 122__1_0
+unused ; 123__1_0
+unused ; 124__1_0
+unused ; 125__1_0
+unused ; 126_0_80_Corvette2
+unused ; 127_0_81_ModCorvette
+unused ; 128_0_82_Frigate2
+unused ; 129_0_83_ModFrigate
+unused ; 130_0_84_PassengerLiner
+unused ; 131_0_85_CarrackCruiser
+unused ; 132_0_86_StrikeCruiser
+unused ; 133_0_87_EscortCarrier
+unused ; 134_0_88_Dreadnaught2
+unused ; 135_0_89_CalamariCruiserNew
+unused ; 136_0_90_LightCalamariCruiser
+unused ; 137_0_91_Interdictor2
+unused ; 138_0_92_VictoryStarDestroyer2
+unused ; 139_0_93_ImperialStarDestroyer2
+unused ; 140_0_94_SuperStarDestroyer
+unused ; 141_0_95_ModStrikeCruiser
+unused ; 142_0_96_LancerFrigate
+unused ; 143_0_97_BulkCruiser
+unused ; 144_0_98_AssaultFrigate
+unused ; 145_0_99_CorellianGunship
+unused ; 146_0_100_MarauderCorvette
+unused ; 147_0_101_ImpResearchShip
+unused ; 148_0_135_CalamariWinged
+unused ; 149_0_92_VictoryStarDestroyer2
+unused ; 150_0_141_ImperialStarDestroyer2
+unused ; 151__1_0
+unused ; 152__1_0
+unused ; 153_0_102_Platform1
+unused ; 154_0_103_Platform2
+unused ; 155_0_104_Platform3
+unused ; 156_0_105_Platform4
+unused ; 157_0_106_Platform5
+unused ; 158_0_107_Platform6
+unused ; 159_0_108_AsteroidBase
+unused ; 160_0_109_Factory
+unused ; 161_0_110_ShipYard
+unused ; 162_0_111_RepairYard
+unused ; 163_0_112_GolanOne
+unused ; 164_0_113_GolanTwo
+unused ; 165_0_114_GolanThree
+unused ; 166_0_115_DerilynPlatform
+unused ; 167_0_116_SensorArray
+unused ; 168_0_117_CommRelay
+unused ; 169_0_118_SpaceColony1
+unused ; 170_0_119_SpaceColony2
+unused ; 171_0_120_SpaceColony3
+unused ; 172_0_121_Casino
+unused ; 173_0_122_CargoFacility1
+unused ; 174_0_123_CargoFacility2
+unused ; 175_0_124_AsteroidMiningUnit
+unused ; 176_0_125_ProcessingPlant
+unused ; 177_0_126_RebelPlatform
+unused ; 178_0_127_ImpResearchCenter
+unused ; 179_0_128_FamilyBase
+unused ; 180_0_129_FamilyRepairYard
+unused ; 181_0_130_PirateShipyard
+unused ; 182_0_131_IndustrialComplex
+unused ; 183_0_132_PirateJunkyardBase
+unused ; 184__1_0
+unused ; 185__1_0
+unused ; 186__1_0
+unused ; 187__1_0
+unused ; 188__1_0
+unused ; 189__1_0
+unused ; 190__1_0
+unused ; 191__1_0
+unused ; 192_1_40_LaserBat
+unused ; 193_1_39_IonBat
+unused ; 194_0_133_AsteroidLaserBattery
+unused ; 195_0_134_AsteroidWarheadLauncher
+unused ; 196_1_6_GunPlatform
+unused ; 197_1_43_GunPad
+unused ; 198_1_44_GunWarheadPad
+unused ; 199_1_41_HomingMineA
+unused ; 200_1_42_HomingMineB
+unused ; 201_1_45_ProximityMineA
+unused ; 202_1_46_ProximityMineB
+unused ; 203_1_51_RebelPilot
+unused ; 204_1_52_ImperialPilot
+unused ; 205_1_53_CivilianPilot
+unused ; 206_1_54_ZeroGStormtrooper
+unused ; 207_1_55_ZeroGUtility
+unused ; 208_1_56_Marko
+unused ; 209_1_57_R2D2
+unused ; 210_1_0_SatB
+unused ; 211_1_1_SatC
+unused ; 212_1_2_SatD
+unused ; 213_1_7_Probe
+unused ; 214_1_50_ProbeCapsule
+unused ; 215_1_47_BuoyC
+unused ; 216_1_48_BuoyB
+unused ; 217_1_49_BuoyRendez
+unused ; 218_1_8_BuoyFaux
+unused ; 219_1_3_MineA
+unused ; 220_1_4_MineB
+unused ; 221_1_5_MineC
+unused ; 222__1_0

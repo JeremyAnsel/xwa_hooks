@@ -127,6 +127,16 @@ E8BBB21600              call 005A8B30, 005A8B30 - 0043D875 = 0016B2BB
 EB1B                    jmp 0043D895, 0043D895 - 0043D87A = 1B
 90                      nop
 
+// Engine Wash sound stop
+:0043D93C - 0x03CD3C
+52                      push edx
+E80EEF0900              call 004DC850
+83C404                  add esp, 00000004
+
+E8DFB11600              call 005A8B20, 005A8B20 - 0043D941 = 0016B1DF
+EB36                    jmp 0043D979, 0043D979 - 0043D943 = 36
+9090                    nop
+
 
 // Engine Take Off sound
 :0045B7D0 - 0x05ABD0

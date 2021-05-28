@@ -1,0 +1,18 @@
+
+To setup Sfx_Weapon, copy the following files to WAVE\Sfx_Weapon\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+EmpireLaser.wav
+EmpireLaserChChChhh.wav
+EmpireLaserStarship.wav
+EmpireLaserTurbo.wav
+FalconLaser.wav
+FalconLaserTurbo.wav
+IonCannon.wav
+IonCannonStarship.wav
+IonCannonTurbo.wav
+RebelLaser.wav
+RebelLaserStarship.wav
+RebelLaserTurbo.wav

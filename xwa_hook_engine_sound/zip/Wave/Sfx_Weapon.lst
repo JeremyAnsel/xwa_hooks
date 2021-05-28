@@ -1,0 +1,2230 @@
+RebelLaser.wav			70 2000 ; 000__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 000__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 000__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 000__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 000__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 000__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 000__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 000__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 000__1_0 - IonCannonStarship
+unused ; 000__1_0 - unused
+RebelLaser.wav			70 2000 ; 001_0_0_Xwing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 001_0_0_Xwing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 001_0_0_Xwing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 001_0_0_Xwing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 001_0_0_Xwing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 001_0_0_Xwing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 001_0_0_Xwing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 001_0_0_Xwing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 001_0_0_Xwing - IonCannonStarship
+unused ; 001_0_0_Xwing - unused
+RebelLaser.wav			70 2000 ; 002_0_1_Ywing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 002_0_1_Ywing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 002_0_1_Ywing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 002_0_1_Ywing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 002_0_1_Ywing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 002_0_1_Ywing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 002_0_1_Ywing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 002_0_1_Ywing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 002_0_1_Ywing - IonCannonStarship
+unused ; 002_0_1_Ywing - unused
+RebelLaser.wav			70 2000 ; 003_0_2_Awing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 003_0_2_Awing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 003_0_2_Awing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 003_0_2_Awing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 003_0_2_Awing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 003_0_2_Awing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 003_0_2_Awing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 003_0_2_Awing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 003_0_2_Awing - IonCannonStarship
+unused ; 003_0_2_Awing - unused
+RebelLaser.wav			70 2000 ; 004_0_3_Bwing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 004_0_3_Bwing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 004_0_3_Bwing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 004_0_3_Bwing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 004_0_3_Bwing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 004_0_3_Bwing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 004_0_3_Bwing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 004_0_3_Bwing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 004_0_3_Bwing - IonCannonStarship
+unused ; 004_0_3_Bwing - unused
+EmpireLaserChChChhh.wav		70 2800 ; 005_0_4_TieFighter - RebelLaser
+EmpireLaserChChChhh.wav		70 2800 ; 005_0_4_TieFighter - RebelLaserTurbo
+EmpireLaserChChChhh.wav		70 2800 ; 005_0_4_TieFighter - EmpireLaser
+EmpireLaserChChChhh.wav		70 2800 ; 005_0_4_TieFighter - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 005_0_4_TieFighter - IonCannon
+IonCannonTurbo.wav		75 2800 ; 005_0_4_TieFighter - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 005_0_4_TieFighter - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 005_0_4_TieFighter - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 005_0_4_TieFighter - IonCannonStarship
+unused ; 005_0_4_TieFighter - unused
+EmpireLaserChChChhh.wav		70 2800 ; 006_0_5_TieInterceptor - RebelLaser
+EmpireLaserChChChhh.wav		70 2800 ; 006_0_5_TieInterceptor - RebelLaserTurbo
+EmpireLaserChChChhh.wav		70 2800 ; 006_0_5_TieInterceptor - EmpireLaser
+EmpireLaserChChChhh.wav		70 2800 ; 006_0_5_TieInterceptor - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 006_0_5_TieInterceptor - IonCannon
+IonCannonTurbo.wav		75 2800 ; 006_0_5_TieInterceptor - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 006_0_5_TieInterceptor - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 006_0_5_TieInterceptor - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 006_0_5_TieInterceptor - IonCannonStarship
+unused ; 006_0_5_TieInterceptor - unused
+EmpireLaserChChChhh.wav		70 2800 ; 007_0_6_TieBomber - RebelLaser
+EmpireLaserChChChhh.wav		70 2800 ; 007_0_6_TieBomber - RebelLaserTurbo
+EmpireLaserChChChhh.wav		70 2800 ; 007_0_6_TieBomber - EmpireLaser
+EmpireLaserChChChhh.wav		70 2800 ; 007_0_6_TieBomber - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 007_0_6_TieBomber - IonCannon
+IonCannonTurbo.wav		75 2800 ; 007_0_6_TieBomber - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 007_0_6_TieBomber - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 007_0_6_TieBomber - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 007_0_6_TieBomber - IonCannonStarship
+unused ; 007_0_6_TieBomber - unused
+EmpireLaserChChChhh.wav		70 2800 ; 008_0_7_TieAdvanced - RebelLaser
+EmpireLaserChChChhh.wav		70 2800 ; 008_0_7_TieAdvanced - RebelLaserTurbo
+EmpireLaserChChChhh.wav		70 2800 ; 008_0_7_TieAdvanced - EmpireLaser
+EmpireLaserChChChhh.wav		70 2800 ; 008_0_7_TieAdvanced - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 008_0_7_TieAdvanced - IonCannon
+IonCannonTurbo.wav		75 2800 ; 008_0_7_TieAdvanced - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 008_0_7_TieAdvanced - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 008_0_7_TieAdvanced - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 008_0_7_TieAdvanced - IonCannonStarship
+unused ; 008_0_7_TieAdvanced - unused
+EmpireLaserChChChhh.wav		70 2800 ; 009_0_8_TieDefender - RebelLaser
+EmpireLaserChChChhh.wav		70 2800 ; 009_0_8_TieDefender - RebelLaserTurbo
+EmpireLaserChChChhh.wav		70 2800 ; 009_0_8_TieDefender - EmpireLaser
+EmpireLaserChChChhh.wav		70 2800 ; 009_0_8_TieDefender - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 009_0_8_TieDefender - IonCannon
+IonCannonTurbo.wav		75 2800 ; 009_0_8_TieDefender - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 009_0_8_TieDefender - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 009_0_8_TieDefender - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 009_0_8_TieDefender - IonCannonStarship
+unused ; 009_0_8_TieDefender - unused
+RebelLaser.wav			70 2000 ; 010_0_9_IrdFighter - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 010_0_9_IrdFighter - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 010_0_9_IrdFighter - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 010_0_9_IrdFighter - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 010_0_9_IrdFighter - IonCannon
+IonCannonTurbo.wav		75 2800 ; 010_0_9_IrdFighter - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 010_0_9_IrdFighter - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 010_0_9_IrdFighter - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 010_0_9_IrdFighter - IonCannonStarship
+unused ; 010_0_9_IrdFighter - unused
+RebelLaser.wav			70 2000 ; 011_0_10_ToscanFighter - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 011_0_10_ToscanFighter - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 011_0_10_ToscanFighter - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 011_0_10_ToscanFighter - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 011_0_10_ToscanFighter - IonCannon
+IonCannonTurbo.wav		75 2800 ; 011_0_10_ToscanFighter - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 011_0_10_ToscanFighter - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 011_0_10_ToscanFighter - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 011_0_10_ToscanFighter - IonCannonStarship
+unused ; 011_0_10_ToscanFighter - unused
+RebelLaser.wav			70 2000 ; 012_0_11_MissileBoat - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 012_0_11_MissileBoat - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 012_0_11_MissileBoat - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 012_0_11_MissileBoat - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 012_0_11_MissileBoat - IonCannon
+IonCannonTurbo.wav		75 2800 ; 012_0_11_MissileBoat - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 012_0_11_MissileBoat - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 012_0_11_MissileBoat - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 012_0_11_MissileBoat - IonCannonStarship
+unused ; 012_0_11_MissileBoat - unused
+RebelLaser.wav			70 2000 ; 013_0_12_Twing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 013_0_12_Twing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 013_0_12_Twing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 013_0_12_Twing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 013_0_12_Twing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 013_0_12_Twing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 013_0_12_Twing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 013_0_12_Twing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 013_0_12_Twing - IonCannonStarship
+unused ; 013_0_12_Twing - unused
+RebelLaser.wav			70 2000 ; 014_0_13_Z_95 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 014_0_13_Z_95 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 014_0_13_Z_95 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 014_0_13_Z_95 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 014_0_13_Z_95 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 014_0_13_Z_95 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 014_0_13_Z_95 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 014_0_13_Z_95 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 014_0_13_Z_95 - IonCannonStarship
+unused ; 014_0_13_Z_95 - unused
+RebelLaser.wav			70 2000 ; 015_0_14_R41 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 015_0_14_R41 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 015_0_14_R41 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 015_0_14_R41 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 015_0_14_R41 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 015_0_14_R41 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 015_0_14_R41 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 015_0_14_R41 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 015_0_14_R41 - IonCannonStarship
+unused ; 015_0_14_R41 - unused
+RebelLaser.wav			70 2000 ; 016_0_15_AssaultGunboat - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 016_0_15_AssaultGunboat - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 016_0_15_AssaultGunboat - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 016_0_15_AssaultGunboat - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 016_0_15_AssaultGunboat - IonCannon
+IonCannonTurbo.wav		75 2800 ; 016_0_15_AssaultGunboat - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 016_0_15_AssaultGunboat - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 016_0_15_AssaultGunboat - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 016_0_15_AssaultGunboat - IonCannonStarship
+unused ; 016_0_15_AssaultGunboat - unused
+RebelLaser.wav			70 2000 ; 017_0_16_SkiprayBlastBoat - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 017_0_16_SkiprayBlastBoat - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 017_0_16_SkiprayBlastBoat - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 017_0_16_SkiprayBlastBoat - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 017_0_16_SkiprayBlastBoat - IonCannon
+IonCannonTurbo.wav		75 2800 ; 017_0_16_SkiprayBlastBoat - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 017_0_16_SkiprayBlastBoat - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 017_0_16_SkiprayBlastBoat - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 017_0_16_SkiprayBlastBoat - IonCannonStarship
+unused ; 017_0_16_SkiprayBlastBoat - unused
+EmpireLaserChChChhh.wav		70 2800 ; 018_0_17_TieBizarro - RebelLaser
+EmpireLaserChChChhh.wav		70 2800 ; 018_0_17_TieBizarro - RebelLaserTurbo
+EmpireLaserChChChhh.wav		70 2800 ; 018_0_17_TieBizarro - EmpireLaser
+EmpireLaserChChChhh.wav		70 2800 ; 018_0_17_TieBizarro - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 018_0_17_TieBizarro - IonCannon
+IonCannonTurbo.wav		75 2800 ; 018_0_17_TieBizarro - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 018_0_17_TieBizarro - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 018_0_17_TieBizarro - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 018_0_17_TieBizarro - IonCannonStarship
+unused ; 018_0_17_TieBizarro - unused
+EmpireLaserChChChhh.wav		70 2800 ; 019_0_18_TieBigGun - RebelLaser
+EmpireLaserChChChhh.wav		70 2800 ; 019_0_18_TieBigGun - RebelLaserTurbo
+EmpireLaserChChChhh.wav		70 2800 ; 019_0_18_TieBigGun - EmpireLaser
+EmpireLaserChChChhh.wav		70 2800 ; 019_0_18_TieBigGun - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 019_0_18_TieBigGun - IonCannon
+IonCannonTurbo.wav		75 2800 ; 019_0_18_TieBigGun - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 019_0_18_TieBigGun - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 019_0_18_TieBigGun - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 019_0_18_TieBigGun - IonCannonStarship
+unused ; 019_0_18_TieBigGun - unused
+EmpireLaserChChChhh.wav		70 2800 ; 020_0_19_TieWarheads - RebelLaser
+EmpireLaserChChChhh.wav		70 2800 ; 020_0_19_TieWarheads - RebelLaserTurbo
+EmpireLaserChChChhh.wav		70 2800 ; 020_0_19_TieWarheads - EmpireLaser
+EmpireLaserChChChhh.wav		70 2800 ; 020_0_19_TieWarheads - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 020_0_19_TieWarheads - IonCannon
+IonCannonTurbo.wav		75 2800 ; 020_0_19_TieWarheads - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 020_0_19_TieWarheads - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 020_0_19_TieWarheads - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 020_0_19_TieWarheads - IonCannonStarship
+unused ; 020_0_19_TieWarheads - unused
+EmpireLaserChChChhh.wav		70 2800 ; 021_0_20_TieBomb - RebelLaser
+EmpireLaserChChChhh.wav		70 2800 ; 021_0_20_TieBomb - RebelLaserTurbo
+EmpireLaserChChChhh.wav		70 2800 ; 021_0_20_TieBomb - EmpireLaser
+EmpireLaserChChChhh.wav		70 2800 ; 021_0_20_TieBomb - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 021_0_20_TieBomb - IonCannon
+IonCannonTurbo.wav		75 2800 ; 021_0_20_TieBomb - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 021_0_20_TieBomb - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 021_0_20_TieBomb - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 021_0_20_TieBomb - IonCannonStarship
+unused ; 021_0_20_TieBomb - unused
+EmpireLaserChChChhh.wav		70 2800 ; 022_0_21_TieBooster - RebelLaser
+EmpireLaserChChChhh.wav		70 2800 ; 022_0_21_TieBooster - RebelLaserTurbo
+EmpireLaserChChChhh.wav		70 2800 ; 022_0_21_TieBooster - EmpireLaser
+EmpireLaserChChChhh.wav		70 2800 ; 022_0_21_TieBooster - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 022_0_21_TieBooster - IonCannon
+IonCannonTurbo.wav		75 2800 ; 022_0_21_TieBooster - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 022_0_21_TieBooster - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 022_0_21_TieBooster - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 022_0_21_TieBooster - IonCannonStarship
+unused ; 022_0_21_TieBooster - unused
+RebelLaser.wav			70 2000 ; 023_0_22_CloakshapeFighter - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 023_0_22_CloakshapeFighter - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 023_0_22_CloakshapeFighter - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 023_0_22_CloakshapeFighter - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 023_0_22_CloakshapeFighter - IonCannon
+IonCannonTurbo.wav		75 2800 ; 023_0_22_CloakshapeFighter - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 023_0_22_CloakshapeFighter - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 023_0_22_CloakshapeFighter - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 023_0_22_CloakshapeFighter - IonCannonStarship
+unused ; 023_0_22_CloakshapeFighter - unused
+RebelLaser.wav			70 2000 ; 024_0_23_RazorFighter - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 024_0_23_RazorFighter - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 024_0_23_RazorFighter - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 024_0_23_RazorFighter - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 024_0_23_RazorFighter - IonCannon
+IonCannonTurbo.wav		75 2800 ; 024_0_23_RazorFighter - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 024_0_23_RazorFighter - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 024_0_23_RazorFighter - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 024_0_23_RazorFighter - IonCannonStarship
+unused ; 024_0_23_RazorFighter - unused
+RebelLaser.wav			70 2000 ; 025_0_24_PlanetaryFighter - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 025_0_24_PlanetaryFighter - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 025_0_24_PlanetaryFighter - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 025_0_24_PlanetaryFighter - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 025_0_24_PlanetaryFighter - IonCannon
+IonCannonTurbo.wav		75 2800 ; 025_0_24_PlanetaryFighter - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 025_0_24_PlanetaryFighter - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 025_0_24_PlanetaryFighter - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 025_0_24_PlanetaryFighter - IonCannonStarship
+unused ; 025_0_24_PlanetaryFighter - unused
+RebelLaser.wav			70 2000 ; 026_0_25_SupaFighter - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 026_0_25_SupaFighter - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 026_0_25_SupaFighter - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 026_0_25_SupaFighter - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 026_0_25_SupaFighter - IonCannon
+IonCannonTurbo.wav		75 2800 ; 026_0_25_SupaFighter - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 026_0_25_SupaFighter - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 026_0_25_SupaFighter - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 026_0_25_SupaFighter - IonCannonStarship
+unused ; 026_0_25_SupaFighter - unused
+RebelLaser.wav			70 2000 ; 027_0_26_Piggyback - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 027_0_26_Piggyback - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 027_0_26_Piggyback - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 027_0_26_Piggyback - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 027_0_26_Piggyback - IonCannon
+IonCannonTurbo.wav		75 2800 ; 027_0_26_Piggyback - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 027_0_26_Piggyback - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 027_0_26_Piggyback - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 027_0_26_Piggyback - IonCannonStarship
+unused ; 027_0_26_Piggyback - unused
+RebelLaser.wav			70 2000 ; 028_0_27_Booster - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 028_0_27_Booster - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 028_0_27_Booster - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 028_0_27_Booster - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 028_0_27_Booster - IonCannon
+IonCannonTurbo.wav		75 2800 ; 028_0_27_Booster - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 028_0_27_Booster - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 028_0_27_Booster - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 028_0_27_Booster - IonCannonStarship
+unused ; 028_0_27_Booster - unused
+RebelLaser.wav			70 2000 ; 029_0_28_PreybirdFighter - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 029_0_28_PreybirdFighter - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 029_0_28_PreybirdFighter - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 029_0_28_PreybirdFighter - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 029_0_28_PreybirdFighter - IonCannon
+IonCannonTurbo.wav		75 2800 ; 029_0_28_PreybirdFighter - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 029_0_28_PreybirdFighter - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 029_0_28_PreybirdFighter - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 029_0_28_PreybirdFighter - IonCannonStarship
+unused ; 029_0_28_PreybirdFighter - unused
+RebelLaser.wav			70 2000 ; 030_0_29_Xwing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 030_0_29_Xwing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 030_0_29_Xwing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 030_0_29_Xwing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 030_0_29_Xwing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 030_0_29_Xwing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 030_0_29_Xwing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 030_0_29_Xwing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 030_0_29_Xwing - IonCannonStarship
+unused ; 030_0_29_Xwing - unused
+RebelLaser.wav			70 2000 ; 031_0_30_SlaveOne - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 031_0_30_SlaveOne - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 031_0_30_SlaveOne - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 031_0_30_SlaveOne - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 031_0_30_SlaveOne - IonCannon
+IonCannonTurbo.wav		75 2800 ; 031_0_30_SlaveOne - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 031_0_30_SlaveOne - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 031_0_30_SlaveOne - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 031_0_30_SlaveOne - IonCannonStarship
+unused ; 031_0_30_SlaveOne - unused
+RebelLaser.wav			70 2000 ; 032_0_31_SlaveTwo - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 032_0_31_SlaveTwo - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 032_0_31_SlaveTwo - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 032_0_31_SlaveTwo - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 032_0_31_SlaveTwo - IonCannon
+IonCannonTurbo.wav		75 2800 ; 032_0_31_SlaveTwo - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 032_0_31_SlaveTwo - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 032_0_31_SlaveTwo - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 032_0_31_SlaveTwo - IonCannonStarship
+unused ; 032_0_31_SlaveTwo - unused
+RebelLaser.wav			70 2000 ; 033__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 033__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 033__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 033__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 033__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 033__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 033__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 033__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 033__1_0 - IonCannonStarship
+unused ; 033__1_0 - unused
+RebelLaser.wav			70 2000 ; 034__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 034__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 034__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 034__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 034__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 034__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 034__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 034__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 034__1_0 - IonCannonStarship
+unused ; 034__1_0 - unused
+RebelLaser.wav			70 2000 ; 035__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 035__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 035__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 035__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 035__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 035__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 035__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 035__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 035__1_0 - IonCannonStarship
+unused ; 035__1_0 - unused
+RebelLaser.wav			70 2000 ; 036__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 036__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 036__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 036__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 036__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 036__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 036__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 036__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 036__1_0 - IonCannonStarship
+unused ; 036__1_0 - unused
+RebelLaser.wav			70 2000 ; 037__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 037__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 037__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 037__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 037__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 037__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 037__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 037__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 037__1_0 - IonCannonStarship
+unused ; 037__1_0 - unused
+RebelLaser.wav			70 2000 ; 038__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 038__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 038__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 038__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 038__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 038__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 038__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 038__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 038__1_0 - IonCannonStarship
+unused ; 038__1_0 - unused
+RebelLaser.wav			70 2000 ; 039__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 039__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 039__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 039__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 039__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 039__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 039__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 039__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 039__1_0 - IonCannonStarship
+unused ; 039__1_0 - unused
+RebelLaser.wav			70 2000 ; 040__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 040__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 040__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 040__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 040__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 040__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 040__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 040__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 040__1_0 - IonCannonStarship
+unused ; 040__1_0 - unused
+RebelLaser.wav			70 2000 ; 041__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 041__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 041__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 041__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 041__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 041__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 041__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 041__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 041__1_0 - IonCannonStarship
+unused ; 041__1_0 - unused
+RebelLaser.wav			70 2000 ; 042__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 042__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 042__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 042__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 042__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 042__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 042__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 042__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 042__1_0 - IonCannonStarship
+unused ; 042__1_0 - unused
+RebelLaser.wav			70 2000 ; 043_0_32_Tug - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 043_0_32_Tug - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 043_0_32_Tug - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 043_0_32_Tug - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 043_0_32_Tug - IonCannon
+IonCannonTurbo.wav		75 2800 ; 043_0_32_Tug - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 043_0_32_Tug - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 043_0_32_Tug - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 043_0_32_Tug - IonCannonStarship
+unused ; 043_0_32_Tug - unused
+RebelLaser.wav			70 2000 ; 044_0_33_CombatUtilityVehicle - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 044_0_33_CombatUtilityVehicle - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 044_0_33_CombatUtilityVehicle - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 044_0_33_CombatUtilityVehicle - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 044_0_33_CombatUtilityVehicle - IonCannon
+IonCannonTurbo.wav		75 2800 ; 044_0_33_CombatUtilityVehicle - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 044_0_33_CombatUtilityVehicle - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 044_0_33_CombatUtilityVehicle - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 044_0_33_CombatUtilityVehicle - IonCannonStarship
+unused ; 044_0_33_CombatUtilityVehicle - unused
+RebelLaser.wav			70 2000 ; 045_0_34_HeavyLifter - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 045_0_34_HeavyLifter - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 045_0_34_HeavyLifter - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 045_0_34_HeavyLifter - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 045_0_34_HeavyLifter - IonCannon
+IonCannonTurbo.wav		75 2800 ; 045_0_34_HeavyLifter - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 045_0_34_HeavyLifter - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 045_0_34_HeavyLifter - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 045_0_34_HeavyLifter - IonCannonStarship
+unused ; 045_0_34_HeavyLifter - unused
+RebelLaser.wav			70 2000 ; 046_0_35_MoleMiner - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 046_0_35_MoleMiner - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 046_0_35_MoleMiner - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 046_0_35_MoleMiner - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 046_0_35_MoleMiner - IonCannon
+IonCannonTurbo.wav		75 2800 ; 046_0_35_MoleMiner - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 046_0_35_MoleMiner - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 046_0_35_MoleMiner - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 046_0_35_MoleMiner - IonCannonStarship
+unused ; 046_0_35_MoleMiner - unused
+RebelLaser.wav			70 2000 ; 047_0_36_EscapePod - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 047_0_36_EscapePod - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 047_0_36_EscapePod - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 047_0_36_EscapePod - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 047_0_36_EscapePod - IonCannon
+IonCannonTurbo.wav		75 2800 ; 047_0_36_EscapePod - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 047_0_36_EscapePod - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 047_0_36_EscapePod - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 047_0_36_EscapePod - IonCannonStarship
+unused ; 047_0_36_EscapePod - unused
+RebelLaser.wav			70 2000 ; 048_0_153_EscapePodA - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 048_0_153_EscapePodA - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 048_0_153_EscapePodA - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 048_0_153_EscapePodA - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 048_0_153_EscapePodA - IonCannon
+IonCannonTurbo.wav		75 2800 ; 048_0_153_EscapePodA - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 048_0_153_EscapePodA - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 048_0_153_EscapePodA - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 048_0_153_EscapePodA - IonCannonStarship
+unused ; 048_0_153_EscapePodA - unused
+RebelLaser.wav			70 2000 ; 049__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 049__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 049__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 049__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 049__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 049__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 049__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 049__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 049__1_0 - IonCannonStarship
+unused ; 049__1_0 - unused
+RebelLaser.wav			70 2000 ; 050_0_37_Shuttle - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 050_0_37_Shuttle - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 050_0_37_Shuttle - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 050_0_37_Shuttle - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 050_0_37_Shuttle - IonCannon
+IonCannonTurbo.wav		75 2800 ; 050_0_37_Shuttle - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 050_0_37_Shuttle - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 050_0_37_Shuttle - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 050_0_37_Shuttle - IonCannonStarship
+unused ; 050_0_37_Shuttle - unused
+RebelLaser.wav			70 2000 ; 051_0_38_EscortShuttle - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 051_0_38_EscortShuttle - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 051_0_38_EscortShuttle - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 051_0_38_EscortShuttle - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 051_0_38_EscortShuttle - IonCannon
+IonCannonTurbo.wav		75 2800 ; 051_0_38_EscortShuttle - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 051_0_38_EscortShuttle - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 051_0_38_EscortShuttle - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 051_0_38_EscortShuttle - IonCannonStarship
+unused ; 051_0_38_EscortShuttle - unused
+RebelLaser.wav			70 2000 ; 052_0_39_StormtrooperTransport - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 052_0_39_StormtrooperTransport - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 052_0_39_StormtrooperTransport - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 052_0_39_StormtrooperTransport - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 052_0_39_StormtrooperTransport - IonCannon
+IonCannonTurbo.wav		75 2800 ; 052_0_39_StormtrooperTransport - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 052_0_39_StormtrooperTransport - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 052_0_39_StormtrooperTransport - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 052_0_39_StormtrooperTransport - IonCannonStarship
+unused ; 052_0_39_StormtrooperTransport - unused
+RebelLaser.wav			70 2000 ; 053_0_40_AssaultTransport - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 053_0_40_AssaultTransport - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 053_0_40_AssaultTransport - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 053_0_40_AssaultTransport - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 053_0_40_AssaultTransport - IonCannon
+IonCannonTurbo.wav		75 2800 ; 053_0_40_AssaultTransport - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 053_0_40_AssaultTransport - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 053_0_40_AssaultTransport - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 053_0_40_AssaultTransport - IonCannonStarship
+unused ; 053_0_40_AssaultTransport - unused
+RebelLaser.wav			70 2000 ; 054_0_41_EscortTransport - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 054_0_41_EscortTransport - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 054_0_41_EscortTransport - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 054_0_41_EscortTransport - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 054_0_41_EscortTransport - IonCannon
+IonCannonTurbo.wav		75 2800 ; 054_0_41_EscortTransport - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 054_0_41_EscortTransport - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 054_0_41_EscortTransport - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 054_0_41_EscortTransport - IonCannonStarship
+unused ; 054_0_41_EscortTransport - unused
+RebelLaser.wav			70 2000 ; 055_0_42_SystemPatrolCraft - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 055_0_42_SystemPatrolCraft - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 055_0_42_SystemPatrolCraft - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 055_0_42_SystemPatrolCraft - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 055_0_42_SystemPatrolCraft - IonCannon
+IonCannonTurbo.wav		75 2800 ; 055_0_42_SystemPatrolCraft - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 055_0_42_SystemPatrolCraft - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 055_0_42_SystemPatrolCraft - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 055_0_42_SystemPatrolCraft - IonCannonStarship
+unused ; 055_0_42_SystemPatrolCraft - unused
+RebelLaser.wav			70 2000 ; 056_0_43_ScoutCraft - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 056_0_43_ScoutCraft - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 056_0_43_ScoutCraft - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 056_0_43_ScoutCraft - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 056_0_43_ScoutCraft - IonCannon
+IonCannonTurbo.wav		75 2800 ; 056_0_43_ScoutCraft - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 056_0_43_ScoutCraft - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 056_0_43_ScoutCraft - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 056_0_43_ScoutCraft - IonCannonStarship
+unused ; 056_0_43_ScoutCraft - unused
+RebelLaser.wav			70 2000 ; 057_0_44_MuurianTransport - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 057_0_44_MuurianTransport - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 057_0_44_MuurianTransport - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 057_0_44_MuurianTransport - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 057_0_44_MuurianTransport - IonCannon
+IonCannonTurbo.wav		75 2800 ; 057_0_44_MuurianTransport - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 057_0_44_MuurianTransport - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 057_0_44_MuurianTransport - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 057_0_44_MuurianTransport - IonCannonStarship
+unused ; 057_0_44_MuurianTransport - unused
+FalconLaser.wav			48 2000 ; 058_0_45_CorellianTransport2 - RebelLaser
+FalconLaserTurbo.wav		48 2000 ; 058_0_45_CorellianTransport2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 058_0_45_CorellianTransport2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 058_0_45_CorellianTransport2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 058_0_45_CorellianTransport2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 058_0_45_CorellianTransport2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 058_0_45_CorellianTransport2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 058_0_45_CorellianTransport2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 058_0_45_CorellianTransport2 - IonCannonStarship
+unused ; 058_0_45_CorellianTransport2 - unused
+FalconLaser.wav			48 2000 ; 059_0_46_MilleniumFalcon2 - RebelLaser
+FalconLaserTurbo.wav		48 2000 ; 059_0_46_MilleniumFalcon2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 059_0_46_MilleniumFalcon2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 059_0_46_MilleniumFalcon2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 059_0_46_MilleniumFalcon2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 059_0_46_MilleniumFalcon2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 059_0_46_MilleniumFalcon2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 059_0_46_MilleniumFalcon2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 059_0_46_MilleniumFalcon2 - IonCannonStarship
+unused ; 059_0_46_MilleniumFalcon2 - unused
+RebelLaser.wav			70 2000 ; 060_0_47_Outrider - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 060_0_47_Outrider - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 060_0_47_Outrider - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 060_0_47_Outrider - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 060_0_47_Outrider - IonCannon
+IonCannonTurbo.wav		75 2800 ; 060_0_47_Outrider - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 060_0_47_Outrider - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 060_0_47_Outrider - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 060_0_47_Outrider - IonCannonStarship
+unused ; 060_0_47_Outrider - unused
+RebelLaser.wav			70 2000 ; 061_0_48_ImpLandingCraft - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 061_0_48_ImpLandingCraft - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 061_0_48_ImpLandingCraft - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 061_0_48_ImpLandingCraft - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 061_0_48_ImpLandingCraft - IonCannon
+IonCannonTurbo.wav		75 2800 ; 061_0_48_ImpLandingCraft - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 061_0_48_ImpLandingCraft - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 061_0_48_ImpLandingCraft - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 061_0_48_ImpLandingCraft - IonCannonStarship
+unused ; 061_0_48_ImpLandingCraft - unused
+RebelLaser.wav			70 2000 ; 062_0_49_AssaultShuttle - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 062_0_49_AssaultShuttle - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 062_0_49_AssaultShuttle - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 062_0_49_AssaultShuttle - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 062_0_49_AssaultShuttle - IonCannon
+IonCannonTurbo.wav		75 2800 ; 062_0_49_AssaultShuttle - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 062_0_49_AssaultShuttle - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 062_0_49_AssaultShuttle - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 062_0_49_AssaultShuttle - IonCannonStarship
+unused ; 062_0_49_AssaultShuttle - unused
+RebelLaser.wav			70 2000 ; 063_0_50_LuxuryYacht - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 063_0_50_LuxuryYacht - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 063_0_50_LuxuryYacht - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 063_0_50_LuxuryYacht - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 063_0_50_LuxuryYacht - IonCannon
+IonCannonTurbo.wav		75 2800 ; 063_0_50_LuxuryYacht - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 063_0_50_LuxuryYacht - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 063_0_50_LuxuryYacht - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 063_0_50_LuxuryYacht - IonCannonStarship
+unused ; 063_0_50_LuxuryYacht - unused
+RebelLaser.wav			70 2000 ; 064_0_51_FerryboatLiner - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 064_0_51_FerryboatLiner - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 064_0_51_FerryboatLiner - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 064_0_51_FerryboatLiner - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 064_0_51_FerryboatLiner - IonCannon
+IonCannonTurbo.wav		75 2800 ; 064_0_51_FerryboatLiner - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 064_0_51_FerryboatLiner - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 064_0_51_FerryboatLiner - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 064_0_51_FerryboatLiner - IonCannonStarship
+unused ; 064_0_51_FerryboatLiner - unused
+FalconLaser.wav			48 2000 ; 065_0_52_FamilyTransport - RebelLaser
+FalconLaserTurbo.wav		48 2000 ; 065_0_52_FamilyTransport - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 065_0_52_FamilyTransport - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 065_0_52_FamilyTransport - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 065_0_52_FamilyTransport - IonCannon
+IonCannonTurbo.wav		75 2800 ; 065_0_52_FamilyTransport - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 065_0_52_FamilyTransport - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 065_0_52_FamilyTransport - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 065_0_52_FamilyTransport - IonCannonStarship
+unused ; 065_0_52_FamilyTransport - unused
+RebelLaser.wav			70 2000 ; 066__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 066__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 066__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 066__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 066__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 066__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 066__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 066__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 066__1_0 - IonCannonStarship
+unused ; 066__1_0 - unused
+RebelLaser.wav			70 2000 ; 067__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 067__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 067__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 067__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 067__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 067__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 067__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 067__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 067__1_0 - IonCannonStarship
+unused ; 067__1_0 - unused
+RebelLaser.wav			70 2000 ; 068__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 068__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 068__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 068__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 068__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 068__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 068__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 068__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 068__1_0 - IonCannonStarship
+unused ; 068__1_0 - unused
+RebelLaser.wav			70 2000 ; 069__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 069__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 069__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 069__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 069__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 069__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 069__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 069__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 069__1_0 - IonCannonStarship
+unused ; 069__1_0 - unused
+RebelLaser.wav			70 2000 ; 070__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 070__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 070__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 070__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 070__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 070__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 070__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 070__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 070__1_0 - IonCannonStarship
+unused ; 070__1_0 - unused
+RebelLaser.wav			70 2000 ; 071_0_53_ContainerBrick - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 071_0_53_ContainerBrick - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 071_0_53_ContainerBrick - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 071_0_53_ContainerBrick - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 071_0_53_ContainerBrick - IonCannon
+IonCannonTurbo.wav		75 2800 ; 071_0_53_ContainerBrick - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 071_0_53_ContainerBrick - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 071_0_53_ContainerBrick - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 071_0_53_ContainerBrick - IonCannonStarship
+unused ; 071_0_53_ContainerBrick - unused
+RebelLaser.wav			70 2000 ; 072_0_54_ContainerHexBox - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 072_0_54_ContainerHexBox - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 072_0_54_ContainerHexBox - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 072_0_54_ContainerHexBox - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 072_0_54_ContainerHexBox - IonCannon
+IonCannonTurbo.wav		75 2800 ; 072_0_54_ContainerHexBox - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 072_0_54_ContainerHexBox - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 072_0_54_ContainerHexBox - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 072_0_54_ContainerHexBox - IonCannonStarship
+unused ; 072_0_54_ContainerHexBox - unused
+RebelLaser.wav			70 2000 ; 073_0_55_ContainerTube - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 073_0_55_ContainerTube - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 073_0_55_ContainerTube - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 073_0_55_ContainerTube - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 073_0_55_ContainerTube - IonCannon
+IonCannonTurbo.wav		75 2800 ; 073_0_55_ContainerTube - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 073_0_55_ContainerTube - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 073_0_55_ContainerTube - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 073_0_55_ContainerTube - IonCannonStarship
+unused ; 073_0_55_ContainerTube - unused
+RebelLaser.wav			70 2000 ; 074_0_56_ContainerPronged - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 074_0_56_ContainerPronged - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 074_0_56_ContainerPronged - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 074_0_56_ContainerPronged - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 074_0_56_ContainerPronged - IonCannon
+IonCannonTurbo.wav		75 2800 ; 074_0_56_ContainerPronged - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 074_0_56_ContainerPronged - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 074_0_56_ContainerPronged - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 074_0_56_ContainerPronged - IonCannonStarship
+unused ; 074_0_56_ContainerPronged - unused
+RebelLaser.wav			70 2000 ; 075_0_57_ContainerHemisphere - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 075_0_57_ContainerHemisphere - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 075_0_57_ContainerHemisphere - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 075_0_57_ContainerHemisphere - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 075_0_57_ContainerHemisphere - IonCannon
+IonCannonTurbo.wav		75 2800 ; 075_0_57_ContainerHemisphere - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 075_0_57_ContainerHemisphere - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 075_0_57_ContainerHemisphere - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 075_0_57_ContainerHemisphere - IonCannonStarship
+unused ; 075_0_57_ContainerHemisphere - unused
+RebelLaser.wav			70 2000 ; 076_0_58_ContainerSlotted - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 076_0_58_ContainerSlotted - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 076_0_58_ContainerSlotted - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 076_0_58_ContainerSlotted - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 076_0_58_ContainerSlotted - IonCannon
+IonCannonTurbo.wav		75 2800 ; 076_0_58_ContainerSlotted - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 076_0_58_ContainerSlotted - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 076_0_58_ContainerSlotted - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 076_0_58_ContainerSlotted - IonCannonStarship
+unused ; 076_0_58_ContainerSlotted - unused
+RebelLaser.wav			70 2000 ; 077_0_59_ContainerHourglass - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 077_0_59_ContainerHourglass - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 077_0_59_ContainerHourglass - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 077_0_59_ContainerHourglass - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 077_0_59_ContainerHourglass - IonCannon
+IonCannonTurbo.wav		75 2800 ; 077_0_59_ContainerHourglass - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 077_0_59_ContainerHourglass - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 077_0_59_ContainerHourglass - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 077_0_59_ContainerHourglass - IonCannonStarship
+unused ; 077_0_59_ContainerHourglass - unused
+RebelLaser.wav			70 2000 ; 078_0_60_ContainerGem - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 078_0_60_ContainerGem - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 078_0_60_ContainerGem - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 078_0_60_ContainerGem - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 078_0_60_ContainerGem - IonCannon
+IonCannonTurbo.wav		75 2800 ; 078_0_60_ContainerGem - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 078_0_60_ContainerGem - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 078_0_60_ContainerGem - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 078_0_60_ContainerGem - IonCannonStarship
+unused ; 078_0_60_ContainerGem - unused
+RebelLaser.wav			70 2000 ; 079_0_61_ContainerYshaped - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 079_0_61_ContainerYshaped - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 079_0_61_ContainerYshaped - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 079_0_61_ContainerYshaped - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 079_0_61_ContainerYshaped - IonCannon
+IonCannonTurbo.wav		75 2800 ; 079_0_61_ContainerYshaped - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 079_0_61_ContainerYshaped - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 079_0_61_ContainerYshaped - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 079_0_61_ContainerYshaped - IonCannonStarship
+unused ; 079_0_61_ContainerYshaped - unused
+RebelLaser.wav			70 2000 ; 080_0_62_CargoCanister - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 080_0_62_CargoCanister - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 080_0_62_CargoCanister - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 080_0_62_CargoCanister - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 080_0_62_CargoCanister - IonCannon
+IonCannonTurbo.wav		75 2800 ; 080_0_62_CargoCanister - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 080_0_62_CargoCanister - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 080_0_62_CargoCanister - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 080_0_62_CargoCanister - IonCannonStarship
+unused ; 080_0_62_CargoCanister - unused
+RebelLaser.wav			70 2000 ; 081_0_63_PropaneTank - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 081_0_63_PropaneTank - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 081_0_63_PropaneTank - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 081_0_63_PropaneTank - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 081_0_63_PropaneTank - IonCannon
+IonCannonTurbo.wav		75 2800 ; 081_0_63_PropaneTank - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 081_0_63_PropaneTank - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 081_0_63_PropaneTank - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 081_0_63_PropaneTank - IonCannonStarship
+unused ; 081_0_63_PropaneTank - unused
+RebelLaser.wav			70 2000 ; 082_0_64_ContainerGrande - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 082_0_64_ContainerGrande - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 082_0_64_ContainerGrande - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 082_0_64_ContainerGrande - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 082_0_64_ContainerGrande - IonCannon
+IonCannonTurbo.wav		75 2800 ; 082_0_64_ContainerGrande - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 082_0_64_ContainerGrande - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 082_0_64_ContainerGrande - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 082_0_64_ContainerGrande - IonCannonStarship
+unused ; 082_0_64_ContainerGrande - unused
+RebelLaser.wav			70 2000 ; 083_0_65_ContainerBox - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 083_0_65_ContainerBox - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 083_0_65_ContainerBox - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 083_0_65_ContainerBox - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 083_0_65_ContainerBox - IonCannon
+IonCannonTurbo.wav		75 2800 ; 083_0_65_ContainerBox - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 083_0_65_ContainerBox - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 083_0_65_ContainerBox - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 083_0_65_ContainerBox - IonCannonStarship
+unused ; 083_0_65_ContainerBox - unused
+RebelLaser.wav			70 2000 ; 084_0_66_ContainerSphere - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 084_0_66_ContainerSphere - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 084_0_66_ContainerSphere - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 084_0_66_ContainerSphere - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 084_0_66_ContainerSphere - IonCannon
+IonCannonTurbo.wav		75 2800 ; 084_0_66_ContainerSphere - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 084_0_66_ContainerSphere - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 084_0_66_ContainerSphere - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 084_0_66_ContainerSphere - IonCannonStarship
+unused ; 084_0_66_ContainerSphere - unused
+RebelLaser.wav			70 2000 ; 085_0_67_ContainerHanger - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 085_0_67_ContainerHanger - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 085_0_67_ContainerHanger - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 085_0_67_ContainerHanger - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 085_0_67_ContainerHanger - IonCannon
+IonCannonTurbo.wav		75 2800 ; 085_0_67_ContainerHanger - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 085_0_67_ContainerHanger - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 085_0_67_ContainerHanger - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 085_0_67_ContainerHanger - IonCannonStarship
+unused ; 085_0_67_ContainerHanger - unused
+RebelLaser.wav			70 2000 ; 086__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 086__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 086__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 086__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 086__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 086__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 086__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 086__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 086__1_0 - IonCannonStarship
+unused ; 086__1_0 - unused
+RebelLaser.wav			70 2000 ; 087__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 087__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 087__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 087__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 087__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 087__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 087__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 087__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 087__1_0 - IonCannonStarship
+unused ; 087__1_0 - unused
+RebelLaser.wav			70 2000 ; 088__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 088__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 088__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 088__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 088__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 088__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 088__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 088__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 088__1_0 - IonCannonStarship
+unused ; 088__1_0 - unused
+RebelLaser.wav			70 2000 ; 089__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 089__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 089__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 089__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 089__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 089__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 089__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 089__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 089__1_0 - IonCannonStarship
+unused ; 089__1_0 - unused
+RebelLaser.wav			70 2000 ; 090__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 090__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 090__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 090__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 090__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 090__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 090__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 090__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 090__1_0 - IonCannonStarship
+unused ; 090__1_0 - unused
+RebelLaser.wav			70 2000 ; 091_0_68_BulkFreighter - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 091_0_68_BulkFreighter - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 091_0_68_BulkFreighter - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 091_0_68_BulkFreighter - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 091_0_68_BulkFreighter - IonCannon
+IonCannonTurbo.wav		75 2800 ; 091_0_68_BulkFreighter - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 091_0_68_BulkFreighter - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 091_0_68_BulkFreighter - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 091_0_68_BulkFreighter - IonCannonStarship
+unused ; 091_0_68_BulkFreighter - unused
+RebelLaser.wav			70 2000 ; 092_0_69_CargoFerry - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 092_0_69_CargoFerry - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 092_0_69_CargoFerry - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 092_0_69_CargoFerry - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 092_0_69_CargoFerry - IonCannon
+IonCannonTurbo.wav		75 2800 ; 092_0_69_CargoFerry - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 092_0_69_CargoFerry - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 092_0_69_CargoFerry - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 092_0_69_CargoFerry - IonCannonStarship
+unused ; 092_0_69_CargoFerry - unused
+RebelLaser.wav			70 2000 ; 093_0_70_ModularConveyor - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 093_0_70_ModularConveyor - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 093_0_70_ModularConveyor - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 093_0_70_ModularConveyor - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 093_0_70_ModularConveyor - IonCannon
+IonCannonTurbo.wav		75 2800 ; 093_0_70_ModularConveyor - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 093_0_70_ModularConveyor - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 093_0_70_ModularConveyor - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 093_0_70_ModularConveyor - IonCannonStarship
+unused ; 093_0_70_ModularConveyor - unused
+RebelLaser.wav			70 2000 ; 094_0_71_ContainerTransport - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 094_0_71_ContainerTransport - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 094_0_71_ContainerTransport - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 094_0_71_ContainerTransport - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 094_0_71_ContainerTransport - IonCannon
+IonCannonTurbo.wav		75 2800 ; 094_0_71_ContainerTransport - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 094_0_71_ContainerTransport - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 094_0_71_ContainerTransport - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 094_0_71_ContainerTransport - IonCannonStarship
+unused ; 094_0_71_ContainerTransport - unused
+RebelLaser.wav			70 2000 ; 095_0_72_TunaBoat2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 095_0_72_TunaBoat2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 095_0_72_TunaBoat2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 095_0_72_TunaBoat2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 095_0_72_TunaBoat2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 095_0_72_TunaBoat2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 095_0_72_TunaBoat2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 095_0_72_TunaBoat2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 095_0_72_TunaBoat2 - IonCannonStarship
+unused ; 095_0_72_TunaBoat2 - unused
+RebelLaser.wav			70 2000 ; 096_0_73_StarGalleon - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 096_0_73_StarGalleon - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 096_0_73_StarGalleon - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 096_0_73_StarGalleon - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 096_0_73_StarGalleon - IonCannon
+IonCannonTurbo.wav		75 2800 ; 096_0_73_StarGalleon - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 096_0_73_StarGalleon - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 096_0_73_StarGalleon - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 096_0_73_StarGalleon - IonCannonStarship
+unused ; 096_0_73_StarGalleon - unused
+RebelLaser.wav			70 2000 ; 097_0_74_ModActionTransport - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 097_0_74_ModActionTransport - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 097_0_74_ModActionTransport - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 097_0_74_ModActionTransport - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 097_0_74_ModActionTransport - IonCannon
+IonCannonTurbo.wav		75 2800 ; 097_0_74_ModActionTransport - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 097_0_74_ModActionTransport - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 097_0_74_ModActionTransport - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 097_0_74_ModActionTransport - IonCannonStarship
+unused ; 097_0_74_ModActionTransport - unused
+RebelLaser.wav			70 2000 ; 098_0_75_MobquetTransport - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 098_0_75_MobquetTransport - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 098_0_75_MobquetTransport - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 098_0_75_MobquetTransport - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 098_0_75_MobquetTransport - IonCannon
+IonCannonTurbo.wav		75 2800 ; 098_0_75_MobquetTransport - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 098_0_75_MobquetTransport - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 098_0_75_MobquetTransport - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 098_0_75_MobquetTransport - IonCannonStarship
+unused ; 098_0_75_MobquetTransport - unused
+RebelLaser.wav			70 2000 ; 099_0_76_XiytiarTransport - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 099_0_76_XiytiarTransport - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 099_0_76_XiytiarTransport - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 099_0_76_XiytiarTransport - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 099_0_76_XiytiarTransport - IonCannon
+IonCannonTurbo.wav		75 2800 ; 099_0_76_XiytiarTransport - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 099_0_76_XiytiarTransport - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 099_0_76_XiytiarTransport - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 099_0_76_XiytiarTransport - IonCannonStarship
+unused ; 099_0_76_XiytiarTransport - unused
+RebelLaser.wav			70 2000 ; 100_0_77_FreighterConB - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 100_0_77_FreighterConB - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 100_0_77_FreighterConB - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 100_0_77_FreighterConB - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 100_0_77_FreighterConB - IonCannon
+IonCannonTurbo.wav		75 2800 ; 100_0_77_FreighterConB - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 100_0_77_FreighterConB - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 100_0_77_FreighterConB - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 100_0_77_FreighterConB - IonCannonStarship
+unused ; 100_0_77_FreighterConB - unused
+RebelLaser.wav			70 2000 ; 101_0_78_FreighterConG - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 101_0_78_FreighterConG - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 101_0_78_FreighterConG - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 101_0_78_FreighterConG - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 101_0_78_FreighterConG - IonCannon
+IonCannonTurbo.wav		75 2800 ; 101_0_78_FreighterConG - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 101_0_78_FreighterConG - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 101_0_78_FreighterConG - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 101_0_78_FreighterConG - IonCannonStarship
+unused ; 101_0_78_FreighterConG - unused
+RebelLaser.wav			70 2000 ; 102_0_79_FreighterBox - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 102_0_79_FreighterBox - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 102_0_79_FreighterBox - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 102_0_79_FreighterBox - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 102_0_79_FreighterBox - IonCannon
+IonCannonTurbo.wav		75 2800 ; 102_0_79_FreighterBox - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 102_0_79_FreighterBox - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 102_0_79_FreighterBox - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 102_0_79_FreighterBox - IonCannonStarship
+unused ; 102_0_79_FreighterBox - unused
+RebelLaser.wav			70 2000 ; 103_0_0_Xwing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 103_0_0_Xwing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 103_0_0_Xwing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 103_0_0_Xwing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 103_0_0_Xwing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 103_0_0_Xwing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 103_0_0_Xwing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 103_0_0_Xwing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 103_0_0_Xwing - IonCannonStarship
+unused ; 103_0_0_Xwing - unused
+RebelLaser.wav			70 2000 ; 104_0_0_Xwing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 104_0_0_Xwing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 104_0_0_Xwing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 104_0_0_Xwing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 104_0_0_Xwing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 104_0_0_Xwing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 104_0_0_Xwing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 104_0_0_Xwing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 104_0_0_Xwing - IonCannonStarship
+unused ; 104_0_0_Xwing - unused
+RebelLaser.wav			70 2000 ; 105_0_136_CrewCabinFront - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 105_0_136_CrewCabinFront - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 105_0_136_CrewCabinFront - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 105_0_136_CrewCabinFront - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 105_0_136_CrewCabinFront - IonCannon
+IonCannonTurbo.wav		75 2800 ; 105_0_136_CrewCabinFront - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 105_0_136_CrewCabinFront - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 105_0_136_CrewCabinFront - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 105_0_136_CrewCabinFront - IonCannonStarship
+unused ; 105_0_136_CrewCabinFront - unused
+RebelLaser.wav			70 2000 ; 106_0_137_ConnectorRod - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 106_0_137_ConnectorRod - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 106_0_137_ConnectorRod - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 106_0_137_ConnectorRod - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 106_0_137_ConnectorRod - IonCannon
+IonCannonTurbo.wav		75 2800 ; 106_0_137_ConnectorRod - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 106_0_137_ConnectorRod - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 106_0_137_ConnectorRod - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 106_0_137_ConnectorRod - IonCannonStarship
+unused ; 106_0_137_ConnectorRod - unused
+RebelLaser.wav			70 2000 ; 107_0_138_EngineBack - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 107_0_138_EngineBack - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 107_0_138_EngineBack - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 107_0_138_EngineBack - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 107_0_138_EngineBack - IonCannon
+IonCannonTurbo.wav		75 2800 ; 107_0_138_EngineBack - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 107_0_138_EngineBack - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 107_0_138_EngineBack - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 107_0_138_EngineBack - IonCannonStarship
+unused ; 107_0_138_EngineBack - unused
+RebelLaser.wav			70 2000 ; 108_0_0_Xwing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 108_0_0_Xwing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 108_0_0_Xwing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 108_0_0_Xwing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 108_0_0_Xwing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 108_0_0_Xwing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 108_0_0_Xwing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 108_0_0_Xwing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 108_0_0_Xwing - IonCannonStarship
+unused ; 108_0_0_Xwing - unused
+RebelLaser.wav			70 2000 ; 109_0_0_Xwing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 109_0_0_Xwing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 109_0_0_Xwing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 109_0_0_Xwing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 109_0_0_Xwing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 109_0_0_Xwing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 109_0_0_Xwing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 109_0_0_Xwing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 109_0_0_Xwing - IonCannonStarship
+unused ; 109_0_0_Xwing - unused
+RebelLaser.wav			70 2000 ; 110_0_139_EngineFront - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 110_0_139_EngineFront - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 110_0_139_EngineFront - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 110_0_139_EngineFront - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 110_0_139_EngineFront - IonCannon
+IonCannonTurbo.wav		75 2800 ; 110_0_139_EngineFront - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 110_0_139_EngineFront - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 110_0_139_EngineFront - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 110_0_139_EngineFront - IonCannonStarship
+unused ; 110_0_139_EngineFront - unused
+RebelLaser.wav			70 2000 ; 111_0_140_CrewCabinBack - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 111_0_140_CrewCabinBack - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 111_0_140_CrewCabinBack - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 111_0_140_CrewCabinBack - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 111_0_140_CrewCabinBack - IonCannon
+IonCannonTurbo.wav		75 2800 ; 111_0_140_CrewCabinBack - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 111_0_140_CrewCabinBack - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 111_0_140_CrewCabinBack - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 111_0_140_CrewCabinBack - IonCannonStarship
+unused ; 111_0_140_CrewCabinBack - unused
+RebelLaser.wav			70 2000 ; 112_0_0_Xwing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 112_0_0_Xwing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 112_0_0_Xwing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 112_0_0_Xwing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 112_0_0_Xwing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 112_0_0_Xwing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 112_0_0_Xwing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 112_0_0_Xwing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 112_0_0_Xwing - IonCannonStarship
+unused ; 112_0_0_Xwing - unused
+RebelLaser.wav			70 2000 ; 113_0_0_Xwing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 113_0_0_Xwing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 113_0_0_Xwing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 113_0_0_Xwing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 113_0_0_Xwing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 113_0_0_Xwing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 113_0_0_Xwing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 113_0_0_Xwing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 113_0_0_Xwing - IonCannonStarship
+unused ; 113_0_0_Xwing - unused
+RebelLaser.wav			70 2000 ; 114_0_0_Xwing - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 114_0_0_Xwing - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 114_0_0_Xwing - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 114_0_0_Xwing - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 114_0_0_Xwing - IonCannon
+IonCannonTurbo.wav		75 2800 ; 114_0_0_Xwing - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 114_0_0_Xwing - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 114_0_0_Xwing - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 114_0_0_Xwing - IonCannonStarship
+unused ; 114_0_0_Xwing - unused
+RebelLaser.wav			70 2000 ; 115_0_142_Suprosa - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 115_0_142_Suprosa - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 115_0_142_Suprosa - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 115_0_142_Suprosa - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 115_0_142_Suprosa - IonCannon
+IonCannonTurbo.wav		75 2800 ; 115_0_142_Suprosa - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 115_0_142_Suprosa - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 115_0_142_Suprosa - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 115_0_142_Suprosa - IonCannonStarship
+unused ; 115_0_142_Suprosa - unused
+RebelLaser.wav			70 2000 ; 116__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 116__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 116__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 116__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 116__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 116__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 116__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 116__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 116__1_0 - IonCannonStarship
+unused ; 116__1_0 - unused
+RebelLaser.wav			70 2000 ; 117__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 117__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 117__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 117__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 117__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 117__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 117__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 117__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 117__1_0 - IonCannonStarship
+unused ; 117__1_0 - unused
+RebelLaser.wav			70 2000 ; 118__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 118__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 118__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 118__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 118__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 118__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 118__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 118__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 118__1_0 - IonCannonStarship
+unused ; 118__1_0 - unused
+RebelLaser.wav			70 2000 ; 119__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 119__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 119__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 119__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 119__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 119__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 119__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 119__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 119__1_0 - IonCannonStarship
+unused ; 119__1_0 - unused
+RebelLaser.wav			70 2000 ; 120__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 120__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 120__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 120__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 120__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 120__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 120__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 120__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 120__1_0 - IonCannonStarship
+unused ; 120__1_0 - unused
+RebelLaser.wav			70 2000 ; 121__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 121__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 121__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 121__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 121__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 121__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 121__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 121__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 121__1_0 - IonCannonStarship
+unused ; 121__1_0 - unused
+RebelLaser.wav			70 2000 ; 122__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 122__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 122__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 122__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 122__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 122__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 122__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 122__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 122__1_0 - IonCannonStarship
+unused ; 122__1_0 - unused
+RebelLaser.wav			70 2000 ; 123__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 123__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 123__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 123__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 123__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 123__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 123__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 123__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 123__1_0 - IonCannonStarship
+unused ; 123__1_0 - unused
+RebelLaser.wav			70 2000 ; 124__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 124__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 124__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 124__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 124__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 124__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 124__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 124__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 124__1_0 - IonCannonStarship
+unused ; 124__1_0 - unused
+RebelLaser.wav			70 2000 ; 125__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 125__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 125__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 125__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 125__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 125__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 125__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 125__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 125__1_0 - IonCannonStarship
+unused ; 125__1_0 - unused
+RebelLaser.wav			70 2000 ; 126_0_80_Corvette2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 126_0_80_Corvette2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 126_0_80_Corvette2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 126_0_80_Corvette2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 126_0_80_Corvette2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 126_0_80_Corvette2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 126_0_80_Corvette2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 126_0_80_Corvette2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 126_0_80_Corvette2 - IonCannonStarship
+unused ; 126_0_80_Corvette2 - unused
+RebelLaser.wav			70 2000 ; 127_0_81_ModCorvette - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 127_0_81_ModCorvette - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 127_0_81_ModCorvette - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 127_0_81_ModCorvette - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 127_0_81_ModCorvette - IonCannon
+IonCannonTurbo.wav		75 2800 ; 127_0_81_ModCorvette - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 127_0_81_ModCorvette - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 127_0_81_ModCorvette - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 127_0_81_ModCorvette - IonCannonStarship
+unused ; 127_0_81_ModCorvette - unused
+RebelLaser.wav			70 2000 ; 128_0_82_Frigate2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 128_0_82_Frigate2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 128_0_82_Frigate2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 128_0_82_Frigate2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 128_0_82_Frigate2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 128_0_82_Frigate2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 128_0_82_Frigate2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 128_0_82_Frigate2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 128_0_82_Frigate2 - IonCannonStarship
+unused ; 128_0_82_Frigate2 - unused
+RebelLaser.wav			70 2000 ; 129_0_83_ModFrigate - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 129_0_83_ModFrigate - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 129_0_83_ModFrigate - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 129_0_83_ModFrigate - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 129_0_83_ModFrigate - IonCannon
+IonCannonTurbo.wav		75 2800 ; 129_0_83_ModFrigate - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 129_0_83_ModFrigate - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 129_0_83_ModFrigate - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 129_0_83_ModFrigate - IonCannonStarship
+unused ; 129_0_83_ModFrigate - unused
+RebelLaser.wav			70 2000 ; 130_0_84_PassengerLiner - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 130_0_84_PassengerLiner - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 130_0_84_PassengerLiner - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 130_0_84_PassengerLiner - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 130_0_84_PassengerLiner - IonCannon
+IonCannonTurbo.wav		75 2800 ; 130_0_84_PassengerLiner - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 130_0_84_PassengerLiner - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 130_0_84_PassengerLiner - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 130_0_84_PassengerLiner - IonCannonStarship
+unused ; 130_0_84_PassengerLiner - unused
+RebelLaser.wav			70 2000 ; 131_0_85_CarrackCruiser - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 131_0_85_CarrackCruiser - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 131_0_85_CarrackCruiser - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 131_0_85_CarrackCruiser - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 131_0_85_CarrackCruiser - IonCannon
+IonCannonTurbo.wav		75 2800 ; 131_0_85_CarrackCruiser - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 131_0_85_CarrackCruiser - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 131_0_85_CarrackCruiser - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 131_0_85_CarrackCruiser - IonCannonStarship
+unused ; 131_0_85_CarrackCruiser - unused
+RebelLaser.wav			70 2000 ; 132_0_86_StrikeCruiser - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 132_0_86_StrikeCruiser - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 132_0_86_StrikeCruiser - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 132_0_86_StrikeCruiser - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 132_0_86_StrikeCruiser - IonCannon
+IonCannonTurbo.wav		75 2800 ; 132_0_86_StrikeCruiser - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 132_0_86_StrikeCruiser - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 132_0_86_StrikeCruiser - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 132_0_86_StrikeCruiser - IonCannonStarship
+unused ; 132_0_86_StrikeCruiser - unused
+RebelLaser.wav			70 2000 ; 133_0_87_EscortCarrier - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 133_0_87_EscortCarrier - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 133_0_87_EscortCarrier - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 133_0_87_EscortCarrier - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 133_0_87_EscortCarrier - IonCannon
+IonCannonTurbo.wav		75 2800 ; 133_0_87_EscortCarrier - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 133_0_87_EscortCarrier - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 133_0_87_EscortCarrier - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 133_0_87_EscortCarrier - IonCannonStarship
+unused ; 133_0_87_EscortCarrier - unused
+RebelLaser.wav			70 2000 ; 134_0_88_Dreadnaught2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 134_0_88_Dreadnaught2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 134_0_88_Dreadnaught2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 134_0_88_Dreadnaught2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 134_0_88_Dreadnaught2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 134_0_88_Dreadnaught2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 134_0_88_Dreadnaught2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 134_0_88_Dreadnaught2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 134_0_88_Dreadnaught2 - IonCannonStarship
+unused ; 134_0_88_Dreadnaught2 - unused
+RebelLaser.wav			70 2000 ; 135_0_89_CalamariCruiserNew - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 135_0_89_CalamariCruiserNew - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 135_0_89_CalamariCruiserNew - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 135_0_89_CalamariCruiserNew - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 135_0_89_CalamariCruiserNew - IonCannon
+IonCannonTurbo.wav		75 2800 ; 135_0_89_CalamariCruiserNew - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 135_0_89_CalamariCruiserNew - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 135_0_89_CalamariCruiserNew - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 135_0_89_CalamariCruiserNew - IonCannonStarship
+unused ; 135_0_89_CalamariCruiserNew - unused
+RebelLaser.wav			70 2000 ; 136_0_90_LightCalamariCruiser - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 136_0_90_LightCalamariCruiser - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 136_0_90_LightCalamariCruiser - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 136_0_90_LightCalamariCruiser - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 136_0_90_LightCalamariCruiser - IonCannon
+IonCannonTurbo.wav		75 2800 ; 136_0_90_LightCalamariCruiser - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 136_0_90_LightCalamariCruiser - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 136_0_90_LightCalamariCruiser - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 136_0_90_LightCalamariCruiser - IonCannonStarship
+unused ; 136_0_90_LightCalamariCruiser - unused
+RebelLaser.wav			70 2000 ; 137_0_91_Interdictor2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 137_0_91_Interdictor2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 137_0_91_Interdictor2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 137_0_91_Interdictor2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 137_0_91_Interdictor2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 137_0_91_Interdictor2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 137_0_91_Interdictor2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 137_0_91_Interdictor2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 137_0_91_Interdictor2 - IonCannonStarship
+unused ; 137_0_91_Interdictor2 - unused
+RebelLaser.wav			70 2000 ; 138_0_92_VictoryStarDestroyer2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 138_0_92_VictoryStarDestroyer2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 138_0_92_VictoryStarDestroyer2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 138_0_92_VictoryStarDestroyer2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 138_0_92_VictoryStarDestroyer2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 138_0_92_VictoryStarDestroyer2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 138_0_92_VictoryStarDestroyer2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 138_0_92_VictoryStarDestroyer2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 138_0_92_VictoryStarDestroyer2 - IonCannonStarship
+unused ; 138_0_92_VictoryStarDestroyer2 - unused
+RebelLaser.wav			70 2000 ; 139_0_93_ImperialStarDestroyer2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 139_0_93_ImperialStarDestroyer2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 139_0_93_ImperialStarDestroyer2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 139_0_93_ImperialStarDestroyer2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 139_0_93_ImperialStarDestroyer2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 139_0_93_ImperialStarDestroyer2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 139_0_93_ImperialStarDestroyer2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 139_0_93_ImperialStarDestroyer2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 139_0_93_ImperialStarDestroyer2 - IonCannonStarship
+unused ; 139_0_93_ImperialStarDestroyer2 - unused
+RebelLaser.wav			70 2000 ; 140_0_94_SuperStarDestroyer - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 140_0_94_SuperStarDestroyer - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 140_0_94_SuperStarDestroyer - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 140_0_94_SuperStarDestroyer - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 140_0_94_SuperStarDestroyer - IonCannon
+IonCannonTurbo.wav		75 2800 ; 140_0_94_SuperStarDestroyer - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 140_0_94_SuperStarDestroyer - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 140_0_94_SuperStarDestroyer - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 140_0_94_SuperStarDestroyer - IonCannonStarship
+unused ; 140_0_94_SuperStarDestroyer - unused
+RebelLaser.wav			70 2000 ; 141_0_95_ModStrikeCruiser - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 141_0_95_ModStrikeCruiser - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 141_0_95_ModStrikeCruiser - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 141_0_95_ModStrikeCruiser - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 141_0_95_ModStrikeCruiser - IonCannon
+IonCannonTurbo.wav		75 2800 ; 141_0_95_ModStrikeCruiser - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 141_0_95_ModStrikeCruiser - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 141_0_95_ModStrikeCruiser - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 141_0_95_ModStrikeCruiser - IonCannonStarship
+unused ; 141_0_95_ModStrikeCruiser - unused
+RebelLaser.wav			70 2000 ; 142_0_96_LancerFrigate - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 142_0_96_LancerFrigate - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 142_0_96_LancerFrigate - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 142_0_96_LancerFrigate - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 142_0_96_LancerFrigate - IonCannon
+IonCannonTurbo.wav		75 2800 ; 142_0_96_LancerFrigate - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 142_0_96_LancerFrigate - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 142_0_96_LancerFrigate - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 142_0_96_LancerFrigate - IonCannonStarship
+unused ; 142_0_96_LancerFrigate - unused
+RebelLaser.wav			70 2000 ; 143_0_97_BulkCruiser - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 143_0_97_BulkCruiser - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 143_0_97_BulkCruiser - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 143_0_97_BulkCruiser - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 143_0_97_BulkCruiser - IonCannon
+IonCannonTurbo.wav		75 2800 ; 143_0_97_BulkCruiser - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 143_0_97_BulkCruiser - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 143_0_97_BulkCruiser - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 143_0_97_BulkCruiser - IonCannonStarship
+unused ; 143_0_97_BulkCruiser - unused
+RebelLaser.wav			70 2000 ; 144_0_98_AssaultFrigate - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 144_0_98_AssaultFrigate - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 144_0_98_AssaultFrigate - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 144_0_98_AssaultFrigate - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 144_0_98_AssaultFrigate - IonCannon
+IonCannonTurbo.wav		75 2800 ; 144_0_98_AssaultFrigate - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 144_0_98_AssaultFrigate - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 144_0_98_AssaultFrigate - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 144_0_98_AssaultFrigate - IonCannonStarship
+unused ; 144_0_98_AssaultFrigate - unused
+RebelLaser.wav			70 2000 ; 145_0_99_CorellianGunship - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 145_0_99_CorellianGunship - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 145_0_99_CorellianGunship - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 145_0_99_CorellianGunship - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 145_0_99_CorellianGunship - IonCannon
+IonCannonTurbo.wav		75 2800 ; 145_0_99_CorellianGunship - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 145_0_99_CorellianGunship - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 145_0_99_CorellianGunship - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 145_0_99_CorellianGunship - IonCannonStarship
+unused ; 145_0_99_CorellianGunship - unused
+RebelLaser.wav			70 2000 ; 146_0_100_MarauderCorvette - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 146_0_100_MarauderCorvette - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 146_0_100_MarauderCorvette - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 146_0_100_MarauderCorvette - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 146_0_100_MarauderCorvette - IonCannon
+IonCannonTurbo.wav		75 2800 ; 146_0_100_MarauderCorvette - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 146_0_100_MarauderCorvette - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 146_0_100_MarauderCorvette - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 146_0_100_MarauderCorvette - IonCannonStarship
+unused ; 146_0_100_MarauderCorvette - unused
+RebelLaser.wav			70 2000 ; 147_0_101_ImpResearchShip - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 147_0_101_ImpResearchShip - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 147_0_101_ImpResearchShip - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 147_0_101_ImpResearchShip - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 147_0_101_ImpResearchShip - IonCannon
+IonCannonTurbo.wav		75 2800 ; 147_0_101_ImpResearchShip - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 147_0_101_ImpResearchShip - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 147_0_101_ImpResearchShip - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 147_0_101_ImpResearchShip - IonCannonStarship
+unused ; 147_0_101_ImpResearchShip - unused
+RebelLaser.wav			70 2000 ; 148_0_135_CalamariWinged - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 148_0_135_CalamariWinged - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 148_0_135_CalamariWinged - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 148_0_135_CalamariWinged - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 148_0_135_CalamariWinged - IonCannon
+IonCannonTurbo.wav		75 2800 ; 148_0_135_CalamariWinged - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 148_0_135_CalamariWinged - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 148_0_135_CalamariWinged - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 148_0_135_CalamariWinged - IonCannonStarship
+unused ; 148_0_135_CalamariWinged - unused
+RebelLaser.wav			70 2000 ; 149_0_92_VictoryStarDestroyer2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 149_0_92_VictoryStarDestroyer2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 149_0_92_VictoryStarDestroyer2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 149_0_92_VictoryStarDestroyer2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 149_0_92_VictoryStarDestroyer2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 149_0_92_VictoryStarDestroyer2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 149_0_92_VictoryStarDestroyer2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 149_0_92_VictoryStarDestroyer2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 149_0_92_VictoryStarDestroyer2 - IonCannonStarship
+unused ; 149_0_92_VictoryStarDestroyer2 - unused
+RebelLaser.wav			70 2000 ; 150_0_141_ImperialStarDestroyer2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 150_0_141_ImperialStarDestroyer2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 150_0_141_ImperialStarDestroyer2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 150_0_141_ImperialStarDestroyer2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 150_0_141_ImperialStarDestroyer2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 150_0_141_ImperialStarDestroyer2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 150_0_141_ImperialStarDestroyer2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 150_0_141_ImperialStarDestroyer2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 150_0_141_ImperialStarDestroyer2 - IonCannonStarship
+unused ; 150_0_141_ImperialStarDestroyer2 - unused
+RebelLaser.wav			70 2000 ; 151__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 151__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 151__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 151__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 151__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 151__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 151__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 151__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 151__1_0 - IonCannonStarship
+unused ; 151__1_0 - unused
+RebelLaser.wav			70 2000 ; 152__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 152__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 152__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 152__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 152__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 152__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 152__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 152__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 152__1_0 - IonCannonStarship
+unused ; 152__1_0 - unused
+RebelLaser.wav			70 2000 ; 153_0_102_Platform1 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 153_0_102_Platform1 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 153_0_102_Platform1 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 153_0_102_Platform1 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 153_0_102_Platform1 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 153_0_102_Platform1 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 153_0_102_Platform1 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 153_0_102_Platform1 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 153_0_102_Platform1 - IonCannonStarship
+unused ; 153_0_102_Platform1 - unused
+RebelLaser.wav			70 2000 ; 154_0_103_Platform2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 154_0_103_Platform2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 154_0_103_Platform2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 154_0_103_Platform2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 154_0_103_Platform2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 154_0_103_Platform2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 154_0_103_Platform2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 154_0_103_Platform2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 154_0_103_Platform2 - IonCannonStarship
+unused ; 154_0_103_Platform2 - unused
+RebelLaser.wav			70 2000 ; 155_0_104_Platform3 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 155_0_104_Platform3 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 155_0_104_Platform3 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 155_0_104_Platform3 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 155_0_104_Platform3 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 155_0_104_Platform3 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 155_0_104_Platform3 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 155_0_104_Platform3 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 155_0_104_Platform3 - IonCannonStarship
+unused ; 155_0_104_Platform3 - unused
+RebelLaser.wav			70 2000 ; 156_0_105_Platform4 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 156_0_105_Platform4 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 156_0_105_Platform4 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 156_0_105_Platform4 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 156_0_105_Platform4 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 156_0_105_Platform4 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 156_0_105_Platform4 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 156_0_105_Platform4 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 156_0_105_Platform4 - IonCannonStarship
+unused ; 156_0_105_Platform4 - unused
+RebelLaser.wav			70 2000 ; 157_0_106_Platform5 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 157_0_106_Platform5 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 157_0_106_Platform5 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 157_0_106_Platform5 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 157_0_106_Platform5 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 157_0_106_Platform5 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 157_0_106_Platform5 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 157_0_106_Platform5 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 157_0_106_Platform5 - IonCannonStarship
+unused ; 157_0_106_Platform5 - unused
+RebelLaser.wav			70 2000 ; 158_0_107_Platform6 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 158_0_107_Platform6 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 158_0_107_Platform6 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 158_0_107_Platform6 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 158_0_107_Platform6 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 158_0_107_Platform6 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 158_0_107_Platform6 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 158_0_107_Platform6 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 158_0_107_Platform6 - IonCannonStarship
+unused ; 158_0_107_Platform6 - unused
+RebelLaser.wav			70 2000 ; 159_0_108_AsteroidBase - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 159_0_108_AsteroidBase - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 159_0_108_AsteroidBase - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 159_0_108_AsteroidBase - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 159_0_108_AsteroidBase - IonCannon
+IonCannonTurbo.wav		75 2800 ; 159_0_108_AsteroidBase - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 159_0_108_AsteroidBase - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 159_0_108_AsteroidBase - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 159_0_108_AsteroidBase - IonCannonStarship
+unused ; 159_0_108_AsteroidBase - unused
+RebelLaser.wav			70 2000 ; 160_0_109_Factory - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 160_0_109_Factory - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 160_0_109_Factory - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 160_0_109_Factory - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 160_0_109_Factory - IonCannon
+IonCannonTurbo.wav		75 2800 ; 160_0_109_Factory - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 160_0_109_Factory - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 160_0_109_Factory - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 160_0_109_Factory - IonCannonStarship
+unused ; 160_0_109_Factory - unused
+RebelLaser.wav			70 2000 ; 161_0_110_ShipYard - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 161_0_110_ShipYard - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 161_0_110_ShipYard - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 161_0_110_ShipYard - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 161_0_110_ShipYard - IonCannon
+IonCannonTurbo.wav		75 2800 ; 161_0_110_ShipYard - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 161_0_110_ShipYard - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 161_0_110_ShipYard - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 161_0_110_ShipYard - IonCannonStarship
+unused ; 161_0_110_ShipYard - unused
+RebelLaser.wav			70 2000 ; 162_0_111_RepairYard - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 162_0_111_RepairYard - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 162_0_111_RepairYard - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 162_0_111_RepairYard - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 162_0_111_RepairYard - IonCannon
+IonCannonTurbo.wav		75 2800 ; 162_0_111_RepairYard - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 162_0_111_RepairYard - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 162_0_111_RepairYard - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 162_0_111_RepairYard - IonCannonStarship
+unused ; 162_0_111_RepairYard - unused
+RebelLaser.wav			70 2000 ; 163_0_112_GolanOne - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 163_0_112_GolanOne - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 163_0_112_GolanOne - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 163_0_112_GolanOne - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 163_0_112_GolanOne - IonCannon
+IonCannonTurbo.wav		75 2800 ; 163_0_112_GolanOne - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 163_0_112_GolanOne - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 163_0_112_GolanOne - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 163_0_112_GolanOne - IonCannonStarship
+unused ; 163_0_112_GolanOne - unused
+RebelLaser.wav			70 2000 ; 164_0_113_GolanTwo - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 164_0_113_GolanTwo - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 164_0_113_GolanTwo - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 164_0_113_GolanTwo - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 164_0_113_GolanTwo - IonCannon
+IonCannonTurbo.wav		75 2800 ; 164_0_113_GolanTwo - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 164_0_113_GolanTwo - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 164_0_113_GolanTwo - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 164_0_113_GolanTwo - IonCannonStarship
+unused ; 164_0_113_GolanTwo - unused
+RebelLaser.wav			70 2000 ; 165_0_114_GolanThree - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 165_0_114_GolanThree - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 165_0_114_GolanThree - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 165_0_114_GolanThree - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 165_0_114_GolanThree - IonCannon
+IonCannonTurbo.wav		75 2800 ; 165_0_114_GolanThree - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 165_0_114_GolanThree - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 165_0_114_GolanThree - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 165_0_114_GolanThree - IonCannonStarship
+unused ; 165_0_114_GolanThree - unused
+RebelLaser.wav			70 2000 ; 166_0_115_DerilynPlatform - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 166_0_115_DerilynPlatform - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 166_0_115_DerilynPlatform - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 166_0_115_DerilynPlatform - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 166_0_115_DerilynPlatform - IonCannon
+IonCannonTurbo.wav		75 2800 ; 166_0_115_DerilynPlatform - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 166_0_115_DerilynPlatform - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 166_0_115_DerilynPlatform - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 166_0_115_DerilynPlatform - IonCannonStarship
+unused ; 166_0_115_DerilynPlatform - unused
+RebelLaser.wav			70 2000 ; 167_0_116_SensorArray - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 167_0_116_SensorArray - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 167_0_116_SensorArray - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 167_0_116_SensorArray - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 167_0_116_SensorArray - IonCannon
+IonCannonTurbo.wav		75 2800 ; 167_0_116_SensorArray - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 167_0_116_SensorArray - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 167_0_116_SensorArray - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 167_0_116_SensorArray - IonCannonStarship
+unused ; 167_0_116_SensorArray - unused
+RebelLaser.wav			70 2000 ; 168_0_117_CommRelay - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 168_0_117_CommRelay - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 168_0_117_CommRelay - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 168_0_117_CommRelay - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 168_0_117_CommRelay - IonCannon
+IonCannonTurbo.wav		75 2800 ; 168_0_117_CommRelay - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 168_0_117_CommRelay - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 168_0_117_CommRelay - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 168_0_117_CommRelay - IonCannonStarship
+unused ; 168_0_117_CommRelay - unused
+RebelLaser.wav			70 2000 ; 169_0_118_SpaceColony1 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 169_0_118_SpaceColony1 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 169_0_118_SpaceColony1 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 169_0_118_SpaceColony1 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 169_0_118_SpaceColony1 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 169_0_118_SpaceColony1 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 169_0_118_SpaceColony1 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 169_0_118_SpaceColony1 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 169_0_118_SpaceColony1 - IonCannonStarship
+unused ; 169_0_118_SpaceColony1 - unused
+RebelLaser.wav			70 2000 ; 170_0_119_SpaceColony2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 170_0_119_SpaceColony2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 170_0_119_SpaceColony2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 170_0_119_SpaceColony2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 170_0_119_SpaceColony2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 170_0_119_SpaceColony2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 170_0_119_SpaceColony2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 170_0_119_SpaceColony2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 170_0_119_SpaceColony2 - IonCannonStarship
+unused ; 170_0_119_SpaceColony2 - unused
+RebelLaser.wav			70 2000 ; 171_0_120_SpaceColony3 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 171_0_120_SpaceColony3 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 171_0_120_SpaceColony3 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 171_0_120_SpaceColony3 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 171_0_120_SpaceColony3 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 171_0_120_SpaceColony3 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 171_0_120_SpaceColony3 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 171_0_120_SpaceColony3 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 171_0_120_SpaceColony3 - IonCannonStarship
+unused ; 171_0_120_SpaceColony3 - unused
+RebelLaser.wav			70 2000 ; 172_0_121_Casino - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 172_0_121_Casino - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 172_0_121_Casino - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 172_0_121_Casino - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 172_0_121_Casino - IonCannon
+IonCannonTurbo.wav		75 2800 ; 172_0_121_Casino - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 172_0_121_Casino - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 172_0_121_Casino - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 172_0_121_Casino - IonCannonStarship
+unused ; 172_0_121_Casino - unused
+RebelLaser.wav			70 2000 ; 173_0_122_CargoFacility1 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 173_0_122_CargoFacility1 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 173_0_122_CargoFacility1 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 173_0_122_CargoFacility1 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 173_0_122_CargoFacility1 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 173_0_122_CargoFacility1 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 173_0_122_CargoFacility1 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 173_0_122_CargoFacility1 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 173_0_122_CargoFacility1 - IonCannonStarship
+unused ; 173_0_122_CargoFacility1 - unused
+RebelLaser.wav			70 2000 ; 174_0_123_CargoFacility2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 174_0_123_CargoFacility2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 174_0_123_CargoFacility2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 174_0_123_CargoFacility2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 174_0_123_CargoFacility2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 174_0_123_CargoFacility2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 174_0_123_CargoFacility2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 174_0_123_CargoFacility2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 174_0_123_CargoFacility2 - IonCannonStarship
+unused ; 174_0_123_CargoFacility2 - unused
+RebelLaser.wav			70 2000 ; 175_0_124_AsteroidMiningUnit - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 175_0_124_AsteroidMiningUnit - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 175_0_124_AsteroidMiningUnit - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 175_0_124_AsteroidMiningUnit - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 175_0_124_AsteroidMiningUnit - IonCannon
+IonCannonTurbo.wav		75 2800 ; 175_0_124_AsteroidMiningUnit - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 175_0_124_AsteroidMiningUnit - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 175_0_124_AsteroidMiningUnit - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 175_0_124_AsteroidMiningUnit - IonCannonStarship
+unused ; 175_0_124_AsteroidMiningUnit - unused
+RebelLaser.wav			70 2000 ; 176_0_125_ProcessingPlant - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 176_0_125_ProcessingPlant - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 176_0_125_ProcessingPlant - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 176_0_125_ProcessingPlant - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 176_0_125_ProcessingPlant - IonCannon
+IonCannonTurbo.wav		75 2800 ; 176_0_125_ProcessingPlant - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 176_0_125_ProcessingPlant - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 176_0_125_ProcessingPlant - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 176_0_125_ProcessingPlant - IonCannonStarship
+unused ; 176_0_125_ProcessingPlant - unused
+RebelLaser.wav			70 2000 ; 177_0_126_RebelPlatform - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 177_0_126_RebelPlatform - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 177_0_126_RebelPlatform - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 177_0_126_RebelPlatform - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 177_0_126_RebelPlatform - IonCannon
+IonCannonTurbo.wav		75 2800 ; 177_0_126_RebelPlatform - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 177_0_126_RebelPlatform - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 177_0_126_RebelPlatform - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 177_0_126_RebelPlatform - IonCannonStarship
+unused ; 177_0_126_RebelPlatform - unused
+RebelLaser.wav			70 2000 ; 178_0_127_ImpResearchCenter - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 178_0_127_ImpResearchCenter - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 178_0_127_ImpResearchCenter - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 178_0_127_ImpResearchCenter - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 178_0_127_ImpResearchCenter - IonCannon
+IonCannonTurbo.wav		75 2800 ; 178_0_127_ImpResearchCenter - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 178_0_127_ImpResearchCenter - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 178_0_127_ImpResearchCenter - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 178_0_127_ImpResearchCenter - IonCannonStarship
+unused ; 178_0_127_ImpResearchCenter - unused
+RebelLaser.wav			70 2000 ; 179_0_128_FamilyBase - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 179_0_128_FamilyBase - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 179_0_128_FamilyBase - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 179_0_128_FamilyBase - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 179_0_128_FamilyBase - IonCannon
+IonCannonTurbo.wav		75 2800 ; 179_0_128_FamilyBase - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 179_0_128_FamilyBase - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 179_0_128_FamilyBase - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 179_0_128_FamilyBase - IonCannonStarship
+unused ; 179_0_128_FamilyBase - unused
+RebelLaser.wav			70 2000 ; 180_0_129_FamilyRepairYard - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 180_0_129_FamilyRepairYard - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 180_0_129_FamilyRepairYard - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 180_0_129_FamilyRepairYard - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 180_0_129_FamilyRepairYard - IonCannon
+IonCannonTurbo.wav		75 2800 ; 180_0_129_FamilyRepairYard - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 180_0_129_FamilyRepairYard - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 180_0_129_FamilyRepairYard - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 180_0_129_FamilyRepairYard - IonCannonStarship
+unused ; 180_0_129_FamilyRepairYard - unused
+RebelLaser.wav			70 2000 ; 181_0_130_PirateShipyard - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 181_0_130_PirateShipyard - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 181_0_130_PirateShipyard - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 181_0_130_PirateShipyard - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 181_0_130_PirateShipyard - IonCannon
+IonCannonTurbo.wav		75 2800 ; 181_0_130_PirateShipyard - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 181_0_130_PirateShipyard - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 181_0_130_PirateShipyard - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 181_0_130_PirateShipyard - IonCannonStarship
+unused ; 181_0_130_PirateShipyard - unused
+RebelLaser.wav			70 2000 ; 182_0_131_IndustrialComplex - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 182_0_131_IndustrialComplex - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 182_0_131_IndustrialComplex - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 182_0_131_IndustrialComplex - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 182_0_131_IndustrialComplex - IonCannon
+IonCannonTurbo.wav		75 2800 ; 182_0_131_IndustrialComplex - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 182_0_131_IndustrialComplex - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 182_0_131_IndustrialComplex - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 182_0_131_IndustrialComplex - IonCannonStarship
+unused ; 182_0_131_IndustrialComplex - unused
+RebelLaser.wav			70 2000 ; 183_0_132_PirateJunkyardBase - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 183_0_132_PirateJunkyardBase - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 183_0_132_PirateJunkyardBase - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 183_0_132_PirateJunkyardBase - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 183_0_132_PirateJunkyardBase - IonCannon
+IonCannonTurbo.wav		75 2800 ; 183_0_132_PirateJunkyardBase - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 183_0_132_PirateJunkyardBase - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 183_0_132_PirateJunkyardBase - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 183_0_132_PirateJunkyardBase - IonCannonStarship
+unused ; 183_0_132_PirateJunkyardBase - unused
+RebelLaser.wav			70 2000 ; 184__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 184__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 184__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 184__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 184__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 184__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 184__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 184__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 184__1_0 - IonCannonStarship
+unused ; 184__1_0 - unused
+RebelLaser.wav			70 2000 ; 185__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 185__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 185__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 185__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 185__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 185__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 185__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 185__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 185__1_0 - IonCannonStarship
+unused ; 185__1_0 - unused
+RebelLaser.wav			70 2000 ; 186__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 186__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 186__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 186__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 186__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 186__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 186__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 186__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 186__1_0 - IonCannonStarship
+unused ; 186__1_0 - unused
+RebelLaser.wav			70 2000 ; 187__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 187__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 187__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 187__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 187__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 187__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 187__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 187__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 187__1_0 - IonCannonStarship
+unused ; 187__1_0 - unused
+RebelLaser.wav			70 2000 ; 188__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 188__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 188__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 188__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 188__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 188__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 188__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 188__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 188__1_0 - IonCannonStarship
+unused ; 188__1_0 - unused
+RebelLaser.wav			70 2000 ; 189__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 189__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 189__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 189__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 189__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 189__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 189__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 189__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 189__1_0 - IonCannonStarship
+unused ; 189__1_0 - unused
+RebelLaser.wav			70 2000 ; 190__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 190__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 190__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 190__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 190__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 190__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 190__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 190__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 190__1_0 - IonCannonStarship
+unused ; 190__1_0 - unused
+RebelLaser.wav			70 2000 ; 191__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 191__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 191__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 191__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 191__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 191__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 191__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 191__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 191__1_0 - IonCannonStarship
+unused ; 191__1_0 - unused
+RebelLaser.wav			70 2000 ; 192_1_40_LaserBat - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 192_1_40_LaserBat - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 192_1_40_LaserBat - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 192_1_40_LaserBat - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 192_1_40_LaserBat - IonCannon
+IonCannonTurbo.wav		75 2800 ; 192_1_40_LaserBat - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 192_1_40_LaserBat - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 192_1_40_LaserBat - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 192_1_40_LaserBat - IonCannonStarship
+unused ; 192_1_40_LaserBat - unused
+RebelLaser.wav			70 2000 ; 193_1_39_IonBat - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 193_1_39_IonBat - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 193_1_39_IonBat - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 193_1_39_IonBat - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 193_1_39_IonBat - IonCannon
+IonCannonTurbo.wav		75 2800 ; 193_1_39_IonBat - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 193_1_39_IonBat - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 193_1_39_IonBat - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 193_1_39_IonBat - IonCannonStarship
+unused ; 193_1_39_IonBat - unused
+RebelLaser.wav			70 2000 ; 194_0_133_AsteroidLaserBattery - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 194_0_133_AsteroidLaserBattery - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 194_0_133_AsteroidLaserBattery - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 194_0_133_AsteroidLaserBattery - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 194_0_133_AsteroidLaserBattery - IonCannon
+IonCannonTurbo.wav		75 2800 ; 194_0_133_AsteroidLaserBattery - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 194_0_133_AsteroidLaserBattery - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 194_0_133_AsteroidLaserBattery - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 194_0_133_AsteroidLaserBattery - IonCannonStarship
+unused ; 194_0_133_AsteroidLaserBattery - unused
+RebelLaser.wav			70 2000 ; 195_0_134_AsteroidWarheadLauncher - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 195_0_134_AsteroidWarheadLauncher - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 195_0_134_AsteroidWarheadLauncher - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 195_0_134_AsteroidWarheadLauncher - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 195_0_134_AsteroidWarheadLauncher - IonCannon
+IonCannonTurbo.wav		75 2800 ; 195_0_134_AsteroidWarheadLauncher - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 195_0_134_AsteroidWarheadLauncher - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 195_0_134_AsteroidWarheadLauncher - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 195_0_134_AsteroidWarheadLauncher - IonCannonStarship
+unused ; 195_0_134_AsteroidWarheadLauncher - unused
+RebelLaser.wav			70 2000 ; 196_1_6_GunPlatform - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 196_1_6_GunPlatform - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 196_1_6_GunPlatform - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 196_1_6_GunPlatform - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 196_1_6_GunPlatform - IonCannon
+IonCannonTurbo.wav		75 2800 ; 196_1_6_GunPlatform - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 196_1_6_GunPlatform - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 196_1_6_GunPlatform - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 196_1_6_GunPlatform - IonCannonStarship
+unused ; 196_1_6_GunPlatform - unused
+RebelLaser.wav			70 2000 ; 197_1_43_GunPad - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 197_1_43_GunPad - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 197_1_43_GunPad - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 197_1_43_GunPad - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 197_1_43_GunPad - IonCannon
+IonCannonTurbo.wav		75 2800 ; 197_1_43_GunPad - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 197_1_43_GunPad - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 197_1_43_GunPad - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 197_1_43_GunPad - IonCannonStarship
+unused ; 197_1_43_GunPad - unused
+RebelLaser.wav			70 2000 ; 198_1_44_GunWarheadPad - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 198_1_44_GunWarheadPad - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 198_1_44_GunWarheadPad - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 198_1_44_GunWarheadPad - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 198_1_44_GunWarheadPad - IonCannon
+IonCannonTurbo.wav		75 2800 ; 198_1_44_GunWarheadPad - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 198_1_44_GunWarheadPad - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 198_1_44_GunWarheadPad - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 198_1_44_GunWarheadPad - IonCannonStarship
+unused ; 198_1_44_GunWarheadPad - unused
+RebelLaser.wav			70 2000 ; 199_1_41_HomingMineA - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 199_1_41_HomingMineA - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 199_1_41_HomingMineA - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 199_1_41_HomingMineA - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 199_1_41_HomingMineA - IonCannon
+IonCannonTurbo.wav		75 2800 ; 199_1_41_HomingMineA - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 199_1_41_HomingMineA - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 199_1_41_HomingMineA - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 199_1_41_HomingMineA - IonCannonStarship
+unused ; 199_1_41_HomingMineA - unused
+RebelLaser.wav			70 2000 ; 200_1_42_HomingMineB - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 200_1_42_HomingMineB - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 200_1_42_HomingMineB - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 200_1_42_HomingMineB - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 200_1_42_HomingMineB - IonCannon
+IonCannonTurbo.wav		75 2800 ; 200_1_42_HomingMineB - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 200_1_42_HomingMineB - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 200_1_42_HomingMineB - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 200_1_42_HomingMineB - IonCannonStarship
+unused ; 200_1_42_HomingMineB - unused
+RebelLaser.wav			70 2000 ; 201_1_45_ProximityMineA - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 201_1_45_ProximityMineA - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 201_1_45_ProximityMineA - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 201_1_45_ProximityMineA - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 201_1_45_ProximityMineA - IonCannon
+IonCannonTurbo.wav		75 2800 ; 201_1_45_ProximityMineA - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 201_1_45_ProximityMineA - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 201_1_45_ProximityMineA - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 201_1_45_ProximityMineA - IonCannonStarship
+unused ; 201_1_45_ProximityMineA - unused
+RebelLaser.wav			70 2000 ; 202_1_46_ProximityMineB - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 202_1_46_ProximityMineB - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 202_1_46_ProximityMineB - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 202_1_46_ProximityMineB - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 202_1_46_ProximityMineB - IonCannon
+IonCannonTurbo.wav		75 2800 ; 202_1_46_ProximityMineB - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 202_1_46_ProximityMineB - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 202_1_46_ProximityMineB - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 202_1_46_ProximityMineB - IonCannonStarship
+unused ; 202_1_46_ProximityMineB - unused
+RebelLaser.wav			70 2000 ; 203_1_51_RebelPilot - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 203_1_51_RebelPilot - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 203_1_51_RebelPilot - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 203_1_51_RebelPilot - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 203_1_51_RebelPilot - IonCannon
+IonCannonTurbo.wav		75 2800 ; 203_1_51_RebelPilot - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 203_1_51_RebelPilot - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 203_1_51_RebelPilot - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 203_1_51_RebelPilot - IonCannonStarship
+unused ; 203_1_51_RebelPilot - unused
+RebelLaser.wav			70 2000 ; 204_1_52_ImperialPilot - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 204_1_52_ImperialPilot - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 204_1_52_ImperialPilot - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 204_1_52_ImperialPilot - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 204_1_52_ImperialPilot - IonCannon
+IonCannonTurbo.wav		75 2800 ; 204_1_52_ImperialPilot - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 204_1_52_ImperialPilot - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 204_1_52_ImperialPilot - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 204_1_52_ImperialPilot - IonCannonStarship
+unused ; 204_1_52_ImperialPilot - unused
+RebelLaser.wav			70 2000 ; 205_1_53_CivilianPilot - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 205_1_53_CivilianPilot - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 205_1_53_CivilianPilot - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 205_1_53_CivilianPilot - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 205_1_53_CivilianPilot - IonCannon
+IonCannonTurbo.wav		75 2800 ; 205_1_53_CivilianPilot - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 205_1_53_CivilianPilot - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 205_1_53_CivilianPilot - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 205_1_53_CivilianPilot - IonCannonStarship
+unused ; 205_1_53_CivilianPilot - unused
+RebelLaser.wav			70 2000 ; 206_1_54_ZeroGStormtrooper - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 206_1_54_ZeroGStormtrooper - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 206_1_54_ZeroGStormtrooper - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 206_1_54_ZeroGStormtrooper - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 206_1_54_ZeroGStormtrooper - IonCannon
+IonCannonTurbo.wav		75 2800 ; 206_1_54_ZeroGStormtrooper - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 206_1_54_ZeroGStormtrooper - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 206_1_54_ZeroGStormtrooper - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 206_1_54_ZeroGStormtrooper - IonCannonStarship
+unused ; 206_1_54_ZeroGStormtrooper - unused
+RebelLaser.wav			70 2000 ; 207_1_55_ZeroGUtility - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 207_1_55_ZeroGUtility - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 207_1_55_ZeroGUtility - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 207_1_55_ZeroGUtility - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 207_1_55_ZeroGUtility - IonCannon
+IonCannonTurbo.wav		75 2800 ; 207_1_55_ZeroGUtility - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 207_1_55_ZeroGUtility - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 207_1_55_ZeroGUtility - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 207_1_55_ZeroGUtility - IonCannonStarship
+unused ; 207_1_55_ZeroGUtility - unused
+RebelLaser.wav			70 2000 ; 208_1_56_Marko - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 208_1_56_Marko - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 208_1_56_Marko - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 208_1_56_Marko - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 208_1_56_Marko - IonCannon
+IonCannonTurbo.wav		75 2800 ; 208_1_56_Marko - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 208_1_56_Marko - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 208_1_56_Marko - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 208_1_56_Marko - IonCannonStarship
+unused ; 208_1_56_Marko - unused
+RebelLaser.wav			70 2000 ; 209_1_57_R2D2 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 209_1_57_R2D2 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 209_1_57_R2D2 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 209_1_57_R2D2 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 209_1_57_R2D2 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 209_1_57_R2D2 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 209_1_57_R2D2 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 209_1_57_R2D2 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 209_1_57_R2D2 - IonCannonStarship
+unused ; 209_1_57_R2D2 - unused
+RebelLaser.wav			70 2000 ; 210_1_0_SatB - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 210_1_0_SatB - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 210_1_0_SatB - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 210_1_0_SatB - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 210_1_0_SatB - IonCannon
+IonCannonTurbo.wav		75 2800 ; 210_1_0_SatB - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 210_1_0_SatB - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 210_1_0_SatB - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 210_1_0_SatB - IonCannonStarship
+unused ; 210_1_0_SatB - unused
+RebelLaser.wav			70 2000 ; 211_1_1_SatC - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 211_1_1_SatC - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 211_1_1_SatC - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 211_1_1_SatC - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 211_1_1_SatC - IonCannon
+IonCannonTurbo.wav		75 2800 ; 211_1_1_SatC - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 211_1_1_SatC - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 211_1_1_SatC - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 211_1_1_SatC - IonCannonStarship
+unused ; 211_1_1_SatC - unused
+RebelLaser.wav			70 2000 ; 212_1_2_SatD - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 212_1_2_SatD - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 212_1_2_SatD - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 212_1_2_SatD - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 212_1_2_SatD - IonCannon
+IonCannonTurbo.wav		75 2800 ; 212_1_2_SatD - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 212_1_2_SatD - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 212_1_2_SatD - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 212_1_2_SatD - IonCannonStarship
+unused ; 212_1_2_SatD - unused
+RebelLaser.wav			70 2000 ; 213_1_7_Probe - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 213_1_7_Probe - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 213_1_7_Probe - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 213_1_7_Probe - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 213_1_7_Probe - IonCannon
+IonCannonTurbo.wav		75 2800 ; 213_1_7_Probe - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 213_1_7_Probe - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 213_1_7_Probe - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 213_1_7_Probe - IonCannonStarship
+unused ; 213_1_7_Probe - unused
+RebelLaser.wav			70 2000 ; 214_1_50_ProbeCapsule - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 214_1_50_ProbeCapsule - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 214_1_50_ProbeCapsule - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 214_1_50_ProbeCapsule - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 214_1_50_ProbeCapsule - IonCannon
+IonCannonTurbo.wav		75 2800 ; 214_1_50_ProbeCapsule - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 214_1_50_ProbeCapsule - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 214_1_50_ProbeCapsule - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 214_1_50_ProbeCapsule - IonCannonStarship
+unused ; 214_1_50_ProbeCapsule - unused
+RebelLaser.wav			70 2000 ; 215_1_47_BuoyC - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 215_1_47_BuoyC - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 215_1_47_BuoyC - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 215_1_47_BuoyC - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 215_1_47_BuoyC - IonCannon
+IonCannonTurbo.wav		75 2800 ; 215_1_47_BuoyC - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 215_1_47_BuoyC - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 215_1_47_BuoyC - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 215_1_47_BuoyC - IonCannonStarship
+unused ; 215_1_47_BuoyC - unused
+RebelLaser.wav			70 2000 ; 216_1_48_BuoyB - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 216_1_48_BuoyB - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 216_1_48_BuoyB - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 216_1_48_BuoyB - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 216_1_48_BuoyB - IonCannon
+IonCannonTurbo.wav		75 2800 ; 216_1_48_BuoyB - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 216_1_48_BuoyB - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 216_1_48_BuoyB - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 216_1_48_BuoyB - IonCannonStarship
+unused ; 216_1_48_BuoyB - unused
+RebelLaser.wav			70 2000 ; 217_1_49_BuoyRendez - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 217_1_49_BuoyRendez - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 217_1_49_BuoyRendez - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 217_1_49_BuoyRendez - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 217_1_49_BuoyRendez - IonCannon
+IonCannonTurbo.wav		75 2800 ; 217_1_49_BuoyRendez - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 217_1_49_BuoyRendez - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 217_1_49_BuoyRendez - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 217_1_49_BuoyRendez - IonCannonStarship
+unused ; 217_1_49_BuoyRendez - unused
+RebelLaser.wav			70 2000 ; 218_1_8_BuoyFaux - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 218_1_8_BuoyFaux - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 218_1_8_BuoyFaux - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 218_1_8_BuoyFaux - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 218_1_8_BuoyFaux - IonCannon
+IonCannonTurbo.wav		75 2800 ; 218_1_8_BuoyFaux - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 218_1_8_BuoyFaux - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 218_1_8_BuoyFaux - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 218_1_8_BuoyFaux - IonCannonStarship
+unused ; 218_1_8_BuoyFaux - unused
+RebelLaser.wav			70 2000 ; 219_1_3_MineA - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 219_1_3_MineA - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 219_1_3_MineA - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 219_1_3_MineA - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 219_1_3_MineA - IonCannon
+IonCannonTurbo.wav		75 2800 ; 219_1_3_MineA - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 219_1_3_MineA - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 219_1_3_MineA - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 219_1_3_MineA - IonCannonStarship
+unused ; 219_1_3_MineA - unused
+RebelLaser.wav			70 2000 ; 220_1_4_MineB - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 220_1_4_MineB - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 220_1_4_MineB - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 220_1_4_MineB - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 220_1_4_MineB - IonCannon
+IonCannonTurbo.wav		75 2800 ; 220_1_4_MineB - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 220_1_4_MineB - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 220_1_4_MineB - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 220_1_4_MineB - IonCannonStarship
+unused ; 220_1_4_MineB - unused
+RebelLaser.wav			70 2000 ; 221_1_5_MineC - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 221_1_5_MineC - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 221_1_5_MineC - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 221_1_5_MineC - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 221_1_5_MineC - IonCannon
+IonCannonTurbo.wav		75 2800 ; 221_1_5_MineC - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 221_1_5_MineC - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 221_1_5_MineC - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 221_1_5_MineC - IonCannonStarship
+unused ; 221_1_5_MineC - unused
+RebelLaser.wav			70 2000 ; 222__1_0 - RebelLaser
+RebelLaserTurbo.wav		70 2000 ; 222__1_0 - RebelLaserTurbo
+EmpireLaser.wav			70 2000 ; 222__1_0 - EmpireLaser
+EmpireLaserTurbo.wav		70 2800 ; 222__1_0 - EmpireLaserTurbo
+IonCannon.wav			75 2800 ; 222__1_0 - IonCannon
+IonCannonTurbo.wav		75 2800 ; 222__1_0 - IonCannonTurbo
+RebelLaserStarship.wav		75 3000 ; 222__1_0 - RebelLaserStarship
+EmpireLaserStarship.wav		75 3000 ; 222__1_0 - EmpireLaserStarship
+IonCannonStarship.wav		75 3000 ; 222__1_0 - IonCannonStarship
+unused ; 222__1_0 - unused

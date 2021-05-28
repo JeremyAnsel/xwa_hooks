@@ -1,0 +1,12 @@
+
+To setup Sfx_FlyBy, copy the following files to WAVE\Sfx_FlyBy\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+FlyByAG.wav
+FlyByAW.wav
+FlyByCORT.wav
+FlyByTI.wav
+FlyByXW.wav
+FlyByYW.wav
