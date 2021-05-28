@@ -12,3 +12,14 @@ PlayerExplosionStrengthPercent = 100
 PlayerHullStrengthPercent = 100
 PlayerSystemStrengthPercent = 100
 PlayerShieldStrengthPercent = 100
+
+SpeedPercent = 100
+AccelerationPercent = 100
+DecelerationPercent = 100
+PitchPercent = 100
+RollPercent = 100
+YawPercent = 100
+ExplosionStrengthPercent = 100
+HullStrengthPercent = 100
+SystemStrengthPercent = 100
+ShieldStrengthPercent = 100

@@ -101,6 +101,7 @@ See "XWing.ini".
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 To define a stats profile for a craft, create a file named "[MissionDir]\[Mission]_StatsProfiles.txt" or create a section named "[StatsProfiles]" in "[MissionDir]\[Mission].ini".
+Or create a file named "FlightModels\StatsProfiles.txt" or create a section named "[StatsProfiles]" in "FlightModels\default.ini".
 The format is
 CraftOptName_fgc_# = ProfileName
 PlayerSpeedPercent = integer
@@ -113,9 +114,21 @@ PlayerExplosionStrengthPercent = integer
 PlayerHullStrengthPercent = integer
 PlayerSystemStrengthPercent = integer
 PlayerShieldStrengthPercent = integer
+SpeedPercent = integer
+AccelerationPercent = integer
+DecelerationPercent = integer
+PitchPercent = integer
+RollPercent = integer
+YawPercent = integer
+ExplosionStrengthPercent = integer
+HullStrengthPercent = integer
+SystemStrengthPercent = integer
+ShieldStrengthPercent = integer
 # in CraftOptName_fgc_# is an integer for the opt color marking index, starting at 0.
 To define a profile for the player craft, set "CraftOptName_fg_player = ProfileName".
 The default ProfileName is "Default".
+Player*Percent applies to the player craft.
+*Percent applies to all crafts.
 See "StatsProfiles.txt"
 
 The raw values are calculated as follow:

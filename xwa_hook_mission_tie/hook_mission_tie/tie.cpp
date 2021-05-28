@@ -439,6 +439,26 @@ CraftStatsPercent GetObjectPlayerStatsPercent()
 	return stats;
 }
 
+CraftStatsPercent GetObjectStatsPercent()
+{
+	const auto statsLines = GetCustomFileLines("StatsProfiles");
+
+	CraftStatsPercent stats;
+
+	stats.SpeedPercent = GetFileKeyValueInt(statsLines, "SpeedPercent", -1);
+	stats.AccelerationPercent = GetFileKeyValueInt(statsLines, "AccelerationPercent", -1);
+	stats.DecelerationPercent = GetFileKeyValueInt(statsLines, "DecelerationPercent", -1);
+	stats.PitchPercent = GetFileKeyValueInt(statsLines, "PitchPercent", -1);
+	stats.RollPercent = GetFileKeyValueInt(statsLines, "RollPercent", -1);
+	stats.YawPercent = GetFileKeyValueInt(statsLines, "YawPercent", -1);
+	stats.ExplosionStrengthPercent = GetFileKeyValueInt(statsLines, "ExplosionStrengthPercent", -1);
+	stats.HullStrengthPercent = GetFileKeyValueInt(statsLines, "HullStrengthPercent", -1);
+	stats.SystemStrengthPercent = GetFileKeyValueInt(statsLines, "SystemStrengthPercent", -1);
+	stats.ShieldStrengthPercent = GetFileKeyValueInt(statsLines, "ShieldStrengthPercent", -1);
+
+	return stats;
+}
+
 class ModelIndexProfiles
 {
 public:
@@ -477,6 +497,13 @@ public:
 		return this->_playerStatsPercent;
 	}
 
+	const CraftStatsPercent& GetStatsPercent()
+	{
+		this->UpdateIfChanged();
+
+		return this->_statsPercent;
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -490,11 +517,13 @@ private:
 
 			this->_profiles.clear();
 			this->_playerStatsPercent = GetObjectPlayerStatsPercent();
+			this->_statsPercent = GetObjectStatsPercent();
 		}
 	}
 
 	std::map<std::pair<int, int>, CraftStats> _profiles;
 	CraftStatsPercent _playerStatsPercent;
+	CraftStatsPercent _statsPercent;
 };
 
 ModelIndexProfiles g_modelIndexProfiles;
@@ -506,6 +535,7 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 
 	const CraftStats& values = g_modelIndexProfiles.GetProfileStats(currentObject);
 	const CraftStatsPercent& valuesPercent = g_modelIndexProfiles.GetPlayerStatsPercent();
+	const CraftStatsPercent& statsPercent = g_modelIndexProfiles.GetStatsPercent();
 
 	if (values.Speed != -1)
 	{
@@ -515,6 +545,10 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 	if (currentObject->PlayerIndex != -1 && valuesPercent.SpeedPercent != -1)
 	{
 		currentCraft->Speed = currentCraft->Speed * valuesPercent.SpeedPercent / 100;
+	}
+	else if (statsPercent.SpeedPercent != -1)
+	{
+		currentCraft->Speed = currentCraft->Speed * statsPercent.SpeedPercent / 100;
 	}
 
 	if (values.Pitch != -1)
@@ -526,6 +560,10 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 	{
 		currentCraft->Pitch = currentCraft->Pitch * valuesPercent.PitchPercent / 100;
 	}
+	else if (statsPercent.PitchPercent != -1)
+	{
+		currentCraft->Pitch = currentCraft->Pitch * statsPercent.PitchPercent / 100;
+	}
 
 	if (values.Roll != -1)
 	{
@@ -535,6 +573,10 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 	if (currentObject->PlayerIndex != -1 && valuesPercent.RollPercent != -1)
 	{
 		currentCraft->Roll = currentCraft->Roll * valuesPercent.RollPercent / 100;
+	}
+	else if (statsPercent.RollPercent != -1)
+	{
+		currentCraft->Roll = currentCraft->Roll * statsPercent.RollPercent / 100;
 	}
 
 	if (values.Yaw != -1)
@@ -546,6 +588,10 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 	{
 		currentCraft->Yaw = currentCraft->Yaw * valuesPercent.YawPercent / 100;
 	}
+	else if (statsPercent.YawPercent != -1)
+	{
+		currentCraft->Yaw = currentCraft->Yaw * statsPercent.YawPercent / 100;
+	}
 
 	if (values.ExplosionStrength != -1)
 	{
@@ -556,6 +602,10 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 	{
 		currentCraft->ExplosionStrength = currentCraft->ExplosionStrength * valuesPercent.ExplosionStrengthPercent / 100;
 	}
+	else if (statsPercent.ExplosionStrengthPercent != -1)
+	{
+		currentCraft->ExplosionStrength = currentCraft->ExplosionStrength * statsPercent.ExplosionStrengthPercent / 100;
+	}
 
 	if (values.HullStrength != -1)
 	{
@@ -565,6 +615,10 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 	if (currentObject->PlayerIndex != -1 && valuesPercent.HullStrengthPercent != -1)
 	{
 		currentCraft->HullStrength = currentCraft->HullStrength * valuesPercent.HullStrengthPercent / 100;
+	}
+	else if (statsPercent.HullStrengthPercent != -1)
+	{
+		currentCraft->HullStrength = currentCraft->HullStrength * statsPercent.HullStrengthPercent / 100;
 	}
 
 	if (values.ShieldStrength != -1)
@@ -578,6 +632,11 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 	{
 		currentCraft->ShieldStrength[0] = currentCraft->ShieldStrength[0] * valuesPercent.ShieldStrengthPercent / 100;
 		currentCraft->ShieldStrength[1] = currentCraft->ShieldStrength[1] * valuesPercent.ShieldStrengthPercent / 100;
+	}
+	else if (statsPercent.ShieldStrengthPercent != -1)
+	{
+		currentCraft->ShieldStrength[0] = currentCraft->ShieldStrength[0] * statsPercent.ShieldStrengthPercent / 100;
+		currentCraft->ShieldStrength[1] = currentCraft->ShieldStrength[1] * statsPercent.ShieldStrengthPercent / 100;
 	}
 
 	bool hasShieldGenerator;
@@ -823,6 +882,7 @@ int StatsProfiles_L0042CF90_Acceleration_Hook(int* params)
 
 	const CraftStats& values = g_modelIndexProfiles.GetProfileStats(currentObject);
 	const CraftStatsPercent& valuesPercent = g_modelIndexProfiles.GetPlayerStatsPercent();
+	const CraftStatsPercent& statsPercent = g_modelIndexProfiles.GetStatsPercent();
 	int acceleration;
 
 	if (values.Acceleration != -1)
@@ -837,6 +897,10 @@ int StatsProfiles_L0042CF90_Acceleration_Hook(int* params)
 	if (currentObject->PlayerIndex != -1 && valuesPercent.AccelerationPercent != -1)
 	{
 		acceleration = acceleration * valuesPercent.AccelerationPercent / 100;
+	}
+	else if (statsPercent.AccelerationPercent != -1)
+	{
+		acceleration = acceleration * statsPercent.AccelerationPercent / 100;
 	}
 
 	return acceleration;
@@ -854,6 +918,7 @@ int StatsProfiles_L0042CF90_Deceleration_Hook(int* params)
 
 	const CraftStats& values = g_modelIndexProfiles.GetProfileStats(currentObject);
 	const CraftStatsPercent& valuesPercent = g_modelIndexProfiles.GetPlayerStatsPercent();
+	const CraftStatsPercent& statsPercent = g_modelIndexProfiles.GetStatsPercent();
 	int deceleration;
 
 	if (values.Deceleration != -1)
@@ -868,6 +933,10 @@ int StatsProfiles_L0042CF90_Deceleration_Hook(int* params)
 	if (currentObject->PlayerIndex != -1 && valuesPercent.DecelerationPercent != -1)
 	{
 		deceleration = deceleration * valuesPercent.DecelerationPercent / 100;
+	}
+	else if (statsPercent.DecelerationPercent != -1)
+	{
+		deceleration = deceleration * statsPercent.DecelerationPercent / 100;
 	}
 
 	return deceleration;
@@ -933,6 +1002,7 @@ int StatsProfiles_L0040B4F0_HullStrength_Hook(int* params)
 
 	const CraftStats& values = g_modelIndexProfiles.GetProfileStats(currentObject);
 	const CraftStatsPercent& valuesPercent = g_modelIndexProfiles.GetPlayerStatsPercent();
+	const CraftStatsPercent& statsPercent = g_modelIndexProfiles.GetStatsPercent();
 	int hullStrength;
 
 	if (values.HullStrength != -1)
@@ -947,6 +1017,10 @@ int StatsProfiles_L0040B4F0_HullStrength_Hook(int* params)
 	if (currentObject->PlayerIndex != -1 && valuesPercent.HullStrengthPercent != -1)
 	{
 		hullStrength = hullStrength * valuesPercent.HullStrengthPercent / 100;
+	}
+	else if (statsPercent.HullStrengthPercent != -1)
+	{
+		hullStrength = hullStrength * statsPercent.HullStrengthPercent / 100;
 	}
 
 	return hullStrength;
@@ -964,6 +1038,7 @@ int StatsProfiles_SystemStrength_Hook(int* params)
 
 	const CraftStats& values = g_modelIndexProfiles.GetProfileStats(currentObject);
 	const CraftStatsPercent& valuesPercent = g_modelIndexProfiles.GetPlayerStatsPercent();
+	const CraftStatsPercent& statsPercent = g_modelIndexProfiles.GetStatsPercent();
 	int systemStrength;
 
 	if (values.SystemStrength != -1)
@@ -978,6 +1053,10 @@ int StatsProfiles_SystemStrength_Hook(int* params)
 	if (currentObject->PlayerIndex != -1 && valuesPercent.SystemStrengthPercent != -1)
 	{
 		systemStrength = systemStrength * valuesPercent.SystemStrengthPercent / 100;
+	}
+	else if (statsPercent.SystemStrengthPercent != -1)
+	{
+		systemStrength = systemStrength * statsPercent.SystemStrengthPercent / 100;
 	}
 
 	return systemStrength;
@@ -995,6 +1074,7 @@ int StatsProfiles_ShieldStrength_Hook1(int* params)
 
 	const CraftStats& values = g_modelIndexProfiles.GetProfileStats(currentObject);
 	const CraftStatsPercent& valuesPercent = g_modelIndexProfiles.GetPlayerStatsPercent();
+	const CraftStatsPercent& statsPercent = g_modelIndexProfiles.GetStatsPercent();
 	int shieldStrength;
 
 	if (values.ShieldStrength != -1)
@@ -1009,6 +1089,10 @@ int StatsProfiles_ShieldStrength_Hook1(int* params)
 	if (currentObject->PlayerIndex != -1 && valuesPercent.ShieldStrengthPercent != -1)
 	{
 		shieldStrength = shieldStrength * valuesPercent.ShieldStrengthPercent / 100;
+	}
+	else if (statsPercent.ShieldStrengthPercent != -1)
+	{
+		shieldStrength = shieldStrength * statsPercent.ShieldStrengthPercent / 100;
 	}
 
 	params[0] = shieldStrength;
@@ -1027,6 +1111,7 @@ int StatsProfiles_ShieldStrength_Hook2(int* params)
 
 	const CraftStats& values = g_modelIndexProfiles.GetProfileStats(currentObject);
 	const CraftStatsPercent& valuesPercent = g_modelIndexProfiles.GetPlayerStatsPercent();
+	const CraftStatsPercent& statsPercent = g_modelIndexProfiles.GetStatsPercent();
 	int shieldStrength;
 
 	if (values.ShieldStrength != -1)
@@ -1041,6 +1126,10 @@ int StatsProfiles_ShieldStrength_Hook2(int* params)
 	if (currentObject->PlayerIndex != -1 && valuesPercent.ShieldStrengthPercent != -1)
 	{
 		shieldStrength = shieldStrength * valuesPercent.ShieldStrengthPercent / 100;
+	}
+	else if (statsPercent.ShieldStrengthPercent != -1)
+	{
+		shieldStrength = shieldStrength * statsPercent.ShieldStrengthPercent / 100;
 	}
 
 	params[0] = shieldStrength;
@@ -1059,6 +1148,7 @@ int StatsProfiles_L004D5AE0_ShieldStrength_Hook(int* params)
 
 	const CraftStats& values = g_modelIndexProfiles.GetProfileStats(currentObject);
 	const CraftStatsPercent& valuesPercent = g_modelIndexProfiles.GetPlayerStatsPercent();
+	const CraftStatsPercent& statsPercent = g_modelIndexProfiles.GetStatsPercent();
 	int shieldStrength;
 
 	if (values.ShieldStrength != -1)
@@ -1073,6 +1163,10 @@ int StatsProfiles_L004D5AE0_ShieldStrength_Hook(int* params)
 	if (currentObject->PlayerIndex != -1 && valuesPercent.ShieldStrengthPercent != -1)
 	{
 		shieldStrength = shieldStrength * valuesPercent.ShieldStrengthPercent / 100;
+	}
+	else if (statsPercent.ShieldStrengthPercent != -1)
+	{
+		shieldStrength = shieldStrength * statsPercent.ShieldStrengthPercent / 100;
 	}
 
 	return shieldStrength;
