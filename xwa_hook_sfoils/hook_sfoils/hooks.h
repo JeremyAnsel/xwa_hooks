@@ -28,6 +28,10 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4BE53A, AILookForParkOrderHook },
 	{ 0x4B4185, AIParkManrHook },
 	{ 0x4B4E94, AIParkManrFunctionHook },
+	{ 0x403B52, PlaySFoilSoundHook },
+	{ 0x459546, PlaySFoilSoundHook },
+	{ 0x4FC4DF, PlaySFoilSoundHook },
+	{ 0x508E0D, PlaySFoilSoundHook },
 };
 
 static const HookPatchItem g_keysSFoilsLandingGearsPatch[] =
@@ -105,6 +109,14 @@ static const HookPatchItem g_parkPatch[] =
 	{ 0x0B428F, "FEC088415D", "E88C3C0F00" },
 };
 
+static const HookPatchItem g_playSoundPatch[] =
+{
+	{ 0x002F4D, "E83E840300", "E8DE4F1A00" },
+	{ 0x058941, "E84A2AFEFF", "E8EAF51400" },
+	{ 0x0FB8DA, "E8B1FAF3FF", "E851C60A00" },
+	{ 0x108208, "E88331F3FF", "E823FD0900" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("Keys for SFoils and LandingGears", g_keysSFoilsLandingGearsPatch),
@@ -118,4 +130,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that set enter hyperspace state", g_enterHyperspacePatch),
 	MAKE_HOOK_PATCH("To call the hook that shows the no fire message", g_noFireMesagePatch),
 	MAKE_HOOK_PATCH("To call the hook that set the park state", g_parkPatch),
+	MAKE_HOOK_PATCH("To call the hook that play S-Foil sound", g_playSoundPatch),
 };

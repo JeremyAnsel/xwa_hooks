@@ -1,0 +1,7 @@
+
+To setup Sfx_SFoil, copy the following files to WAVE\Sfx_SFoil\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+S-Foil.wav

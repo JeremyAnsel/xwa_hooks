@@ -17,6 +17,11 @@ This dll requires:
 
 Place hook_sfoils.dll and hook_sfoils.cfg next to xwingalliance.exe
 
+To setup Sfx_SFoil, copy the following files to WAVE\Sfx_SFoil\
+From WAVE\FE_HIGH_RES\
+Copy files:
+S-Foil.wav
+
 
 *** Patch ***
 
@@ -75,6 +80,12 @@ At offset 0BD934, replace 8B0DB0A17C00894147 with 50E8E6A50E00589090.
 At offset 0B3580, replace A0F7538000 with E8AB490F00.
 At offset 0B428F, replace FEC088415D with E88C3C0F00.
 
+# To call the hook that play S-Foil sound
+At offset 002F4D, replace E83E840300 with E8DE4F1A00.
+At offset 058941, replace E84A2AFEFF with E8EAF51400.
+At offset 0FB8DA, replace E8B1FAF3FF with E851C60A00.
+At offset 108208, replace E88331F3FF with E823FD0900.
+
 
 *** Usage ***
 
@@ -126,6 +137,8 @@ Possible values are: it, es, fr, de, en
 The default value is en.
 
 See the "hook_sfoils.cfg" file or the "hook_sfoils" section of "hooks.ini".
+
+For SFoil sounds, sounds defined in "Wave\Sfx_SFoil.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 
 
 *** Credits ***

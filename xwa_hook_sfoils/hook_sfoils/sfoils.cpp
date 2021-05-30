@@ -58,6 +58,35 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class SoundsConfig
+{
+public:
+	SoundsConfig()
+	{
+		this->SoundsCountHookExists = std::ifstream("Hook_Sounds_Count.dll") ? true : false;
+		this->SoundEffectIds = this->SoundsCountHookExists ? *(int**)0x00917E80 : (int*)0x00917E80;
+
+		if (this->SoundsCountHookExists)
+		{
+			auto lines = GetFileLines("Hook_Sounds_Count.txt");
+
+			this->SfxSFoilIndex = GetFileKeyValueInt(lines, "sfx_sfoil_index");
+			this->SfxSFoilCount = GetFileKeyValueInt(lines, "sfx_sfoil_count");
+		}
+	}
+
+	bool SoundsCountHookExists;
+	int* SoundEffectIds;
+	int SfxSFoilIndex;
+	int SfxSFoilCount;
+};
+
+SoundsConfig& GetSoundsConfig()
+{
+	static SoundsConfig g_soundsConfig;
+	return g_soundsConfig;
+}
+
 class Config
 {
 public:
@@ -1417,4 +1446,40 @@ int AIParkManrFunctionHook(int* params)
 	}
 
 	return 0;
+}
+
+int PlaySFoilSoundHook(int* params)
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
+	const int currentPlayerId = *(int*)0x08C1CC8;
+	const int* xwaSoundEffectsBufferId = GetSoundsConfig().SoundEffectIds;
+
+	const auto playSound = (int(*)(int, int, int))0x0043BF90;
+	const auto stopSound = (unsigned char(*)(int))0x004DC400;
+
+	const unsigned short modelIndex = xwaObjects[xwaPlayers[currentPlayerId].ObjectIndex].ModelIndex;
+
+	const auto& soundConfig = GetSoundsConfig();
+
+	stopSound(xwaSoundEffectsBufferId[0x78]);
+
+	int slot = 0x78;
+
+	if (soundConfig.SoundsCountHookExists && soundConfig.SfxSFoilCount)
+	{
+		for (int i = soundConfig.SfxSFoilIndex; i < soundConfig.SfxSFoilIndex + soundConfig.SfxSFoilCount; i++)
+		{
+			stopSound(xwaSoundEffectsBufferId[i]);
+		}
+
+		if (modelIndex < soundConfig.SfxSFoilCount)
+		{
+			slot = soundConfig.SfxSFoilIndex + modelIndex;
+		}
+	}
+
+	int ret = playSound(slot, 0xFFFF, currentPlayerId);
+
+	return ret;
 }

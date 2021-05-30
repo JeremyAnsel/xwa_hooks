@@ -326,3 +326,26 @@ FEC0                    inc al
 88415D                  mov byte ptr [ecx+5D], al
 
 E88C3C0F00              call 005A8B20, 005A8B20 - 004B4E94 = 000F3C8C
+
+
+# Play S-Foil sound
+
+:00403B4D - 0x002F4D
+E83E840300              call 0043BF90
+
+E8DE4F1A00              call 005A8B30, 005A8B30 - 00403B52 = 001A4FDE
+
+:00459541 - 0x058941
+E84A2AFEFF              call 0043BF90
+
+E8EAF51400              call 005A8B30, 005A8B30 - 00459546 = 0014F5EA
+
+:004FC4DA - 0x0FB8DA
+E8B1FAF3FF              call 0043BF90
+
+E851C60A00              call 005A8B30, 005A8B30 - 004FC4DF = 000AC651
+
+:00508E08 - 0x108208
+E88331F3FF              call 0043BF90
+
+E823FD0900              call 005A8B30, 005A8B30 - 00508E0D = 0009FD23
