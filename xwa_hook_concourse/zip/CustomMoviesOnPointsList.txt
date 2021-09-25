@@ -1,0 +1,2 @@
+; points level, cutscene name
+0, ceremony

@@ -22,6 +22,10 @@ See https://www.xwaupgrade.com/phpBB3/viewtopic.php?f=33&t=12257
 
 This hook adds starfield backdrops to skirmish mission and permits to replace .dat files for a given mission.
 
+## xwa_hook_concourse
+
+This hook permits to modify the concourse items.
+
 ## xwa_hook_countermeasures
 
 This hook fixes countermeasures count when reloading.

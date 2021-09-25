@@ -1,0 +1,18 @@
+
+tourdoor_posX = 231
+tourdoor_posY = 174
+
+mkanim_posX = 110
+mkanim_posY = 358
+
+traindoor_posX = 536
+traindoor_posY = 174
+
+combatdoor_poxX = 35
+combatdoor_poxY = 174
+
+filmdoor_posX = 536
+filmdoor_posY = 286
+
+techdoor_posX = 426
+techdoor_posY = 219
