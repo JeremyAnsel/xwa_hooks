@@ -9,6 +9,8 @@
         Height="650" Width="800"
         UseLayoutRounding="True"
         Closed="Window_Closed"
+        Loaded="MainWindow_Loaded"
+        Unloaded="MainWindow_Unloaded"
         x:Name="mainWindow">
     <DockPanel>
         <ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True">
@@ -154,6 +156,13 @@
                         <GridView>
                             <GridViewColumn Header="Controller" Width="200" DisplayMemberBinding="{Binding Controller}" />
                             <GridViewColumn Header="Key" Width="150" DisplayMemberBinding="{Binding Key}" />
+                            <GridViewColumn Header="Pressed" Width="50">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <RadioButton IsEnabled="False" IsChecked="{Binding IsPressed}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Header="Value" Width="400">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>

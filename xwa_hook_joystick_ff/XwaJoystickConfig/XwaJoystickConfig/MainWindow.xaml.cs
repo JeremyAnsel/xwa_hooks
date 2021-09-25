@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -24,6 +25,8 @@ namespace XwaJoystickConfig
     public partial class MainWindow : Window
     {
         private static readonly Encoding _encoding = Encoding.GetEncoding("iso-8859-1");
+
+        private System.Timers.Timer _timer;
 
         public MainWindow()
         {
@@ -80,7 +83,7 @@ namespace XwaJoystickConfig
 
         public bool JoystickSettingUsePovControllerAsButtons { get; set; }
 
-        public List<JoystickConfigButton> JoystickConfigButtons { get; } = new List<JoystickConfigButton>();
+        public ObservableCollection<JoystickConfigButton> JoystickConfigButtons { get; } = new ObservableCollection<JoystickConfigButton>();
 
         public List<JoystickController> JoystickControllers { get; }
 
@@ -118,6 +121,20 @@ namespace XwaJoystickConfig
                     MessageBox.Show(this, ex.Message, this.Title, MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            _timer = new System.Timers.Timer(100);
+            _timer.Elapsed += TimerFunction;
+            _timer.Start();
+        }
+
+        private void MainWindow_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _timer?.Stop();
+            _timer?.Dispose();
+            _timer = null;
         }
 
         private void OpenConfigButton_Click(object sender, RoutedEventArgs e)
@@ -540,6 +557,84 @@ namespace XwaJoystickConfig
             }
 
             return controllers;
+        }
+
+        private void TimerFunction(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (this.JoystickConfigButtons.Count == 0)
+            {
+                return;
+            }
+
+            int count = NativeMethods.JoyGetNumDevs();
+            int sizeCaps = Marshal.SizeOf(typeof(JoyCaps));
+            int sizeInfo = Marshal.SizeOf(typeof(JoyInfoEx));
+            int controllerIndex = -1;
+
+            var pressedKeys = new List<string>();
+
+            for (int deviceIndex = 0; deviceIndex < count; deviceIndex++)
+            {
+                if (NativeMethods.JoyGetDevCaps(new IntPtr(deviceIndex), out JoyCaps caps, sizeCaps) != 0)
+                {
+                    continue;
+                }
+
+                JoyInfoEx info = new JoyInfoEx
+                {
+                    dwSize = (uint)sizeInfo,
+                    dwOptions = JoyInfoExOptions.ReturnPov | JoyInfoExOptions.ReturnButtons | JoyInfoExOptions.ReturnCentered
+                };
+
+                if (NativeMethods.JoyGetPosEx(deviceIndex, ref info) != 0)
+                {
+                    continue;
+                }
+
+                controllerIndex++;
+
+                int index1 = controllerIndex;
+                int index2 = caps.ManufacturerID << 16 | caps.ProductID;
+
+                for (int i = 0; i < caps.wNumButtons; i++)
+                {
+                    if ((info.dwButtons & 1U << i) != 0)
+                    {
+                        string key1 = string.Format(CultureInfo.InvariantCulture, "joybutton_{0}_{1}", index1, i + 1);
+                        string key2 = string.Format(CultureInfo.InvariantCulture, "joybutton_{0}_{1}", index2, i + 1);
+
+                        pressedKeys.Add(key1);
+                        pressedKeys.Add(key2);
+                    }
+                }
+
+                if (caps.wCaps.HasFlag(JoyDriverCaps.HasPov))
+                {
+                    if (info.dwPOV != 0xffff)
+                    {
+                        int povIndex = (int)(info.dwPOV / 9000U);
+
+                        string key1 = string.Format(CultureInfo.InvariantCulture, "joybutton_{0}_pov{1}", index1, povIndex + 1);
+                        string key2 = string.Format(CultureInfo.InvariantCulture, "joybutton_{0}_pov{1}", index2, povIndex + 1);
+
+                        pressedKeys.Add(key1);
+                        pressedKeys.Add(key2);
+                    }
+                }
+            }
+
+            foreach (JoystickConfigButton button in this.JoystickConfigButtons)
+            {
+                button.IsPressed = false;
+
+                foreach (string pressedKey in pressedKeys)
+                {
+                    if (string.Equals(button.Key, pressedKey, StringComparison.Ordinal))
+                    {
+                        button.IsPressed = true;
+                    }
+                }
+            }
         }
     }
 }

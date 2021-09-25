@@ -16,5 +16,8 @@ namespace XwaJoystickConfig
 
         [DllImport("Winmm.dll", EntryPoint = "joyGetDevCapsW")]
         public static extern int JoyGetDevCaps(IntPtr uJoyID, out JoyCaps pjc, int cbjc);
+
+        [DllImport("Winmm.dll", EntryPoint = "joyGetPosEx")]
+        public static extern int JoyGetPosEx(int uJoyID, ref JoyInfoEx pji);
     }
 }
