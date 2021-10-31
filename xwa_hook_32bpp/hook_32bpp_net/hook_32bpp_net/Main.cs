@@ -113,8 +113,8 @@ namespace hook_32bpp_net
         private static void UpdateOptFile(string optName, OptFile opt, IList<string> objectLines, IList<string> baseSkins, int fgCount)
         {
             List<List<string>> fgSkins = ReadFgSkins(optName, objectLines, baseSkins, fgCount);
-            List<string> distinctSkins = fgSkins.SelectMany(t => t).Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
-            List<string> texturesExist = GetTexturesExist(optName, opt, distinctSkins);
+            List<string> distinctSkins = fgSkins.SelectMany(t => t).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+            ICollection<string> texturesExist = GetTexturesExist(optName, opt, distinctSkins);
             CreateSwitchTextures(opt, texturesExist, fgSkins);
             UpdateSkins(optName, opt, fgSkins);
         }
@@ -140,20 +140,25 @@ namespace hook_32bpp_net
             return fgSkins;
         }
 
-        private static List<string> GetTexturesExist(string optName, OptFile opt, List<string> distinctSkins)
+        private static ICollection<string> GetTexturesExist(string optName, OptFile opt, List<string> distinctSkins)
         {
-            var texturesExist = new List<string>();
+            var texturesExist = new SortedSet<string>();
+            string directory = Path.GetDirectoryName(opt.FileName);
 
-            foreach (string textureName in opt.Textures.Keys)
+            foreach (string skin in distinctSkins)
             {
-                foreach (string skin in distinctSkins)
-                {
-                    string baseFilename = $"FlightModels\\Skins\\{optName}\\{skin}\\{textureName}";
+                string skinDirectory = $"{directory}\\Skins\\{optName}\\{skin}";
 
-                    if (TextureExists(baseFilename, skin) != null)
+                var filesEnum = Directory.EnumerateFiles(skinDirectory)
+                    .Select(t => Path.GetFileName(t));
+
+                var filesSet = new SortedSet<string>(filesEnum, StringComparer.OrdinalIgnoreCase);
+
+                foreach (string textureName in opt.Textures.Keys)
+                {
+                    if (TextureExists(filesSet, textureName, skin) != null)
                     {
                         texturesExist.Add(textureName);
-                        break;
                     }
                 }
             }
@@ -161,7 +166,7 @@ namespace hook_32bpp_net
             return texturesExist;
         }
 
-        private static void CreateSwitchTextures(OptFile opt, List<string> texturesExist, List<List<string>> fgSkins)
+        private static void CreateSwitchTextures(OptFile opt, ICollection<string> texturesExist, List<List<string>> fgSkins)
         {
             int fgCount = fgSkins.Count;
 
@@ -225,33 +230,40 @@ namespace hook_32bpp_net
 
         private static void UpdateSkins(string optName, OptFile opt, List<List<string>> fgSkins)
         {
-            foreach (var texture in opt.Textures)
+            opt.Textures.AsParallel().ForAll(texture =>
             {
                 int position = texture.Key.IndexOf("_fg_");
 
                 if (position == -1)
                 {
-                    continue;
+                    return;
                 }
 
                 string textureName = texture.Key.Substring(0, position);
                 int fgIndex = int.Parse(texture.Key.Substring(position + 4, texture.Key.IndexOf('_', position + 4) - position - 4), CultureInfo.InvariantCulture);
+                string directory = Path.GetDirectoryName(opt.FileName);
 
                 foreach (string skin in fgSkins[fgIndex])
                 {
-                    string baseFilename = $"FlightModels\\Skins\\{optName}\\{skin}\\{textureName}";
-                    string filename = TextureExists(baseFilename, skin);
+                    string skinDirectory = $"{directory}\\Skins\\{optName}\\{skin}";
+
+                    var filesEnum = Directory.EnumerateFiles(skinDirectory)
+                        .Select(t => Path.GetFileName(t));
+
+                    var filesSet = new SortedSet<string>(filesEnum, StringComparer.InvariantCultureIgnoreCase);
+
+                    string filename = TextureExists(filesSet, textureName, skin);
 
                     if (filename == null)
                     {
                         continue;
                     }
 
-                    CombineTextures(texture.Value, filename);
+                    CombineTextures(texture.Value, Path.Combine(skinDirectory, filename));
                 }
 
                 texture.Value.GenerateMipmaps();
-            }
+            });
         }
 
         private static void CombineTextures(Texture baseTexture, string filename)
@@ -279,25 +291,25 @@ namespace hook_32bpp_net
             }
         }
 
-        private static string TextureExists(string baseFilename, string skin)
-        {
-            var extensions = new string[] { ".bmp", ".png", ".jpg" };
+        private static readonly string[] _textureExtensions = new string[] { ".bmp", ".png", ".jpg" };
 
-            foreach (string ext in extensions)
+        private static string TextureExists(ICollection<string> files, string baseFilename, string skin)
+        {
+            foreach (string ext in _textureExtensions)
             {
                 string filename = baseFilename + "_" + skin + ext;
 
-                if (File.Exists(filename))
+                if (files.Contains(filename))
                 {
                     return filename;
                 }
             }
 
-            foreach (string ext in extensions)
+            foreach (string ext in _textureExtensions)
             {
                 string filename = baseFilename + ext;
 
-                if (File.Exists(filename))
+                if (files.Contains(filename))
                 {
                     return filename;
                 }
