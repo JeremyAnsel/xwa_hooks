@@ -149,6 +149,11 @@ namespace hook_32bpp_net
             {
                 string skinDirectory = $"{directory}\\Skins\\{optName}\\{skin}";
 
+                if (!Directory.Exists(skinDirectory))
+                {
+                    continue;
+                }
+
                 var filesEnum = Directory.EnumerateFiles(skinDirectory)
                     .Select(t => Path.GetFileName(t));
 
@@ -246,6 +251,11 @@ namespace hook_32bpp_net
                 foreach (string skin in fgSkins[fgIndex])
                 {
                     string skinDirectory = $"{directory}\\Skins\\{optName}\\{skin}";
+
+                    if (!Directory.Exists(skinDirectory))
+                    {
+                        continue;
+                    }
 
                     var filesEnum = Directory.EnumerateFiles(skinDirectory)
                         .Select(t => Path.GetFileName(t));
