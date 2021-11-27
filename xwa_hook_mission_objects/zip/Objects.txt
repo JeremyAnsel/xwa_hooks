@@ -1,3 +1,7 @@
 FlightModels\ImperialStarDestroyer2.opt = FlightModels\IndustrialComplex.opt
+FlightModels\XWing.opt = FlightModels\TieFighter.opt
+
+FlightModels\TieFighter_CockpitPovProfile = Default
+CockpitPovProfile = Default
 
 ObjectProfile_fg_0 = Default

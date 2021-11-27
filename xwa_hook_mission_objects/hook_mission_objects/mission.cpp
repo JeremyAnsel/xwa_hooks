@@ -679,25 +679,31 @@ int MissionObjectsStatsHook(int* params)
 		}
 	}
 
-	const int esp1C = params[7];
-	const short esp24 = (short)params[9];
-	const char* esp144 = (const char*)&params[81];
+	std::string argOpt = (char*)params[0];
+	const int modelIndex = *(int*)0x07FFD6C;
 
-	short* s_XwaOptModelFileMemHandles = (short*)0x007CA6E0;
+	const auto OptLoad = (int(*)(const char*))0x004CC940;
+
 	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 	ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
 
-	s_XwaOptModelFileMemHandles[esp1C] = esp24;
-
 	const auto objectLines = GetCustomFileLines("Objects");
-	std::string objectValue = GetFileKeyValue(objectLines, esp144);
+	const std::string argObjectValue = GetFileKeyValue(objectLines, argOpt);
+
+	if (!argObjectValue.empty() && std::ifstream(argObjectValue))
+	{
+		argOpt = argObjectValue;
+	}
+
+	std::string objectPath = g_flightModelsList.GetLstLine(modelIndex) + ".opt";
+	std::string objectValue = GetFileKeyValue(objectLines, objectPath);
 
 	if (objectValue.empty() || !std::ifstream(objectValue))
 	{
-		objectValue = esp144;
+		objectValue = objectPath;
 	}
 
-	const short craftIndex = ExeEnableTable[esp1C].CraftIndex;
+	const short craftIndex = ExeEnableTable[modelIndex].CraftIndex;
 
 	if (craftIndex == -1)
 	{
@@ -715,7 +721,33 @@ int MissionObjectsStatsHook(int* params)
 		lines = GetFileLines(shipPath + ".ini", "CockpitPov");
 	}
 
-	if (!GetFileKeyValue(lines, "CockpitPovX").empty() && !GetFileKeyValue(lines, "CockpitPovY").empty() && !GetFileKeyValue(lines, "CockpitPovZ").empty())
+	std::string povProfile = GetFileKeyValue(objectLines, shipPath + "_CockpitPovProfile");
+
+	if (povProfile.empty())
+	{
+		povProfile = GetFileKeyValue(objectLines, "CockpitPovProfile");
+
+		if (povProfile.empty())
+		{
+			povProfile = "Default";
+		}
+	}
+
+	std::string povProfileSection = std::string("CockpitPov_") + povProfile;
+	auto povProfileLines = GetFileLines(shipPath + povProfileSection + ".txt");
+
+	if (!povProfileLines.size())
+	{
+		povProfileLines = GetFileLines(shipPath + ".ini", povProfileSection);
+	}
+
+	if (!GetFileKeyValue(povProfileLines, "CockpitPovX").empty() && !GetFileKeyValue(povProfileLines, "CockpitPovY").empty() && !GetFileKeyValue(povProfileLines, "CockpitPovZ").empty())
+	{
+		craftEntry.CockpitPositionX = (short)GetFileKeyValueInt(povProfileLines, "CockpitPovX", 0);
+		craftEntry.CockpitPositionY = (short)GetFileKeyValueInt(povProfileLines, "CockpitPovY", 0);
+		craftEntry.CockpitPositionZ = (short)GetFileKeyValueInt(povProfileLines, "CockpitPovZ", 0);
+	}
+	else if (!GetFileKeyValue(lines, "CockpitPovX").empty() && !GetFileKeyValue(lines, "CockpitPovY").empty() && !GetFileKeyValue(lines, "CockpitPovZ").empty())
 	{
 		craftEntry.CockpitPositionX = (short)GetFileKeyValueInt(lines, "CockpitPovX", 0);
 		craftEntry.CockpitPositionY = (short)GetFileKeyValueInt(lines, "CockpitPovY", 0);
@@ -728,7 +760,7 @@ int MissionObjectsStatsHook(int* params)
 		craftEntry.CockpitPositionZ = s_CockpitPositionZ[craftIndex];
 	}
 
-	return 0;
+	return OptLoad(argOpt.c_str());
 }
 
 void TurretOptReload(int gunnerModelIndex, int playerModelIndex, int turretIndex)

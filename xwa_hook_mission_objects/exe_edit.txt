@@ -38,14 +38,6 @@ E893AE0900              call 004CC940
 E883701700              call 005A8B30, 005A8B30 - 00431AAD = 00177083
 
 
-; from L00431B70
-:00431E46 - 0x031246
-66898AE0A67C00          mov word ptr [edx+007CA6E0], cx
-
-E8D56C1700              call 005A8B20, 005A8B20 - 00431E4B = 00176CD5
-9090                    nop
-
-
 ; from L00501D90
 :00501D90 - 0x101190
 53                      push ebx

@@ -26,7 +26,6 @@ At offset 30A1A, replace E821B30900 with E811751700.
 At offset 30C59, replace E8E2B00900 with E8D2721700.
 At offset 30D05, replace E836B00900 with E826721700.
 At offset 30EA8, replace E893AE0900 with E883701700.
-At offset 31246, replace 66898AE0A67C00 with E8D56C17009090.
 
 # To call the hook that set crafts turret
 At offset 101190, replace 535556578B7C2414 with E88B6D0A00C39090.
@@ -114,9 +113,33 @@ If a "Objects.txt" file doesn't exist, no model is replaced.
 The format is a line per object: "FlightModels\ObjectA = FlightModels\NewObjA"
 See "Objects.txt".
 
+To define the cockpit POV for a craft, you can either directly define the coordinates for the craft int the "CockpitPov" section, either define profiles and use them on a per-mission basis.
+
 Suppose that the new craft is "FlightModels\[Model].opt".
 To define the cockpit POV, set CockpitPovX, CockpitPovY and CockpitPovZ in a file named "FlightModels\[Model]CockpitPov.txt" or create a section named "[CockpitPov]" in "FlightModels\[Model].ini".
 See "CorellianTransport2CockpitPov.txt"
+
+To create a POV profile named "Profile1", create a file named "FlightModels\[Model]CockpitPov_Profile1.txt" or create a section named "CockpitPov_Profile1" in "FlightModels\[Model].ini".
+The format is
+CockpitPovX = integer
+CockpitPovY = integer
+CockpitPovZ = integer
+See "CorellianTransport2CockpitPov_Default.txt"
+
+Suppose that the new craft is "FlightModels\[Model].opt".
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+To replace the cockpit POV profile, create a file named "[MissionDir]\[Mission]_Objects.txt" or create a section named "[Objects]" in "[MissionDir]\[Mission].ini".
+The format is
+FlightModels\[Model]_CockpitPovProfile = ProfileName
+CockpitPovProfile = ProfileName
+When "FlightModels\[Model]_CockpitPovProfile" doesn't exist, "CockpitPovProfile" is used. If "CockpitPovProfile" doesn't exist, "Default is used".
+See "Objects.txt".
+
+Cockpit POV position is read in this order:
+- [Model]CockpitPov
+- [Model]_CockpitPovProfile
+- CockpitPovProfile
+- Default profile
 
 # crafts turrets
 The craft turrets are no longer limited to CorellianTransport2, MilleniumFalcon2, and FamilyTransport. You can now enable turrets for any craft.
