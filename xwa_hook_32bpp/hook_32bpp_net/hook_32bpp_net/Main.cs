@@ -327,5 +327,20 @@ namespace hook_32bpp_net
 
             return null;
         }
+
+        [DllExport(CallingConvention.Cdecl)]
+        unsafe public static void ReadCompressedDatImageFunction(byte* destination, int destinationLength, byte* source, int sourceLength)
+        {
+            byte[] coderProperties = new byte[5];
+            Marshal.Copy(new IntPtr(source), coderProperties, 0, 5);
+
+            using (var imageDecompressedStream = new UnmanagedMemoryStream(destination, destinationLength, destinationLength, FileAccess.Write))
+            using (var imageStream = new UnmanagedMemoryStream(source + 5, sourceLength - 5, sourceLength - 5, FileAccess.Read))
+            {
+                var decoder = new SevenZip.Compression.LZMA.Decoder();
+                decoder.SetDecoderProperties(coderProperties);
+                decoder.Code(imageStream, imageDecompressedStream, sourceLength - 5, destinationLength, null);
+            }
+        }
     }
 }

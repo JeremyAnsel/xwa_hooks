@@ -1,6 +1,7 @@
 #include "targetver.h"
 #include "32bpp.h"
 #include <vector>
+#include <string>
 #include <Windows.h>
 
 #pragma pack(push, 1)
@@ -30,6 +31,21 @@ struct DatImageDescription
 };
 
 static_assert(sizeof(DatImageDescription) == 18, "size of DatImageDescription must be 18");
+
+struct DatImageHeader
+{
+	int Length; // sizeof(S0x04CD390_05) + ColorsCount * 3 + Width * Height * 2
+	int ColorsOffset; // sizeof(S0x04CD390_05)
+	int DataOffset; // sizeof(S0x04CD390_05) + ColorsCount * 3
+	int DatImageHeader_m0C;
+	char unk10[8];
+	int OffsetX;
+	int OffsetY;
+	char unk20[8];
+	int ColorsCount;
+};
+
+static_assert(sizeof(DatImageHeader) == 44, "size of DatImageHeader must be 44");
 
 struct XwaSpeciesTMInfo
 {
@@ -104,12 +120,14 @@ class NetFunctions
 {
 public:
 	typedef int(_cdecl * readOptFunction)(const char*);
+	typedef int(_cdecl * readCompressedDatImageFunction)(void*, int, const void*, int);
 
 	NetFunctions()
 	{
 		_module = LoadLibrary("hook_32bpp_net.dll");
 
 		_readOptFunction = (readOptFunction)GetProcAddress(_module, "ReadOptFunction");
+		_readCompressedDatImageFunction = (readCompressedDatImageFunction)GetProcAddress(_module, "ReadCompressedDatImageFunction");
 	}
 
 	~NetFunctions()
@@ -119,6 +137,7 @@ public:
 
 	HMODULE _module;
 	readOptFunction _readOptFunction;
+	readCompressedDatImageFunction _readCompressedDatImageFunction;
 };
 
 NetFunctions g_netFunctions;
@@ -402,6 +421,9 @@ int DatImage32Hook(int* params)
 	XwaSpeciesTMInfo* A14 = (XwaSpeciesTMInfo*)params[4];
 	const int A18 = params[5];
 
+	const DatImageHeader* imageHeader = (DatImageHeader*)(params[0] + sizeof(DatImageDescription));
+	const void* imageData = (void*)(params[0] + sizeof(DatImageDescription) + sizeof(DatImageHeader));
+
 	if (A4->ImageType == 25)
 	{
 		for (int esp10 = 0; esp10 < A18; esp10++)
@@ -445,7 +467,14 @@ int DatImage32Hook(int* params)
 				A14[esp10].Width = A4->Width;
 				A14[esp10].Height = A4->Height;
 
-				memcpy(esp24, (void*)AC, ebp * 4);
+				if (imageHeader->ColorsCount == 0)
+				{
+					memcpy(esp24, (void*)AC, ebp * 4);
+				}
+				else if (imageHeader->ColorsCount == 1)
+				{
+					g_netFunctions._readCompressedDatImageFunction(esp24, ebp * 4, imageData, A4->DataSize - 0x2C);
+				}
 			}
 
 			A14[esp10].pData = esi;
