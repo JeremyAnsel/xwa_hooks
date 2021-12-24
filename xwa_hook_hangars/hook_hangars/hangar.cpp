@@ -770,6 +770,30 @@ public:
 		return this->Droid2Update;
 	}
 
+	unsigned short GetDroid1ModelIndex()
+	{
+		this->UpdateIfChanged();
+		return this->Droid1ModelIndex;
+	}
+
+	int GetDroid1Markings()
+	{
+		this->UpdateIfChanged();
+		return this->Droid1Markings;
+	}
+
+	unsigned short GetDroid2ModelIndex()
+	{
+		this->UpdateIfChanged();
+		return this->Droid2ModelIndex;
+	}
+
+	int GetDroid2Markings()
+	{
+		this->UpdateIfChanged();
+		return this->Droid2Markings;
+	}
+
 	int GetHangarRoofCranePositionX()
 	{
 		this->UpdateIfChanged();
@@ -879,6 +903,10 @@ private:
 			this->IsDroidsFloorInverted = GetFileKeyValueInt(lines, "IsDroidsFloorInverted", 0) != 0;
 			this->Droid1Update = GetFileKeyValueInt(lines, "Droid1Update", 1) != 0;
 			this->Droid2Update = GetFileKeyValueInt(lines, "Droid2Update", 1) != 0;
+			this->Droid1ModelIndex = (unsigned short)GetFileKeyValueInt(lines, "Droid1ModelIndex", 311); // ModelIndex_311_1_33_HangarDroid
+			this->Droid1Markings = GetFileKeyValueInt(lines, "Droid1Markings", 0);
+			this->Droid2ModelIndex = (unsigned short)GetFileKeyValueInt(lines, "Droid2ModelIndex", 312); // ModelIndex_312_1_34_HangarDroid2
+			this->Droid2Markings = GetFileKeyValueInt(lines, "Droid2Markings", 0);
 			this->HangarRoofCranePositionX = GetFileKeyValueInt(lines, "HangarRoofCranePositionX", -1400);
 			this->HangarRoofCranePositionY = GetFileKeyValueInt(lines, "HangarRoofCranePositionY", 786);
 			this->HangarRoofCranePositionZ = GetFileKeyValueInt(lines, "HangarRoofCranePositionZ", -282);
@@ -915,6 +943,10 @@ private:
 	bool IsDroidsFloorInverted;
 	bool Droid1Update;
 	bool Droid2Update;
+	unsigned short Droid1ModelIndex;
+	int Droid1Markings;
+	unsigned short Droid2ModelIndex;
+	int Droid2Markings;
 	int HangarRoofCranePositionX;
 	int HangarRoofCranePositionY;
 	int HangarRoofCranePositionZ;
@@ -1974,6 +2006,7 @@ void HangarLoadDroidsSetPositionZ(int objectIndex, int positionZ)
 
 int HangarLoadDroidsHook(int* params)
 {
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 
 	int& V0x068BC10 = *(int*)0x068BC10;
@@ -1987,21 +2020,23 @@ int HangarLoadDroidsHook(int* params)
 		g_isHangarFloorInverted = g_hangarObjects.GetIsDroidsFloorInverted();
 
 		// ModelIndex_311_1_33_HangarDroid
-		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(311, 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
+		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(g_hangarObjects.GetDroid1ModelIndex(), 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
 		V0x09C6780[V0x068BC10].m04 = 0;
 		V0x09C6780[V0x068BC10].m26 = 0;
 		V0x09C6780[V0x068BC10].m22 = 0;
 		V0x09C6780[V0x068BC10].m08 = 0;
 		HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, g_hangarObjects.GetDroid1PositionZ());
+		xwaObjects[V0x09C6780[V0x068BC10].ObjectIndex].pMobileObject->Markings = g_hangarObjects.GetDroid1Markings();
 		V0x068BC10++;
 
 		// ModelIndex_312_1_34_HangarDroid2
-		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(312, 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
+		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(g_hangarObjects.GetDroid2ModelIndex(), 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
 		V0x09C6780[V0x068BC10].m04 = 0;
 		V0x09C6780[V0x068BC10].m26 = 0;
 		V0x09C6780[V0x068BC10].m22 = 0;
 		V0x09C6780[V0x068BC10].m08 = 0;
 		HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, g_hangarObjects.GetDroid2PositionZ());
+		xwaObjects[V0x09C6780[V0x068BC10].ObjectIndex].pMobileObject->Markings = g_hangarObjects.GetDroid2Markings();
 		V0x068BC10++;
 
 		g_isHangarFloorInverted = isHangarFloorInverted;

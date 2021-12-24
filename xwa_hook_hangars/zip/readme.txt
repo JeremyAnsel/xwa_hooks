@@ -310,6 +310,10 @@ To set the second droid z position, set "Droid2PositionZ = value". value is an i
 To invert the hangar floor for the droids, set "IsDroidsFloorInverted = 1". When set to 0, the floor is below the droids. When set to 1, the floor is above the droids.
 To not update the first droid, set "Droid1Update = 0".
 To not update the second droid, set "Droid2Update = 0".
+To set the first droid model index, set "Droid1ModelIndex = value". value is an integer. The default value is 311 (HangarDroid).
+To set the first droid markings, set "Droid1Markings = value". value is an integer. The default value is 0.
+To set the second droid model index, set "Droid2ModelIndex = value". value is an integer. The default value is 312 (HangarDroid2).
+To set the second droid markings, set "Droid2Markings = value". value is an integer. The default value is 0.
 To set the Hangar Roof Crane position, set "HangarRoofCranePositionX = value X", "HangarRoofCranePositionY = value Y" and "HangarRoofCranePositionZ = value Z". The values are integers. The default value for HangarRoofCranePositionX is -1400. The default value for HangarRoofCranePositionY is 786. The default value for HangarRoofCranePositionZ is -282.
 To set the Hangar Roof Crane axis, set "HangarRoofCraneAxis = value". 0 means the X axis. 1 means the Y axis. 2 means the Z axis. The default value is 0.
 To define the range of Hangar Roof Crane animation, set "HangarRoofCraneLowOffset = value" and "HangarRoofCraneHighOffset = value". The values are relative to the Hangar Roof Crane initial position.
