@@ -1,0 +1,107 @@
+
+; L00415760
+; crafts count
+:0041583D - 0x014C3D
+890D5CF38B00            mov dword ptr [008BF35C], ecx
+892D507E9100            mov dword ptr [00917E50], ebp
+
+56                      push esi
+E8DD321900              call 005A8B20, 005A8B20 - 00415843 = 001932DD
+5B                      pop ebx
+9090909090              nop
+
+; L00415760
+; projectiles count
+:00415860 - 0x014C60
+83FF01                  cmp edi, 00000001
+A3804B7D00              mov dword ptr [007D4B80], eax
+
+E8CB321900              call 005A8B30, 005A8B30 - 00415865 = 001932CB
+EB12                    jmp 00415879, 00415879 - 00415867 = 12
+90                      nop
+
+; L00415760
+; explosions count
+:00415883 - 0x014C83
+8BC6                    mov eax, esi
+C1E005                  shl eax, 05
+
+E8A8321900              call 005A8B30, 005A8B30 - 00415888 = 001932A8
+
+; L00415760
+; alloc XwaObjects
+:00415A06 - 0x014E06
+A180FD7F00              mov eax, dword ptr [007FFD80]
+
+E825311900              call 005A8B30, 005A8B30 - 00415A0B = 00193125
+
+; AI handling array
+:004AA1AA - 0x0A95AA
+8A847980F19A00          mov al, byte ptr [ecx+2*edi+009AF180]
+
+57                      push edi
+E880E90F00              call 005A8B30, 005A8B30 - 004AA1B0 = 000FE980
+5F                      pop edi
+
+:004AA6D5 - 0x0A9AD5
+C6847080F19A0000        mov byte ptr [eax+2*esi+009AF180], 00
+
+56                      push esi
+E845E40F00              call 005A8B20, 005A8B20 - 004AA6DB = 000FE445
+5E                      pop esi
+90                      nop
+
+:004AA75F - 0x0A9B5F
+C6847180F19A0001        mov byte ptr [ecx+2*esi+009AF180], 01
+
+56                      push esi
+E8BBE30F00              call 005A8B20, 005A8B20 - 004AA765 = 000FE3BB
+5E                      pop esi
+90                      nop
+
+; officer sounds buffer
+:0043A121 - 0x039521
+8D3C8560FD9C00          lea edi, dword ptr [4*eax+009CFD60]
+
+50                      push eax
+E8F9E91600              call 005A8B20, 005A8B20 - 0043A127 = 0016E9F9
+5F                      pop edi
+
+:0043F442 - 0x03E842
+8B0CB560FD9C00          mov ecx, dword ptr [4*esi+009CFD60]
+
+56                      push esi
+E8D8961600              call 005A8B20, 005A8B20 - 0043F448 = 001696D8
+59                      pop ecx
+
+:0043F45D - 0x03E85D
+8904B560FD9C00          mov dword ptr [4*esi+009CFD60], eax
+
+50                      push eax
+E8BD961600              call 005A8B20, 005A8B20 - 0043F463 = 001696BD
+58                      pop eax
+
+===============================================================================
+
+; RS friendly and enemy craft lists 192
+:004C0861 - 0x0BFC61
+A1B8A37C00              mov eax, dword ptr [007CA3B8]
+
+B8C0000000              mov eax, 000000C0
+
+:004C1963 - 0x0C0D63
+A1B8A37C00              mov eax, dword ptr [007CA3B8]
+
+B8C0000000              mov eax, 000000C0
+
+; RS message log 10000
+:00430E16 - 0x030216
+68007D0000              push 00007D00
+
+6880A21900              push 0019A280
+
+; RS fly-by sounds
+:0043C0E9 - 0x03B4E9
+7407                    je 0043C0F2
+
+EB07                    jmp 0043C0F2
