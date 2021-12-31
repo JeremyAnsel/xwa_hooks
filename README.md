@@ -168,6 +168,10 @@ See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=10&t=11338 and http://ww
 
 This hook allows you to use the built in campaign/tour mode within XWA to play the story campaign with other players, or fly custom campaigns.
 
+## xwa_hook_userdata
+
+This hook modifies where the pilot files are saved.
+
 ## xwa_hook_weapon_color
 
 This hook permits to define weapon color for any craft.
