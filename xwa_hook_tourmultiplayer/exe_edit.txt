@@ -1,0 +1,198 @@
+
+// Fix Roster FG Names
+:0054D8DB - 0x14CCDB
+33C0                    xor eax, eax
+F2                      repnz
+AE                      scasb
+F7D1                    not ecx
+2BF9                    sub edi, ecx
+8BC1                    mov eax, ecx
+C1E902                  shr ecx, 02
+8BF7                    mov esi, edi
+8B7C2414                mov edi, dword ptr [esp+14]
+
+33C0                    xor eax, eax
+8A4771                  mov al, byte ptr [edi+71]
+8B44841C                mov eax, dword ptr [esp+4*eax+1C]
+E837B20500              call 005A8B20, 005A8B20 - 0054D8E9 = 0005B237
+EB0C                    jmp 0054D8F7, 0054D8F7 - 0054D8EB = 0C
+909090                  nop
+
+// Fix Roster FG Names for Clients
+:005721D9 - 0x1715D9
+837C24184F              cmp dword ptr [esp+18], 0000004F
+B950000000              mov ecx, 00000050
+
+E842690300              call 005A8B20, 005A8B20 - 005721DE = 00036942
+837C24184F              cmp dword ptr [esp+18], 0000004F
+
+// Loads proper panel buttons for Combat and Tour directories
+:00544F94 - 0x144394
+B804000000              mov eax, 00000004
+
+E8873B0600              call 005A8B20, 005A8B20 - 00544F99 = 00063B87
+
+// Loads briefing button instead of Ready if Combat or Tour modes
+:0054508C - 0x14448C
+833D8A2AAE0004          cmp dword ptr [00AE2A8A], 00000004
+
+E88F3A0600              call 005A8B20, 005A8B20 - 00545091 = 00063A8F
+9090                    nop
+
+// Fixes back button on Racing mode
+:00545349 - 0x144749
+B803000000              mov eax, 00000003
+
+E8D2370600              call 005A8B20, 005A8B20 - 0054534E = 000637D2
+
+// Prevents AI Rank from being shown on Roster unless its Skirmish
+:00551275 - 0x150675
+E8864E0000              call 00556100
+
+E8B6780500              call 005A8B30, 005A8B30 - 0055127A = 000578B6
+
+:005512CE - 0x1506CE
+E83D600000              call 00557310
+
+E84D780500              call 005A8B20, 005A8B20 - 005512D3 = 0005784D
+
+===============================================================================
+
+// PatchMemoryHook
+
+;// Loads briefing text on loading screen for Combat Engagement missions
+;:0053199A
+;E956201600              jmp 006939F5
+;
+;:006939F5
+;A18A2AAE00              mov eax, dword ptr [00AE2A8A]
+;83F804                  cmp eax, 00000004
+;0F83D7E1E9FF            jnb 00531BDA
+;83F802                  cmp eax, 00000002
+;0F84CEE1E9FF            je 00531BDA
+;83F801                  cmp eax, 00000001
+;0F84C5E1E9FF            je 00531BDA
+;E997DFE9FF              jmp 005319B1
+
+;// Fixes player hyperspace sideways bug
+;:004EF060
+;E9AB000000               jmp 004EF110
+;90                       nop
+
+===============================================================================
+
+// IFF Color Craft Species Hook
+:00472FD5 - 0x0723D5
+84C0                    test al, al
+7504                    jne 00472FDD
+6A51                    push 00000051
+
+E8465B1300              call 005A8B20
+50                      push eax
+
+// IFF Color Craft Name Hook
+:004730B3 - 0x0724B3
+84C0                    test al, al
+7504                    jne 004730BB
+6A52                    push 00000052
+
+E8685A1300              call 005A8B20
+50                      push eax
+
+// IFF Color FG Species hook
+:00473391 - 0x072791
+84DB                    test bl, bl
+7504                    jne 00473399
+6A51                    push 00000051
+
+E88A571300              call 005A8B20
+50                      push eax
+
+// IFF Color FG Name Hook
+:00473429 - 0x072829
+84DB                    test bl, bl
+7504                    jne 00473431
+6A52                    push 00000052
+
+E8F2561300              call 005A8B20
+50                      push eax
+
+// IFF Color Player Target Box Hook
+:005038B4 - 0x102CB4
+83F804                  cmp eax, 00000004
+7713                    ja 005038CC
+FF2485103A5000          jmp dword ptr [4*eax+00503A10]
+
+E867520A00              call 005A8B20
+EB13                    jmp 005038CE
+9090909090              nop
+
+// IFF Color Map Player Target Box Hook
+:0049FA29 - 0x09EE29
+7719                    ja 0049FA44
+FF24858C044A00          jmp dword ptr [4*eax+004A048C]
+C645F83F                mov [ebp-08], 3F
+
+9090                    nop
+E8F0901000              call 005A8B20
+9090                    nop
+8845F8                  mov byte ptr [ebp-08], al
+90                      nop
+
+// IFF Color FG Map marker hook
+:0049FE5C - 0x09F25C
+7723                    ja 0049FE81
+FF2485A0044A00          jmp dword ptr [4*eax+004A04A0]
+
+9090                    nop
+E8BD8C1000              call 005A8B20
+EB21                    jmp 0049FE86, 0049FE86 - 0049FE65 = 21
+
+// IFF Craft Names List Hook
+:004C2927 - 0x0C1D27
+84C0                    test al, al
+7504                    jne 004C292F
+6A52                    push 00000052
+
+E8F4610E00              call 005A8B20
+50                      push eax
+
+===============================================================================
+
+// Tests
+
+// Test 1
+:00543CF7 - 0x1430F7
+C705C84B9F0006000000    mov dword ptr [009F4BC8], 00000006
+
+E8244E0600              call 005A8B20, 005A8B20 - 00543CFC = 00064E24
+9090909090              nop
+
+// Test2
+
+00546B9A
+
+:00546D60 - 0x146160
+7521                    jne 00546D83
+
+EB21                    jmp 00546D83
+
+:00547041 - 0x146441
+7514                    jne 00547057
+
+EB14                    jmp 00547057
+
+:00547235 - 0x146635
+7514                    jne 0054724B
+
+EB14                    jmp 0054724B
+
+:0055439F - 0x15379F
+751B                    jne 005543BC
+
+EB1B                    jmp 005543BC
+
+:005541CF - 0x1535CF
+751B                    jne 005541EC
+
+EB1B                    jmp 005541EC

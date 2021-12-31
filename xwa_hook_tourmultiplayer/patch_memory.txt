@@ -1,0 +1,125 @@
+
+// Entry for patching memory
+:00528BBB - 0x127FBB
+BF602AAE00              mov edi, 00AE2A60
+68201F6000              push 00601F20
+
+E860FF0700              call 0007FF60, 005A8B20
+E915A41600              jmp 0016A415, 00692FDA
+
+BF602AAE009068201F6000
+hexstr_to_char_address((unsigned char*)0x692FDA, "BF602AAE009068201F6000 E9DB5BE9FF"); jmp FFE95BDB, 00528BC5
+
+===============================================================================
+
+// PatchMemoryHook
+
+// Fix Roster FG names
+:0054D8AD
+0F849E581400            je 00693151
+
+:00693151
+8B442410                mov eax, dword ptr [esp+10]
+0FBF8EB82E0B00          movsx ecx, word ptr [esi+000B2EB8]
+40                      inc eax
+81C23E0E0000            add edx, 00000E3E
+39C8                    cmp eax, ecx
+89442410                mov dword ptr [esp+10], eax
+0F8C35A7EBFF            jl 0054D8A4
+E957AAEBFF              jmp 0054DBCB
+
+// Fixes FG Roster names for clients
+:005721DE
+E9400B1200              jmp 00692D23
+
+:00692D23
+833D8A2AAE0003          cmp dword ptr [00AE2A8A], 00000003
+740F                    je 00692D3B
+E85F40EDFF              call 00566D90
+E8EAA8EBFF              call 0054D620
+E895A9EBFF              call 0054D6D0
+:00692D3B
+B950000000              mov ecx, 00000050
+E99EF4EDFF              jmp 005721E3
+
+// Loads proper panel buttons for Combat and Tour directories
+:00544F94
+E9A6E91400              jmp 0069393F
+
+:0069393F
+B804000000              mov eax, 00000004
+83F902                  cmp ecx, 00000002
+0F845016EBFF            je 00544F9D
+39C1                    cmp ecx, eax
+0F8C7616EBFF            jl 00544FCB
+E94316EBFF              jmp 00544F9D
+
+// Loads briefing button instead of Ready if Combat or Tour modes
+:0054508C
+E9C9E81400              jmp  0069395A
+9090                    nop
+
+:0069395A
+833D8A2AAE0002          cmp dword ptr [00AE2A8A], 00000002
+0F842E17EBFF            je 00545095
+833D8A2AAE0004          cmp dword ptr [00AE2A8A], 00000004
+0F8C5017EBFF            jl 005450C4
+E91C17EBFF              jmp 00545095
+
+// Fixes back button on Racing mode
+:00545349
+E92BE61400              jmp 00693979
+
+:00693979
+B803000000              mov eax, 00000003
+83F901                  cmp ecx, 00000001
+0F84CB19EBFF            je 00545352
+39C1                    cmp ecx, eax
+0F85DE19EBFF            jne 0054536D
+E9BE19EBFF              jmp 00545352
+
+// Prevents AI Rank from being shown on Roster unless its Skirmish
+:00551275
+E9E11C1400              jmp 00692F5B
+
+:00692F5B
+833D8A2AAE0003          cmp dword ptr [00AE2A8A], 00000003
+750A                    jne 00692F6E
+E89731ECFF              call 00556100
+E90CE3EBFF              jmp 0055127A
+:00692F6E
+E907E3EBFF              jmp 0055127A
+
+:005512CE
+E9A01C1400              jmp 00692F73
+
+:00692F73
+833D8A2AAE0003          cmp dword ptr [00AE2A8A], 00000003
+750A                    jne 00692F86
+E88F43ECFF              call 00557310
+E94DE3EBFF              jmp 005512D3
+:00692F86
+E948E3EBFF              jmp 005512D3
+
+===============================================================================
+
+// PatchMemoryHook
+
+;// Loads briefing text on loading screen for Combat Engagement missions
+;:0053199A
+;E956201600              jmp 006939F5
+;
+;:006939F5
+;A18A2AAE00              mov eax, dword ptr [00AE2A8A]
+;83F804                  cmp eax, 00000004
+;0F83D7E1E9FF            jnb 00531BDA
+;83F802                  cmp eax, 00000002
+;0F84CEE1E9FF            je 00531BDA
+;83F801                  cmp eax, 00000001
+;0F84C5E1E9FF            je 00531BDA
+;E997DFE9FF              jmp 005319B1
+
+;// Fixes player hyperspace sideways bug
+;:004EF060
+;E9AB000000               jmp 004EF110
+;90                       nop
