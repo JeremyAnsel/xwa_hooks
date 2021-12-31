@@ -16,3 +16,4 @@ int AILookForParkOrderHook(int* params);
 int AIParkManrHook(int* params);
 int AIParkManrFunctionHook(int* params);
 int PlaySFoilSoundHook(int* params);
+int HangarDoorsHook(int* params);

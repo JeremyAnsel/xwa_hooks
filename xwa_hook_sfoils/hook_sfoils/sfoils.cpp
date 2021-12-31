@@ -143,6 +143,32 @@ CraftConfig g_craftConfig;
 
 #pragma pack(push, 1)
 
+enum ShipCategoryEnum : unsigned char
+{
+	ShipCategory_Starfighter = 0,
+	ShipCategory_Transport = 1,
+	ShipCategory_UtilityVehicle = 2,
+	ShipCategory_Freighter = 3,
+	ShipCategory_Starship = 4,
+	ShipCategory_Platform = 5,
+	ShipCategory_PlayerProjectile = 6,
+	ShipCategory_OtherProjectile = 7,
+	ShipCategory_Mine = 8,
+	ShipCategory_Satellite = 9,
+	ShipCategory_NormalDebris = 10,
+	ShipCategory_SmallDebris = 11,
+	ShipCategory_Backdrop = 12,
+	ShipCategory_Explosion = 13,
+	ShipCategory_Obstacle = 14,
+	ShipCategory_DeathStarII = 15,
+	ShipCategory_People = 16,
+	ShipCategory_Container = 17,
+	ShipCategory_Droid = 18,
+	ShipCategory_Armament = 19,
+	ShipCategory_LargeDebris = 20,
+	ShipCategory_SalvageYard = 21,
+};
+
 struct XwaCraft
 {
 	char unk000[4];
@@ -159,7 +185,9 @@ static_assert(sizeof(XwaCraft) == 1017, "size of XwaCraft must be 1017");
 
 struct XwaMobileObject
 {
-	char unk00[221];
+	char unk00[152];
+	unsigned char Team;
+	char unk99[68];
 	XwaCraft* pCraft;
 	char unkE1[4];
 };
@@ -170,9 +198,13 @@ struct XwaObject
 {
 	char unk000[2];
 	unsigned short ModelIndex;
-	char unk004[1];
+	ShipCategoryEnum ShipCategory;
 	unsigned char TieFlightGroupIndex;
-	char unk006[25];
+	unsigned char Region;
+	int PositionX;
+	int PositionY;
+	int PositionZ;
+	char unk013[12];
 	int PlayerIndex;
 	XwaMobileObject* pMobileObject;
 };
@@ -220,6 +252,7 @@ struct CraftSettings
 	int SFoilsAnimationSpeed;
 	bool AllowFireWhenSFoilsAreClosed;
 	bool ParkOrderSFoilsClosed;
+	int HangarDoorsDistance;
 };
 
 std::vector<std::string> GetCustomFileLines(const std::string& name)
@@ -402,6 +435,42 @@ std::vector<SFoil> GetLandingGearsList(int modelIndex)
 	return values;
 }
 
+std::vector<SFoil> GetHangarDoorsList(int modelIndex)
+{
+	const std::string ship = GetShipPath(modelIndex);
+
+	auto lines = GetFileLines(ship + "SFoilsHangarDoors.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", "SFoilsHangarDoors");
+	}
+
+	const auto sfoils = GetFileListValues(lines);
+
+	std::vector<SFoil> values;
+
+	for (unsigned int i = 0; i < sfoils.size(); i++)
+	{
+		const auto& value = sfoils[i];
+
+		if (value.size() < 4)
+		{
+			continue;
+		}
+
+		SFoil sfoil;
+		sfoil.meshIndex = std::stoi(value[0], 0, 0);
+		sfoil.angle = std::stoi(value[1], 0, 0);
+		sfoil.closingSpeed = std::stoi(value[2], 0, 0);
+		sfoil.openingSpeed = std::stoi(value[3], 0, 0);
+
+		values.push_back(sfoil);
+	}
+
+	return values;
+}
+
 CraftSettings GetSFoilsSettings(int modelIndex)
 {
 	const std::string ship = GetShipPath(modelIndex);
@@ -418,6 +487,7 @@ CraftSettings GetSFoilsSettings(int modelIndex)
 	settings.SFoilsAnimationSpeed = std::max(GetFileKeyValueInt(lines, "SFoilsAnimationSpeed", 1), 1);
 	settings.AllowFireWhenSFoilsAreClosed = GetFileKeyValueInt(lines, "AllowFireWhenSFoilsAreClosed", 0) == 0 ? false : true;
 	settings.ParkOrderSFoilsClosed = GetFileKeyValueInt(lines, "ParkOrderSFoilsClosed", 0) == 0 ? false : true;
+	settings.HangarDoorsDistance = GetFileKeyValueInt(lines, "HangarDoorsDistance", 0x4000);
 
 	return settings;
 }
@@ -468,6 +538,24 @@ public:
 
 		sfoils.insert(sfoils.end(), landingGears.begin(), landingGears.end());
 		return sfoils;
+	}
+
+	std::vector<SFoil> GetHangarDoors(int modelIndex)
+	{
+		this->UpdateIfChanged();
+
+		auto it = this->_hangarDoors.find(modelIndex);
+
+		if (it != this->_hangarDoors.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetHangarDoorsList(modelIndex);
+			this->_hangarDoors.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
 	}
 
 	CraftSettings GetSettings(int modelIndex)
@@ -559,12 +647,14 @@ private:
 
 			this->_sfoils.clear();
 			this->_landingGears.clear();
+			this->_hangarDoors.clear();
 			this->_settings.clear();
 		}
 	}
 
 	std::map<int, std::vector<SFoil>> _sfoils;
 	std::map<int, std::vector<SFoil>> _landingGears;
+	std::map<int, std::vector<SFoil>> _hangarDoors;
 	std::map<int, CraftSettings> _settings;
 };
 
@@ -603,11 +693,32 @@ public:
 		}
 	}
 
+	int RetrieveTimeSpeed(int modelIndex, int objectIndex, int elapsedTime)
+	{
+		const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
+
+		const int timeFrame = 15 * settings.SFoilsAnimationSpeed;
+		int time = this->Get(objectIndex);
+		time += elapsedTime;
+
+		int timeSpeed = 0;
+		if (time >= timeFrame)
+		{
+			timeSpeed = 1;
+			time = time % timeFrame;
+		}
+
+		this->Set(objectIndex, time);
+
+		return timeSpeed;
+	}
+
 private:
 	std::map<int, int> _time;
 };
 
 ObjectIndexTime g_objectIndexTime;
+ObjectIndexTime g_hangarDoorsObjectIndexTime;
 
 bool g_keySFoils = false;
 bool g_keyLandingGears = false;
@@ -856,26 +967,13 @@ int SFoilsHook2(int* params)
 		}
 	}
 
-	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
-
 	if (!sfoils.size())
 	{
 		currentCraft->SFoilsState = 0;
 		return 0;
 	}
 
-	const int timeFrame = 15 * settings.SFoilsAnimationSpeed;
-	int time = g_objectIndexTime.Get(objectIndex);
-	time += elapsedTime;
-
-	int timeSpeed = 0;
-	if (time >= timeFrame)
-	{
-		timeSpeed = 1;
-		time = time % timeFrame;
-	}
-
-	g_objectIndexTime.Set(objectIndex, time);
+	int timeSpeed = g_objectIndexTime.RetrieveTimeSpeed(modelIndex, objectIndex, elapsedTime);
 
 	int ret = 0;
 
@@ -1482,4 +1580,177 @@ int PlaySFoilSoundHook(int* params)
 	int ret = playSound(slot, 0xFFFF, currentPlayerId);
 
 	return ret;
+}
+
+int Distance(int objectIndex1, int objectIndex2)
+{
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+
+	int x = std::abs(xwaObjects[objectIndex1].PositionX - xwaObjects[objectIndex2].PositionX);
+	int y = std::abs(xwaObjects[objectIndex1].PositionY - xwaObjects[objectIndex2].PositionY);
+	int z = std::abs(xwaObjects[objectIndex1].PositionZ - xwaObjects[objectIndex2].PositionZ);
+
+	int distance;
+
+	if (x > y && x > z)
+	{
+		distance = x + y / 4 + z / 4;
+	}
+	else if (y > x && y > z)
+	{
+		distance = x / 4 + y + z / 4;
+	}
+	else
+	{
+		distance = x / 4 + y / 4 + z;
+	}
+
+	return distance;
+}
+
+int HangarDoorsHook(int* params)
+{
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	short elapsedTime = *(short*)0x08C1640;
+
+	const auto L00408DC0 = (void(*)())0x00408DC0;
+
+	L00408DC0();
+
+	for (int currentObjectIndex = *(int*)0x08BF378; currentObjectIndex < *(int*)0x08D9628; currentObjectIndex++)
+	{
+		XwaObject* currentObject = &xwaObjects[currentObjectIndex];
+		unsigned short currentModelIndex = currentObject->ModelIndex;
+
+		if (currentModelIndex == 0)
+		{
+			continue;
+		}
+
+		if (currentObject->ShipCategory != ShipCategory_Starship && currentObject->ShipCategory != ShipCategory_Platform && currentObject->ShipCategory != ShipCategory_Freighter)
+		{
+			continue;
+		}
+
+		XwaMobileObject* currentMobileObject = currentObject->pMobileObject;
+
+		if (currentMobileObject == nullptr)
+		{
+			continue;
+		}
+
+		XwaCraft* currentCraft = currentMobileObject->pCraft;
+
+		if (currentCraft == nullptr)
+		{
+			continue;
+		}
+
+		const auto sfoils = g_modelIndexSFoils.GetHangarDoors(currentModelIndex);
+
+		if (!sfoils.size())
+		{
+			continue;
+		}
+
+		int currentDistanceSameTeam = 0x7fffffff;
+		int currentDistanceOtherTeams = 0x7fffffff;
+
+		for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x08D9628; objectIndex++)
+		{
+			if (objectIndex == currentObjectIndex)
+			{
+				continue;
+			}
+
+			XwaObject* object = &xwaObjects[objectIndex];
+			unsigned short modelIndex = object->ModelIndex;
+
+			if (modelIndex == 0)
+			{
+				continue;
+			}
+
+			if (object->Region != currentObject->Region)
+			{
+				continue;
+			}
+
+			if (object->ShipCategory != ShipCategory_Starfighter && object->ShipCategory != ShipCategory_UtilityVehicle && object->ShipCategory != ShipCategory_Transport && object->ShipCategory != ShipCategory_Droid)
+			{
+				continue;
+			}
+
+			XwaMobileObject* mobileObject = object->pMobileObject;
+
+			if (mobileObject == nullptr)
+			{
+				continue;
+			}
+
+			XwaCraft* craft = mobileObject->pCraft;
+
+			if (craft == nullptr)
+			{
+				continue;
+			}
+
+			int distance = Distance(currentObjectIndex, objectIndex);
+
+			if (mobileObject->Team == currentMobileObject->Team)
+			{
+				if (distance < currentDistanceSameTeam)
+				{
+					currentDistanceSameTeam = distance;
+				}
+			}
+			else
+			{
+				if (distance < currentDistanceOtherTeams)
+				{
+					currentDistanceOtherTeams = distance;
+				}
+			}
+		}
+
+		const auto settings = g_modelIndexSFoils.GetSettings(currentModelIndex);
+		unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+		int timeSpeed = g_hangarDoorsObjectIndexTime.RetrieveTimeSpeed(currentModelIndex, currentObjectIndex, elapsedTime);
+		bool openDoors = currentDistanceSameTeam < settings.HangarDoorsDistance && currentDistanceOtherTeams >= settings.HangarDoorsDistance;
+
+		for (unsigned int i = 0; i < sfoils.size(); i++)
+		{
+			auto sfoil = sfoils[i];
+
+			sfoil.closingSpeed *= timeSpeed;
+			sfoil.openingSpeed *= timeSpeed;
+
+			if (openDoors)
+			{
+				if (currentCraftMeshRotationAngles[sfoil.meshIndex] < sfoil.angle)
+				{
+					currentCraftMeshRotationAngles[sfoil.meshIndex] += sfoil.closingSpeed;
+
+					if (currentCraftMeshRotationAngles[sfoil.meshIndex] > sfoil.angle)
+					{
+						currentCraftMeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+					}
+				}
+			}
+			else
+			{
+				if (currentCraftMeshRotationAngles[sfoil.meshIndex] >= sfoil.openingSpeed)
+				{
+					currentCraftMeshRotationAngles[sfoil.meshIndex] -= sfoil.openingSpeed;
+
+					if (currentCraftMeshRotationAngles[sfoil.meshIndex] < sfoil.openingSpeed)
+					{
+						currentCraftMeshRotationAngles[sfoil.meshIndex] = 0;
+					}
+				}
+			}
+		}
+	}
+
+	return 0;
 }

@@ -86,6 +86,9 @@ At offset 058941, replace E84A2AFEFF with E8EAF51400.
 At offset 0FB8DA, replace E8B1FAF3FF with E851C60A00.
 At offset 108208, replace E88331F3FF with E823FD0900.
 
+# To call the hook that defines hangar doors
+At offset 0F5DC7, replace E8F423F1FF with E854210B00.
+
 
 *** Usage ***
 
@@ -110,6 +113,13 @@ mesh index, angle, opening speed, closing speed.
 Landing gears are deployed when a craft in is the hangar. When the s-foils are closed in space, the landing gears are not deployed.
 
 To open or close s-foils, use the V key. To deploy or retract landing gears, use the Ctrl+L key.
+
+To create hangar doors, create a file named "FlightModels\[Model]SFoilsHangarDoors.txt" or create a section named "[SFoilsHangarDoors]" in "FlightModels\[Model].ini".
+The format is a line per mesh:
+mesh index, angle, opening speed, closing speed.
+When a craft of the same team approach the hangar, the doors are opened. The doors are not opened if an enemy craft is near the hangar. When there is no craft near the hangar, the doors are closed.
+To define the distance from the craft with the hangar, create a setting name "HangarDoorsDistance". The default value is 16384.
+The hook uses hangars for Starships, Freighters, Platforms, and uses near crafts for Starfighters, Utility Vehicules, Transports, Droids.
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 
