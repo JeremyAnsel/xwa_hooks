@@ -66,6 +66,10 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x5846E0, MedalAndKalidorCrescentDescriptionHook },
 	{ 0x58486A, MedalAndKalidorCrescentDescriptionHook },
 	{ 0x577A8D, PlayPerMissionMovieHook },
+	{ 0x5291FB, WritePilotHook },
+	{ 0x529935, ReadPilotHook },
+	{ 0x528D20, CreatePilotHook },
+	{ 0x563275, ReadEmailTxtHook },
 };
 
 static const std::string g_RankPointsArray = int_to_hex(GetRankPointsArrayPtr() + 0x00);
@@ -177,6 +181,14 @@ static const HookPatchItem g_perMissionMoviesPatch[] =
 	{ 0x176E88, "E89341FEFF", "E893100300" },
 };
 
+static const HookPatchItem g_emailsPatch[] =
+{
+	{ 0x1285F6, "B801000000", "E835F90700" },
+	{ 0x128D30, "B801000000", "E8FBF10700" },
+	{ 0x12811B, "E8F0200700", "E810FE0700" },
+	{ 0x162670, "893D104B9F00", "E8AB58040090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that loads medal details", g_medalDetailsPatch),
@@ -187,4 +199,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the battles and missions images count", g_battlesMissionsImagesPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the rank points", g_rankPointsPatch),
 	MAKE_HOOK_PATCH("To call the hook that plays per-mission movies", g_perMissionMoviesPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines emails", g_emailsPatch),
 };

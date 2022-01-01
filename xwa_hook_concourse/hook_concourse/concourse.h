@@ -21,3 +21,7 @@ int GetRankPointsArrayPtr();
 int GetPilotRatingPointsArrayPtr();
 int MedalAndKalidorCrescentDescriptionHook(int* params);
 int PlayPerMissionMovieHook(int* params);
+int WritePilotHook(int* params);
+int ReadPilotHook(int* params);
+int CreatePilotHook(int* params);
+int ReadEmailTxtHook(int* params);

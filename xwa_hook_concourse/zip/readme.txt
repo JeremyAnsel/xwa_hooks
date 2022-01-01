@@ -107,6 +107,12 @@ At offset 02E9BF, replace F73C9DD42F5B00 with F73C9DD42F5B00.
 # To call the hook that plays per-mission movies
 At offset 176E88, replace E89341FEFF with E893100300.
 
+# To call the hook that defines emails
+At offset 1285F6, replace B801000000 with E835F90700.
+At offset 128D30, replace B801000000 with E8FBF10700.
+At offset 12811B, replace E8F0200700 with E810FE0700.
+At offset 162670, replace 893D104B9F00 with E8AB58040090.
+
 
 *** Usage ***
 
@@ -143,6 +149,8 @@ See "hook_concourse.cfg"
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 To play a per-misson briefing movie, create a movie named "Movies\[Mission]_briefroom.[ext]" where [ext] is "snm" or another supported movie format.
 If a such movie doesn't exist, then "briefroom.[ext]" is played.
+
+Emails count is now unlimited. The emails status are written to a file named "<PilotName>_emails.bin" where "<PilotName>" is the name of the pilot.
 
 
 *** Credits ***

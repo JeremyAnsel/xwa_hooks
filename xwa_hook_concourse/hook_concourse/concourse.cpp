@@ -4,6 +4,19 @@
 #include <fstream>
 #include <queue>
 
+// Stack contents for function params
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 class Config
 {
 public:
@@ -735,6 +748,111 @@ int PlayPerMissionMovieHook(int* params)
 	{
 		XwaPlayMovie(A4, A8);
 	}
+
+	return 0;
+}
+
+std::vector<unsigned char> g_emailsStatus;
+
+void UpdateEmailsStatusPointers()
+{
+	*(int*)(0x00539F3B + 0x02) = (int)g_emailsStatus.data();
+	*(int*)(0x00539F59 + 0x02) = (int)g_emailsStatus.data();
+	*(int*)(0x00560048 + 0x02) = (int)g_emailsStatus.data();
+	*(int*)(0x0056005D + 0x02) = (int)g_emailsStatus.data();
+	*(int*)(0x00560C06 + 0x02) = (int)g_emailsStatus.data();
+	*(int*)(0x00560C9A + 0x02) = (int)g_emailsStatus.data();
+	*(int*)(0x00560E45 + 0x02) = (int)g_emailsStatus.data();
+	*(int*)(0x00563937 + 0x02) = (int)g_emailsStatus.data();
+	*(int*)(0x00563949 + 0x02) = (int)g_emailsStatus.data();
+	*(int*)(0x0056395E + 0x02) = (int)g_emailsStatus.data();
+}
+
+void ResizeEmailsStatusBuffer(int newSize)
+{
+	std::vector<unsigned char> buffer;
+	buffer.reserve(g_emailsStatus.capacity());
+	memcpy_s(buffer.data(), g_emailsStatus.capacity(), g_emailsStatus.data(), g_emailsStatus.capacity());
+
+	g_emailsStatus.clear();
+	g_emailsStatus.reserve(newSize);
+	memset(g_emailsStatus.data(), 0, g_emailsStatus.capacity());
+
+	memcpy_s(g_emailsStatus.data(), std::min(g_emailsStatus.capacity(), buffer.capacity()), buffer.data(), std::min(g_emailsStatus.capacity(), buffer.capacity()));
+
+	UpdateEmailsStatusPointers();
+}
+
+int WritePilotHook(int* params)
+{
+	const char* pilotName = (const char*)0x00ABD680;
+
+	if (std::ofstream file{ std::string(pilotName) + "_emails.bin", std::ofstream::trunc | std::ofstream::binary })
+	{
+		file.write((const char*)g_emailsStatus.data(), g_emailsStatus.capacity());
+	}
+
+	return 1;
+}
+
+int ReadPilotHook(int* params)
+{
+	const char* pilotName = (const char*)0x00ABD680;
+
+	g_emailsStatus.clear();
+
+	if (std::ifstream file{ std::string(pilotName) + "_emails.bin", std::ifstream::binary })
+	{
+		file.seekg(0, std::ios::end);
+		int count = (int)file.tellg();
+		file.seekg(0, std::ios::beg);
+		ResizeEmailsStatusBuffer(count);
+		file.read((char*)g_emailsStatus.data(), count);
+	}
+	else
+	{
+		int offset = 0x00AE2A60 + 0x2508E;
+		int count = 100;
+		ResizeEmailsStatusBuffer(count);
+		memcpy_s(g_emailsStatus.data(), g_emailsStatus.capacity(), (const char*)offset, count);
+	}
+
+	return 1;
+}
+
+int CreatePilotHook(int* params)
+{
+	const char* A4 = (const char*)params[0];
+	const char* A8 = (const char*)params[1];
+
+	const auto Xwa_fopen = (int(*)(const char*, const char*))0x0059AE10;
+
+	int result = Xwa_fopen(A4, A8);
+
+	if (result != 0)
+	{
+		return result;
+	}
+
+	const char* pilotName = (const char*)params[14];
+
+	g_emailsStatus.clear();
+	ResizeEmailsStatusBuffer(100);
+
+	if (std::ofstream file{ std::string(pilotName) + "_emails.bin", std::ofstream::trunc | std::ofstream::binary })
+	{
+		file.write((const char*)g_emailsStatus.data(), g_emailsStatus.capacity());
+	}
+
+	return 0;
+}
+
+int ReadEmailTxtHook(int* params)
+{
+	int& s_XwaEmailsCount = *(int*)0x009F4B10;
+
+	s_XwaEmailsCount = params[Params_EDI];
+	ResizeEmailsStatusBuffer(s_XwaEmailsCount);
 
 	return 0;
 }
