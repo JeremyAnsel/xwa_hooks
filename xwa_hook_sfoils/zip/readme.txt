@@ -89,6 +89,10 @@ At offset 108208, replace E88331F3FF with E823FD0900.
 # To call the hook that defines hangar doors
 At offset 0F5DC7, replace E8F423F1FF with E854210B00.
 
+# To call the hook that defines the hatches
+At offset 05E079, replace A1D4948B00 with E8B29E1400.
+At offset 05AA31, replace A108BC6800 with E8FAD41400.
+
 
 *** Usage ***
 
@@ -120,6 +124,10 @@ mesh index, angle, opening speed, closing speed.
 When a craft of the same team approach the hangar, the doors are opened. The doors are not opened if an enemy craft is near the hangar. When there is no craft near the hangar, the doors are closed.
 To define the distance from the craft with the hangar, create a setting name "HangarDoorsDistance". The default value is 16384.
 The hook uses hangars for Starships, Freighters, Platforms, and uses near crafts for Starfighters, Utility Vehicules, Transports, Droids.
+
+To create object hatches or ramps, create a file named "FlightModels\[Model]SFoilsHatches.txt" or create a section named "[SFoilsHatches]" in "FlightModels\[Model].ini".
+The format is a line per mesh:
+mesh index, angle, opening speed, closing speed.
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 

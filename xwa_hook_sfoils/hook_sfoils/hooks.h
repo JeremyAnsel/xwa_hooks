@@ -33,6 +33,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4FC4DF, PlaySFoilSoundHook },
 	{ 0x508E0D, PlaySFoilSoundHook },
 	{ 0x4F69CC, HangarDoorsHook },
+	{ 0x45EC7E, ShuttleHatchHook },
+	{ 0x45B636, PlayerCraftHatchHook },
 };
 
 static const HookPatchItem g_keysSFoilsLandingGearsPatch[] =
@@ -123,6 +125,12 @@ static const HookPatchItem g_hangarDoorsPatch[] =
 	{ 0x0F5DC7, "E8F423F1FF", "E854210B00" },
 };
 
+static const HookPatchItem g_hatchesPatch[] =
+{
+	{ 0x05E079, "A1D4948B00", "E8B29E1400" },
+	{ 0x05AA31, "A108BC6800", "E8FAD41400" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("Keys for SFoils and LandingGears", g_keysSFoilsLandingGearsPatch),
@@ -138,4 +146,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that set the park state", g_parkPatch),
 	MAKE_HOOK_PATCH("To call the hook that play S-Foil sound", g_playSoundPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines hangar doors", g_hangarDoorsPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines the hatches", g_hatchesPatch),
 };

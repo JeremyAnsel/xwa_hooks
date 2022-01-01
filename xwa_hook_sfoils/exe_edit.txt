@@ -357,3 +357,18 @@ E823FD0900              call 005A8B30, 005A8B30 - 00508E0D = 0009FD23
 E8F423F1FF              call 00408DC0
 
 E854210B00              call 005A8B20, 005A8B20 - 004F69CC = 000B2154
+
+
+# hatches
+
+L0045EC70 - shuttle
+:0045EC79 - 0x05E079
+A1D4948B00              mov eax, dword ptr [008B94D4]
+
+E8B29E1400              call 005A8B30, 005A8B30 - 0045EC7E = 00149EB2
+
+L0045B0D0 - player craft
+:0045B631 - 0x05AA31
+A108BC6800              mov eax, dword ptr [0068BC08]
+
+E8FAD41400              call 005A8B30, 005A8B30 - 0045B636 = 0014D4FA

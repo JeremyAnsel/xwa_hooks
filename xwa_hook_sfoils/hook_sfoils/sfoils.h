@@ -17,3 +17,5 @@ int AIParkManrHook(int* params);
 int AIParkManrFunctionHook(int* params);
 int PlaySFoilSoundHook(int* params);
 int HangarDoorsHook(int* params);
+int ShuttleHatchHook(int* params);
+int PlayerCraftHatchHook(int* params);

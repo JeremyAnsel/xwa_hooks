@@ -471,6 +471,42 @@ std::vector<SFoil> GetHangarDoorsList(int modelIndex)
 	return values;
 }
 
+std::vector<SFoil> GetHatchesList(int modelIndex)
+{
+	const std::string ship = GetShipPath(modelIndex);
+
+	auto lines = GetFileLines(ship + "SFoilsHatches.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", "SFoilsHatches");
+	}
+
+	const auto sfoils = GetFileListValues(lines);
+
+	std::vector<SFoil> values;
+
+	for (unsigned int i = 0; i < sfoils.size(); i++)
+	{
+		const auto& value = sfoils[i];
+
+		if (value.size() < 4)
+		{
+			continue;
+		}
+
+		SFoil sfoil;
+		sfoil.meshIndex = std::stoi(value[0], 0, 0);
+		sfoil.angle = std::stoi(value[1], 0, 0);
+		sfoil.closingSpeed = std::stoi(value[2], 0, 0);
+		sfoil.openingSpeed = std::stoi(value[3], 0, 0);
+
+		values.push_back(sfoil);
+	}
+
+	return values;
+}
+
 CraftSettings GetSFoilsSettings(int modelIndex)
 {
 	const std::string ship = GetShipPath(modelIndex);
@@ -554,6 +590,24 @@ public:
 		{
 			auto value = GetHangarDoorsList(modelIndex);
 			this->_hangarDoors.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+	std::vector<SFoil> GetHatches(int modelIndex)
+	{
+		this->UpdateIfChanged();
+
+		auto it = this->_hatches.find(modelIndex);
+
+		if (it != this->_hatches.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetHatchesList(modelIndex);
+			this->_hatches.insert(std::make_pair(modelIndex, value));
 			return value;
 		}
 	}
@@ -648,6 +702,7 @@ private:
 			this->_sfoils.clear();
 			this->_landingGears.clear();
 			this->_hangarDoors.clear();
+			this->_hatches.clear();
 			this->_settings.clear();
 		}
 	}
@@ -655,6 +710,7 @@ private:
 	std::map<int, std::vector<SFoil>> _sfoils;
 	std::map<int, std::vector<SFoil>> _landingGears;
 	std::map<int, std::vector<SFoil>> _hangarDoors;
+	std::map<int, std::vector<SFoil>> _hatches;
 	std::map<int, CraftSettings> _settings;
 };
 
@@ -719,6 +775,7 @@ private:
 
 ObjectIndexTime g_objectIndexTime;
 ObjectIndexTime g_hangarDoorsObjectIndexTime;
+ObjectIndexTime g_hatchesObjectIndexTime;
 
 bool g_keySFoils = false;
 bool g_keyLandingGears = false;
@@ -768,6 +825,22 @@ int SFoilsFilterHook(int* params)
 	const char** s_StringsMessageLines = (const char**)0x009B6400;
 	const int StringsMessageLine_MSG_SFOILS_NO_FIRE = 138;
 	const int StringsMessageLine_MSG_NOT_EQUIPPED_SFOIL = 293;
+
+	// player hangar exit
+	if (params[-1] == 0x459522)
+	{
+		XwaCraft* currentCraft = object->pMobileObject->pCraft;
+		unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+
+		const auto hatches = g_modelIndexSFoils.GetHatches(modelIndex);
+
+		for (unsigned int i = 0; i < hatches.size(); i++)
+		{
+			const auto& hatch = hatches[i];
+
+			currentCraftMeshRotationAngles[hatch.meshIndex] = 0;
+		}
+	}
 
 	std::vector<SFoil> sfoils;
 
@@ -908,6 +981,19 @@ int SFoilsHook1(int* params)
 	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
 
 	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+
+	// hangar start
+	if (*(int*)0x0686B94 == 0)
+	{
+		const auto hatches = g_modelIndexSFoils.GetHatches(modelIndex);
+
+		for (unsigned int i = 0; i < hatches.size(); i++)
+		{
+			const auto& hatch = hatches[i];
+
+			currentCraftMeshRotationAngles[hatch.meshIndex] = hatch.angle;
+		}
+	}
 
 	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex);
 
@@ -1753,4 +1839,160 @@ int HangarDoorsHook(int* params)
 	}
 
 	return 0;
+}
+
+int ShuttleHatchHook(int* params)
+{
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+
+	const int step = *(int*)0x68BBCC;
+	const short elapsedTime = *(short*)0x08C1640;
+	const int shuttleObjectIndex = *(int*)0x068BBC8;
+	const unsigned short modelIndex = xwaObjects[shuttleObjectIndex].ModelIndex;
+	XwaCraft* currentCraft = xwaObjects[shuttleObjectIndex].pMobileObject->pCraft;
+
+	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+	int timeSpeed = g_hatchesObjectIndexTime.RetrieveTimeSpeed(modelIndex, shuttleObjectIndex, elapsedTime);
+
+	auto hatches = g_modelIndexSFoils.GetHatches(modelIndex);
+
+	switch (step)
+	{
+	case 0:
+	{
+		for (unsigned int i = 0; i < hatches.size(); i++)
+		{
+			const auto& hatch = hatches[i];
+			currentCraftMeshRotationAngles[hatch.meshIndex] = hatch.angle;
+		}
+
+		break;
+	}
+
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+	case 5:
+	case 6:
+	case 7:
+	{
+		for (unsigned int i = 0; i < hatches.size(); i++)
+		{
+			auto hatch = hatches[i];
+
+			hatch.closingSpeed *= timeSpeed;
+			hatch.openingSpeed *= timeSpeed;
+
+			if (currentCraftMeshRotationAngles[hatch.meshIndex] >= hatch.openingSpeed)
+			{
+				currentCraftMeshRotationAngles[hatch.meshIndex] -= hatch.openingSpeed;
+
+				if (currentCraftMeshRotationAngles[hatch.meshIndex] < hatch.openingSpeed)
+				{
+					currentCraftMeshRotationAngles[hatch.meshIndex] = 0;
+				}
+			}
+		}
+
+		break;
+	}
+
+	case 9:
+	{
+		for (unsigned int i = 0; i < hatches.size(); i++)
+		{
+			auto hatch = hatches[i];
+
+			hatch.closingSpeed *= timeSpeed;
+			hatch.openingSpeed *= timeSpeed;
+
+			if (currentCraftMeshRotationAngles[hatch.meshIndex] < hatch.angle)
+			{
+				currentCraftMeshRotationAngles[hatch.meshIndex] += hatch.closingSpeed;
+
+				if (currentCraftMeshRotationAngles[hatch.meshIndex] > hatch.angle)
+				{
+					currentCraftMeshRotationAngles[hatch.meshIndex] = hatch.angle;
+				}
+			}
+		}
+
+		break;
+	}
+	}
+
+	return *(int*)0x8B94D4;
+}
+
+int PlayerCraftHatchHook(int* params)
+{
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+
+	const int step = *(int*)0x0686B94;
+	const short elapsedTime = *(short*)0x08C1640;
+
+	const int playerObjectIndex = *(int*)0x68BC08;
+	const unsigned short modelIndex = xwaObjects[playerObjectIndex].ModelIndex;
+	XwaCraft* currentCraft = xwaObjects[playerObjectIndex].pMobileObject->pCraft;
+
+	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+	int timeSpeed = g_hatchesObjectIndexTime.RetrieveTimeSpeed(modelIndex, playerObjectIndex, elapsedTime);
+
+	auto hatches = g_modelIndexSFoils.GetHatches(modelIndex);
+
+	switch (step)
+	{
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+	{
+		for (unsigned int i = 0; i < hatches.size(); i++)
+		{
+			auto hatch = hatches[i];
+
+			hatch.closingSpeed *= timeSpeed;
+			hatch.openingSpeed *= timeSpeed;
+
+			if (currentCraftMeshRotationAngles[hatch.meshIndex] >= hatch.openingSpeed)
+			{
+				currentCraftMeshRotationAngles[hatch.meshIndex] -= hatch.openingSpeed;
+
+				if (currentCraftMeshRotationAngles[hatch.meshIndex] < hatch.openingSpeed)
+				{
+					currentCraftMeshRotationAngles[hatch.meshIndex] = 0;
+				}
+			}
+		}
+
+		break;
+	}
+
+	case 7:
+	case 8:
+	{
+		for (unsigned int i = 0; i < hatches.size(); i++)
+		{
+			auto hatch = hatches[i];
+
+			hatch.closingSpeed *= timeSpeed;
+			hatch.openingSpeed *= timeSpeed;
+
+			if (currentCraftMeshRotationAngles[hatch.meshIndex] < hatch.angle)
+			{
+				currentCraftMeshRotationAngles[hatch.meshIndex] += hatch.closingSpeed;
+
+				if (currentCraftMeshRotationAngles[hatch.meshIndex] > hatch.angle)
+				{
+					currentCraftMeshRotationAngles[hatch.meshIndex] = hatch.angle;
+				}
+			}
+		}
+
+		break;
+	}
+	}
+
+	return *(int*)0x68BC08;
 }
