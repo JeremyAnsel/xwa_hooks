@@ -307,7 +307,7 @@ struct CraftData
 	float m3D1;
 };
 
-std::string GetFileNameWithoutExtension(const std::string& str)
+std::string GetPathFileName(const std::string& str)
 {
 	auto a = str.find_last_of('\\');
 
@@ -384,7 +384,7 @@ std::vector<TurretData> GetTurretDataList(int modelIndex)
 				continue;
 			}
 
-			TurretData turret;
+			TurretData turret{};
 			turret.PositionX = (short)std::stoi(value[0], 0, 0);
 			turret.PositionY = (short)std::stoi(value[1], 0, 0);
 			turret.PositionZ = (short)std::stoi(value[2], 0, 0);
@@ -406,7 +406,7 @@ std::vector<TurretData> GetTurretDataList(int modelIndex)
 		const short craftIndex = ExeEnableTable[modelIndex].CraftIndex;
 		const ExeCraftEntry& craftEntry = ExeCraftTable[craftIndex];
 
-		const std::string shipName = GetFileNameWithoutExtension(shipPath);
+		const std::string shipName = GetPathFileName(shipPath);
 
 		for (unsigned int i = 0; i < 2; i++)
 		{
@@ -415,7 +415,7 @@ std::vector<TurretData> GetTurretDataList(int modelIndex)
 				continue;
 			}
 
-			TurretData turret;
+			TurretData turret{};
 			turret.PositionX = craftEntry.TurretPositionX[i];
 			turret.PositionY = craftEntry.TurretPositionY[i];
 			turret.PositionZ = craftEntry.TurretPositionZ[i];
@@ -661,9 +661,9 @@ int MissionObjectsHook(int* params)
 int MissionObjectsStatsHook(int* params)
 {
 	static bool s_init = false;
-	static short s_CockpitPositionX[265];
-	static short s_CockpitPositionY[265];
-	static short s_CockpitPositionZ[265];
+	static short s_CockpitPositionX[265]{};
+	static short s_CockpitPositionY[265]{};
+	static short s_CockpitPositionZ[265]{};
 
 	if (!s_init)
 	{
