@@ -1,4 +1,4 @@
-﻿xwa_hook_interdictor
+xwa_hook_interdictor
 
 This hook permits to enable interdictor feature for any craft.
 
@@ -6,7 +6,7 @@ This hook permits to enable interdictor feature for any craft.
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
+- Windows 7 or superior
 - xwa_hook_main
 
 
