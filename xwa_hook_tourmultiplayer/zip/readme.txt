@@ -6,7 +6,7 @@ This hook allows you to use the built in campaign/tour mode within XWA to play t
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
+- Windows 7 or superior
 - xwa_hook_main
 
 

@@ -574,11 +574,10 @@ int PanelButtonsHook(int* params)
 
 				signed int missionsListed = *missionCountInLst;
 				int missionIndex = 0;
-				char missionTitleBuffer[128];
+				char missionTitleBuffer[128]{};
 				memset(&missionTitleBuffer, 0, 128);
 				int missionIndexSelected = 0;
 				MissionLSTEntry* missionLst = *(MissionLSTEntry**)0x9F4B98;
-				char missionTitle[128];
 
 				if (*missionCountInLst > 0)
 				{
@@ -590,7 +589,7 @@ int PanelButtonsHook(int* params)
 						}
 						else
 						{
-							*(char**)missionTitle = missionLst[missionIndex].MissionTitle;
+							const char* missionTitle = missionLst[missionIndex].MissionTitle;
 							if (strcmp(missionLst[missionIndex].MissionTitle, missionTitleBuffer))
 							{
 								*loadScrnTotalMissionsListed = ++missionsListed;
@@ -1403,7 +1402,7 @@ int HangarMultiplayerHook(int* params)
 
 int UpdateRateHostJoinRoomHook(int* params)
 {
-	char* updateRate = 0;
+	const char* updateRate = 0;
 
 	// Reset UpdateRate if needed
 	if (*configUpdateRate != 8 && *configUpdateRate != 29 && *configUpdateRate != 59)
@@ -1445,7 +1444,7 @@ int UpdateRateHostJoinRoomHook(int* params)
 
 int UpdateRateOptionsMenuHook(int* params)
 {
-	char* updateRate = 0;
+	const char* updateRate = 0;
 
 	// Reset UpdateRate if needed
 	if (*configUpdateRate != 8 && *configUpdateRate != 29 && *configUpdateRate != 59)
@@ -1487,7 +1486,7 @@ int UpdateRateOptionsMenuHook(int* params)
 
 int UpdateRateOptionsMenuClientHook(int* params)
 {
-	char* updateRate = 0;
+	const char* updateRate = 0;
 
 	// Reset UpdateRate if needed
 	if (*configUpdateRate != 8 && *configUpdateRate != 29 && *configUpdateRate != 59)
