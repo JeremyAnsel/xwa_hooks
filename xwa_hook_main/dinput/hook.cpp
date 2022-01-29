@@ -52,7 +52,8 @@ public:
 
 	~VirtualProtectMemory()
 	{
-		VirtualProtect(address, size, oldProtection, nullptr);
+		DWORD protection;
+		VirtualProtect(address, size, oldProtection, &protection);
 	}
 
 private:
@@ -71,7 +72,7 @@ bool IsPatchMemoryEqual(const char* offset, const char* item)
 {
 	offset += 0x400C00;
 
-	char byte[3];
+	char byte[3]{};
 
 	bool ret = true;
 
@@ -96,7 +97,7 @@ void WritePatchMemory(char* offset, const char* item)
 {
 	offset += 0x400C00;
 
-	char byte[3];
+	char byte[3]{};
 
 	for (int i = 0; item[i] != 0; i += 2, offset++)
 	{
@@ -207,9 +208,9 @@ public:
 
 	void LoadHooksList()
 	{
-		for (const auto& file : std::experimental::filesystem::directory_iterator("."))
+		for (const auto& file : std::filesystem::directory_iterator("."))
 		{
-			if (!std::experimental::filesystem::is_regular_file(file))
+			if (!std::filesystem::is_regular_file(file))
 			{
 				continue;
 			}
@@ -303,7 +304,7 @@ bool LoadAndPatchHooks()
 {
 	for (const auto& wrapper : g_hookList._wrappers)
 	{
-		auto getPatch = (const HookPatch* (*)(int))GetProcAddress(wrapper._module, "GetHookPatch");
+		auto getPatch = (const HookPatch * (*)(int))GetProcAddress(wrapper._module, "GetHookPatch");
 
 		if (getPatch != nullptr)
 		{
@@ -347,7 +348,7 @@ public:
 				}
 			}
 
-			std::sort(functions.begin(), functions.end(), [](const auto& a, const auto& b) {return a.second < b.second;});
+			std::sort(functions.begin(), functions.end(), [](const auto& a, const auto& b) {return a.second < b.second; });
 
 			for (const auto& f : functions)
 			{

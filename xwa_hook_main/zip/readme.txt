@@ -6,7 +6,7 @@ This is the main dll hook that is used to call other hooks. A hook is a way to i
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
+- Windows 7 or superior
 
 
 *** Setup ***
