@@ -6,7 +6,7 @@ This hook improves FPS.
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
+- Windows 7 or superior
 - xwa_hook_main
 - a CPU with SSE2 support
 - custom DDraw.dll with support for the d3d hook
