@@ -6,7 +6,7 @@ This hook displays the screen resolution in the video options screen.
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
+- Windows 7 or superior
 - xwa_hook_main
 
 
