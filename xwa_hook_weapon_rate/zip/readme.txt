@@ -6,7 +6,7 @@ This hook permits to define weapon decharge and recharge rates for any craft.
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
+- Windows 7 or superior
 - xwa_hook_main
 
 
