@@ -112,7 +112,7 @@ public:
 			controllerIndex++;
 			int controllerId = (int)((unsigned int)caps.wMid << 16 | (unsigned int)caps.wPid);
 
-			std::array<short, 32 + 4> buttons;
+			std::array<short, 32 + 4> buttons{};
 
 			int numButtons = min(caps.wNumButtons, 32);
 
@@ -322,8 +322,8 @@ int JoystickFFEnumHook(int* params)
 
 	LPCDIDEVICEINSTANCEA lpddi = (LPCDIDEVICEINSTANCEA)params[1];
 
-	LPDIRECTINPUTA &s_XwaForceFeedbackIDirectInput = *(LPDIRECTINPUTA*)0x0063CF78;
-	LPDIRECTINPUTDEVICE2A &s_XwaForceFeedbackIDirectInput2 = *(LPDIRECTINPUTDEVICE2A*)0x0063CF7C;
+	LPDIRECTINPUTA& s_XwaForceFeedbackIDirectInput = *(LPDIRECTINPUTA*)0x0063CF78;
+	LPDIRECTINPUTDEVICE2A& s_XwaForceFeedbackIDirectInput2 = *(LPDIRECTINPUTDEVICE2A*)0x0063CF7C;
 
 	if (s_XwaForceFeedbackIDirectInput2 == nullptr)
 	{
