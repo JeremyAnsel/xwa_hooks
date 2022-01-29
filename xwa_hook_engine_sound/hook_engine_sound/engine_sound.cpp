@@ -63,19 +63,21 @@ public:
 		this->SoundsCountHookExists = std::ifstream("Hook_Sounds_Count.dll") ? true : false;
 		this->SoundEffectIds = this->SoundsCountHookExists ? *(int**)0x00917E80 : (int*)0x00917E80;
 
+		std::vector<std::string> lines;
+
 		if (this->SoundsCountHookExists)
 		{
-			auto lines = GetFileLines("Hook_Sounds_Count.txt");
-
-			this->SfxInteriorIndex = GetFileKeyValueInt(lines, "sfx_interior_index");
-			this->SfxInteriorCount = GetFileKeyValueInt(lines, "sfx_interior_count");
-			this->SfxFlyByIndex = GetFileKeyValueInt(lines, "sfx_flyby_index");
-			this->SfxFlyByCount = GetFileKeyValueInt(lines, "sfx_flyby_count");
-			this->SfxEngineWashIndex = GetFileKeyValueInt(lines, "sfx_enginewash_index");
-			this->SfxEngineWashCount = GetFileKeyValueInt(lines, "sfx_enginewash_count");
-			this->SfxWeaponIndex = GetFileKeyValueInt(lines, "sfx_weapon_index");
-			this->SfxWeaponCount = GetFileKeyValueInt(lines, "sfx_weapon_count");
+			lines = GetFileLines("Hook_Sounds_Count.txt");
 		}
+
+		this->SfxInteriorIndex = GetFileKeyValueInt(lines, "sfx_interior_index");
+		this->SfxInteriorCount = GetFileKeyValueInt(lines, "sfx_interior_count");
+		this->SfxFlyByIndex = GetFileKeyValueInt(lines, "sfx_flyby_index");
+		this->SfxFlyByCount = GetFileKeyValueInt(lines, "sfx_flyby_count");
+		this->SfxEngineWashIndex = GetFileKeyValueInt(lines, "sfx_enginewash_index");
+		this->SfxEngineWashCount = GetFileKeyValueInt(lines, "sfx_enginewash_count");
+		this->SfxWeaponIndex = GetFileKeyValueInt(lines, "sfx_weapon_index");
+		this->SfxWeaponCount = GetFileKeyValueInt(lines, "sfx_weapon_count");
 	}
 
 	bool SoundsCountHookExists;
