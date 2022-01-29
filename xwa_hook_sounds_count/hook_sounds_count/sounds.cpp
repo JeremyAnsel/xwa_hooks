@@ -5,7 +5,7 @@
 #include <filesystem>
 #include <tuple>
 
-std::string GetFileName(const std::string& str)
+std::string GetPathFileName(const std::string& str)
 {
 	auto a = str.find_last_of('\\');
 
@@ -48,9 +48,9 @@ private:
 	{
 		std::vector<std::string> filenames;
 
-		for (const auto& file : std::experimental::filesystem::directory_iterator(".\\Wave"))
+		for (const auto& file : std::filesystem::directory_iterator(".\\Wave"))
 		{
-			if (!std::experimental::filesystem::is_regular_file(file))
+			if (!std::filesystem::is_regular_file(file))
 			{
 				continue;
 			}
@@ -90,7 +90,7 @@ private:
 
 			if (count)
 			{
-				std::string baseName = to_lower(GetStringWithoutExtension(GetFileName(filename)));
+				std::string baseName = to_lower(GetStringWithoutExtension(GetPathFileName(filename)));
 
 				file << "; " << filename << std::endl;
 				file << baseName << "_index = " << currentIndex << std::endl;
@@ -311,7 +311,7 @@ int LoadEffectSoundsHook(int* params)
 	{
 		int index = std::get<0>(sound);
 		std::string filename = std::get<1>(sound);
-		std::string basename = GetStringWithoutExtension(GetFileName(filename));
+		std::string basename = GetStringWithoutExtension(GetPathFileName(filename));
 		std::string directory = "Wave\\" + basename + "\\";
 
 		XwaLoadSfxLst(filename.c_str(), (short)index, directory.c_str());
