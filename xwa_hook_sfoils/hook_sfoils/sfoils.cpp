@@ -66,13 +66,15 @@ public:
 		this->SoundsCountHookExists = std::ifstream("Hook_Sounds_Count.dll") ? true : false;
 		this->SoundEffectIds = this->SoundsCountHookExists ? *(int**)0x00917E80 : (int*)0x00917E80;
 
+		std::vector<std::string> lines;
+
 		if (this->SoundsCountHookExists)
 		{
-			auto lines = GetFileLines("Hook_Sounds_Count.txt");
-
-			this->SfxSFoilIndex = GetFileKeyValueInt(lines, "sfx_sfoil_index");
-			this->SfxSFoilCount = GetFileKeyValueInt(lines, "sfx_sfoil_count");
+			lines = GetFileLines("Hook_Sounds_Count.txt");
 		}
+
+		this->SfxSFoilIndex = GetFileKeyValueInt(lines, "sfx_sfoil_index");
+		this->SfxSFoilCount = GetFileKeyValueInt(lines, "sfx_sfoil_count");
 	}
 
 	bool SoundsCountHookExists;
@@ -333,7 +335,7 @@ std::vector<SFoil> GetFileListSFoils(const std::vector<std::string>& lines)
 			continue;
 		}
 
-		SFoil sfoil;
+		SFoil sfoil{};
 		sfoil.meshIndex = std::stoi(value[0], 0, 0);
 		sfoil.angle = std::stoi(value[1], 0, 0);
 		sfoil.closingSpeed = std::stoi(value[2], 0, 0);
@@ -423,7 +425,7 @@ std::vector<SFoil> GetLandingGearsList(int modelIndex)
 			continue;
 		}
 
-		SFoil sfoil;
+		SFoil sfoil{};
 		sfoil.meshIndex = std::stoi(value[0], 0, 0);
 		sfoil.angle = std::stoi(value[1], 0, 0);
 		sfoil.closingSpeed = std::stoi(value[2], 0, 0);
@@ -459,7 +461,7 @@ std::vector<SFoil> GetHangarDoorsList(int modelIndex)
 			continue;
 		}
 
-		SFoil sfoil;
+		SFoil sfoil{};
 		sfoil.meshIndex = std::stoi(value[0], 0, 0);
 		sfoil.angle = std::stoi(value[1], 0, 0);
 		sfoil.closingSpeed = std::stoi(value[2], 0, 0);
@@ -495,7 +497,7 @@ std::vector<SFoil> GetHatchesList(int modelIndex)
 			continue;
 		}
 
-		SFoil sfoil;
+		SFoil sfoil{};
 		sfoil.meshIndex = std::stoi(value[0], 0, 0);
 		sfoil.angle = std::stoi(value[1], 0, 0);
 		sfoil.closingSpeed = std::stoi(value[2], 0, 0);
@@ -518,7 +520,7 @@ CraftSettings GetSFoilsSettings(int modelIndex)
 		lines = GetFileLines(ship + ".ini", "SFoils");
 	}
 
-	CraftSettings settings;
+	CraftSettings settings{};
 	settings.CloseSFoilsInHyperspace = GetFileKeyValueInt(lines, "CloseSFoilsInHyperspace", 0) == 0 ? false : true;
 	settings.SFoilsAnimationSpeed = std::max(GetFileKeyValueInt(lines, "SFoilsAnimationSpeed", 1), 1);
 	settings.AllowFireWhenSFoilsAreClosed = GetFileKeyValueInt(lines, "AllowFireWhenSFoilsAreClosed", 0) == 0 ? false : true;
@@ -1065,7 +1067,7 @@ int SFoilsHook2(int* params)
 
 	for (unsigned int i = 0; i < sfoils.size(); i++)
 	{
-		auto sfoil = sfoils[i];
+		SFoil sfoil = sfoils[i];
 
 		sfoil.closingSpeed *= timeSpeed;
 		sfoil.openingSpeed *= timeSpeed;
@@ -1542,7 +1544,7 @@ int NoFireMessageHook(int* params)
 		ret = 1;
 	}
 
-	return (currentCraft->SFoilsState & 1) != 0 || ret;
+	return (currentCraft->SFoilsState & 1) | ret;
 }
 
 int AILookForParkOrderHook(int* params)
@@ -1806,7 +1808,7 @@ int HangarDoorsHook(int* params)
 
 		for (unsigned int i = 0; i < sfoils.size(); i++)
 		{
-			auto sfoil = sfoils[i];
+			SFoil sfoil = sfoils[i];
 
 			sfoil.closingSpeed *= timeSpeed;
 			sfoil.openingSpeed *= timeSpeed;
@@ -1879,7 +1881,7 @@ int ShuttleHatchHook(int* params)
 	{
 		for (unsigned int i = 0; i < hatches.size(); i++)
 		{
-			auto hatch = hatches[i];
+			SFoil hatch = hatches[i];
 
 			hatch.closingSpeed *= timeSpeed;
 			hatch.openingSpeed *= timeSpeed;
@@ -1902,7 +1904,7 @@ int ShuttleHatchHook(int* params)
 	{
 		for (unsigned int i = 0; i < hatches.size(); i++)
 		{
-			auto hatch = hatches[i];
+			SFoil hatch = hatches[i];
 
 			hatch.closingSpeed *= timeSpeed;
 			hatch.openingSpeed *= timeSpeed;
@@ -1950,7 +1952,7 @@ int PlayerCraftHatchHook(int* params)
 	{
 		for (unsigned int i = 0; i < hatches.size(); i++)
 		{
-			auto hatch = hatches[i];
+			SFoil hatch = hatches[i];
 
 			hatch.closingSpeed *= timeSpeed;
 			hatch.openingSpeed *= timeSpeed;
@@ -1974,7 +1976,7 @@ int PlayerCraftHatchHook(int* params)
 	{
 		for (unsigned int i = 0; i < hatches.size(); i++)
 		{
-			auto hatch = hatches[i];
+			SFoil hatch = hatches[i];
 
 			hatch.closingSpeed *= timeSpeed;
 			hatch.openingSpeed *= timeSpeed;
