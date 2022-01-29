@@ -1,4 +1,4 @@
-﻿xwa_hook_backdrops
+xwa_hook_backdrops
 
 This hook adds starfield backdrops to skirmish mission and permits to replace .dat files for a given mission.
 
@@ -6,7 +6,7 @@ This hook adds starfield backdrops to skirmish mission and permits to replace .d
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
+- Windows 7 or superior
 - xwa_hook_main
 
 
