@@ -201,7 +201,7 @@ std::vector<PilotMesh> GetFileListPilotMeshes(const std::vector<std::string>& li
 			continue;
 		}
 
-		PilotMesh pilotMesh;
+		PilotMesh pilotMesh{};
 		pilotMesh.meshIndex = std::stoi(value[0], 0, 0);
 		pilotMesh.angle = std::stoi(value[1], 0, 0);
 		pilotMesh.speed = std::stoi(value[2], 0, 0);
