@@ -6,7 +6,7 @@ This hook fix the warheads selection for crafts that have dual warheads.
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
+- Windows 7 or superior
 - xwa_hook_main
 
 
