@@ -77,13 +77,15 @@ public:
 		this->SoundsCountHookExists = std::ifstream("Hook_Sounds_Count.dll") ? true : false;
 		this->SoundEffectIds = this->SoundsCountHookExists ? *(int**)0x00917E80 : (int*)0x00917E80;
 
+		std::vector<std::string> lines;
+
 		if (this->SoundsCountHookExists)
 		{
-			auto lines = GetFileLines("Hook_Sounds_Count.txt");
-
-			this->SfxHangarAmbientIndex = GetFileKeyValueInt(lines, "sfx_hangarambient_index");
-			this->SfxHangarAmbientCount = GetFileKeyValueInt(lines, "sfx_hangarambient_count");
+			lines = GetFileLines("Hook_Sounds_Count.txt");
 		}
+
+		this->SfxHangarAmbientIndex = GetFileKeyValueInt(lines, "sfx_hangarambient_index");
+		this->SfxHangarAmbientCount = GetFileKeyValueInt(lines, "sfx_hangarambient_count");
 	}
 
 	bool SoundsCountHookExists;
@@ -925,42 +927,42 @@ private:
 	}
 
 	std::vector<std::string> _lines;
-	bool LoadShuttle;
-	unsigned short ShuttleModelIndex;
-	int ShuttleMarkings;
-	int ShuttlePositionX;
-	int ShuttlePositionY;
-	int ShuttlePositionZ;
-	unsigned short ShuttleOrientation;
-	bool IsShuttleFloorInverted;
+	bool LoadShuttle = false;
+	unsigned short ShuttleModelIndex = 0;
+	int ShuttleMarkings = 0;
+	int ShuttlePositionX = 0;
+	int ShuttlePositionY = 0;
+	int ShuttlePositionZ = 0;
+	unsigned short ShuttleOrientation = 0;
+	bool IsShuttleFloorInverted = false;
 	std::string ShuttleAnimation;
-	int ShuttleAnimationStraightLine;
-	int ShuttleAnimationElevation;
-	bool LoadDroids;
-	int DroidsPositionZ;
-	int Droid1PositionZ;
-	int Droid2PositionZ;
-	bool IsDroidsFloorInverted;
-	bool Droid1Update;
-	bool Droid2Update;
-	unsigned short Droid1ModelIndex;
-	int Droid1Markings;
-	unsigned short Droid2ModelIndex;
-	int Droid2Markings;
-	int HangarRoofCranePositionX;
-	int HangarRoofCranePositionY;
-	int HangarRoofCranePositionZ;
-	int HangarRoofCraneAxis;
-	int HangarRoofCraneLowOffset;
-	int HangarRoofCraneHighOffset;
-	bool IsHangarFloorInverted;
-	unsigned char HangarIff;
-	int PlayerAnimationElevation;
-	int PlayerAnimationStraightLine;
-	int PlayerOffsetX;
-	int PlayerOffsetY;
-	int PlayerOffsetZ;
-	bool IsPlayerFloorInverted;
+	int ShuttleAnimationStraightLine = 0;
+	int ShuttleAnimationElevation = 0;
+	bool LoadDroids = false;
+	int DroidsPositionZ = 0;
+	int Droid1PositionZ = 0;
+	int Droid2PositionZ = 0;
+	bool IsDroidsFloorInverted = 0;
+	bool Droid1Update = false;
+	bool Droid2Update = false;
+	unsigned short Droid1ModelIndex = 0;
+	int Droid1Markings = 0;
+	unsigned short Droid2ModelIndex = 0;
+	int Droid2Markings = 0;
+	int HangarRoofCranePositionX = 0;
+	int HangarRoofCranePositionY = 0;
+	int HangarRoofCranePositionZ = 0;
+	int HangarRoofCraneAxis = 0;
+	int HangarRoofCraneLowOffset = 0;
+	int HangarRoofCraneHighOffset = 0;
+	bool IsHangarFloorInverted = false;
+	unsigned char HangarIff = 0;
+	int PlayerAnimationElevation = 0;
+	int PlayerAnimationStraightLine = 0;
+	int PlayerOffsetX = 0;
+	int PlayerOffsetY = 0;
+	int PlayerOffsetZ = 0;
+	bool IsPlayerFloorInverted = false;
 
 	bool HasChanged()
 	{
@@ -1019,7 +1021,7 @@ private:
 	bool lastIsProvingGround = false;
 	std::string lastMissionFileName;
 	std::string lastCommandShip;
-	unsigned char lastCommandShipIff;
+	unsigned char lastCommandShipIff = 0;
 };
 
 CustomFileLinesHangarObjects g_hangarObjects;
@@ -2428,7 +2430,7 @@ int SelectHangarTypeHook(int* params)
 {
 	// apply to family mission type
 
-	const auto mode = g_config.SelectionMode;
+	const auto& mode = g_config.SelectionMode;
 	const auto missionDirectoryId = *(int*)0x0AE2A8A;
 	const auto missionDescriptionId = ((int*)0x0AE2A8E)[missionDirectoryId];
 
@@ -2454,7 +2456,7 @@ int SelectHangarInsideAnimation(int* params)
 {
 	const unsigned short modelIndex = (unsigned short)params[0];
 
-	const auto mode = g_config.SelectionMode;
+	const auto& mode = g_config.SelectionMode;
 
 	bool inside;
 
@@ -2475,7 +2477,7 @@ int SelectHangarModelIndex(int* params)
 {
 	const unsigned short modelIndex = (unsigned short)params[0];
 
-	const auto mode = g_config.SelectionMode;
+	const auto& mode = g_config.SelectionMode;
 
 	bool isFamilyBase;
 
