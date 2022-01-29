@@ -1,22 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DInputLogger", "DInputLogger\DInputLogger.vcxproj", "{C0505AD5-2F6F-41CA-9635-710EAC03DEE0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DInputLogger", "DInputLogger\DInputLogger.vcxproj", "{8AB27DB7-11E9-4D9E-88D6-8CFFA6602896}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Win32 = Debug|Win32
-		Release|Win32 = Release|Win32
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C0505AD5-2F6F-41CA-9635-710EAC03DEE0}.Debug|Win32.ActiveCfg = Debug|Win32
-		{C0505AD5-2F6F-41CA-9635-710EAC03DEE0}.Debug|Win32.Build.0 = Debug|Win32
-		{C0505AD5-2F6F-41CA-9635-710EAC03DEE0}.Release|Win32.ActiveCfg = Release|Win32
-		{C0505AD5-2F6F-41CA-9635-710EAC03DEE0}.Release|Win32.Build.0 = Release|Win32
+		{8AB27DB7-11E9-4D9E-88D6-8CFFA6602896}.Debug|x86.ActiveCfg = Debug|Win32
+		{8AB27DB7-11E9-4D9E-88D6-8CFFA6602896}.Debug|x86.Build.0 = Debug|Win32
+		{8AB27DB7-11E9-4D9E-88D6-8CFFA6602896}.Release|x86.ActiveCfg = Release|Win32
+		{8AB27DB7-11E9-4D9E-88D6-8CFFA6602896}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A3A2A67B-B1F0-4115-BB3B-59CAB962706E}
 	EndGlobalSection
 EndGlobal
