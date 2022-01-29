@@ -6,7 +6,7 @@ This hook set a tag to the textures. The tag can then be read from ddraw.dll.
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
+- Windows 7 or superior
 - xwa_hook_main
 
 
