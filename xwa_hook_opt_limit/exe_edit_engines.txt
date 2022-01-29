@@ -1,0 +1,248 @@
+
+; XwaCraft EngineThrottles
+
+:0041CD06 - 0x01C106
+889401CF020000          mov byte ptr [ecx+eax+000002CF], dl
+
+889401 + g_craftOffset_2CF_0
+
+:0047AC8C - 0x07A08C
+8A8C11CF020000          mov cl, byte ptr [ecx+edx+000002CF]
+
+8A8C11 + g_craftOffset_2CF_0
+
+:004BACFB - 0x0BA0FB
+88843ECF020000          mov byte ptr [esi+edi+000002CF], al
+
+88843E + g_craftOffset_2CF_0
+
+:004E0E85 - 0x0E0285
+8A8C02CF020000          mov cl, byte ptr [edx+eax+000002CF]
+
+8A8C02 + g_craftOffset_2CF_0
+
+:004E0FB7 - 0x0E03B7
+8D8C08CF020000          lea ecx, dword ptr [eax+ecx+000002CF]
+
+8D8C08 + g_craftOffset_2CF_0
+
+:004E1017 - 0x0E0417
+80BC30CF02000000        cmp byte ptr [eax+esi+000002CF], 00
+
+80BC30 + g_craftOffset_2CF_0 + 00
+
+:004E2CCF - 0x0E20CF
+8A8411CF020000          mov al, byte ptr [ecx+edx+000002CF]
+
+8A8411 + g_craftOffset_2CF_0
+
+; ExeCraftTable Engines
+
+:0042D675 - 0x02CA75
+8DB862B65B00            lea edi, dword ptr [eax+005BB662]
+
+8DB8 + g_exeCraftEnginesArray_0
+
+:0042DA2E - 0x02CE2E
+8DB862B65B00            lea edi, dword ptr [eax+005BB662]
+
+8DB8 + g_exeCraftEnginesArray_0
+
+:00432B49 - 0x031F49
+89849662B65B00          mov dword ptr [esi+4*edx+005BB662], eax
+
+898496 + g_exeCraftEnginesArray_0
+
+:004E0E7A - 0x0E027A
+8D9F62B65B00            lea ebx, dword ptr [edi+005BB662]
+
+8D9F + g_exeCraftEnginesArray_0
+
+:004EA00B - 0x0E940B
+8B9C9A62B65B00          mov ebx, dword ptr [edx+4*ebx+005BB662]
+
+8B9C9A + g_exeCraftEnginesArray_0
+
+:004F2BC4 - 0x0F1FC4
+8D8562B65B00            lea eax, dword ptr [ebp+005BB662]
+
+8D85 + g_exeCraftEnginesArray_0
+
+; ExeCraftTable EngineMeshIds
+
+:0040B0E9 - 0x00A4E9
+660FB6BC01A2B65B00      movzx di, byte ptr [ecx+eax+005BB6A2]
+
+660FB6BC01 + g_exeCraftEngineMeshIdsArray_0
+
+:0040B1BD - 0x00A5BD
+660FB6BC01A2B65B00      movzx di, byte ptr [ecx+eax+005BB6A2]
+
+660FB6BC01 + g_exeCraftEngineMeshIdsArray_0
+
+:0042D67B - 0x02CA7B
+8D80A2B65B00            lea eax, dword ptr [eax+005BB6A2]
+
+8D80 + g_exeCraftEngineMeshIdsArray_0
+
+:0042DA34 - 0x02CE34
+8D98A2B65B00            lea ebx, dword ptr [eax+005BB6A2]
+
+8D98 + g_exeCraftEngineMeshIdsArray_0
+
+:00432B60 - 0x031F60
+88940FA1B65B00          mov byte ptr [edi+ecx+005BB6A1], dl
+
+88940F + g_exeCraftEngineMeshIdsArray__1
+
+:0047AC54 - 0x07A054
+660FB6AC01A2B65B00      movzx bp, byte ptr [ecx+eax+005BB6A2]
+
+660FB6AC01 + g_exeCraftEngineMeshIdsArray_0
+
+:004E0E94 - 0x0E0294
+660FB68C3AA2B65B00      movzx cx, byte ptr [edx+edi+005BB6A2]
+
+660FB68C3A + g_exeCraftEngineMeshIdsArray_0
+
+:004E2CAC - 0x0E20AC
+8A9401A2B65B00          mov dl, byte ptr [ecx+eax+005BB6A2]
+
+8A9401 + g_exeCraftEngineMeshIdsArray_0
+
+:004F2BDA - 0x0F1FDA
+8A8429A2B65B00          mov al, byte ptr [ecx+ebp+005BB6A2]
+
+8A8429 + g_exeCraftEngineMeshIdsArray_0
+
+; SpaceBomb Engines and EngineMeshIds arrays
+
+:0042D611 - 0x02CA11
+BF60578D00              mov edi, 008D5760
+
+BF + g_spaceBombEnginesArray_0
+
+:00432971 - 0x031D71
+89048D60578D00          mov dword ptr [4*ecx+008D5760], eax
+
+89048D + g_spaceBombEnginesArray_0
+
+:0042D616 - 0x02CA16
+C7442414A0578D00        mov [esp+14], 008D57A0
+
+C7442414 + g_spaceBombEngineMeshIdsArray_0
+
+:00432986 - 0x031D86
+889C329F578D00          mov byte ptr [edx+esi+008D579F], bl
+
+889C32 + g_spaceBombEngineMeshIdsArray__1
+
+; Cockpit Engines and EngineMeshIds arrays
+
+:0042D6CE - 0x02CACE
+BF80FB7F00              mov edi, 007FFB80
+
+BF + g_cockpitEnginesArray_0
+
+:0043361A - 0x032A1A
+89049580FB7F00          mov dword ptr [4*edx+007FFB80], eax
+
+890495 + g_cockpitEnginesArray_0
+
+:0042D6D3 - 0x02CAD3
+C7442414C0FB7F00        mov [esp+14], 007FFBC0
+
+C7442414 + g_cockpitEngineMeshIdsArray_0
+
+:0043362D - 0x032A2D
+888C30BFFB7F00          mov byte ptr [eax+esi+007FFBBF], cl
+
+888C30 + g_cockpitEngineMeshIdsArray__1
+
+; Exterior Engines and EngineMeshIds arrays
+
+:0042D6EA - 0x02CAEA
+BF60099100              mov edi, 00910960
+
+BF + g_exteriorEnginesArray_0
+
+:004337E9 - 0x032BE9
+89049560099100          mov dword ptr [4*edx+00910960], eax
+
+890495 + g_exteriorEnginesArray_0
+
+:0042D6EF - 0x02CAEF
+C7442414A0099100        mov [esp+14], 009109A0
+
+C7442414 + g_exteriorEngineMeshIdsArray_0
+
+:004337F9 - 0x032BF9
+889C309F099100          mov byte ptr [eax+esi+0091099F], bl
+
+889C30 +  g_exteriorEngineMeshIdsArray__1
+
+; XwaOptGetMeshEngineGlowCount
+
+:00432939 - 0x031D39
+E8425D0500              call 00488680
+
+E8F2611700              call 005A8B30, 005A8B30 - 0043293E = 001761F2
+
+:00432B11 - 0x031F11
+E86A5B0500              call 00488680
+
+E81A601700              call 005A8B30, 005A8B30 - 00432B16 = 0017601A
+
+:004335E2 - 0x0329E2
+E899500500              call 00488680
+
+E849551700              call 005A8B30, 005A8B30 - 004335E7 = 00175549
+
+:004337B5 - 0x032BB5
+E8C64E0500              call 00488680
+
+E876531700              call 005A8B30, 005A8B30 - 004337BA = 00175376
+
+===============================================================================
+
+; L004E28F0
+:004E2AC0 - 0x0E1EC0
+E88B5FFAFF              call 00488A50
+
+E86B600C00              call 005A8B30, 005A8B30 - 004E2AC5 = 000C606B
+
+; L0047AAA0
+:0047AB11 - 0x079F11
+8B9ADD000000            mov ebx, dword ptr [edx+000000DD]
+
+E80AE01200              call 005A8B20, 005A8B20 - 0047AB16 = 0012E00A
+90                      nop
+
+; L004E0E10
+:004E0E64 - 0x0E0264
+660FB687B2B65B00        movzx ax, byte ptr [edi+005BB6B2]
+
+E8B77C0C00              call 005A8B20, 005A8B20 - 004E0E69 = 000C7CB7
+909090                  nop
+
+; L004E0FA0
+:004E1022 - 0x0E0422
+40                      inc eax
+3BC1                    cmp eax, ecx
+72F0                    jb 004E1017
+
+E8F97A0C00              call 005A8B20, 005A8B20 - 004E1027 = 000C7AF9
+
+; L004F22B0
+:004F2C28 - 0x0F2028
+8B81DD000000            mov eax, dword ptr [ecx+000000DD]
+
+E8F35E0B00              call 005A8B20, 005A8B20 - 004F2C2D = 000B5EF3
+90                      nop
+
+; L0042D590
+:0042D884 - 0x02CC84
+0F8598000000            jne 0042D922
+
+E897B21700              call 005A8B20, 005A8B20 - 0042D889 = 0017B297
+90                      nop

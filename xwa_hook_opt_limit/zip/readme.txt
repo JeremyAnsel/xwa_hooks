@@ -3,6 +3,7 @@ xwa_hook_opt_limit
 This hook removes the opt limit of 512 vertices per mesh.
 It also generates the "spec.rci" file.
 The meshes count per opt is now 254.
+The engines count per opt is now 255.
 
 
 *** Requirements ***
@@ -101,6 +102,12 @@ See "exe_edit_meshes.txt"
 
 # To call the hook that zero inits the craft memory
 See "exe_edit_meshes.txt"
+
+# To call the hook that sets the craft engines count
+See "exe_edit_engines.txt"
+
+# To call the hook that gets the craft engine mesh
+See "exe_edit_engines.txt"
 
 
 *** Usage ***

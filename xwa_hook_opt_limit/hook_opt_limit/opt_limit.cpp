@@ -2,6 +2,18 @@
 #include "opt_limit.h"
 #include "config.h"
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 #pragma pack(push, 1)
 
 struct HitData
@@ -45,26 +57,33 @@ public:
 		}
 
 		this->MeshesCount = GetFileKeyValueInt(lines, "MeshesCount", 255);
-		this->Craft_Size = 0x3F9 + GetFileKeyValueInt(lines, "Craft_ExtraSize", this->MeshesCount * 3);
+		this->EnginesCount = 255;
+		// 22E (MeshesCount) + 260 (MeshesCount) + 292 (MeshesCount) + 2CF (EnginesCount)
+		this->Craft_Size = 0x3F9 + GetFileKeyValueInt(lines, "Craft_ExtraSize", this->MeshesCount * 3 + this->EnginesCount);
 		this->Craft_Offset_22E = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_22E", 0);
 		this->Craft_Offset_260 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_260", this->MeshesCount * 1);
 		this->Craft_Offset_292 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_292", this->MeshesCount * 2);
+		this->Craft_Offset_2CF = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_2CF", this->MeshesCount * 3);
 
 		if (this->MeshesCount == 0)
 		{
 			this->MeshesCount = 50;
+			this->EnginesCount = 16;
 			this->Craft_Size = 0;
-			this->Craft_Offset_22E = -459;
-			this->Craft_Offset_260 = -409;
-			this->Craft_Offset_292 = -359;
+			this->Craft_Offset_22E = 0x22E;
+			this->Craft_Offset_260 = 0x260;
+			this->Craft_Offset_292 = 0x292;
+			this->Craft_Offset_2CF = 0x2CF;
 		}
 	}
 
 	int MeshesCount;
+	int EnginesCount;
 	int Craft_Size;
 	int Craft_Offset_22E;
 	int Craft_Offset_260;
 	int Craft_Offset_292;
+	int Craft_Offset_2CF;
 };
 
 const Config& GetConfig()
@@ -126,6 +145,11 @@ int GetCraftMeshesCount()
 	return GetConfig().MeshesCount;
 }
 
+int GetCraftEnginesCount()
+{
+	return GetConfig().EnginesCount;
+}
+
 int GetCraftOffset_22E()
 {
 	return GetConfig().Craft_Offset_22E;
@@ -139,6 +163,11 @@ int GetCraftOffset_260()
 int GetCraftOffset_292()
 {
 	return GetConfig().Craft_Offset_292;
+}
+
+int GetCraftOffset_2CF()
+{
+	return GetConfig().Craft_Offset_2CF;
 }
 
 int GetOptModelMeshesInfoSize()
@@ -170,6 +199,118 @@ int GetOptModelMeshesInfoOffsetType()
 int GetOptModelMeshesInfoOffsetDescriptor()
 {
 	return 4 + GetConfig().MeshesCount * 4;
+}
+
+int GetExeCraftEnginesArrayPtr()
+{
+	static bool init = true;
+	static std::vector<void*> s_engines;
+
+	if (init)
+	{
+		init = false;
+		s_engines.reserve(GetCraftEnginesCount());
+	}
+
+	return (int)s_engines.data();
+}
+
+int GetExeCraftEngineMeshIdsArrayPtr()
+{
+	static bool init = true;
+	static std::vector<unsigned char> s_engineMeshIds;
+
+	if (init)
+	{
+		init = false;
+		s_engineMeshIds.reserve(GetCraftEnginesCount());
+	}
+
+	return (int)s_engineMeshIds.data();
+}
+
+int GetSpaceBombEnginesArrayPtr()
+{
+	static bool init = true;
+	static std::vector<void*> s_engines;
+
+	if (init)
+	{
+		init = false;
+		s_engines.reserve(GetCraftEnginesCount());
+	}
+
+	return (int)s_engines.data();
+}
+
+int GetSpaceBombEngineMeshIdsArrayPtr()
+{
+	static bool init = true;
+	static std::vector<unsigned char> s_engineMeshIds;
+
+	if (init)
+	{
+		init = false;
+		s_engineMeshIds.reserve(GetCraftEnginesCount());
+	}
+
+	return (int)s_engineMeshIds.data();
+}
+
+int GetCockpitEnginesArrayPtr()
+{
+	static bool init = true;
+	static std::vector<void*> s_engines;
+
+	if (init)
+	{
+		init = false;
+		s_engines.reserve(GetCraftEnginesCount());
+	}
+
+	return (int)s_engines.data();
+}
+
+int GetCockpitEngineMeshIdsArrayPtr()
+{
+	static bool init = true;
+	static std::vector<unsigned char> s_engineMeshIds;
+
+	if (init)
+	{
+		init = false;
+		s_engineMeshIds.reserve(GetCraftEnginesCount());
+	}
+
+	return (int)s_engineMeshIds.data();
+}
+
+int GetExteriorEnginesArrayPtr()
+{
+	static bool init = true;
+	static std::vector<void*> s_engines;
+
+	if (init)
+	{
+		init = false;
+		s_engines.reserve(GetCraftEnginesCount());
+	}
+
+	return (int)s_engines.data();
+}
+
+int GetExteriorEngineMeshIdsArrayPtr()
+{
+	static bool init = true;
+	static std::vector<unsigned char> s_engineMeshIds;
+
+	if (init)
+	{
+		init = false;
+		s_engineMeshIds.reserve(GetCraftEnginesCount());
+	}
+
+	return (int)s_engineMeshIds.data();
 }
 
 int GenerateSpecRciHook(int* params)
@@ -428,6 +569,210 @@ int CraftZeroMemoryHook(int* params)
 	memset((void*)pCraft, 0, GetConfig().Craft_Size);
 
 	*(int*)(pCraft + 0x3F5) = pObject;
+
+	return 0;
+}
+
+int OptGetMeshEngineGlowCountExeCraftHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+
+	const auto XwaOptGetMeshEngineGlowCount = (int(*)(int, int))0x00488680;
+
+	int maxCount = GetCraftEnginesCount();
+	int currentCount = *(unsigned char*)(0x005BB6B2 + params[Params_ESI]);
+	int count = XwaOptGetMeshEngineGlowCount(A4, A8);
+
+	if (currentCount + count > maxCount)
+	{
+		count = maxCount - currentCount;
+	}
+
+	return count;
+}
+
+int OptGetMeshEngineGlowCountSpaceBombHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+
+	const auto XwaOptGetMeshEngineGlowCount = (int(*)(int, int))0x00488680;
+
+	int maxCount = GetCraftEnginesCount();
+	int currentCount = *(unsigned char*)0x008D57B0;
+	int count = XwaOptGetMeshEngineGlowCount(A4, A8);
+
+	if (currentCount + count > maxCount)
+	{
+		count = maxCount - currentCount;
+	}
+
+	return count;
+}
+
+int OptGetMeshEngineGlowCountCockpitHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+
+	const auto XwaOptGetMeshEngineGlowCount = (int(*)(int, int))0x00488680;
+
+	int maxCount = GetCraftEnginesCount();
+	int currentCount = *(unsigned char*)0x007FFBD0;
+	int count = XwaOptGetMeshEngineGlowCount(A4, A8);
+
+	if (currentCount + count > maxCount)
+	{
+		count = maxCount - currentCount;
+	}
+
+	return count;
+}
+
+int OptGetMeshEngineGlowCountExteriorHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+
+	const auto XwaOptGetMeshEngineGlowCount = (int(*)(int, int))0x00488680;
+
+	int maxCount = GetCraftEnginesCount();
+	int currentCount = *(unsigned char*)0x009109B0;
+	int count = XwaOptGetMeshEngineGlowCount(A4, A8);
+
+	if (currentCount + count > maxCount)
+	{
+		count = maxCount - currentCount;
+	}
+
+	return count;
+}
+
+int L004E28F0_GetMeshHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+
+	const auto L00488A50 = (int(*)(int, int))0x00488A50;
+
+	const int* ebp = (int*)params[Params_EBP];
+	int pCraft = ebp[-12];
+	int meshIndex = params[Params_ESI];
+	unsigned char* pCraft_292 = (unsigned char*)(pCraft + GetCraftOffset_292());
+
+	if (pCraft_292[meshIndex] == 0)
+	{
+		return 0;
+	}
+
+	int result = L00488A50(A4, A8);
+
+	return result;
+}
+
+int L0047AAA0_SetCraftHook(int* params)
+{
+	const XwaMobileObject* pMobileObject = (XwaMobileObject*)params[Params_EDX];
+	int pCraft = pMobileObject->pCraft;
+	params[Params_EBX] = pCraft;
+
+	if (pCraft == 0)
+	{
+		return 0;
+	}
+
+	int meshIndex = *(short*)(0x008B9515 + params[Params_ECX]);
+	unsigned char* pCraft_292 = (unsigned char*)(pCraft + GetCraftOffset_292());
+
+	if (meshIndex != -1 && pCraft_292[meshIndex] == 0)
+	{
+		params[Params_EBX] = 0;
+	}
+
+	return 0;
+}
+
+int L004E0E10_GetEnginesCountHook(int* params)
+{
+	params[Params_EAX] = *(unsigned char*)(0x005BB6B2 + params[Params_EDI]);
+
+	int meshIndex = (short)params[Params_EBP];
+	int pCraft = *(int*)0x00910DFC;
+	unsigned char* pCraft_292 = (unsigned char*)(pCraft + GetCraftOffset_292());
+
+	if (meshIndex != -1 && pCraft_292[meshIndex] == 0)
+	{
+		params[Params_EAX] = 0;
+	}
+
+	return 0;
+}
+
+int L004E0FA0_ComputePercentOfActiveEnginesHook(int* params)
+{
+	unsigned char* exeCraftEngineMeshIds = (unsigned char*)GetExeCraftEngineMeshIdsArrayPtr();
+	int enginesCount = params[Params_ECX];
+	int pCraft = params[Params_ESI];
+	unsigned char* pCraft_292 = (unsigned char*)(pCraft + GetCraftOffset_292());
+	unsigned char* pCraft_2CF = (unsigned char*)(pCraft + GetCraftOffset_2CF());
+
+	int totalCount = 0;
+	int inactiveCount = 0;
+
+	for (int index = 0; index < enginesCount; index++)
+	{
+		int meshIndex = exeCraftEngineMeshIds[index];
+
+		if (pCraft_292[meshIndex] == 0)
+		{
+			continue;
+		}
+
+		totalCount++;
+
+		if (pCraft_2CF[index] == 0)
+		{
+			inactiveCount++;
+		}
+	}
+
+	params[Params_ECX] = totalCount;
+	params[Params_EDX] = inactiveCount;
+
+	return 0;
+}
+
+int L004F22B0_EngineGlowIsDisabledHook(int* params)
+{
+	XwaMobileObject* pMobileObject = (XwaMobileObject*)params[Params_ECX];
+	int pCraft = pMobileObject->pCraft;
+
+	params[Params_EAX] = pCraft;
+
+	int meshIndex = (unsigned char)params[6];
+	unsigned char* pCraft_292 = (unsigned char*)(pCraft + GetCraftOffset_292());
+
+	if (pCraft_292[meshIndex] == 0)
+	{
+		params[Params_ReturnAddress] = 0x004F2E31;
+	}
+
+	return 0;
+}
+
+int L0042D590_EngineGlowIsDisabledHook(int* params)
+{
+	int meshIndex = (unsigned char)params[9];
+	int pCraft = *(int*)0x00910DFC;
+	unsigned char* pCraft_292 = (unsigned char*)(pCraft + GetCraftOffset_292());
+
+	int ebx = params[Params_EBX];
+
+	if (pCraft_292[meshIndex] == 0 || *(int*)ebx != 0)
+	{
+		params[Params_ReturnAddress] = 0x0042D922;
+	}
 
 	return 0;
 }

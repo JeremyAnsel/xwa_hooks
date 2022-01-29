@@ -4,13 +4,24 @@ int GetHitDataArrayPtr();
 
 int GetCraftSize();
 int GetCraftMeshesCount();
+int GetCraftEnginesCount();
 int GetCraftOffset_22E();
 int GetCraftOffset_260();
 int GetCraftOffset_292();
+int GetCraftOffset_2CF();
 int GetOptModelMeshesInfoSize();
 int GetOptModelMeshesInfoPtr();
 int GetOptModelMeshesInfoOffsetType();
 int GetOptModelMeshesInfoOffsetDescriptor();
+
+int GetExeCraftEnginesArrayPtr();
+int GetExeCraftEngineMeshIdsArrayPtr();
+int GetSpaceBombEnginesArrayPtr();
+int GetSpaceBombEngineMeshIdsArrayPtr();
+int GetCockpitEnginesArrayPtr();
+int GetCockpitEngineMeshIdsArrayPtr();
+int GetExteriorEnginesArrayPtr();
+int GetExteriorEngineMeshIdsArrayPtr();
 
 int GenerateSpecRciHook(int* params);
 
@@ -29,3 +40,15 @@ int EscapePodCraftInitHook(int* params);
 int CurrentCraftInitHook(int* params);
 int CraftMeshesFilterHook(int* params);
 int CraftZeroMemoryHook(int* params);
+
+int OptGetMeshEngineGlowCountExeCraftHook(int* params);
+int OptGetMeshEngineGlowCountSpaceBombHook(int* params);
+int OptGetMeshEngineGlowCountCockpitHook(int* params);
+int OptGetMeshEngineGlowCountExteriorHook(int* params);
+
+int L004E28F0_GetMeshHook(int* params);
+int L0047AAA0_SetCraftHook(int* params);
+int L004E0E10_GetEnginesCountHook(int* params);
+int L004E0FA0_ComputePercentOfActiveEnginesHook(int* params);
+int L004F22B0_EngineGlowIsDisabledHook(int* params);
+int L0042D590_EngineGlowIsDisabledHook(int* params);

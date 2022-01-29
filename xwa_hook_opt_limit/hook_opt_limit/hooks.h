@@ -42,6 +42,16 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x487F48, CraftMeshesFilterHook },
 	{ 0x405BF8, CraftZeroMemoryHook },
 	{ 0x41E85E, CraftZeroMemoryHook },
+	{ 0x432B16, OptGetMeshEngineGlowCountExeCraftHook },
+	{ 0x43293E, OptGetMeshEngineGlowCountSpaceBombHook },
+	{ 0x4335E7, OptGetMeshEngineGlowCountCockpitHook },
+	{ 0x4337BA, OptGetMeshEngineGlowCountExteriorHook },
+	{ 0x4E2AC5, L004E28F0_GetMeshHook },
+	{ 0x47AB16, L0047AAA0_SetCraftHook },
+	{ 0x4E0E69, L004E0E10_GetEnginesCountHook },
+	{ 0x4E1027, L004E0FA0_ComputePercentOfActiveEnginesHook },
+	{ 0x4F2C2D, L004F22B0_EngineGlowIsDisabledHook },
+	{ 0x42D889, L0042D590_EngineGlowIsDisabledHook },
 };
 
 static const std::string g_hitDataArray0 = int_to_hex(GetHitDataArrayPtr());
@@ -71,6 +81,21 @@ static const std::string g_craftOffset_292_3 = int_to_hex(GetCraftOffset_292() +
 static const std::string g_craftOffset_292_4 = int_to_hex(GetCraftOffset_292() + 4);
 static const std::string g_craftOffset_292_6 = int_to_hex(GetCraftOffset_292() + 6);
 static const std::string g_craftOffset_292_10 = int_to_hex(GetCraftOffset_292() + 10);
+
+static const std::string g_craftOffset_2CF_0 = int_to_hex(GetCraftOffset_2CF());
+
+static const std::string g_exeCraftEnginesArray_0 = int_to_hex(GetExeCraftEnginesArrayPtr());
+static const std::string g_exeCraftEngineMeshIdsArray__1 = int_to_hex(GetExeCraftEngineMeshIdsArrayPtr() - 1);
+static const std::string g_exeCraftEngineMeshIdsArray_0 = int_to_hex(GetExeCraftEngineMeshIdsArrayPtr());
+static const std::string g_spaceBombEnginesArray_0 = int_to_hex(GetSpaceBombEnginesArrayPtr());
+static const std::string g_spaceBombEngineMeshIdsArray__1 = int_to_hex(GetSpaceBombEngineMeshIdsArrayPtr() - 1);
+static const std::string g_spaceBombEngineMeshIdsArray_0 = int_to_hex(GetSpaceBombEngineMeshIdsArrayPtr());
+static const std::string g_cockpitEnginesArray_0 = int_to_hex(GetCockpitEnginesArrayPtr());
+static const std::string g_cockpitEngineMeshIdsArray__1 = int_to_hex(GetCockpitEngineMeshIdsArrayPtr() - 1);
+static const std::string g_cockpitEngineMeshIdsArray_0 = int_to_hex(GetCockpitEngineMeshIdsArrayPtr());
+static const std::string g_exteriorEnginesArray_0 = int_to_hex(GetExteriorEnginesArrayPtr());
+static const std::string g_exteriorEngineMeshIdsArray__1 = int_to_hex(GetExteriorEngineMeshIdsArrayPtr() - 1);
+static const std::string g_exteriorEngineMeshIdsArray_0 = int_to_hex(GetExteriorEngineMeshIdsArrayPtr());
 
 static const HookPatchItem g_trianglingPatch[] =
 {
@@ -658,6 +683,58 @@ static const HookPatchItem g_craftZeroMemoryPatch[] =
 	{ 0x01DC58, "B9EA00000033C0F3ABAA", "51E8C2A2180083C40490" },
 };
 
+static const HookPatchItem g_craftEnginesPatch[] =
+{
+	{ 0x01C106 + 3, "CF020000", g_craftOffset_2CF_0.c_str() },
+	{ 0x07A08C + 3, "CF020000", g_craftOffset_2CF_0.c_str() },
+	{ 0x0BA0FB + 3, "CF020000", g_craftOffset_2CF_0.c_str() },
+	{ 0x0E0285 + 3, "CF020000", g_craftOffset_2CF_0.c_str() },
+	{ 0x0E03B7 + 3, "CF020000", g_craftOffset_2CF_0.c_str() },
+	{ 0x0E0417 + 3, "CF020000", g_craftOffset_2CF_0.c_str() },
+	{ 0x0E20CF + 3, "CF020000", g_craftOffset_2CF_0.c_str() },
+	{ 0x02CA75 + 2, "62B65B00", g_exeCraftEnginesArray_0.c_str() },
+	{ 0x02CE2E + 2, "62B65B00", g_exeCraftEnginesArray_0.c_str() },
+	{ 0x031F49 + 3, "62B65B00", g_exeCraftEnginesArray_0.c_str() },
+	{ 0x0E027A + 2, "62B65B00", g_exeCraftEnginesArray_0.c_str() },
+	{ 0x0E940B + 3, "62B65B00", g_exeCraftEnginesArray_0.c_str() },
+	{ 0x0F1FC4 + 2, "62B65B00", g_exeCraftEnginesArray_0.c_str() },
+	{ 0x00A4E9 + 5, "A2B65B00", g_exeCraftEngineMeshIdsArray_0.c_str() },
+	{ 0x00A5BD + 5, "A2B65B00", g_exeCraftEngineMeshIdsArray_0.c_str() },
+	{ 0x02CA7B + 2, "A2B65B00", g_exeCraftEngineMeshIdsArray_0.c_str() },
+	{ 0x02CE34 + 2, "A2B65B00", g_exeCraftEngineMeshIdsArray_0.c_str() },
+	{ 0x031F60 + 3, "A1B65B00", g_exeCraftEngineMeshIdsArray__1.c_str() },
+	{ 0x07A054 + 5, "A2B65B00", g_exeCraftEngineMeshIdsArray_0.c_str() },
+	{ 0x0E0294 + 5, "A2B65B00", g_exeCraftEngineMeshIdsArray_0.c_str() },
+	{ 0x0E20AC + 3, "A2B65B00", g_exeCraftEngineMeshIdsArray_0.c_str() },
+	{ 0x0F1FDA + 3, "A2B65B00", g_exeCraftEngineMeshIdsArray_0.c_str() },
+	{ 0x02CA11 + 1, "60578D00", g_spaceBombEnginesArray_0.c_str() },
+	{ 0x031D71 + 3, "60578D00", g_spaceBombEnginesArray_0.c_str() },
+	{ 0x02CA16 + 4, "A0578D00", g_spaceBombEngineMeshIdsArray_0.c_str() },
+	{ 0x031D86 + 3, "9F578D00", g_spaceBombEngineMeshIdsArray__1.c_str() },
+	{ 0x02CACE + 1, "80FB7F00", g_cockpitEnginesArray_0.c_str() },
+	{ 0x032A1A + 3, "80FB7F00", g_cockpitEnginesArray_0.c_str() },
+	{ 0x02CAD3 + 4, "C0FB7F00", g_cockpitEngineMeshIdsArray_0.c_str() },
+	{ 0x032A2D + 3, "BFFB7F00", g_cockpitEngineMeshIdsArray__1.c_str() },
+	{ 0x02CAEA + 1, "60099100", g_exteriorEnginesArray_0.c_str() },
+	{ 0x032BE9 + 3, "60099100", g_exteriorEnginesArray_0.c_str() },
+	{ 0x02CAEF + 4, "A0099100", g_exteriorEngineMeshIdsArray_0.c_str() },
+	{ 0x032BF9 + 3, "9F099100", g_exteriorEngineMeshIdsArray__1.c_str() },
+	{ 0x031F11, "E86A5B0500", "E81A601700" },
+	{ 0x031D39, "E8425D0500", "E8F2611700" },
+	{ 0x0329E2, "E899500500", "E849551700" },
+	{ 0x032BB5, "E8C64E0500", "E876531700" },
+};
+
+static const HookPatchItem g_craftEngineMeshPatch[] =
+{
+	{ 0x0E1EC0, "E88B5FFAFF", "E86B600C00" },
+	{ 0x079F11, "8B9ADD000000", "E80AE0120090" },
+	{ 0x0E0264, "660FB687B2B65B00", "E8B77C0C00909090" },
+	{ 0x0E0422, "403BC172F0", "E8F97A0C00" },
+	{ 0x0F2028, "8B81DD000000", "E8F35E0B0090" },
+	{ 0x02CC84, "0F8598000000", "E897B2170090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
@@ -678,4 +755,6 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that inits the current craft", g_currentCraftInitPatch),
 	MAKE_HOOK_PATCH("To call the hook that filters craft meshes", g_craftMeshesFilterPatch),
 	MAKE_HOOK_PATCH("To call the hook that zero inits the craft memory", g_craftZeroMemoryPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the craft engines count", g_craftEnginesPatch),
+	MAKE_HOOK_PATCH("To call the hook that gets the craft engine mesh", g_craftEngineMeshPatch),
 };
