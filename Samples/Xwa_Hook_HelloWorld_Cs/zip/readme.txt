@@ -6,8 +6,8 @@ This hook shows "Hello, World!" at the bottom of the game menu, before the versi
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
-- .NET framework 4.0
+- Windows 7 or superior
+- .NET framework 4.5
 - xwa_hook_main
 
 
