@@ -126,6 +126,11 @@ public:
 	{
 		_module = LoadLibrary("hook_32bpp_net.dll");
 
+		if (!_module)
+		{
+			return;
+		}
+
 		_readOptFunction = (readOptFunction)GetProcAddress(_module, "ReadOptFunction");
 		_readCompressedDatImageFunction = (readCompressedDatImageFunction)GetProcAddress(_module, "ReadCompressedDatImageFunction");
 	}
@@ -136,8 +141,8 @@ public:
 	}
 
 	HMODULE _module;
-	readOptFunction _readOptFunction;
-	readCompressedDatImageFunction _readCompressedDatImageFunction;
+	readOptFunction _readOptFunction = nullptr;
+	readCompressedDatImageFunction _readCompressedDatImageFunction = nullptr;
 };
 
 NetFunctions g_netFunctions;

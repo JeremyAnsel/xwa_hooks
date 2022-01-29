@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hook_32bpp_net", "hook_32bpp_net\hook_32bpp_net.csproj", "{AB809185-E600-4011-A8B7-013049D6C4B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hook_32bpp_net", "hook_32bpp_net\hook_32bpp_net.csproj", "{80892C56-50C1-4DFC-ADB5-4AF2F81FB723}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AB809185-E600-4011-A8B7-013049D6C4B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AB809185-E600-4011-A8B7-013049D6C4B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AB809185-E600-4011-A8B7-013049D6C4B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AB809185-E600-4011-A8B7-013049D6C4B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80892C56-50C1-4DFC-ADB5-4AF2F81FB723}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80892C56-50C1-4DFC-ADB5-4AF2F81FB723}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80892C56-50C1-4DFC-ADB5-4AF2F81FB723}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80892C56-50C1-4DFC-ADB5-4AF2F81FB723}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D876DBE7-79DA-4D21-8029-1FCF6136D3CC}
+		SolutionGuid = {5EB95E7F-116E-40AD-A721-723FA76E96D0}
 	EndGlobalSection
 EndGlobal

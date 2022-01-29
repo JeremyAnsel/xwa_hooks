@@ -1,54 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
-    <Version>1.0.0</Version>
-    <Copyright>Copyright © 2020 Jérémy Ansel</Copyright>
+    <LangVersion>10.0</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup>
-    <DllExportIdent>3D6DB7DC-26CB-434B-84F3-B4B78A966E91</DllExportIdent>
-    <DllExportMetaLibName>DllExport.dll</DllExportMetaLibName>
-    <DllExportNamespace>hook_32bpp_net</DllExportNamespace>
-    <DllExportDDNSCecil>false</DllExportDDNSCecil>
+    <Version>1.0.0</Version>
+    <ProductName>XWA hook 32bpp net</ProductName>
+    <Description>Hook_32bpp_net</Description>
+    <Company>Jérémy Ansel</Company>
+    <Copyright>Copyright © 2020 Jérémy Ansel</Copyright>
     <PlatformTarget>x86</PlatformTarget>
-    <DllExportOrdinalsBase>1</DllExportOrdinalsBase>
-    <DllExportGenExpLib>false</DllExportGenExpLib>
+    <DllExportDDNSCecil>false</DllExportDDNSCecil>
     <DllExportOurILAsm>false</DllExportOurILAsm>
-    <DllExportSysObjRebase>false</DllExportSysObjRebase>
-    <DllExportLeaveIntermediateFiles>false</DllExportLeaveIntermediateFiles>
-    <DllExportTimeout>30000</DllExportTimeout>
-    <DllExportPeCheck>2</DllExportPeCheck>
-    <DllExportPatches>0</DllExportPatches>
-    <DllExportPreProcType>0</DllExportPreProcType>
-    <DllExportPostProcType>0</DllExportPostProcType>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="DllExport">
-      <Version>1.7.3</Version>
-      <Visible>false</Visible>
-      <Wz>1</Wz>
-    </PackageReference>
     <PackageReference Include="JeremyAnsel.IO.Locator" Version="2.0.31" />
-    <PackageReference Include="JeremyAnsel.Xwa.Opt" Version="2.0.36" />
+    <PackageReference Include="JeremyAnsel.Xwa.Opt" Version="2.0.36" />		
   </ItemGroup>
-  <ImportGroup Label=".NET DllExport">
-    <Import Project="$(SolutionDir)packages\DllExport.1.7.3\tools\net.r_eg.DllExport.targets" Condition="Exists($([MSBuild]::Escape('$(SolutionDir)packages\DllExport.1.7.3\tools\net.r_eg.DllExport.targets')))" Label="8337224c9ad9e356" />
-  </ImportGroup>
-  <Target Name="DllExportRestorePkg" BeforeTargets="PrepareForBuild">
-    <Error Condition="!Exists('$(SolutionDir)DllExport.bat')" Text="DllExport.bat is not found. Path: '$(SolutionDir)' - https://github.com/3F/DllExport" />
-    <Exec Condition="('$(DllExportModImported)' != 'true' Or !Exists('$(SolutionDir)packages\DllExport.1.7.3\tools\net.r_eg.DllExport.targets')) And Exists('$(SolutionDir)DllExport.bat')" Command=".\DllExport.bat -packages=&quot;C:\Users\Jérémy\Documents\Visual Studio 2019\Projects\hook_32bpp_net\packages&quot; -sln-dir=&quot;C:\Users\Jérémy\Documents\Visual Studio 2019\Projects\hook_32bpp_net&quot; -action Restore" WorkingDirectory="$(SolutionDir)" />
-    <MSBuild Condition="'$(DllExportModImported)' != 'true'" Projects="$(SolutionDir)packages\DllExport.1.7.3\tools\net.r_eg.DllExport.targets" Targets="DllExportMetaXBaseTarget" Properties="TargetFramework=$(TargetFramework)">
-      <Output TaskParameter="TargetOutputs" PropertyName="DllExportMetaXBase" />
-    </MSBuild>
-    <ItemGroup>
-      <Reference Include="DllExport, PublicKeyToken=8337224c9ad9e356">
-        <HintPath>$(SolutionDir)packages\DllExport.1.7.3\gcache\$(DllExportMetaXBase)\$(DllExportNamespace)\$(DllExportMetaLibName)</HintPath>
-        <Private>False</Private>
-        <SpecificVersion>False</SpecificVersion>
-      </Reference>
-    </ItemGroup>
-  </Target>
-  <Target Name="DllExportRPkgDynamicImport" BeforeTargets="PostBuildEvent" DependsOnTargets="GetFrameworkPaths" Condition="'$(DllExportModImported)' != 'true' And '$(DllExportRPkgDyn)' != 'false'">
-    <MSBuild BuildInParallel="true" UseResultsCache="true" Projects="$(MSBuildProjectFullPath)" Properties="DllExportRPkgDyn=true" Targets="Build" />
-  </Target>
+
+  <ItemGroup>
+    <Reference Include="DllExport, Version=1.5.2.30304, Culture=neutral, PublicKeyToken=8337224c9ad9e356, processorArchitecture=MSIL">
+      <HintPath>..\packages\DllExport.1.5.2\lib\net20\DllExport.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Import Project="../packages/DllExport.1.5.2/tools/net.r_eg.DllExport.targets" Condition="Exists('../packages/DllExport.1.5.2/tools/net.r_eg.DllExport.targets')" />
+
 </Project>

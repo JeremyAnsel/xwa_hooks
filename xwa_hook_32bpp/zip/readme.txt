@@ -12,7 +12,7 @@ https://www.xwaupgrade.com/phpBB3/viewtopic.php?f=33&t=12257
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
+- Windows 7 or superior
 - xwa_hook_main
 
 
