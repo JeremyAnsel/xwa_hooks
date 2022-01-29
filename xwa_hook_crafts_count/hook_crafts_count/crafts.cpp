@@ -4,6 +4,18 @@
 
 #include <Windows.h>
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 class Config
 {
 public:
@@ -17,8 +29,8 @@ public:
 		}
 
 		this->CraftsCount = GetFileKeyValueInt(lines, "CraftsCount", 3072);
-		this->ProjectilesCount = GetFileKeyValueInt(lines, "ProjectilesCount", 3072 * 2);
-		this->ExplosionsCount = GetFileKeyValueInt(lines, "ExplosionsCount", 512);
+		this->ProjectilesCount = GetFileKeyValueInt(lines, "ProjectilesCount", 1024);
+		this->ExplosionsCount = GetFileKeyValueInt(lines, "ExplosionsCount", 256);
 
 		OutputDebugString(("Hook_Crafts_Count CraftsCount=" + std::to_string(this->CraftsCount)).c_str());
 		OutputDebugString(("Hook_Crafts_Count ProjectilesCount=" + std::to_string(this->ProjectilesCount)).c_str());
@@ -132,6 +144,30 @@ int OfficerSoundsBuffer3Hook(int* params)
 	const int esi = params[8];
 
 	g_officerSoundsBuffer.data()[esi] = eax;
+
+	return 0;
+}
+
+int FriendlyCraftListHook(int* params)
+{
+	int count = params[Params_EBP];
+
+	if (count >= 192)
+	{
+		params[Params_ReturnAddress] = 0x004C0872;
+	}
+
+	return 0;
+}
+
+int EnemyCraftListHook(int* params)
+{
+	int count = params[Params_EBP];
+
+	if (count >= 192)
+	{
+		params[Params_ReturnAddress] = 0x004C1974;
+	}
 
 	return 0;
 }

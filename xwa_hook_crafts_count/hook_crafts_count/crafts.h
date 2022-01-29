@@ -10,3 +10,5 @@ int AIHandlingArraySet1Hook(int* params);
 int OfficerSoundsBuffer1Hook(int* params);
 int OfficerSoundsBuffer2Hook(int* params);
 int OfficerSoundsBuffer3Hook(int* params);
+int FriendlyCraftListHook(int* params);
+int EnemyCraftListHook(int* params);

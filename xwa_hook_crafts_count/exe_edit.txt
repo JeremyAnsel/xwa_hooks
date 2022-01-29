@@ -83,16 +83,17 @@ E8BD961600              call 005A8B20, 005A8B20 - 0043F463 = 001696BD
 
 ===============================================================================
 
-; RS friendly and enemy craft lists 192
-:004C0861 - 0x0BFC61
-A1B8A37C00              mov eax, dword ptr [007CA3B8]
+; RS friendly craft list
+:004C0855 - 0x0BFC55
+25FFFF0000              and eax, 0000FFFF
 
-B8C0000000              mov eax, 000000C0
+E8C6820E00              call 005A8B20, 005A8B20 - 004C085A = 000E82C6
 
-:004C1963 - 0x0C0D63
-A1B8A37C00              mov eax, dword ptr [007CA3B8]
+; RS enemy craft list
+:004C1957 - 0x0C0D57
+25FFFF0000              and eax, 0000FFFF
 
-B8C0000000              mov eax, 000000C0
+E8C4710E00              call 005A8B20, 005A8B20 - 004C195C = 000E71C4
 
 ; RS message log 10000
 :00430E16 - 0x030216

@@ -15,6 +15,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x43A127, OfficerSoundsBuffer1Hook },
 	{ 0x43F448, OfficerSoundsBuffer2Hook },
 	{ 0x43F463, OfficerSoundsBuffer3Hook },
+	{ 0x4C085A, FriendlyCraftListHook },
+	{ 0x4C195C, EnemyCraftListHook },
 };
 
 static const HookPatchItem g_craftsCountPatch[] =
@@ -33,8 +35,8 @@ static const HookPatchItem g_craftsCountPatch[] =
 
 static const HookPatchItem g_rsCraftsCountPatch[] =
 {
-	{ 0x0BFC61, "A1B8A37C00", "B8C0000000" },
-	{ 0x0C0D63, "A1B8A37C00", "B8C0000000" },
+	{ 0x0BFC55, "25FFFF0000", "E8C6820E00" },
+	{ 0x0C0D57, "25FFFF0000", "E8C4710E00" },
 	{ 0x030216, "68007D0000", "6880A21900" },
 	{ 0x03B4E9, "7407", "EB07" },
 };
