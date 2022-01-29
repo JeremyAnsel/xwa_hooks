@@ -1,4 +1,4 @@
-﻿xwa_hook_lightmaps
+xwa_hook_lightmaps
 
 This hook replaces a static buffer with a dynamic one in lightmaps loading.
 
@@ -6,7 +6,7 @@ This hook replaces a static buffer with a dynamic one in lightmaps loading.
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
+- Windows 7 or superior
 - xwa_hook_main
 
 
