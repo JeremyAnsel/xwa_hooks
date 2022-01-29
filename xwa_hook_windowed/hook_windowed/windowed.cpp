@@ -244,7 +244,7 @@ int CursorHook(int* params)
 
 	RECT rc;
 
-	if (SUCCEEDED(GetWindowRect(mainWindow, &rc)))
+	if (GetWindowRect(mainWindow, &rc))
 	{
 		x += rc.left;
 		y += rc.top;
@@ -261,7 +261,7 @@ int CursorZeroHook(int* params)
 
 	RECT rc;
 
-	if (SUCCEEDED(GetWindowRect(mainWindow, &rc)))
+	if (GetWindowRect(mainWindow, &rc))
 	{
 		x += rc.left;
 		y += rc.top;
