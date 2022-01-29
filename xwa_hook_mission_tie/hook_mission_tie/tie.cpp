@@ -319,7 +319,7 @@ CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 		lines = GetFileLines(shipPath + ".ini", section);
 	}
 
-	CraftStats stats;
+	CraftStats stats{};
 
 	stats.Speed = GetFileKeyValueInt(lines, "Speed", -1);
 	stats.Acceleration = GetFileKeyValueInt(lines, "Acceleration", -1);
@@ -423,7 +423,7 @@ CraftStatsPercent GetObjectPlayerStatsPercent()
 {
 	const auto statsLines = GetCustomFileLines("StatsProfiles");
 
-	CraftStatsPercent stats;
+	CraftStatsPercent stats{};
 
 	stats.SpeedPercent = GetFileKeyValueInt(statsLines, "PlayerSpeedPercent", -1);
 	stats.AccelerationPercent = GetFileKeyValueInt(statsLines, "PlayerAccelerationPercent", -1);
@@ -443,7 +443,7 @@ CraftStatsPercent GetObjectStatsPercent()
 {
 	const auto statsLines = GetCustomFileLines("StatsProfiles");
 
-	CraftStatsPercent stats;
+	CraftStatsPercent stats{};
 
 	stats.SpeedPercent = GetFileKeyValueInt(statsLines, "SpeedPercent", -1);
 	stats.AccelerationPercent = GetFileKeyValueInt(statsLines, "AccelerationPercent", -1);
@@ -522,8 +522,8 @@ private:
 	}
 
 	std::map<std::pair<int, int>, CraftStats> _profiles;
-	CraftStatsPercent _playerStatsPercent;
-	CraftStatsPercent _statsPercent;
+	CraftStatsPercent _playerStatsPercent{};
+	CraftStatsPercent _statsPercent{};
 };
 
 ModelIndexProfiles g_modelIndexProfiles;
