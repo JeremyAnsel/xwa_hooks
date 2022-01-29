@@ -8,7 +8,7 @@ It also fixes a crash at offset 0x000d332d.
 *** Requirements ***
 
 This dll requires:
-- Windows XP SP2 or superior
+- Windows 7 or superior
 - xwa_hook_main
 
 

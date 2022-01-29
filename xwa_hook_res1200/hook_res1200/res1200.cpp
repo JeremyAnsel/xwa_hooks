@@ -12,7 +12,7 @@ public:
 		this->_buffer.reserve(size);
 	}
 
-	void Reserve(int size, int pitch)
+	void Reserve(unsigned int size, int pitch)
 	{
 		if (this->_buffer.capacity() < size)
 		{
@@ -92,8 +92,8 @@ int Res1200Hook3(int* params)
 
 int Res1200Hook800(int* params)
 {
-	const int A8 = params[3];
-	const int AC = params[4];
+	const unsigned int A8 = (unsigned int)params[3];
+	const unsigned int AC = (unsigned int)params[4];
 
 	const int*& s_V0x074D5A0 = *(const int**)0x0074D5A0;
 	const int s_XwaFlightScreenBppDiv8 = *(int*)0x005AA0AC;

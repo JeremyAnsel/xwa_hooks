@@ -1,28 +1,25 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hook_res1200", "hook_res1200\hook_res1200.vcxproj", "{E52527DE-0541-45FE-82F5-681B812ED102}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hook_res1200", "hook_res1200\hook_res1200.vcxproj", "{A153DDFC-BED6-4F9F-AE6D-0E41665C9164}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E52527DE-0541-45FE-82F5-681B812ED102}.Debug|x64.ActiveCfg = Debug|x64
-		{E52527DE-0541-45FE-82F5-681B812ED102}.Debug|x64.Build.0 = Debug|x64
-		{E52527DE-0541-45FE-82F5-681B812ED102}.Debug|x86.ActiveCfg = Debug|Win32
-		{E52527DE-0541-45FE-82F5-681B812ED102}.Debug|x86.Build.0 = Debug|Win32
-		{E52527DE-0541-45FE-82F5-681B812ED102}.Release|x64.ActiveCfg = Release|x64
-		{E52527DE-0541-45FE-82F5-681B812ED102}.Release|x64.Build.0 = Release|x64
-		{E52527DE-0541-45FE-82F5-681B812ED102}.Release|x86.ActiveCfg = Release|Win32
-		{E52527DE-0541-45FE-82F5-681B812ED102}.Release|x86.Build.0 = Release|Win32
+		{A153DDFC-BED6-4F9F-AE6D-0E41665C9164}.Debug|x86.ActiveCfg = Debug|Win32
+		{A153DDFC-BED6-4F9F-AE6D-0E41665C9164}.Debug|x86.Build.0 = Debug|Win32
+		{A153DDFC-BED6-4F9F-AE6D-0E41665C9164}.Release|x86.ActiveCfg = Release|Win32
+		{A153DDFC-BED6-4F9F-AE6D-0E41665C9164}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5488A9AC-41F5-4270-96B1-B0AB8C2ED3B7}
 	EndGlobalSection
 EndGlobal
