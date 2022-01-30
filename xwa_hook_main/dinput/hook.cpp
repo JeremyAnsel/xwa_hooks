@@ -52,8 +52,7 @@ public:
 
 	~VirtualProtectMemory()
 	{
-		DWORD protection;
-		VirtualProtect(address, size, oldProtection, &protection);
+		VirtualProtect(address, size, oldProtection, nullptr);
 	}
 
 private:
@@ -64,8 +63,7 @@ private:
 
 void VirtualProtectHookMemory()
 {
-	DWORD oldProtection;
-	VirtualProtect((void*)0x401000, 0x1A7B40, PAGE_EXECUTE_READWRITE, &oldProtection);
+	VirtualProtect((void*)0x401000, 0x1A7B40, PAGE_EXECUTE_READWRITE, nullptr);
 }
 
 bool IsPatchMemoryEqual(const char* offset, const char* item)
