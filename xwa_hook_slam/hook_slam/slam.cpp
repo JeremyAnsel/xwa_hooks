@@ -82,13 +82,33 @@ SoundsConfig& GetSoundsConfig()
 
 #pragma pack(push, 1)
 
+struct XwaCraftWeaponRack
+{
+	unsigned short ModelIndex;
+	unsigned char Sequence;
+	unsigned char LaserIndex;
+	unsigned char m04;
+	unsigned char Count;
+	unsigned short FireRatio;
+	unsigned char MeshId;
+	unsigned char HardpointId;
+	short ObjectIndex;
+	short m0C;
+};
+
+static_assert(sizeof(XwaCraftWeaponRack) == 14, "size of XwaCraftWeaponRack must be 14");
+
 struct XwaCraft
 {
 	char unk000[11];
 	char m00B;
 	char unk00C[234];
 	short IsSlamEnabled;
-	char unk0F8[769];
+	char unk0F8[182];
+	unsigned char WeaponRacksCount;
+	char unk1AF[304];
+	XwaCraftWeaponRack WeaponRacks[16];
+	char unk3BF[58];
 };
 
 static_assert(sizeof(XwaCraft) == 1017, "size of XwaCraft must be 1017");
@@ -217,18 +237,20 @@ int SlamHook(int* params)
 		}
 	}
 
+	XwaCraft* craft = XwaObjects[objectIndex].pMobileObject->pCraft;
+
 	if (hasSlam == 0)
 	{
-		XwaObjects[objectIndex].pMobileObject->pCraft->IsSlamEnabled = 0;
+		craft->IsSlamEnabled = 0;
 
 		// MSG_NOT_EQUIPPED_SLAM
 		ShowMessage(294, playerIndex);
 	}
 	else
 	{
-		if (XwaObjects[objectIndex].pMobileObject->pCraft->IsSlamEnabled)
+		if (craft->IsSlamEnabled)
 		{
-			XwaObjects[objectIndex].pMobileObject->pCraft->IsSlamEnabled = 0;
+			craft->IsSlamEnabled = 0;
 
 			// MSG_OVERDRIVE_OFF
 			ShowMessage(372, playerIndex);
@@ -236,11 +258,30 @@ int SlamHook(int* params)
 		}
 		else
 		{
-			XwaObjects[objectIndex].pMobileObject->pCraft->IsSlamEnabled = 1;
+			bool hasEnergy = false;
 
-			// MSG_OVERDRIVE_ON
-			ShowMessage(371, playerIndex);
-			PlaySound(powerupSoundIndex, 0xFFFF, playerIndex);
+			for (int i = 0; i < craft->WeaponRacksCount; i++)
+			{
+				if (craft->WeaponRacks[i].m04 > 0)
+				{
+					hasEnergy = true;
+					break;
+				}
+			}
+
+			if (hasEnergy)
+			{
+				craft->IsSlamEnabled = 1;
+
+				// MSG_OVERDRIVE_ON
+				ShowMessage(371, playerIndex);
+				PlaySound(powerupSoundIndex, 0xFFFF, playerIndex);
+			}
+			else
+			{
+				// MSG_OVERDRIVE_UNABLE
+				ShowMessage(373, playerIndex);
+			}
 		}
 	}
 
