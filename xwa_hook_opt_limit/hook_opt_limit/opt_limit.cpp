@@ -317,7 +317,7 @@ int GenerateSpecRciHook(int* params)
 {
 	const auto XwaReadShiplist = (void(*)())0x00529950;
 	const auto XwaGenerateSpecRci = (void(*)())0x00577490;
-	const auto XwaFileOpen = (void*(*)(const char*, const char*))0x0052AD30;
+	const auto XwaFileOpen = (void* (*)(const char*, const char*))0x0052AD30;
 	const auto XwaFileClose = (void(*)(void*))0x0052ADD0;
 
 	XwaReadShiplist();
@@ -772,6 +772,24 @@ int L0042D590_EngineGlowIsDisabledHook(int* params)
 	if (pCraft_292[meshIndex] == 0 || *(int*)ebx != 0)
 	{
 		params[Params_ReturnAddress] = 0x0042D922;
+	}
+
+	return 0;
+}
+
+int L0042DB60_EngineGlowHook(int* params)
+{
+	int objectIndex = params[Params_EAX];
+	int edi = params[Params_EDI];
+	int meshIndex = *(unsigned char*)(params[Params_EBP] + 0x10);
+
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	int pCraft = XwaObjects[objectIndex].pMobileObject->pCraft;
+	unsigned char* pCraft_22E = (unsigned char*)(pCraft + GetCraftOffset_22E());
+
+	if (edi == 0 || *(int*)edi != 0 || pCraft_22E[meshIndex] != 0)
+	{
+		params[Params_ReturnAddress] = 0x0042E36F;
 	}
 
 	return 0;

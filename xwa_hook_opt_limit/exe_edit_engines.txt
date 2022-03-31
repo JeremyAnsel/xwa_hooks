@@ -246,3 +246,10 @@ E8F35E0B00              call 005A8B20, 005A8B20 - 004F2C2D = 000B5EF3
 
 E897B21700              call 005A8B20, 005A8B20 - 0042D889 = 0017B297
 90                      nop
+
+; L0042DB60
+:0042DB9C - 0x02CF9C
+0F84CD070000            je 0042E36F
+
+E87FAF1700              call 005A8B20, 005A8B20 - 0042DBA1 = 0017AF7F
+90                      nop

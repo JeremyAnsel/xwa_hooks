@@ -52,6 +52,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4E1027, L004E0FA0_ComputePercentOfActiveEnginesHook },
 	{ 0x4F2C2D, L004F22B0_EngineGlowIsDisabledHook },
 	{ 0x42D889, L0042D590_EngineGlowIsDisabledHook },
+	{ 0x42DBA1, L0042DB60_EngineGlowHook },
 };
 
 static const std::string g_hitDataArray0 = int_to_hex(GetHitDataArrayPtr());
@@ -733,6 +734,7 @@ static const HookPatchItem g_craftEngineMeshPatch[] =
 	{ 0x0E0422, "403BC172F0", "E8F97A0C00" },
 	{ 0x0F2028, "8B81DD000000", "E8F35E0B0090" },
 	{ 0x02CC84, "0F8598000000", "E897B2170090" },
+	{ 0x02CF9C, "0F84CD070000", "E87FAF170090" },
 };
 
 static const HookPatch g_patches[] =
