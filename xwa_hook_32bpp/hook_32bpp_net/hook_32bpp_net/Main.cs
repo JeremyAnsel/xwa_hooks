@@ -67,7 +67,7 @@ namespace hook_32bpp_net
             return _getCustomFileLines_lines;
         }
 
-        public static int GetFlightgroupsCount(IList<string> objectLines, string optName)
+        private static int GetFlightgroupsCount(IList<string> objectLines, string optName)
         {
             int count = 0;
 
@@ -84,6 +84,26 @@ namespace hook_32bpp_net
             }
 
             return count;
+        }
+
+        private static List<int> GetFlightgroupsColors(IList<string> objectLines, string optName, int fgCount, bool hasDefaultSkin)
+        {
+            bool hasBaseSkins = hasDefaultSkin || !string.IsNullOrEmpty(XwaHooksConfig.GetFileKeyValue(objectLines, optName));
+
+            var colors = new List<int>();
+
+            for (int index = 0; index < 256; index++)
+            {
+                string key = optName + "_fgc_" + index.ToString(CultureInfo.InvariantCulture);
+                string value = XwaHooksConfig.GetFileKeyValue(objectLines, key);
+
+                if (!string.IsNullOrEmpty(value) || (hasBaseSkins && index < fgCount))
+                {
+                    colors.Add(index);
+                }
+            }
+
+            return colors;
         }
 
         private static string GetSkinDirectoryLocatorPath(string optName, string skinName)
@@ -130,19 +150,20 @@ namespace hook_32bpp_net
             {
                 var opt = OptFile.FromFile(optFilename);
                 fgCount = Math.Max(fgCount, opt.MaxTextureVersion);
-                UpdateOptFile(optName, opt, objectLines, baseSkins, fgCount);
+                UpdateOptFile(optName, opt, objectLines, baseSkins, fgCount, hasDefaultSkin);
                 opt.Save("temp.opt");
             }
 
             return hasSkins ? 1 : 0;
         }
 
-        private static void UpdateOptFile(string optName, OptFile opt, IList<string> objectLines, IList<string> baseSkins, int fgCount)
+        private static void UpdateOptFile(string optName, OptFile opt, IList<string> objectLines, IList<string> baseSkins, int fgCount, bool hasDefaultSkin)
         {
             List<List<string>> fgSkins = ReadFgSkins(optName, objectLines, baseSkins, fgCount);
             List<string> distinctSkins = fgSkins.SelectMany(t => t).Distinct(StringComparer.OrdinalIgnoreCase).ToList();
             ICollection<string> texturesExist = GetTexturesExist(optName, opt, distinctSkins);
-            CreateSwitchTextures(opt, texturesExist, fgSkins);
+            List<int> fgColors = GetFlightgroupsColors(objectLines, optName, fgCount, hasDefaultSkin);
+            CreateSwitchTextures(opt, texturesExist, fgSkins, fgColors);
             UpdateSkins(optName, opt, distinctSkins, fgSkins);
         }
 
@@ -207,7 +228,7 @@ namespace hook_32bpp_net
             return texturesExist;
         }
 
-        private static void CreateSwitchTextures(OptFile opt, ICollection<string> texturesExist, List<List<string>> fgSkins)
+        private static void CreateSwitchTextures(OptFile opt, ICollection<string> texturesExist, List<List<string>> fgSkins, List<int> fgColors)
         {
             int fgCount = fgSkins.Count;
 
@@ -225,10 +246,9 @@ namespace hook_32bpp_net
                     continue;
                 }
 
-                texture.Value.Convert8To32();
-
-                for (int i = 0; i < fgCount; i++)
+                foreach (int i in fgColors)
                 {
+                    texture.Value.Convert8To32();
                     Texture newTexture = texture.Value.Clone();
                     newTexture.Name += "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]);
                     newTextures.Add(newTexture);
@@ -262,7 +282,14 @@ namespace hook_32bpp_net
 
                         for (int i = 0; i < fgCount; i++)
                         {
-                            faceGroup.Textures.Add(name + "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]));
+                            if (fgColors.Contains(i))
+                            {
+                                faceGroup.Textures.Add(name + "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]));
+                            }
+                            else
+                            {
+                                faceGroup.Textures.Add(name);
+                            }
                         }
                     }
                 }
