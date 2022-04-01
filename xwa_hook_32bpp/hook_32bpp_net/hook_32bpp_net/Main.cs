@@ -151,7 +151,7 @@ namespace hook_32bpp_net
                 var opt = OptFile.FromFile(optFilename);
                 fgCount = Math.Max(fgCount, opt.MaxTextureVersion);
                 UpdateOptFile(optName, opt, objectLines, baseSkins, fgCount, hasDefaultSkin);
-                opt.Save("temp.opt");
+                opt.Save("temp.opt", false);
             }
 
             return hasSkins ? 1 : 0;
