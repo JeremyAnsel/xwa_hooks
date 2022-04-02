@@ -23,16 +23,18 @@ extern "C" __declspec(dllexport) void CallHook(int* esp)
 	{
 		SetProcessDPIAware();
 
-		VirtualProtectHookMemoryWrite();
+		VirtualProtectMemoryReadWrite();
 
 		*(int*)0x005A8B60 = (int)CallHook;
+
+		*(int*)(0x0059BF69 + 0x01) = (int)exit - (0x0059BF69 + 0x05);
 
 		if (MainPatchMemory())
 		{
 			LoadAndPatchHooks();
 		}
 
-		VirtualProtectHookMemory();
+		VirtualProtectMemoryExecuteReadWrite();
 	}
 	else
 	{

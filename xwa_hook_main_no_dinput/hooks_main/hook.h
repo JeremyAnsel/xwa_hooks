@@ -1,8 +1,8 @@
 #pragma once
 #include "hook_function.h"
 
-void VirtualProtectHookMemoryWrite();
-void VirtualProtectHookMemory();
+void VirtualProtectMemoryReadWrite();
+void VirtualProtectMemoryExecuteReadWrite();
 
 bool PatchMemory(const HookPatch& patch);
 bool LoadAndPatchHooks();

@@ -35,6 +35,8 @@ bool MainPatchMemory()
 	*(int*)(0x005A8B20 + 0x09) = (int)DirectInputCreateA - 0x005A8B2D;
 	*(int*)(0x005A8B30 + 0x09) = (int)DirectInputCreateA - 0x005A8B3D;
 
+	*(int*)(0x0059BF69 + 0x01) = (int)exit - (0x0059BF69 + 0x05);
+
 	return true;
 }
 
@@ -48,11 +50,14 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 		{
 			SetProcessDPIAware();
 
+			VirtualProtectMemoryReadWrite();
+
 			if (MainPatchMemory())
 			{
 				LoadAndPatchHooks();
-				VirtualProtectHookMemory();
 			}
+
+			VirtualProtectMemoryExecuteReadWrite();
 		}
 
 		break;

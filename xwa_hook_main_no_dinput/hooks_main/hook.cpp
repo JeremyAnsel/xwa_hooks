@@ -41,35 +41,16 @@ std::string int_to_hex(int i)
 	return stream.str();
 }
 
-class VirtualProtectMemory
+void VirtualProtectMemoryReadWrite()
 {
-public:
-	VirtualProtectMemory()
-	{
-		address = (void*)0x401000;
-		size = 0x1A7BA0;
-		VirtualProtect(address, size, PAGE_READWRITE, &oldProtection);
-	}
-
-	~VirtualProtectMemory()
-	{
-		VirtualProtect(address, size, oldProtection, nullptr);
-	}
-
-private:
 	DWORD oldProtection;
-	LPVOID address;
-	SIZE_T size;
-};
-
-void VirtualProtectHookMemoryWrite()
-{
-	VirtualProtect((void*)0x401000, 0x1A7BA0, PAGE_READWRITE, nullptr);
+	VirtualProtect((void*)0x401000, 0x1A7BA0, PAGE_READWRITE, &oldProtection);
 }
 
-void VirtualProtectHookMemory()
+void VirtualProtectMemoryExecuteReadWrite()
 {
-	VirtualProtect((void*)0x401000, 0x1A7BA0, PAGE_EXECUTE_READWRITE, nullptr);
+	DWORD oldProtection;
+	VirtualProtect((void*)0x401000, 0x1A7BA0, PAGE_EXECUTE_READWRITE, &oldProtection);
 }
 
 bool IsPatchMemoryEqual(const char* offset, const char* item)
@@ -150,8 +131,6 @@ bool PatchMemory(const HookPatch& patch)
 		MessageBoxA(nullptr, message.c_str(), "xwa_hook_main (DInput.dll)", MB_OK | MB_ICONERROR);
 		return false;
 	}
-
-	VirtualProtectMemory memoryProtect;
 
 	for (int itemIndex = 0; itemIndex < patch.Count; itemIndex++)
 	{
