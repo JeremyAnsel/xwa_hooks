@@ -61,7 +61,16 @@ void MakeMinidump(EXCEPTION_POINTERS* pExceptionInfo)
 		GetCurrentProcess(),
 		GetCurrentProcessId(),
 		hFile,
-		MINIDUMP_TYPE(MiniDumpWithCodeSegs | MiniDumpWithDataSegs),
+		MINIDUMP_TYPE(
+			MiniDumpNormal
+			| MiniDumpWithCodeSegs
+			| MiniDumpWithDataSegs
+			| MiniDumpWithIndirectlyReferencedMemory
+			| MiniDumpWithHandleData
+			| MiniDumpWithUnloadedModules
+			| MiniDumpWithFullMemoryInfo
+			| MiniDumpWithThreadInfo
+			| MiniDumpWithTokenInformation),
 		pExceptionInfo ? &exceptionInfo : nullptr,
 		nullptr,
 		nullptr);
