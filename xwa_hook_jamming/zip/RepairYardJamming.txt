@@ -1,0 +1,6 @@
+; ModelIndex_162_0_111_RepairYard
+
+HasJamming = 1
+JammingDirection = All
+JammingDistance = -1
+JammingBehavior = HangarMeshCenter

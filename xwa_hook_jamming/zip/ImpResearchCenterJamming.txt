@@ -1,0 +1,6 @@
+; ModelIndex_178_0_127_ImpResearchCenter
+
+HasJamming = 0
+JammingDirection = All
+JammingDistance = -1
+JammingBehavior = None

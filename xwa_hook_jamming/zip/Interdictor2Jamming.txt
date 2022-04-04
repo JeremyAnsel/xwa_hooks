@@ -1,0 +1,6 @@
+; ModelIndex_137_0_91_Interdictor2
+
+HasJamming = 1
+JammingDirection = Down
+JammingDistance = -1
+JammingBehavior = InsideHangarHardpointAndJammingPoints

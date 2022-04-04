@@ -1,0 +1,24 @@
+
+; hangar jamming
+
+// L004E2E40
+void L004E2E40( unknown A4, unknown A8 )
+
+===============================================================================
+
+Jamming.txt
+
+// HasJamming = 0 or 1
+HasJamming = 1
+
+// JammingDirection = All or Up or Down
+JammingDirection = All
+
+// JammingDistance = integer
+// -1 = disabled
+JammingDistance = -1
+
+// JammingBehavior = None or HangarMeshCenter or InsideHangarHardpoint or InsideHangarHardpointAndJammingPoints
+JammingBehavior = InsideHangarHardpointAndJammingPoints
+
+===============================================================================

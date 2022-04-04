@@ -1,0 +1,6 @@
+; ModelIndex_160_0_109_Factory
+
+HasJamming = 1
+JammingDirection = All
+JammingDistance = 4096
+JammingBehavior = None

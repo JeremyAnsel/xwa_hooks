@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hook_jamming", "hook_jamming\hook_jamming.vcxproj", "{80598840-7D89-4188-94C9-E2AE1659E697}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{80598840-7D89-4188-94C9-E2AE1659E697}.Debug|x86.ActiveCfg = Debug|Win32
+		{80598840-7D89-4188-94C9-E2AE1659E697}.Debug|x86.Build.0 = Debug|Win32
+		{80598840-7D89-4188-94C9-E2AE1659E697}.Release|x86.ActiveCfg = Release|Win32
+		{80598840-7D89-4188-94C9-E2AE1659E697}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C63F14AD-55BB-4714-9060-0D1071F656E8}
+	EndGlobalSection
+EndGlobal

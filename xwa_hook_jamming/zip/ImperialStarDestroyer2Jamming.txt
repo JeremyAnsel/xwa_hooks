@@ -1,0 +1,6 @@
+; ModelIndex_139_0_93_ImperialStarDestroyer2
+
+HasJamming = 1
+JammingDirection = Down
+JammingDistance = -1
+JammingBehavior = InsideHangarHardpointAndJammingPoints

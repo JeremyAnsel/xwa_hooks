@@ -1,0 +1,6 @@
+; ModelIndex_138_0_92_VictoryStarDestroyer2
+
+HasJamming = 1
+JammingDirection = Down
+JammingDistance = -1
+JammingBehavior = InsideHangarHardpointAndJammingPoints

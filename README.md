@@ -78,6 +78,12 @@ See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11761
 
 This hook permits to enable interdictor feature for any craft.
 
+## xwa_hook_jamming
+
+This hook permits to define the jamming behavior for any craft.
+
+See https://forums.xwaupgrade.com/viewtopic.php?f=33&t=13857
+
 ## xwa_hook_joystick_ff
 
 This hook permits to select the joystick device with force feedback.

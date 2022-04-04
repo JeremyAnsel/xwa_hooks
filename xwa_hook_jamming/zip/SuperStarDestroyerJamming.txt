@@ -1,0 +1,6 @@
+; ModelIndex_140_0_94_SuperStarDestroyer
+
+HasJamming = 1
+JammingDirection = All
+JammingDistance = -1
+JammingBehavior = InsideHangarHardpoint
