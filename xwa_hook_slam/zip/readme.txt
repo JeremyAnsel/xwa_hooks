@@ -44,6 +44,8 @@ If the file does not exist, default values are used. By default, the Missile Boa
 
 See MissileBoatSlam.txt.
 
+To define the SLAM enable penalty, set the "SlamEnablePenalty" setting in "hook_slam.cfg". It is an integer value. The default value is 4.
+
 
 *** Credits ***
 

@@ -56,6 +56,26 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class Config
+{
+public:
+	Config()
+	{
+		auto lines = GetFileLines("hook_slam.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_slam");
+		}
+
+		this->SlamEnablePenalty = GetFileKeyValueInt(lines, "SlamEnablePenalty", 4);
+	}
+
+	int SlamEnablePenalty;
+};
+
+Config g_config;
+
 class SoundsConfig
 {
 public:
@@ -258,11 +278,12 @@ int SlamHook(int* params)
 		}
 		else
 		{
+			int penalty = g_config.SlamEnablePenalty;
 			bool hasEnergy = false;
 
 			for (int i = 0; i < craft->WeaponRacksCount; i++)
 			{
-				if (craft->WeaponRacks[i].m04 > 0)
+				if (craft->WeaponRacks[i].m04 > penalty)
 				{
 					hasEnergy = true;
 					break;
@@ -272,6 +293,18 @@ int SlamHook(int* params)
 			if (hasEnergy)
 			{
 				craft->IsSlamEnabled = 1;
+
+				for (int i = 0; i < craft->WeaponRacksCount; i++)
+				{
+					if (craft->WeaponRacks[i].m04 > penalty)
+					{
+						craft->WeaponRacks[i].m04 -= penalty;
+					}
+					else
+					{
+						craft->WeaponRacks[i].m04 = 0;
+					}
+				}
 
 				// MSG_OVERDRIVE_ON
 				ShowMessage(371, playerIndex);
