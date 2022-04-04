@@ -71,6 +71,11 @@ EnergyBarColorIonLow_fgFG_ = ARGB color
 WeaponLightColorXXX = RGB color
 WeaponLightColor_fgFG_XXX = RGB color
 
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+To define settings on a per mission basis, create a file named "[MissionDir]\[Mission]_WeaponColor.txt" or create a section named "[WeaponColor]" in "[MissionDir]\[Mission].ini".
+All the settings defined in a [Model] file can be replaced in a [Mission] file. The key of the setting in the mission file must be prefixed with "[Model]_".
+For example, "WeaponColor" in "[Model].ini" become "[Model]_WeaponColor" in "[Mission].ini".
+
 The format of the color is ARGB: FF000000 is black, FFFF0000 is red, FF00FF00 is green, FF0000FF is blue.
 
 WeaponColor defines the default value used for all weapons.

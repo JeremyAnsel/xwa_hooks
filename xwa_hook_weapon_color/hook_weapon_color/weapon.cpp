@@ -192,9 +192,16 @@ static_assert(sizeof(S0x07FA360) == 48, "size of S0x07FA360 must be 48");
 
 #pragma pack(pop)
 
-int GetWeaponSwitch(int modelIndex)
+std::string GetPathFileName(const std::string& str)
 {
-	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+	auto a = str.find_last_of('\\');
+
+	return a == -1 ? str : str.substr(a + 1, -1);
+}
+
+std::vector<std::string> GetWeaponColorLines(const std::string& ship)
+{
+	const std::string shipName = GetPathFileName(ship);
 
 	auto lines = GetFileLines(ship + "WeaponColor.txt");
 
@@ -202,6 +209,45 @@ int GetWeaponSwitch(int modelIndex)
 	{
 		lines = GetFileLines(ship + ".ini", "WeaponColor");
 	}
+
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+
+	auto missionLines = GetFileLines(mission + "_WeaponColor.txt");
+
+	if (!missionLines.size())
+	{
+		missionLines = GetFileLines(mission + ".ini", "WeaponColor");
+	}
+
+	for (const std::string& missionLine : missionLines)
+	{
+		auto a = missionLine.find_first_of('_');
+
+		if (a == -1)
+		{
+			continue;
+		}
+
+		const std::string prefix = missionLine.substr(0, a);
+
+		if (_stricmp(prefix.c_str(), shipName.c_str()) != 0)
+		{
+			continue;
+		}
+
+		const std::string line = missionLine.substr(a + 1, -1);
+		lines.insert(lines.begin(), line);
+	}
+
+	return lines;
+}
+
+int GetWeaponSwitch(int modelIndex)
+{
+	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetWeaponColorLines(ship);
 
 	int weaponSwitch = -1;
 
@@ -213,7 +259,7 @@ int GetWeaponSwitch(int modelIndex)
 	return weaponSwitch;
 }
 
-std::string GetMarkingsKey(std::string key, int markings)
+std::string GetMarkingsKey(const std::string& key, int markings)
 {
 	if (markings == -1)
 	{
@@ -227,12 +273,7 @@ std::array<int, 28> GetWeaponColor(int modelIndex, int markings)
 {
 	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
 
-	auto lines = GetFileLines(ship + "WeaponColor.txt");
-
-	if (!lines.size())
-	{
-		lines = GetFileLines(ship + ".ini", "WeaponColor");
-	}
+	auto lines = GetWeaponColorLines(ship);
 
 	std::array<int, 28> color;
 
@@ -285,12 +326,7 @@ std::array<unsigned int, 28> GetWeaponImpactColor(int modelIndex, int markings)
 {
 	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
 
-	auto lines = GetFileLines(ship + "WeaponColor.txt");
-
-	if (!lines.size())
-	{
-		lines = GetFileLines(ship + ".ini", "WeaponColor");
-	}
+	auto lines = GetWeaponColorLines(ship);
 
 	std::array<unsigned int, 28> color;
 
@@ -422,12 +458,7 @@ WeaponEnergyBarColor GetWeaponEnergyBarColor(int modelIndex, int markings)
 {
 	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
 
-	auto lines = GetFileLines(ship + "WeaponColor.txt");
-
-	if (!lines.size())
-	{
-		lines = GetFileLines(ship + ".ini", "WeaponColor");
-	}
+	auto lines = GetWeaponColorLines(ship);
 
 	WeaponEnergyBarColor color{};
 
@@ -476,12 +507,7 @@ std::array<unsigned int, 28> GetWeaponLightColor(int modelIndex, int markings)
 {
 	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
 
-	auto lines = GetFileLines(ship + "WeaponColor.txt");
-
-	if (!lines.size())
-	{
-		lines = GetFileLines(ship + ".ini", "WeaponColor");
-	}
+	auto lines = GetWeaponColorLines(ship);
 
 	std::array<unsigned int, 28> color = g_config.WeaponLightColor;
 
@@ -512,6 +538,8 @@ class ModelIndexWeapon
 public:
 	int GetSwitchBasedOnIff(int modelIndex)
 	{
+		this->UpdateIfChanged();
+
 		auto it = this->_weaponSwitch.find(modelIndex);
 
 		if (it != this->_weaponSwitch.end())
@@ -532,6 +560,8 @@ public:
 		{
 			return 0;
 		}
+
+		this->UpdateIfChanged();
 
 		auto it = this->_weaponColor.find(std::make_pair(modelIndex, markings));
 
@@ -554,6 +584,8 @@ public:
 			return 0xFFFFFFFF;
 		}
 
+		this->UpdateIfChanged();
+
 		auto it = this->_weaponImpactColor.find(std::make_pair(modelIndex, markings));
 
 		if (it != this->_weaponImpactColor.end())
@@ -570,6 +602,8 @@ public:
 
 	WeaponEnergyBarColor GetEnergyBarColor(int modelIndex, int markings)
 	{
+		this->UpdateIfChanged();
+
 		auto it = this->_weaponEnergyBarColor.find(std::make_pair(modelIndex, markings));
 
 		if (it != this->_weaponEnergyBarColor.end())
@@ -591,6 +625,8 @@ public:
 			return 0;
 		}
 
+		this->UpdateIfChanged();
+
 		auto it = this->_weaponLightColor.find(std::make_pair(modelIndex, markings));
 
 		if (it != this->_weaponLightColor.end())
@@ -606,6 +642,24 @@ public:
 	}
 
 private:
+	void UpdateIfChanged()
+	{
+		static std::string _mission;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+
+		if (_mission != xwaMissionFileName)
+		{
+			_mission = xwaMissionFileName;
+
+			this->_weaponSwitch.clear();
+			this->_weaponColor.clear();
+			this->_weaponImpactColor.clear();
+			this->_weaponEnergyBarColor.clear();
+			this->_weaponLightColor.clear();
+		}
+	}
+
 	std::map<int, int> _weaponSwitch;
 	std::map<std::pair<int, int>, std::array<int, 28>> _weaponColor;
 	std::map<std::pair<int, int>, std::array<unsigned int, 28>> _weaponImpactColor;
@@ -712,8 +766,8 @@ int WeaponImpactColorHook(int* params)
 	S0x0761E70* esi = (S0x0761E70*)params[0];
 	unsigned short resdataModelIndex = (unsigned short)params[1];
 
-	const auto L004E77C0 = (XwaKnockoutData* (*)(int, int))0x004E77C0;
-	const auto L004E7DF0 = (XwaKnockoutData* (*)(int, int))0x004E7DF0;
+	const auto L004E77C0 = (XwaKnockoutData * (*)(int, int))0x004E77C0;
+	const auto L004E7DF0 = (XwaKnockoutData * (*)(int, int))0x004E7DF0;
 
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 
@@ -782,7 +836,7 @@ int WeaponImpactColorSetIndexHook(int* params)
 	float A10 = *(float*)&params[3];
 	float A14 = *(float*)&params[4];
 
-	const auto L004E9440 = (S0x0761E70* (*)(int, int, int, float, float))0x004E9440;
+	const auto L004E9440 = (S0x0761E70 * (*)(int, int, int, float, float))0x004E9440;
 
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 
