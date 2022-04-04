@@ -18,7 +18,7 @@ This dll requires:
 
 *** Setup ***
 
-Place hook_32bpp.dll, hook_32bpp_net.dll, JeremyAnsel.ColorQuant.dll, JeremyAnsel.Xwa.Opt.dll next to xwingalliance.exe
+Place hook_32bpp.dll, hook_32bpp_net.dll, JeremyAnsel.ColorQuant.dll, JeremyAnsel.IO.Locator.dll, JeremyAnsel.Xwa.Opt.dll, SharpCompress.dll next to xwingalliance.exe
 
 
 *** Patch ***
@@ -26,7 +26,7 @@ Place hook_32bpp.dll, hook_32bpp_net.dll, JeremyAnsel.ColorQuant.dll, JeremyAnse
 The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that set the opt name
-At offset 0CBF18, replace E82370F6FF with E803C00D00.
+At offset 0CBF00, replace 8B442404558B6C240C with E82BC00D00C3909090.
 
 # To call the hook that set textures bpp 8 to 32
 At offset 1964C5, replace 8A028801 with 8B028901.

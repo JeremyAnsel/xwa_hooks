@@ -5,7 +5,7 @@
 
 static const HookFunction g_hookFunctions[] =
 {
-	{ 0x4CCB1D, SetOptNameHook },
+	{ 0x4CCB05, SetOptNameHook },
 	{ 0x441DD0, SetAlphaMaskHook },
 	{ 0x441B40, CreateLightMapHook },
 	{ 0x441A07, ConvertColorMapHook },
@@ -15,7 +15,7 @@ static const HookFunction g_hookFunctions[] =
 
 static const HookPatchItem g_setOptNamePatch[] =
 {
-	{ 0x0CBF18, "E82370F6FF", "E803C00D00" },
+	{ 0x0CBF00, "8B442404558B6C240C", "E82BC00D00C3909090" },
 };
 
 static const HookPatchItem g_setTexturesBpp8To32Patch[] =

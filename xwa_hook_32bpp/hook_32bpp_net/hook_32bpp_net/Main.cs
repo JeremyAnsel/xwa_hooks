@@ -132,7 +132,7 @@ namespace hook_32bpp_net
         }
 
         [DllExport(CallingConvention.Cdecl)]
-        public static int ReadOptFunction([MarshalAs(UnmanagedType.LPStr)] string optFilename)
+        public static unsafe int ReadOptFunction([MarshalAs(UnmanagedType.LPStr)] string optFilename)
         {
             if (!File.Exists(optFilename))
             {
@@ -146,15 +146,28 @@ namespace hook_32bpp_net
             int fgCount = GetFlightgroupsCount(objectLines, optName);
             bool hasSkins = hasDefaultSkin || baseSkins.Count != 0 || fgCount != 0;
 
+            int filePtr = 0;
+
             if (hasSkins)
             {
                 var opt = OptFile.FromFile(optFilename);
                 fgCount = Math.Max(fgCount, opt.MaxTextureVersion);
                 UpdateOptFile(optName, opt, objectLines, baseSkins, fgCount, hasDefaultSkin);
-                opt.Save("temp.opt", false);
+                //opt.Save("temp.opt", false);
+
+                int requiredSize = opt.GetSaveRequiredFileSize();
+                IntPtr ptr = Marshal.AllocHGlobal(requiredSize);
+
+                using (var stream = new UnmanagedMemoryStream((byte*)ptr, requiredSize, requiredSize, FileAccess.Write))
+                {
+                    opt.Save(stream, false);
+                }
+
+                filePtr = ptr.ToInt32();
             }
 
-            return hasSkins ? 1 : 0;
+            //return hasSkins ? 1 : 0;
+            return filePtr;
         }
 
         private static void UpdateOptFile(string optName, OptFile opt, IList<string> objectLines, IList<string> baseSkins, int fgCount, bool hasDefaultSkin)

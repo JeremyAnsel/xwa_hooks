@@ -149,24 +149,128 @@ NetFunctions g_netFunctions;
 
 int SetOptNameHook(int* params)
 {
-	const char* name = (const char*)params[0];
-	const int A8 = params[1];
-	const int AC = params[2];
-	const int A10 = params[3];
+	const char* filename = (const char*)params[1];
+	int* pVersion = (int*)params[2];
 
-	const auto XwaIOOpenFile = (int(*)(const char*, int, int, int))0x00433B40;
+	const auto XwaIOOpenFile = (int(*)(const char*, const char*, int, int))0x00433B40;
+	const auto Xwa_fread = (int(*)(void*, int, int, FILE*))0x0059BAB0;
+	const auto Xwa_fclose = (int(*)(FILE*))0x0059ACE0;
+	const auto Free_Handle = (void(*)(const char*, short))0x0050E240;
+	const auto XwaAllocHandleWithoutZeroingMemory = (short(*)(const char*, int))0x0050E0F0;
+	const auto Lock_Handle = (void* (*)(short))0x0050E2F0;
+	const auto Unlock_Handle = (void(*)(short))0x0050E350;
+	const auto PtrAdjustOptimizedPolyObject = (void(*)(void*))0x004849C0;
+	const auto XwaIOShowErrorMessage = (void(*)(int))0x004340D0;
 
-	g_optName = name;
+	const int StringsFileError_NotEnoughtMemory = 0;
 
-	int result = g_netFunctions._readOptFunction(name);
+	char* s_XwaIOFileName = (char*)0x0080DA60;
+	FILE*& s_XwaIOFile = *(FILE**)0x00910780;
+	int& s_XwaLoadOptBufMemSize = *(int*)0x0074C270;
+	short& s_XwaLoadOptBufMemHandle = *(short*)0x0074C26C;
 
-	if (result)
+	g_optName = filename;
+
+	*pVersion = 0;
+
+	int filePtr = g_netFunctions._readOptFunction(filename);
+	int filePtrOffset = 0;
+
+	int version = 0;
+	int filesize = 0;
+	FILE* xwaFile = nullptr;
+
+	if (filePtr)
 	{
-		name = "temp.opt";
+		strcpy_s(s_XwaIOFileName, 256, filename);
+
+		version = *(int*)(filePtr + filePtrOffset);
+		filePtrOffset += 4;
+
+		if (version > 0)
+		{
+			filesize = version;
+			version = 0;
+		}
+		else
+		{
+			version = -version;
+			filesize = *(int*)(filePtr + filePtrOffset);
+			filePtrOffset += 4;
+		}
+	}
+	else
+	{
+		XwaIOOpenFile(filename, "rb", 0, 0);
+		xwaFile = s_XwaIOFile;
+
+		if (xwaFile == 0)
+		{
+			return 0;
+		}
+
+		Xwa_fread(&version, 1, 4, xwaFile);
+
+		if (version > 0)
+		{
+			filesize = version;
+			version = 0;
+		}
+		else
+		{
+			version = -version;
+			Xwa_fread(&filesize, 1, 4, xwaFile);
+		}
+
+		if (version < 2)
+		{
+			Xwa_fclose(xwaFile);
+			xwaFile = nullptr;
+		}
 	}
 
-	XwaIOOpenFile(name, A8, AC, A10);
-	return 0;
+	if (s_XwaLoadOptBufMemSize < filesize && s_XwaLoadOptBufMemHandle != 0)
+	{
+		Free_Handle("LOADOPTBUF", s_XwaLoadOptBufMemHandle);
+		s_XwaLoadOptBufMemHandle = 0;
+		s_XwaLoadOptBufMemSize = 0;
+	}
+
+	if (s_XwaLoadOptBufMemHandle == 0)
+	{
+		s_XwaLoadOptBufMemHandle = XwaAllocHandleWithoutZeroingMemory("LOADOPTBUF", filesize);
+
+		if (s_XwaLoadOptBufMemHandle == 0)
+		{
+			XwaIOShowErrorMessage(StringsFileError_NotEnoughtMemory);
+		}
+
+		s_XwaLoadOptBufMemSize = filesize;
+	}
+
+	short optMemHandle = s_XwaLoadOptBufMemHandle;
+	void* optPtr = Lock_Handle(optMemHandle);
+
+	if (filePtr)
+	{
+		memcpy(optPtr, (void*)(filePtr + filePtrOffset), filesize);
+		filePtrOffset += filesize;
+		LocalFree((HLOCAL)filePtr);
+		filePtr = 0;
+	}
+	else
+	{
+		Xwa_fread(optPtr, 1, filesize, xwaFile);
+		Xwa_fclose(xwaFile);
+		xwaFile = nullptr;
+	}
+
+	PtrAdjustOptimizedPolyObject(optPtr);
+	Unlock_Handle(optMemHandle);
+
+	*pVersion = version;
+
+	return optMemHandle;
 }
 
 int SetAlphaMaskHook(int* params)

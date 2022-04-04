@@ -30,4 +30,9 @@
 
   <Import Project="../packages/DllExport.1.5.2/tools/net.r_eg.DllExport.targets" Condition="Exists('../packages/DllExport.1.5.2/tools/net.r_eg.DllExport.targets')" />
 
+  <Target Name="PostBuildEventAfterDllExport" AfterTargets="DllExportMod">
+    <Exec Command="call &quot;$(DevEnvDir)..\..\VC\Auxiliary\Build\vcvars32.bat&quot;
+		editbin /largeaddressaware &quot;$(TargetPath)&quot;" />
+  </Target>
+
 </Project>

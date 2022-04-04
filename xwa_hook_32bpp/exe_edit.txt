@@ -2,10 +2,14 @@
 ; opt name
 
 // L004CCB00 XwaOptRead
-:004CCB18 - 0x0CBF18
-E82370F6FF              call 00433B40
+:004CCB00 - 0x0CBF00
+8B442404                mov eax, dword ptr [esp+04]
+55                      push ebp
+8B6C240C                mov ebp, dword ptr [esp+0C]
 
-E803C00D00              call 005A8B20, 005A8B20 - 004CCB1D = 000DC003
+E82BC00D00              call 005A8B30, 005A8B30 - 004CCB05 = 000DC02B
+C3                      ret
+909090                  nop
 
 
 ; textures bpp 8 to 32
