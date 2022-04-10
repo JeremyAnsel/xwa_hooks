@@ -10,18 +10,20 @@
 
 std::string int_to_hex(int i);
 
-std::string GetModuleName(void* address)
+const char* GetModuleName(void* address)
 {
+	static char moduleFileName[MAX_PATH];
+
 	HMODULE hModule = NULL;
 	GetModuleHandleEx(
 		GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
 		(LPCTSTR)address,
 		&hModule);
 
-	char moduleFileName[MAX_PATH];
 	GetModuleFileName(hModule, moduleFileName, sizeof(moduleFileName));
-	std::string moduleName = std::string(strrchr(moduleFileName, '\\') + 1);
+	*strrchr(moduleFileName, '.') = 0;
 
+	const char* moduleName = strrchr(moduleFileName, '\\') + 1;
 	return moduleName;
 }
 
@@ -32,30 +34,31 @@ void MakeMinidump(EXCEPTION_POINTERS* pExceptionInfo)
 	SYSTEMTIME time;
 	GetLocalTime(&time);
 
-	std::string moduleName = GetModuleName(pExceptionInfo->ExceptionRecord->ExceptionAddress);
-	moduleName = moduleName.substr(0, moduleName.rfind('.'));
+	const char* moduleName = GetModuleName(pExceptionInfo->ExceptionRecord->ExceptionAddress);
 
 	wsprintf(
 		name + strlen(name) - 4,
-		"_%4d%02d%02d_%02d%02d%02d_%s.dmp",
+		"_%4d%02d%02d_%02d%02d%02d%03d_%s.dmp",
 		time.wYear,
 		time.wMonth,
 		time.wDay,
 		time.wHour,
 		time.wMinute,
 		time.wSecond,
-		moduleName.c_str());
+		time.wMilliseconds,
+		moduleName);
 
 	HANDLE hFile = CreateFile(name, GENERIC_WRITE, FILE_SHARE_READ, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
+		OutputDebugString("Crash dump creation has failed");
 		return;
 	}
 
 	MINIDUMP_EXCEPTION_INFORMATION exceptionInfo{};
 	exceptionInfo.ThreadId = GetCurrentThreadId();
 	exceptionInfo.ExceptionPointers = pExceptionInfo;
-	exceptionInfo.ClientPointers = FALSE;
+	exceptionInfo.ClientPointers = TRUE;
 
 	MiniDumpWriteDump(
 		GetCurrentProcess(),
@@ -77,20 +80,23 @@ void MakeMinidump(EXCEPTION_POINTERS* pExceptionInfo)
 
 	CloseHandle(hFile);
 
-	OutputDebugString((std::string() + "A crash dump has been generated at " + name).c_str());
+	char text[MAX_PATH];
+	strcpy_s(text, "A crash dump has been generated at ");
+	strcat_s(text, name);
+	OutputDebugString(text);
 }
 
 LONG WINAPI TopLevelExceptionHandler(PEXCEPTION_POINTERS pExceptionInfo)
 {
-	std::string text;
-	text.append("Exception 0x");
-	text.append(int_to_hex(pExceptionInfo->ExceptionRecord->ExceptionCode));
-	text.append(" at ");
-	text.append(int_to_hex((int)pExceptionInfo->ExceptionRecord->ExceptionAddress));
-	text.append("  in ");
-	text.append(GetModuleName(pExceptionInfo->ExceptionRecord->ExceptionAddress));
+	char text[MAX_PATH];
+	wsprintf(
+		text,
+		"Exception 0x%08X at %08X in %s",
+		pExceptionInfo->ExceptionRecord->ExceptionCode,
+		(unsigned int)pExceptionInfo->ExceptionRecord->ExceptionAddress,
+		GetModuleName(pExceptionInfo->ExceptionRecord->ExceptionAddress));
 
-	OutputDebugString(text.c_str());
+	OutputDebugString(text);
 	MakeMinidump(pExceptionInfo);
 
 	return EXCEPTION_CONTINUE_SEARCH;
