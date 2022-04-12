@@ -120,6 +120,9 @@ class NetFunctions
 {
 public:
 	typedef int(_cdecl * readOptFunction)(const char*);
+	typedef int(_cdecl * getOptVersionFunction)();
+	typedef void(_cdecl * writeOptFunction)(void*);
+
 	typedef int(_cdecl * readCompressedDatImageFunction)(void*, int, const void*, int);
 
 	NetFunctions()
@@ -132,6 +135,8 @@ public:
 		}
 
 		_readOptFunction = (readOptFunction)GetProcAddress(_module, "ReadOptFunction");
+		_getOptVersionFunction = (getOptVersionFunction)GetProcAddress(_module, "GetOptVersionFunction");
+		_writeOptFunction = (writeOptFunction)GetProcAddress(_module, "WriteOptFunction");
 		_readCompressedDatImageFunction = (readCompressedDatImageFunction)GetProcAddress(_module, "ReadCompressedDatImageFunction");
 	}
 
@@ -142,6 +147,8 @@ public:
 
 	HMODULE _module;
 	readOptFunction _readOptFunction = nullptr;
+	getOptVersionFunction _getOptVersionFunction = nullptr;
+	writeOptFunction _writeOptFunction = nullptr;
 	readCompressedDatImageFunction _readCompressedDatImageFunction = nullptr;
 };
 
@@ -173,31 +180,18 @@ int SetOptNameHook(int* params)
 
 	*pVersion = 0;
 
-	int filePtr = g_netFunctions._readOptFunction(filename);
-	int filePtrOffset = 0;
+	int requiredFileSize = g_netFunctions._readOptFunction(filename);
 
 	int version = 0;
 	int filesize = 0;
 	FILE* xwaFile = nullptr;
 
-	if (filePtr)
+	if (requiredFileSize)
 	{
 		strcpy_s(s_XwaIOFileName, 256, filename);
 
-		version = *(int*)(filePtr + filePtrOffset);
-		filePtrOffset += 4;
-
-		if (version > 0)
-		{
-			filesize = version;
-			version = 0;
-		}
-		else
-		{
-			version = -version;
-			filesize = *(int*)(filePtr + filePtrOffset);
-			filePtrOffset += 4;
-		}
+		version = g_netFunctions._getOptVersionFunction();
+		filesize = requiredFileSize;
 	}
 	else
 	{
@@ -251,12 +245,9 @@ int SetOptNameHook(int* params)
 	short optMemHandle = s_XwaLoadOptBufMemHandle;
 	void* optPtr = Lock_Handle(optMemHandle);
 
-	if (filePtr)
+	if (requiredFileSize)
 	{
-		memcpy(optPtr, (void*)(filePtr + filePtrOffset), filesize);
-		filePtrOffset += filesize;
-		LocalFree((HLOCAL)filePtr);
-		filePtr = 0;
+		g_netFunctions._writeOptFunction(optPtr);
 	}
 	else
 	{

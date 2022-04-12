@@ -131,9 +131,15 @@ namespace hook_32bpp_net
             return null;
         }
 
+        private static OptFile _tempOptFile;
+        private static int _tempOptFileSize;
+
         [DllExport(CallingConvention.Cdecl)]
-        public static unsafe int ReadOptFunction([MarshalAs(UnmanagedType.LPStr)] string optFilename)
+        public static int ReadOptFunction([MarshalAs(UnmanagedType.LPStr)] string optFilename)
         {
+            _tempOptFile = null;
+            _tempOptFileSize = 0;
+
             if (!File.Exists(optFilename))
             {
                 return 0;
@@ -146,8 +152,6 @@ namespace hook_32bpp_net
             int fgCount = GetFlightgroupsCount(objectLines, optName);
             bool hasSkins = hasDefaultSkin || baseSkins.Count != 0 || fgCount != 0;
 
-            int filePtr = 0;
-
             if (hasSkins)
             {
                 var opt = OptFile.FromFile(optFilename);
@@ -155,19 +159,41 @@ namespace hook_32bpp_net
                 UpdateOptFile(optName, opt, objectLines, baseSkins, fgCount, hasDefaultSkin);
                 //opt.Save("temp.opt", false);
 
-                int requiredSize = opt.GetSaveRequiredFileSize();
-                IntPtr ptr = Marshal.AllocHGlobal(requiredSize);
-
-                using (var stream = new UnmanagedMemoryStream((byte*)ptr, requiredSize, requiredSize, FileAccess.Write))
-                {
-                    opt.Save(stream, false);
-                }
-
-                filePtr = ptr.ToInt32();
+                _tempOptFile = opt;
+                _tempOptFileSize = opt.GetSaveRequiredFileSize(false);
             }
 
-            //return hasSkins ? 1 : 0;
-            return filePtr;
+            return hasSkins ? _tempOptFileSize : 0;
+        }
+
+        [DllExport(CallingConvention.Cdecl)]
+        public static int GetOptVersionFunction()
+        {
+            if (_tempOptFile == null)
+            {
+                return 0;
+            }
+
+            return _tempOptFile.Version;
+        }
+
+        [DllExport(CallingConvention.Cdecl)]
+        public static unsafe void WriteOptFunction(IntPtr ptr)
+        {
+            if (ptr == IntPtr.Zero || _tempOptFile == null || _tempOptFileSize == 0)
+            {
+                _tempOptFile = null;
+                _tempOptFileSize = 0;
+                return;
+            }
+
+            using (var stream = new UnmanagedMemoryStream((byte*)ptr, _tempOptFileSize, _tempOptFileSize, FileAccess.Write))
+            {
+                _tempOptFile.Save(stream, false, false);
+            }
+
+            _tempOptFile = null;
+            _tempOptFileSize = 0;
         }
 
         private static void UpdateOptFile(string optName, OptFile opt, IList<string> objectLines, IList<string> baseSkins, int fgCount, bool hasDefaultSkin)
