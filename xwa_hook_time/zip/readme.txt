@@ -15,7 +15,7 @@ This dll requires:
 
 *** Setup ***
 
-Place hook_time.dll next to xwingalliance.exe
+Place hook_time.dll and hook_time.cfg next to xwingalliance.exe
 
 
 *** Patch ***
@@ -46,6 +46,20 @@ At offset 11034C, replace 7D07 with EB07.
 At offset 499E0, replace E808D21400 with 9090909090.
 At offset 196B96, replace 8B5508 with EB5190.
 
+# To call the hook that sets the animations speed
+At offset 000EF5, replace 0F85310C0000 with 909090909090.
+At offset 000F7D, replace 8D04408D0480 with E89E6F1A0090.
+At offset 000F9C, replace 8D04408D0480 with E87F6F1A0090.
+At offset 000FC2, replace 8D04408D0480 with E8596F1A0090.
+At offset 001A33, replace 0F84D5000000 with E8E8641A0090.
+At offset 001017, replace 25FFFF0000 with E8046F1A00.
+At offset 00193A, replace 66817DFCDE00752B with E8E1651A00909090.
+
+*** Usage ***
+
+To define the duration of an animation frame for explosions, set the ExplosionAnimationTimeFrame setting in "hook_time.cfg". The setting is an integer value. The default value is 60.
+To define the duration of an animation frame for small debris, set the SmallDebrisAnimationTimeFrame setting in "hook_time.cfg". The setting is an integer value. The default value is 60.
+See "hook_time.cfg"
 
 *** Credits ***
 

@@ -143,3 +143,57 @@ E808D21400              call 005977ED
 
 EB51                    jmp 005977E9
 90                      nop
+
+===============================================================================
+
+; L00401880
+; animations speed
+
+; animation delay
+:00401AF5 - 0x000EF5
+0F85310C0000            jne 0040272C
+
+909090909090            nop
+
+; asteroids
+:00401B7D - 0x000F7D
+8D0440                  lea eax, dword ptr [eax+2*eax]
+8D0480                  lea eax, dword ptr [eax+4*eax]
+
+E89E6F1A00              call 005A8B20, 005A8B20 - 00401B82 = 001A6F9E
+90                      nop
+
+:00401B9C - 0x000F9C
+8D0440                  lea eax, dword ptr [eax+2*eax]
+8D0480                  lea eax, dword ptr [eax+4*eax]
+
+E87F6F1A00              call 005A8B20, 005A8B20 - 00401BA1 = 001A6F7F
+90                      nop
+
+:00401BC2 - 0x000FC2
+8D0440                  lea eax, dword ptr [eax+2*eax]
+8D0480                  lea eax, dword ptr [eax+4*eax]
+
+E8596F1A00              call 005A8B20, 005A8B20 - 00401BC7 = 001A6F59
+90                      nop
+
+; null pMobileObject
+:00402633 - 0x001A33
+0F84D5000000            je 0040270E
+
+E8E8641A00              call 005A8B20, 005A8B20 - 00402638 = 001A64E8
+90                      nop
+
+; ship animation
+:00401C17 - 0x001017
+25FFFF0000              and eax, 0000FFFF
+
+E8046F1A00              call 005A8B20, 005A8B20 - 00401C1C = 001A6F04
+
+; explosion animation
+:0040253A - 0x00193A
+66817DFCDE00            cmp word ptr [ebp-04], 00DE
+752B                    jne 0040256D
+
+E8E1651A00              call 005A8B20, 005A8B20 - 0040253F = 001A65E1
+909090                  nop

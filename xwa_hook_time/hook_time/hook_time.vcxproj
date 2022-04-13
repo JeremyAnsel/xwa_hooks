@@ -86,10 +86,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="config.cpp" />
     <ClCompile Include="get_time.cpp" />
     <ClCompile Include="hookmain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="config.h" />
     <ClInclude Include="get_time.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="hook_function.h" />
