@@ -220,6 +220,9 @@ std::vector<std::string> GetWeaponColorLines(const std::string& ship)
 		missionLines = GetFileLines(mission + ".ini", "WeaponColor");
 	}
 
+	std::vector<std::string> lines2;
+	lines2.reserve(lines.size());
+
 	for (const std::string& missionLine : missionLines)
 	{
 		auto a = missionLine.find_first_of('_');
@@ -237,10 +240,15 @@ std::vector<std::string> GetWeaponColorLines(const std::string& ship)
 		}
 
 		const std::string line = missionLine.substr(a + 1, -1);
-		lines.insert(lines.begin(), line);
+		lines2.push_back(line);
 	}
 
-	return lines;
+	for (const std::string& line : lines)
+	{
+		lines2.push_back(line);
+	}
+
+	return lines2;
 }
 
 int GetWeaponSwitch(int modelIndex)
