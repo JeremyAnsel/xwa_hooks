@@ -41,79 +41,94 @@
 :0042D675 - 0x02CA75
 8DB862B65B00            lea edi, dword ptr [eax+005BB662]
 
-8DB8 + g_exeCraftEnginesArray_0
+E8A6B41700              call 005A8B20, 005A8B20 - 0042D67A = 0017B4A6
+90                      nop
 
 :0042DA2E - 0x02CE2E
 8DB862B65B00            lea edi, dword ptr [eax+005BB662]
 
-8DB8 + g_exeCraftEnginesArray_0
+E8EDB01700              call 005A8B20, 005A8B20 - 0042DA33 = 0017B0ED
+90                      nop
 
 :00432B49 - 0x031F49
 89849662B65B00          mov dword ptr [esi+4*edx+005BB662], eax
 
-898496 + g_exeCraftEnginesArray_0
+E8D25F1700              call 005A8B20, 005A8B20 - 00432B4E = 00175FD2
+9090                    nop
 
 :004E0E7A - 0x0E027A
 8D9F62B65B00            lea ebx, dword ptr [edi+005BB662]
 
-8D9F + g_exeCraftEnginesArray_0
+E8A17C0C00              call 005A8B20, 005A8B20 - 004E0E7F = 000C7CA1
+90                      nop
 
 :004EA00B - 0x0E940B
 8B9C9A62B65B00          mov ebx, dword ptr [edx+4*ebx+005BB662]
 
-8B9C9A + g_exeCraftEnginesArray_0
+E810EB0B00              call 005A8B20, 005A8B20 - 004EA010 = 000BEB10
+9090                    nop
 
 :004F2BC4 - 0x0F1FC4
 8D8562B65B00            lea eax, dword ptr [ebp+005BB662]
 
-8D85 + g_exeCraftEnginesArray_0
+E8575F0B00              call 005A8B20, 005A8B20 - 004F2BC9 = 000B5F57
+90                      nop
 
 ; ExeCraftTable EngineMeshIds
 
 :0040B0E9 - 0x00A4E9
 660FB6BC01A2B65B00      movzx di, byte ptr [ecx+eax+005BB6A2]
 
-660FB6BC01 + g_exeCraftEngineMeshIdsArray_0
+E832DA1900              call 005A8B20, 005A8B20 - 0040B0EE = 0019DA32
+90909090                nop
 
 :0040B1BD - 0x00A5BD
 660FB6BC01A2B65B00      movzx di, byte ptr [ecx+eax+005BB6A2]
 
-660FB6BC01 + g_exeCraftEngineMeshIdsArray_0
+E85ED91900              call 005A8B20, 005A8B20 - 0040B1C2 = 0019D95E
+90909090                nop
 
 :0042D67B - 0x02CA7B
 8D80A2B65B00            lea eax, dword ptr [eax+005BB6A2]
 
-8D80 + g_exeCraftEngineMeshIdsArray_0
+E8A0B41700              call 005A8B20, 005A8B20 - 0042D680 = 0017B4A0
+90                      nop
 
 :0042DA34 - 0x02CE34
 8D98A2B65B00            lea ebx, dword ptr [eax+005BB6A2]
 
-8D98 + g_exeCraftEngineMeshIdsArray_0
+E8E7B01700              call 005A8B20, 005A8B20 - 0042DA39 = 0017B0E7
+90                      nop
 
 :00432B60 - 0x031F60
 88940FA1B65B00          mov byte ptr [edi+ecx+005BB6A1], dl
 
-88940F + g_exeCraftEngineMeshIdsArray__1
+E8BB5F1700              call 005A8B20, 005A8B20 - 00432B65 = 00175FBB
+9090                    nop
 
 :0047AC54 - 0x07A054
 660FB6AC01A2B65B00      movzx bp, byte ptr [ecx+eax+005BB6A2]
 
-660FB6AC01 + g_exeCraftEngineMeshIdsArray_0
+E8C7DE1200              call 005A8B20, 005A8B20 - 0047AC59 = 0012DEC7
+90909090                nop
 
 :004E0E94 - 0x0E0294
 660FB68C3AA2B65B00      movzx cx, byte ptr [edx+edi+005BB6A2]
 
-660FB68C3A + g_exeCraftEngineMeshIdsArray_0
+E8877C0C00              call 005A8B20, 005A8B20 - 004E0E99 = 000C7C87
+90909090                nop
 
 :004E2CAC - 0x0E20AC
 8A9401A2B65B00          mov dl, byte ptr [ecx+eax+005BB6A2]
 
-8A9401 + g_exeCraftEngineMeshIdsArray_0
+E86F5E0C00              call 005A8B20, 005A8B20 - 004E2CB1 = 000C5E6F
+9090                    nop
 
 :004F2BDA - 0x0F1FDA
 8A8429A2B65B00          mov al, byte ptr [ecx+ebp+005BB6A2]
 
-8A8429 + g_exeCraftEngineMeshIdsArray_0
+E8415F0B00              call 005A8B20, 005A8B20 - 004F2BDF = 000B5F41
+9090                    nop
 
 ; SpaceBomb Engines and EngineMeshIds arrays
 

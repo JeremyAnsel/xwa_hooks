@@ -209,7 +209,7 @@ int GetExeCraftEnginesArrayPtr()
 	if (init)
 	{
 		init = false;
-		s_engines.reserve(GetCraftEnginesCount());
+		s_engines.reserve(GetCraftEnginesCount() * 265);
 	}
 
 	return (int)s_engines.data();
@@ -223,7 +223,7 @@ int GetExeCraftEngineMeshIdsArrayPtr()
 	if (init)
 	{
 		init = false;
-		s_engineMeshIds.reserve(GetCraftEnginesCount());
+		s_engineMeshIds.reserve(GetCraftEnginesCount() * 265);
 	}
 
 	return (int)s_engineMeshIds.data();
@@ -573,6 +573,135 @@ int CraftZeroMemoryHook(int* params)
 	return 0;
 }
 
+int ExeCraftEnginesArrayHook1(int* params)
+{
+	const unsigned int* arrayPtr = (unsigned int*)GetExeCraftEnginesArrayPtr();
+	int craftIndex = params[Params_EAX] / 987;
+	params[Params_EDI] = (int)(arrayPtr + craftIndex * GetCraftEnginesCount());
+	return 0;
+}
+
+int ExeCraftEnginesArrayHook2(int* params)
+{
+	const unsigned int* arrayPtr = (unsigned int*)GetExeCraftEnginesArrayPtr();
+	const int craftIndex = params[Params_EAX] / 987;
+	params[Params_EDI] = (int)(arrayPtr + craftIndex * GetCraftEnginesCount());
+	return 0;
+}
+
+int ExeCraftEnginesArrayHook3(int* params)
+{
+	unsigned int* arrayPtr = (unsigned int*)GetExeCraftEnginesArrayPtr();
+	const int craftIndex = params[Params_ESI] / 987;
+	const int engineIndex = params[Params_EDX];
+	arrayPtr[craftIndex * GetCraftEnginesCount() + engineIndex] = params[Params_EAX];
+	return 0;
+}
+
+int ExeCraftEnginesArrayHook4(int* params)
+{
+	const unsigned int* arrayPtr = (unsigned int*)GetExeCraftEnginesArrayPtr();
+	const int craftIndex = params[Params_EDI] / 987;
+	params[Params_EBX] = (int)(arrayPtr + craftIndex * GetCraftEnginesCount());
+	return 0;
+}
+
+int ExeCraftEnginesArrayHook5(int* params)
+{
+	const unsigned int* arrayPtr = (unsigned int*)GetExeCraftEnginesArrayPtr();
+	const int craftIndex = params[Params_EDX] / 987;
+	const int engineIndex = params[Params_EBX];
+	params[Params_EBX] = arrayPtr[craftIndex * GetCraftEnginesCount() + engineIndex];
+	return 0;
+}
+
+int ExeCraftEnginesArrayHook6(int* params)
+{
+	const unsigned int* arrayPtr = (unsigned int*)GetExeCraftEnginesArrayPtr();
+	const int craftIndex = params[Params_EBP] / 987;
+	params[Params_EAX] = (int)(arrayPtr + craftIndex * GetCraftEnginesCount());
+	return 0;
+}
+
+int ExeCraftEngineMeshIdsArrayHook1(int* params)
+{
+	const unsigned char* arrayPtr = (unsigned char*)GetExeCraftEngineMeshIdsArrayPtr();
+	const int craftIndex = params[Params_EAX] / 987;
+	const int engineIndex = params[Params_ECX];
+	params[Params_EDI] = arrayPtr[craftIndex * GetCraftEnginesCount() + engineIndex];
+	return 0;
+}
+
+int ExeCraftEngineMeshIdsArrayHook2(int* params)
+{
+	const unsigned char* arrayPtr = (unsigned char*)GetExeCraftEngineMeshIdsArrayPtr();
+	const int craftIndex = params[Params_EAX] / 987;
+	const int engineIndex = params[Params_ECX];
+	params[Params_EDI] = arrayPtr[craftIndex * GetCraftEnginesCount() + engineIndex];
+	return 0;
+}
+
+int ExeCraftEngineMeshIdsArrayHook3(int* params)
+{
+	const unsigned char* arrayPtr = (unsigned char*)GetExeCraftEngineMeshIdsArrayPtr();
+	const int craftIndex = params[Params_EAX] / 987;
+	params[Params_EAX] = (int)(arrayPtr + craftIndex * GetCraftEnginesCount());
+	return 0;
+}
+
+int ExeCraftEngineMeshIdsArrayHook4(int* params)
+{
+	const unsigned char* arrayPtr = (unsigned char*)GetExeCraftEngineMeshIdsArrayPtr();
+	const int craftIndex = params[Params_EAX] / 987;
+	params[Params_EBX] = (int)(arrayPtr + craftIndex * GetCraftEnginesCount());
+	return 0;
+}
+
+int ExeCraftEngineMeshIdsArrayHook5(int* params)
+{
+	unsigned char* arrayPtr = (unsigned char*)GetExeCraftEngineMeshIdsArrayPtr();
+	const int craftIndex = params[Params_ECX] / 987;
+	const int engineIndex = (params[Params_ECX] % 987) + params[Params_EDI] - 1;
+	arrayPtr[craftIndex * GetCraftEnginesCount() + engineIndex] = params[Params_EDX] & 0xff;
+	return 0;
+}
+
+int ExeCraftEngineMeshIdsArrayHook6(int* params)
+{
+	const unsigned char* arrayPtr = (unsigned char*)GetExeCraftEngineMeshIdsArrayPtr();
+	const int craftIndex = params[Params_EAX] / 987;
+	const int engineIndex = params[Params_ECX];
+	params[Params_EBP] = arrayPtr[craftIndex * GetCraftEnginesCount() + engineIndex];
+	return 0;
+}
+
+int ExeCraftEngineMeshIdsArrayHook7(int* params)
+{
+	const unsigned char* arrayPtr = (unsigned char*)GetExeCraftEngineMeshIdsArrayPtr();
+	const int craftIndex = params[Params_EDI] / 987;
+	const int engineIndex = params[Params_EDX];
+	params[Params_ECX] = arrayPtr[craftIndex * GetCraftEnginesCount() + engineIndex];
+	return 0;
+}
+
+int ExeCraftEngineMeshIdsArrayHook8(int* params)
+{
+	const unsigned char* arrayPtr = (unsigned char*)GetExeCraftEngineMeshIdsArrayPtr();
+	const int craftIndex = params[Params_EAX] / 987;
+	const int engineIndex = params[Params_ECX];
+	params[Params_EDX] = arrayPtr[craftIndex * GetCraftEnginesCount() + engineIndex];
+	return 0;
+}
+
+int ExeCraftEngineMeshIdsArrayHook9(int* params)
+{
+	const unsigned char* arrayPtr = (unsigned char*)GetExeCraftEngineMeshIdsArrayPtr();
+	const int craftIndex = params[Params_EBP] / 987;
+	const int engineIndex = params[Params_ECX];
+	params[Params_EAX] = arrayPtr[craftIndex * GetCraftEnginesCount() + engineIndex];
+	return 0;
+}
+
 int OptGetMeshEngineGlowCountExeCraftHook(int* params)
 {
 	const int A4 = params[0];
@@ -711,7 +840,7 @@ int L004E0E10_GetEnginesCountHook(int* params)
 
 int L004E0FA0_ComputePercentOfActiveEnginesHook(int* params)
 {
-	unsigned char* exeCraftEngineMeshIds = (unsigned char*)GetExeCraftEngineMeshIdsArrayPtr();
+	unsigned char* exeCraftEngineMeshIds = (unsigned char*)GetExeCraftEngineMeshIdsArrayPtr() + *(unsigned short*)(params[Params_ESI] + 0x04) * GetCraftEnginesCount();
 	int enginesCount = params[Params_ECX];
 	int pCraft = params[Params_ESI];
 	unsigned char* pCraft_292 = (unsigned char*)(pCraft + GetCraftOffset_292());

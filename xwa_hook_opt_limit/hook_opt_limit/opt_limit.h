@@ -41,6 +41,23 @@ int CurrentCraftInitHook(int* params);
 int CraftMeshesFilterHook(int* params);
 int CraftZeroMemoryHook(int* params);
 
+int ExeCraftEnginesArrayHook1(int* params);
+int ExeCraftEnginesArrayHook2(int* params);
+int ExeCraftEnginesArrayHook3(int* params);
+int ExeCraftEnginesArrayHook4(int* params);
+int ExeCraftEnginesArrayHook5(int* params);
+int ExeCraftEnginesArrayHook6(int* params);
+
+int ExeCraftEngineMeshIdsArrayHook1(int* params);
+int ExeCraftEngineMeshIdsArrayHook2(int* params);
+int ExeCraftEngineMeshIdsArrayHook3(int* params);
+int ExeCraftEngineMeshIdsArrayHook4(int* params);
+int ExeCraftEngineMeshIdsArrayHook5(int* params);
+int ExeCraftEngineMeshIdsArrayHook6(int* params);
+int ExeCraftEngineMeshIdsArrayHook7(int* params);
+int ExeCraftEngineMeshIdsArrayHook8(int* params);
+int ExeCraftEngineMeshIdsArrayHook9(int* params);
+
 int OptGetMeshEngineGlowCountExeCraftHook(int* params);
 int OptGetMeshEngineGlowCountSpaceBombHook(int* params);
 int OptGetMeshEngineGlowCountCockpitHook(int* params);
