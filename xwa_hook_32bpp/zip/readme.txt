@@ -13,6 +13,7 @@ https://www.xwaupgrade.com/phpBB3/viewtopic.php?f=33&t=12257
 
 This dll requires:
 - Windows 7 or superior
+- .NET framework 4.8
 - xwa_hook_main
 
 

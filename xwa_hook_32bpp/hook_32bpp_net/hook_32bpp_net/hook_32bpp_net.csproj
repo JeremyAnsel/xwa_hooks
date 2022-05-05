@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <LangVersion>10.0</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
@@ -17,22 +17,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JeremyAnsel.IO.Locator" Version="2.0.31" />
-    <PackageReference Include="JeremyAnsel.Xwa.Opt" Version="2.0.42" />		
+    <PackageReference Include="DllExport" Version="1.5.2" ExcludeAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="JeremyAnsel.IO.Locator" Version="3.0.34" />
+    <PackageReference Include="JeremyAnsel.Xwa.Opt" Version="3.0.43" />		
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="DllExport, Version=1.5.2.30304, Culture=neutral, PublicKeyToken=8337224c9ad9e356, processorArchitecture=MSIL">
-      <HintPath>..\packages\DllExport.1.5.2\lib\net20\DllExport.dll</HintPath>
+      <HintPath>$(PkgDllExport)\lib\net20\DllExport.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
 
-  <Import Project="../packages/DllExport.1.5.2/tools/net.r_eg.DllExport.targets" Condition="Exists('../packages/DllExport.1.5.2/tools/net.r_eg.DllExport.targets')" />
-
-  <Target Name="PostBuildEventAfterDllExport" AfterTargets="DllExportMod">
-    <Exec Command="call &quot;$(DevEnvDir)..\..\VC\Auxiliary\Build\vcvars32.bat&quot;
-		editbin /largeaddressaware &quot;$(TargetPath)&quot;" />
-  </Target>
+  <Import Project="$(PkgDllExport)/tools/net.r_eg.DllExport.targets" Condition="Exists('$(PkgDllExport)/tools/net.r_eg.DllExport.targets')" />
 
 </Project>
