@@ -2,10 +2,12 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>10.0</LangVersion>
     <Nullable>disable</Nullable>
     <UseWPF>true</UseWPF>
     <Version>1.0.0</Version>
+    <Company>Jérémy Ansel</Company>
     <Copyright>Copyright © 2020 Jérémy Ansel</Copyright>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>

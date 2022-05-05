@@ -7,6 +7,7 @@ This hook permits to customize the joystick settings.
 
 This dll requires:
 - Windows 7 or superior
+- .NET framework 4.8
 - xwa_hook_main
 
 
