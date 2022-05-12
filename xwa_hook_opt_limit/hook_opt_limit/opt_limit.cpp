@@ -898,7 +898,7 @@ int L0042D590_EngineGlowIsDisabledHook(int* params)
 
 	int ebx = params[Params_EBX];
 
-	if (pCraft_292[meshIndex] == 0 || *(int*)ebx != 0)
+	if (pCraft == 0 || pCraft_292[meshIndex] == 0 || *(int*)ebx != 0)
 	{
 		params[Params_ReturnAddress] = 0x0042D922;
 	}
