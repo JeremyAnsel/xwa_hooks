@@ -19,6 +19,9 @@ namespace hook_32bpp_net
         private static string _getCustomFileLines_name;
         private static string _getCustomFileLines_mission;
 
+        private static SevenZip.Compression.LZMA.Decoder _decoder;
+        private static byte[] _decoderProperties;
+
         public static IList<string> GetCustomFileLines(string name)
         {
             string xwaMissionFileName = Marshal.PtrToStringAnsi(new IntPtr(0x06002E8));
@@ -468,16 +471,28 @@ namespace hook_32bpp_net
         [DllExport(CallingConvention.Cdecl)]
         unsafe public static void ReadCompressedDatImageFunction(byte* destination, int destinationLength, byte* source, int sourceLength)
         {
+            if (_decoder == null)
+            {
+                _decoder = new SevenZip.Compression.LZMA.Decoder();
+            }
+
             byte[] coderProperties = new byte[5];
             Marshal.Copy(new IntPtr(source), coderProperties, 0, 5);
 
-            using (var imageDecompressedStream = new UnmanagedMemoryStream(destination, destinationLength, destinationLength, FileAccess.Write))
-            using (var imageStream = new UnmanagedMemoryStream(source + 5, sourceLength - 5, sourceLength - 5, FileAccess.Read))
+            if (_decoderProperties == null
+                || _decoderProperties[0] != coderProperties[0]
+                || _decoderProperties[1] != coderProperties[1]
+                || _decoderProperties[2] != coderProperties[2]
+                || _decoderProperties[3] != coderProperties[3]
+                || _decoderProperties[4] != coderProperties[4])
             {
-                var decoder = new SevenZip.Compression.LZMA.Decoder();
-                decoder.SetDecoderProperties(coderProperties);
-                decoder.Code(imageStream, imageDecompressedStream, sourceLength - 5, destinationLength, null);
+                _decoderProperties = coderProperties;
+                _decoder.SetDecoderProperties(coderProperties);
             }
+
+            using var imageDecompressedStream = new UnmanagedMemoryStream(destination, destinationLength, destinationLength, FileAccess.Write);
+            using var imageStream = new UnmanagedMemoryStream(source + 5, sourceLength - 5, sourceLength - 5, FileAccess.Read);
+            _decoder.Code(imageStream, imageDecompressedStream, sourceLength - 5, destinationLength, null);
         }
     }
 }
