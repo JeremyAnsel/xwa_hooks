@@ -14,3 +14,8 @@ int StatsProfiles_ShieldStrength_Hook1(int* params);
 int StatsProfiles_ShieldStrength_Hook2(int* params);
 int StatsProfiles_L004D5AE0_ShieldStrength_Hook(int* params);
 int StatsProfiles_HasHyperdrive_Hook(int* params);
+
+int MissionIdRedAlertHook(int* params);
+int MissionIdSkipHyperspacedMessagesHook(int* params);
+int MissionIdForcePlayerInTurret1Hook(int* params);
+int MissionIdForcePlayerInTurret2Hook(int* params);

@@ -4,6 +4,18 @@
 #include <fstream>
 #include <map>
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 class FlightModelsList
 {
 public:
@@ -54,6 +66,103 @@ private:
 };
 
 FlightModelsList g_flightModelsList;
+
+class MissionConfig
+{
+public:
+	int GetMissionId()
+	{
+		int missionDirectoryId = *(int*)0x00AE2A8A;
+		int missionDescriptionId = ((int*)0x00AE2A8E)[missionDirectoryId];
+		return missionDescriptionId;
+	}
+
+	bool IsRedAlertEnabled()
+	{
+		this->UpdateIfChanged();
+		return this->_isRedAlertEnabled;
+	}
+
+	bool SkipHyperspacedMessages()
+	{
+		this->UpdateIfChanged();
+		return this->_skipHyperspacedMessages;
+	}
+
+	bool ForcePlayerInTurret()
+	{
+		this->UpdateIfChanged();
+		return this->_forcePlayerInTurret;
+	}
+
+private:
+	void UpdateIfChanged()
+	{
+		static std::string _mission;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+
+		if (_mission != xwaMissionFileName)
+		{
+			_mission = xwaMissionFileName;
+
+			const std::string path = GetStringWithoutExtension(_mission);
+
+			auto lines = GetFileLines(path + ".txt");
+
+			if (!lines.size())
+			{
+				lines = GetFileLines(path + ".ini", "mission_tie");
+			}
+
+			this->_isRedAlertEnabled = GetFileKeyValueInt(lines, "IsRedAlertEnabled", this->GetDefaultReadAlertEnabled()) != 0;
+			this->_skipHyperspacedMessages = GetFileKeyValueInt(lines, "SkipHyperspacedMessages", this->GetDefaultSkipHyperspacedMessages()) != 0;
+			this->_forcePlayerInTurret = GetFileKeyValueInt(lines, "ForcePlayerInTurret", this->GetDefaultForcePlayerInTurret()) != 0;
+		}
+	}
+
+	int GetDefaultReadAlertEnabled()
+	{
+		int id = this->GetMissionId();
+
+		if (id == 0x14)
+		{
+			return 1;
+		}
+
+		return 0;
+	}
+
+	int GetDefaultSkipHyperspacedMessages()
+	{
+		int id = this->GetMissionId();
+
+		if (id == 0x31)
+		{
+			return 1;
+		}
+
+		return 0;
+	}
+
+	int GetDefaultForcePlayerInTurret()
+	{
+		int id = this->GetMissionId();
+
+		if (id == 0x01)
+		{
+			return 1;
+		}
+
+		return 0;
+	}
+
+	bool _isRedAlertEnabled;
+	bool _skipHyperspacedMessages;
+	bool _forcePlayerInTurret;
+};
+
+MissionConfig g_missionConfig;
 
 #pragma pack(push, 1)
 
@@ -1195,4 +1304,52 @@ int StatsProfiles_HasHyperdrive_Hook(int* params)
 	}
 
 	return hasHyperdrive;
+}
+
+int MissionIdRedAlertHook(int* params)
+{
+	bool isRedAlertEnabled = g_missionConfig.IsRedAlertEnabled();
+
+	if (!isRedAlertEnabled)
+	{
+		params[Params_ReturnAddress] = 0x0045C381;
+	}
+
+	return 0;
+}
+
+int MissionIdSkipHyperspacedMessagesHook(int* params)
+{
+	bool skipHyperspacedMessages = g_missionConfig.SkipHyperspacedMessages();
+
+	if (!skipHyperspacedMessages)
+	{
+		params[Params_ReturnAddress] = 0x0045C381;
+	}
+
+	return 0;
+}
+
+int MissionIdForcePlayerInTurret1Hook(int* params)
+{
+	bool focePlayerInTurret = g_missionConfig.ForcePlayerInTurret();
+
+	if (focePlayerInTurret)
+	{
+		params[Params_ReturnAddress] = 0x00501884;
+	}
+
+	return 0;
+}
+
+int MissionIdForcePlayerInTurret2Hook(int* params)
+{
+	bool focePlayerInTurret = g_missionConfig.ForcePlayerInTurret();
+
+	if (!focePlayerInTurret)
+	{
+		params[Params_ReturnAddress] = 0x004F9517;
+	}
+
+	return 0;
 }

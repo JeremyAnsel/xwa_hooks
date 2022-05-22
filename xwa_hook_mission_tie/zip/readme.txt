@@ -62,6 +62,12 @@ At offset 0BBE6A, replace 8A94408CB45B00 with E8C1C00E008AD0.
 At offset 0BD20C, replace 8A8C408CB45B00 with E81FAD0E008AC8.
 At offset 01BA3D, replace 754F with EB4F.
 
+# To call the hook that checks mission ids
+At offset 05B759, replace 83FE147523 with E8C2C71400.
+At offset 09812A, replace 83F9318B4C24107522 with 8B4C2410E8EDFD1000.
+At offset 10086D, replace 0F8411040000 with E8AE760A0090.
+At offset 0F88D5, replace 390C858E2AAE007539 with E846F60A0090909090.
+
 
 *** Usage ***
 
@@ -74,6 +80,10 @@ To replace the flight group markings, the format is: "fg", fg number, "markings"
 To replace the flight group wingman markings, the format is: "fg", fg number, "index", wingman index, "markings", value.
 To replace the flight group iff, the format is: "fg", fg number, "iff", value.
 To replace the flight group pilot voice, the format is: "fg", fg number, "pilotvoice", value.
+
+To define the red alert in hangar, set "IsRedAlertEnabled = 1". The default setting enables IsRedAlertEnabled for mission id 20.
+To skip hyperspaced messages, "set SkipHyperspacedMessages = 1". The default setting enables SkipHyperspacedMessages for mission id 49.
+To force the player in turret, set "ForcePlayerInTurret = 1". The default setting enables ForcePlayerInTurret for mission id 1.
 
 See "mission.txt".
 

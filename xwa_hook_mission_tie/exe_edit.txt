@@ -304,3 +304,36 @@ E81FAD0E00              call 005A8B30, 005A8B30 - 004BDE11 = 000EAD1F
 754F                    jne 0041C68E
 
 EB4F                    jmp 0041C68E
+
+===============================================================================
+
+; red allert
+:0045C359 - 0x05B759
+83FE14                  cmp esi, 00000014
+7523                    jne 0045C381
+
+E8C2C71400              call 005A8B20, 005A8B20 - 0045C35E = 0014C7C2
+
+; skip hyperspaced messages
+:00498D2A - 0x09812A
+83F931                  cmp ecx, 00000031
+8B4C2410                mov ecx, dword ptr [esp+10]
+7522                    jne 00498D55
+
+8B4C2410                mov ecx, dword ptr [esp+10]
+E8EDFD1000              call 005A8B20, 005A8B20 - 00498D33 = 0010FDED
+
+; force player in turret
+:0050146D - 0x10086D
+0F8411040000            je 00501884
+
+E8AE760A00              call 005A8B20, 005A8B20 - 00501472 = 000A76AE
+90                      nop
+
+:004F94D5 - 0x0F88D5
+390C858E2AAE00          cmp dword ptr [4*eax+00AE2A8E], ecx
+7539                    jne 004F9517
+
+E846F60A00              call 005A8B20, 005A8B20 - 004F94DA = 000AF646
+9090                    nop
+9090                    nop

@@ -35,6 +35,10 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4BA8AF, StatsProfiles_HasHyperdrive_Hook },
 	{ 0x4BCA6F, StatsProfiles_HasHyperdrive_Hook },
 	{ 0x4BDE11, StatsProfiles_HasHyperdrive_Hook },
+	{ 0x45C35E, MissionIdRedAlertHook },
+	{ 0x498D33, MissionIdSkipHyperspacedMessagesHook },
+	{ 0x501472, MissionIdForcePlayerInTurret1Hook },
+	{ 0x4F94DA, MissionIdForcePlayerInTurret2Hook },
 };
 
 static const HookPatchItem g_overrideTiePatch[] =
@@ -108,9 +112,18 @@ static const HookPatchItem g_statsProfilesPatch[] =
 	{ 0x01BA3D, "754F", "EB4F" },
 };
 
+static const HookPatchItem g_missionIdsCheckPatch[] =
+{
+	{ 0x05B759, "83FE147523", "E8C2C71400" },
+	{ 0x09812A, "83F9318B4C24107522", "8B4C2410E8EDFD1000" },
+	{ 0x10086D, "0F8411040000", "E8AE760A0090" },
+	{ 0x0F88D5, "390C858E2AAE007539", "E846F60A0090909090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that override tie mission", g_overrideTiePatch),
 	MAKE_HOOK_PATCH("'crafts count per region' patch", g_craftsCountPerRegionPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the stats profiles", g_statsProfilesPatch),
+	MAKE_HOOK_PATCH("To call the hook that checks mission ids", g_missionIdsCheckPatch),
 };
