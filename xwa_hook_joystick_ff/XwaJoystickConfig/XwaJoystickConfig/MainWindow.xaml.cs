@@ -85,6 +85,8 @@ namespace XwaJoystickConfig
 
         public ObservableCollection<JoystickConfigButton> JoystickConfigButtons { get; } = new ObservableCollection<JoystickConfigButton>();
 
+        public ObservableCollection<JoystickConfigAxis> JoystickConfigAxes { get; } = new ObservableCollection<JoystickConfigAxis>();
+
         public List<JoystickController> JoystickControllers { get; }
 
         private void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
@@ -561,11 +563,6 @@ namespace XwaJoystickConfig
 
         private void TimerFunction(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (this.JoystickConfigButtons.Count == 0)
-            {
-                return;
-            }
-
             int count = NativeMethods.JoyGetNumDevs();
             int sizeCaps = Marshal.SizeOf(typeof(JoyCaps));
             int sizeInfo = Marshal.SizeOf(typeof(JoyInfoEx));
@@ -583,7 +580,7 @@ namespace XwaJoystickConfig
                 JoyInfoEx info = new JoyInfoEx
                 {
                     dwSize = (uint)sizeInfo,
-                    dwOptions = JoyInfoExOptions.ReturnPov | JoyInfoExOptions.ReturnButtons | JoyInfoExOptions.ReturnCentered
+                    dwOptions = JoyInfoExOptions.ReturnAll | JoyInfoExOptions.ReturnCentered | JoyInfoExOptions.UseDeadZone
                 };
 
                 if (NativeMethods.JoyGetPosEx(deviceIndex, ref info) != 0)
@@ -595,6 +592,62 @@ namespace XwaJoystickConfig
 
                 int index1 = controllerIndex;
                 int index2 = caps.ManufacturerID << 16 | caps.ProductID;
+
+                for (int i = 0; i < 6; i++)
+                {
+                    string controllerName = (string)ControllerNameConverter.Default.Convert(new object[] { this.JoystickControllers, controllerIndex }, null, null, null);
+                    string controller = string.Format(CultureInfo.InvariantCulture, "{0} : {1}", index1, index2);
+                    string axis = string.Format(CultureInfo.InvariantCulture, "{0}", i);
+                    uint position = 0;
+
+                    switch (i)
+                    {
+                        case 0:
+                            position = info.dwXpos;
+                            break;
+
+                        case 1:
+                            position = info.dwYpos;
+                            break;
+
+                        case 2:
+                            position = info.dwZpos;
+                            break;
+
+                        case 3:
+                            position = info.dwRpos;
+                            break;
+
+                        case 4:
+                            position = info.dwUpos;
+                            break;
+
+                        case 5:
+                            position = info.dwVpos;
+                            break;
+                    }
+
+                    int index = -1;
+
+                    for (int j = 0; j < this.JoystickConfigAxes.Count; j++)
+                    {
+                        if (string.Equals(this.JoystickConfigAxes[j].Controller, controller, StringComparison.Ordinal)
+                            && string.Equals(this.JoystickConfigAxes[j].Axis, axis, StringComparison.Ordinal))
+                        {
+                            index = j;
+                            break;
+                        }
+                    }
+
+                    if (index != -1)
+                    {
+                        this.JoystickConfigAxes[index].Position = (int)position;
+                    }
+                    else
+                    {
+                        this.Dispatcher.Invoke(() => this.JoystickConfigAxes.Add(new JoystickConfigAxis(controller, controllerName, axis) { Position = (int)position }));
+                    }
+                }
 
                 for (int i = 0; i < caps.wNumButtons; i++)
                 {
@@ -632,6 +685,7 @@ namespace XwaJoystickConfig
                     if (string.Equals(button.Key, pressedKey, StringComparison.Ordinal))
                     {
                         button.IsPressed = true;
+                        break;
                     }
                 }
             }

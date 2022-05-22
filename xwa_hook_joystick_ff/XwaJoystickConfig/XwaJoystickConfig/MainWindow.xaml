@@ -180,6 +180,34 @@
                     </ListView.View>
                 </ListView>
             </TabItem>
+            <TabItem Header="Axes">
+                <ListView ItemsSource="{Binding JoystickConfigAxes}"
+                          SelectionMode="Single">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Controller Name"
+                                            DisplayMemberBinding="{Binding ControllerName}" />
+                            <GridViewColumn Header="Controller">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Controller, Mode=OneWay}"
+                                                 IsReadOnly="True" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Axis">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Axis, Mode=OneWay}"
+                                                 IsReadOnly="True" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Position" DisplayMemberBinding="{Binding Position}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
             <TabItem Header="System Controllers">
                 <ListView ItemsSource="{Binding JoystickControllers}" SelectionMode="Single">
                     <ListView.View>
