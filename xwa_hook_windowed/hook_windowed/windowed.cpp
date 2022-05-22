@@ -1,7 +1,23 @@
 #include "targetver.h"
 #include "windowed.h"
 #include "config.h"
+#include <fstream>
 #include <Windows.h>
+#include <gdiplus.h>
+
+#pragma comment(lib, "Gdiplus")
+
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
 
 class WindowConfig
 {
@@ -96,6 +112,123 @@ public:
 };
 
 WindowConfig g_windowConfig;
+
+class GdiInitializer
+{
+public:
+	GdiInitializer()
+	{
+		this->status = Gdiplus::GdiplusStartup(&token, &gdiplusStartupInput, nullptr);
+	}
+
+	~GdiInitializer()
+	{
+		if (this->status == 0)
+		{
+			Gdiplus::GdiplusShutdown(token);
+		}
+	}
+
+	bool hasError()
+	{
+		return this->status != 0;
+	}
+
+	ULONG_PTR token;
+	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
+
+	Gdiplus::Status status;
+};
+
+static GdiInitializer g_gdiInitializer;
+
+void scaleSurface(char* dest, DWORD destWidth, DWORD destHeight, DWORD destBpp, char* src, DWORD srcWidth, DWORD srcHeight, DWORD srcBpp, bool aspectRatioPreserved)
+{
+	if (g_gdiInitializer.hasError())
+		return;
+
+	std::unique_ptr<Gdiplus::Bitmap> bitmap(new Gdiplus::Bitmap(destWidth, destHeight, destBpp == 2 ? PixelFormat16bppRGB565 : PixelFormat32bppRGB));
+	std::unique_ptr<Gdiplus::Bitmap> bitmapSrc(new Gdiplus::Bitmap(srcWidth, srcHeight, srcWidth * srcBpp, srcBpp == 2 ? PixelFormat16bppRGB565 : PixelFormat32bppRGB, (BYTE*)src));
+
+	{
+		std::unique_ptr<Gdiplus::Graphics> graphics(new Gdiplus::Graphics(bitmap.get()));
+
+		Gdiplus::Rect rc(0, 0, destWidth, destHeight);
+
+		Gdiplus::Rect srcRc;
+
+		if (aspectRatioPreserved)
+		{
+			if (srcHeight * destWidth <= srcWidth * destHeight)
+			{
+				srcRc.Width = srcHeight * destWidth / destHeight;
+				srcRc.Height = srcHeight;
+			}
+			else
+			{
+				srcRc.Width = srcWidth;
+				srcRc.Height = srcWidth * destHeight / destWidth;
+			}
+		}
+		else
+		{
+			srcRc.Width = srcWidth;
+			srcRc.Height = srcHeight;
+		}
+
+		srcRc.X = (srcWidth - srcRc.Width) / 2;
+		srcRc.Y = (srcHeight - srcRc.Height) / 2;
+
+		if (graphics->DrawImage(bitmapSrc.get(), rc, srcRc.X, srcRc.Y, srcRc.Width, srcRc.Height, Gdiplus::UnitPixel) == 0)
+		{
+			Gdiplus::BitmapData data;
+
+			if (bitmap->LockBits(&rc, Gdiplus::ImageLockModeRead, bitmap->GetPixelFormat(), &data) == 0)
+			{
+				int rowLength = destWidth * destBpp;
+
+				if (rowLength == data.Stride)
+				{
+					memcpy(dest, data.Scan0, destHeight * rowLength);
+				}
+				else
+				{
+					char* srcBuffer = (char*)data.Scan0;
+					char* destBuffer = dest;
+
+					for (DWORD y = 0; y < destHeight; y++)
+					{
+						memcpy(destBuffer, srcBuffer, rowLength);
+
+						srcBuffer += data.Stride;
+						destBuffer += rowLength;
+					}
+				}
+
+				bitmap->UnlockBits(&data);
+			}
+		}
+	}
+}
+
+void GdiLoadImage(const WCHAR* filename, char* dest, DWORD destWidth, DWORD destHeight, DWORD destBpp, bool aspectRatioPreserved)
+{
+	if (destBpp != 2)
+	{
+		return;
+	}
+
+	if (g_gdiInitializer.hasError())
+		return;
+
+	std::unique_ptr<Gdiplus::Bitmap> bitmap(new Gdiplus::Bitmap(filename));
+	Gdiplus::Rect rect{ 0, 0, (INT)bitmap->GetWidth(), (INT)bitmap->GetHeight() };
+
+	Gdiplus::BitmapData bmData;
+	bitmap->LockBits(&rect, Gdiplus::ImageLockModeRead, PixelFormat16bppRGB565, &bmData);
+	scaleSurface(dest, destWidth, destHeight, 2, (char*)bmData.Scan0, bmData.Width, bmData.Height, 2, aspectRatioPreserved);
+	bitmap->UnlockBits(&bmData);
+}
 
 bool IsWindowInBackground()
 {
@@ -207,6 +340,15 @@ int RetrieveMouseStateHook(int* params)
 	return 0;
 }
 
+int RegisterClassHook(int* params)
+{
+	HINSTANCE hInstance = (HINSTANCE)params[Params_ESI];
+
+	HBRUSH brush = (HBRUSH)GetStockObject(GRAY_BRUSH);
+
+	return (int)brush;
+}
+
 int CreateWindowHook(int* params)
 {
 	ATOM atom = (ATOM)params[0];
@@ -223,7 +365,7 @@ int CreateWindowHook(int* params)
 		nullptr,
 		hInstance,
 		nullptr
-		);
+	);
 
 	return (int)hwnd;
 }
@@ -268,4 +410,49 @@ int CursorZeroHook(int* params)
 	}
 
 	return SetCursorPos(x, y);
+}
+
+int SplashScreenHook(int* params)
+{
+	const auto XwaFrontSurfaceLock = (char* (*)())0x0053EF80;
+	const auto XwaFrontSurfaceUnlock = (void(*)())0x0053F010;
+
+	char* s_pXwaCurrentSurfaceData = *(char**)0x009F60D4;
+	bool isLocked = *(char*)0x009F6FF4 != 0;
+
+	if (isLocked)
+	{
+		XwaFrontSurfaceUnlock();
+	}
+
+	s_pXwaCurrentSurfaceData = XwaFrontSurfaceLock();
+
+	if (std::ifstream("Splash.jpg"))
+	{
+		GdiLoadImage(L"Splash.jpg", s_pXwaCurrentSurfaceData, 640, 480, 2, false);
+	}
+	else if (std::ifstream("Alliance.jpg"))
+	{
+		GdiLoadImage(L"Alliance.jpg", s_pXwaCurrentSurfaceData, 640, 480, 2, false);
+	}
+	else
+	{
+		memset(s_pXwaCurrentSurfaceData, 0xff, 640 * 480 * 2);
+	}
+
+	if (!isLocked)
+	{
+		XwaFrontSurfaceUnlock();
+	}
+
+	return 0;
+}
+
+int MissionPausedHook(int* params)
+{
+	const auto L004F2140 = (void(*)())0x004F2140;
+
+	L004F2140();
+
+	return ((int(*)())0x0050B680)();
 }

@@ -16,6 +16,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4588DF, RetrieveMouseStateHook },
 	{ 0x45D62E, RetrieveMouseStateHook },
 	{ 0x4F9B64, RetrieveMouseStateHook },
+	{ 0x53EB7A, RegisterClassHook },
 	{ 0x53EB9F, CreateWindowHook },
 	{ 0x53E558, CursorHook },
 	{ 0x55BAB1, CursorHook },
@@ -23,6 +24,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x53EC80, CursorZeroHook },
 	{ 0x5400A7, CursorZeroHook },
 	{ 0x54077C, CursorZeroHook },
+	{ 0x53F5D5, SplashScreenHook },
+	{ 0x4F98C0, MissionPausedHook },
 };
 
 static const HookPatchItem g_windowedPatch[] =
@@ -38,6 +41,7 @@ static const HookPatchItem g_windowedPatch[] =
 	{ 0x057CDA, "E84130FDFF", "E841021500" },
 	{ 0x05CA29, "E8F2E2FCFF", "E8F2B41400" },
 	{ 0x0F8F5F, "E8BC1DF3FF", "E8BCEF0A00" },
+	{ 0x13DF71, "6A0489442428FF1544905A00", "89442424E8B69F0600909090" },
 	{ 0x13DF98, "53568B3544925A0053536A01FFD65053FFD6505353680000009068C030600068C030600053FF1540925A00", "5650E8919F060083C408909090909090909090909090909090909090909090909090909090909090909090" },
 	{ 0x13D951, "5150FF1574925A00", "9090E8D8A5060090" },
 	{ 0x15AE9F, "5150A3ED659F00890DF1659F00FF1574925A00", "9090A3ED659F00890DF1659F00E87FD0040090" },
@@ -47,7 +51,19 @@ static const HookPatchItem g_windowedPatch[] =
 	{ 0x13FB6E, "6A006A00A30B7F9F00FF1574925A00", "90909090A30B7F9F00E8B483060090" },
 };
 
+static const HookPatchItem g_splashScreenPatch[] =
+{
+	{ 0x13E9D0, "A12A709F0083EC74", "E84B950600C39090" },
+};
+
+static const HookPatchItem g_missionPatch[] =
+{
+	{ 0x0F8CBB, "E8C01D0100", "E870F20A00" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that enables windowed mode", g_windowedPatch),
+	MAKE_HOOK_PATCH("To call the hook that shows a splash screen", g_splashScreenPatch),
+	MAKE_HOOK_PATCH("To call the hook that paused the game", g_missionPatch),
 };

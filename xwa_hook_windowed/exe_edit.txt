@@ -77,6 +77,15 @@ E8BCEF0A00              call 005A8B20, 005A8B20 - 004F9B64 = 000AEFBC
 // L0053EB30
 XwaCreateMainWindow
 
+:0053EB71 - 0x13DF71
+6A04                    push 00000004
+89442428                mov dword ptr [esp+28], eax
+FF1544905A00            Call dword ptr [005A9044]
+
+89442424                mov dword ptr [esp+24], eax
+E8B69F0600              call 005A8B30, 005A8B30 - 0053EB7A = 00069FB6
+909090                  nop
+
 :0053EB98 - 0x13DF98
 53                      push ebx
 56                      push esi
@@ -184,3 +193,22 @@ FF1574925A00            Call dword ptr [005A9274]
 A30B7F9F00              mov dword ptr [009F7F0B], eax
 E8B4830600              call 005A8B30, 005A8B30 - 0054077C = 000683B4
 90
+
+===============================================================================
+
+; splash screen
+:0053F5D0 - 0x13E9D0
+A12A709F00              mov eax, dword ptr [009F702A]
+83EC74                  sub esp, 00000074
+
+E84B950600              call 005A8B20, 005A8B20 - 0053F5D5 = 0006954B
+C3                      ret
+9090                    nop
+
+===============================================================================
+
+; mission paused
+:004F98BB - 0x0F8CBB
+E8C01D0100              call 0050B680
+
+E870F20A00              call 005A8B30, 005A8B30 - 004F98C0 = 000AF270
