@@ -47,25 +47,25 @@ struct StreamingVoiceContext : public IXAudio2VoiceCallback
 	}
 };
 
-struct ComInit
-{
-	HRESULT hr;
+//struct ComInit
+//{
+//	HRESULT hr;
+//
+//	ComInit()
+//	{
+//		hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+//	}
+//
+//	~ComInit()
+//	{
+//		if (SUCCEEDED(hr))
+//		{
+//			CoUninitialize();
+//		}
+//	}
+//};
 
-	ComInit()
-	{
-		hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-	}
-
-	~ComInit()
-	{
-		if (SUCCEEDED(hr))
-		{
-			CoUninitialize();
-		}
-	}
-};
-
-ComInit g_comInit;
+//ComInit g_comInit;
 ComPtr<IXAudio2> g_pXAudio2;
 IXAudio2MasteringVoice* g_pMasteringVoice = nullptr;
 IXAudio2SourceVoice* g_pSourceVoice = nullptr;
@@ -247,7 +247,7 @@ int MusicUnlockHook(int* params)
 	return ebp04;
 }
 
-int ComInitializeHook(int* params)
-{
-	return CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-}
+//int ComInitializeHook(int* params)
+//{
+//	return CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+//}

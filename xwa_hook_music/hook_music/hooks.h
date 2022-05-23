@@ -10,8 +10,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x592D6F, GetMusicPositionHook },
 	{ 0x592DEE, MusicLockHook },
 	{ 0x592D58, MusicUnlockHook },
-	{ 0x53DFE1, ComInitializeHook },
-	{ 0x5A8889, ComInitializeHook },
+	//{ 0x53DFE1, ComInitializeHook },
+	//{ 0x5A8889, ComInitializeHook },
 };
 
 static const HookPatchItem g_musicFreezePatch[] =
@@ -36,8 +36,8 @@ static const HookPatchItem g_musicFreezePatch[] =
 	{ 0x19212C, "8B0DCC0E7B00518B15240F7B0052A1F80E7B00508B0D200F7B00518B15040F7B0052A1040F7B008B08FF514C", "909090909090909090909090909090909090909090909090909090909090909090909090909090E8D85D0100" },
 
 	// CoInitialize
-	{ 0x13D3DC, "57FF15D8925A00", "E84FAB06009090" },
-	{ 0x1A7C84, "6A00FF15D8925A00", "E8A7020000909090" },
+	//{ 0x13D3DC, "57FF15D8925A00", "E84FAB06009090" },
+	//{ 0x1A7C84, "6A00FF15D8925A00", "E8A7020000909090" },
 };
 
 static const HookPatch g_patches[] =
