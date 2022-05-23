@@ -1324,7 +1324,7 @@ int MissionIdSkipHyperspacedMessagesHook(int* params)
 
 	if (!skipHyperspacedMessages)
 	{
-		params[Params_ReturnAddress] = 0x0045C381;
+		params[Params_ReturnAddress] = 0x00498D55;
 	}
 
 	return 0;
