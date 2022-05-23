@@ -115,6 +115,7 @@ static const HookPatchItem g_statsProfilesPatch[] =
 static const HookPatchItem g_missionIdsCheckPatch[] =
 {
 	{ 0x05B759, "83FE147523", "E8C2C71400" },
+	{ 0x05B6EB, "7416", "EB16" },
 	{ 0x09812A, "83F9318B4C24107522", "8B4C2410E8EDFD1000" },
 	{ 0x10086D, "0F8411040000", "E8AE760A0090" },
 	{ 0x0F88D5, "390C858E2AAE007539", "E846F60A0090909090" },

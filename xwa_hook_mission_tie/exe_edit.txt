@@ -314,6 +314,11 @@ EB4F                    jmp 0041C68E
 
 E8C2C71400              call 005A8B20, 005A8B20 - 0045C35E = 0014C7C2
 
+:0045C2EB - 0x05B6EB
+7416                    je 0045C303
+
+EB16                    jmp 0045C303
+
 ; skip hyperspaced messages
 :00498D2A - 0x09812A
 83F931                  cmp ecx, 00000031

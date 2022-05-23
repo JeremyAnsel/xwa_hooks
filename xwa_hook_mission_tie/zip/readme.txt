@@ -64,6 +64,7 @@ At offset 01BA3D, replace 754F with EB4F.
 
 # To call the hook that checks mission ids
 At offset 05B759, replace 83FE147523 with E8C2C71400.
+At offset 05B6EB, replace 7416 with EB16.
 At offset 09812A, replace 83F9318B4C24107522 with 8B4C2410E8EDFD1000.
 At offset 10086D, replace 0F8411040000 with E8AE760A0090.
 At offset 0F88D5, replace 390C858E2AAE007539 with E846F60A0090909090.
