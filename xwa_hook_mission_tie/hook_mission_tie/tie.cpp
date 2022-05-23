@@ -1332,9 +1332,9 @@ int MissionIdSkipHyperspacedMessagesHook(int* params)
 
 int MissionIdForcePlayerInTurret1Hook(int* params)
 {
-	bool focePlayerInTurret = g_missionConfig.ForcePlayerInTurret();
+	bool forcePlayerInTurret = g_missionConfig.ForcePlayerInTurret();
 
-	if (focePlayerInTurret)
+	if (forcePlayerInTurret)
 	{
 		params[Params_ReturnAddress] = 0x00501884;
 	}
@@ -1344,9 +1344,9 @@ int MissionIdForcePlayerInTurret1Hook(int* params)
 
 int MissionIdForcePlayerInTurret2Hook(int* params)
 {
-	bool focePlayerInTurret = g_missionConfig.ForcePlayerInTurret();
+	bool forcePlayerInTurret = g_missionConfig.ForcePlayerInTurret();
 
-	if (!focePlayerInTurret)
+	if (!forcePlayerInTurret)
 	{
 		params[Params_ReturnAddress] = 0x004F9517;
 	}
