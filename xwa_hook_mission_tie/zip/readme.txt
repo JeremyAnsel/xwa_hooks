@@ -68,6 +68,9 @@ At offset 05B6EB, replace 7416 with EB16.
 At offset 09812A, replace 83F9318B4C24107522 with 8B4C2410E8EDFD1000.
 At offset 10086D, replace 0F8411040000 with E8AE760A0090.
 At offset 0F88D5, replace 390C858E2AAE007539 with E846F60A0090909090.
+At offset 0F88E5, replace 7530 with 9090.
+At offset 0F88EE, replace 7527 with 9090.
+At offset 0F88F7, replace 751E with 9090.
 
 
 *** Usage ***
@@ -85,6 +88,7 @@ To replace the flight group pilot voice, the format is: "fg", fg number, "pilotv
 To define the red alert in hangar, set "IsRedAlertEnabled = 1". The default setting enables IsRedAlertEnabled for mission id 20.
 To skip hyperspaced messages, "set SkipHyperspacedMessages = 1". The default setting enables SkipHyperspacedMessages for mission id 49.
 To force the player in turret, set "ForcePlayerInTurret = 1". The default setting enables ForcePlayerInTurret for mission id 1.
+To set the force turret time, set the ForcePlayerInTurretHours, ForcePlayerInTurretMinutes and ForcePlayerInTurretSeconds settings. The default values are 0, 0, 8.
 
 See "mission.txt".
 

@@ -119,6 +119,9 @@ static const HookPatchItem g_missionIdsCheckPatch[] =
 	{ 0x09812A, "83F9318B4C24107522", "8B4C2410E8EDFD1000" },
 	{ 0x10086D, "0F8411040000", "E8AE760A0090" },
 	{ 0x0F88D5, "390C858E2AAE007539", "E846F60A0090909090" },
+	{ 0x0F88E5, "7530", "9090" },
+	{ 0x0F88EE, "7527", "9090" },
+	{ 0x0F88F7, "751E", "9090" },
 };
 
 static const HookPatch g_patches[] =

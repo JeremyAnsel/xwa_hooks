@@ -95,6 +95,24 @@ public:
 		return this->_forcePlayerInTurret;
 	}
 
+	int ForcePlayerInTurretHours()
+	{
+		this->UpdateIfChanged();
+		return this->_forcePlayerInTurretHours;
+	}
+
+	int ForcePlayerInTurretMinutes()
+	{
+		this->UpdateIfChanged();
+		return this->_forcePlayerInTurretMinutes;
+	}
+
+	int ForcePlayerInTurretSeconds()
+	{
+		this->UpdateIfChanged();
+		return this->_forcePlayerInTurretSeconds;
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -118,6 +136,9 @@ private:
 			this->_isRedAlertEnabled = GetFileKeyValueInt(lines, "IsRedAlertEnabled", this->GetDefaultReadAlertEnabled()) != 0;
 			this->_skipHyperspacedMessages = GetFileKeyValueInt(lines, "SkipHyperspacedMessages", this->GetDefaultSkipHyperspacedMessages()) != 0;
 			this->_forcePlayerInTurret = GetFileKeyValueInt(lines, "ForcePlayerInTurret", this->GetDefaultForcePlayerInTurret()) != 0;
+			this->_forcePlayerInTurretHours = GetFileKeyValueInt(lines, "ForcePlayerInTurretHours", 0);
+			this->_forcePlayerInTurretMinutes = GetFileKeyValueInt(lines, "ForcePlayerInTurretMinutes", 0);
+			this->_forcePlayerInTurretSeconds = GetFileKeyValueInt(lines, "ForcePlayerInTurretSeconds", 8);
 		}
 	}
 
@@ -160,6 +181,9 @@ private:
 	bool _isRedAlertEnabled;
 	bool _skipHyperspacedMessages;
 	bool _forcePlayerInTurret;
+	int _forcePlayerInTurretHours;
+	int _forcePlayerInTurretMinutes;
+	int _forcePlayerInTurretSeconds;
 };
 
 MissionConfig g_missionConfig;
@@ -1345,8 +1369,18 @@ int MissionIdForcePlayerInTurret1Hook(int* params)
 int MissionIdForcePlayerInTurret2Hook(int* params)
 {
 	bool forcePlayerInTurret = g_missionConfig.ForcePlayerInTurret();
+	int forcePlayerInTurretHours = g_missionConfig.ForcePlayerInTurretHours();
+	int forcePlayerInTurretMinutes = g_missionConfig.ForcePlayerInTurretMinutes();
+	int forcePlayerInTurretSeconds = g_missionConfig.ForcePlayerInTurretSeconds();
 
-	if (!forcePlayerInTurret)
+	int hours = *(unsigned char*)0x008053F7;
+	int minutes = *(unsigned char*)0x008053F8;
+	int seconds = *(unsigned char*)0x008053F9;
+
+	if (!forcePlayerInTurret
+		|| hours != forcePlayerInTurretHours
+		|| minutes != forcePlayerInTurretMinutes
+		|| seconds != forcePlayerInTurretSeconds)
 	{
 		params[Params_ReturnAddress] = 0x004F9517;
 	}

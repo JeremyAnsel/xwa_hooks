@@ -6,3 +6,6 @@ fg, 0, pilotvoice, IP1
 IsRedAlertEnabled = 0
 SkipHyperspacedMessages = 0
 ForcePlayerInTurret = 0
+ForcePlayerInTurretHours = 0
+ForcePlayerInTurretMinutes = 0
+ForcePlayerInTurretSeconds = 8
