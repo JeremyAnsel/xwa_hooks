@@ -102,6 +102,8 @@ public:
 		this->Y = y;
 		this->Width = width;
 		this->Height = height;
+
+		this->ShowSplashScreen = GetFileKeyValueInt(lines, "ShowSplashScreen", 0) != 0;
 	}
 
 	bool IsFullscreen;
@@ -109,6 +111,7 @@ public:
 	int Y;
 	int Width;
 	int Height;
+	bool ShowSplashScreen;
 };
 
 WindowConfig g_windowConfig;
@@ -344,7 +347,7 @@ int RegisterClassHook(int* params)
 {
 	HINSTANCE hInstance = (HINSTANCE)params[Params_ESI];
 
-	HBRUSH brush = (HBRUSH)GetStockObject(GRAY_BRUSH);
+	HBRUSH brush = (HBRUSH)GetStockObject(g_windowConfig.ShowSplashScreen ? GRAY_BRUSH : BLACK_BRUSH);
 
 	return (int)brush;
 }
@@ -427,17 +430,25 @@ int SplashScreenHook(int* params)
 
 	s_pXwaCurrentSurfaceData = XwaFrontSurfaceLock();
 
-	if (std::ifstream("Splash.jpg"))
+	if (g_windowConfig.ShowSplashScreen)
 	{
-		GdiLoadImage(L"Splash.jpg", s_pXwaCurrentSurfaceData, 640, 480, 2, false);
-	}
-	else if (std::ifstream("Alliance.jpg"))
-	{
-		GdiLoadImage(L"Alliance.jpg", s_pXwaCurrentSurfaceData, 640, 480, 2, false);
+		if (std::ifstream("Splash.jpg"))
+		{
+			GdiLoadImage(L"Splash.jpg", s_pXwaCurrentSurfaceData, 640, 480, 2, false);
+		}
+		else if (std::ifstream("Alliance.jpg"))
+		{
+			GdiLoadImage(L"Alliance.jpg", s_pXwaCurrentSurfaceData, 640, 480, 2, false);
+		}
+		else
+		{
+			memset(s_pXwaCurrentSurfaceData, 0xff, 640 * 480 * 2);
+		}
 	}
 	else
 	{
-		memset(s_pXwaCurrentSurfaceData, 0xff, 640 * 480 * 2);
+		memset(s_pXwaCurrentSurfaceData, 0, 640 * 480 * 2);
+
 	}
 
 	if (!isLocked)

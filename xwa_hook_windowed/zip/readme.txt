@@ -60,6 +60,7 @@ The minimum value for "Height" is 480.
 When "Width" or "Height" is 0, default values are used: the window will be fullscreen.
 
 To set a splash screen, create an image named "Splash.jpg". If this image doesn't exist then "Alliance.jpg" is used. If this image doesn't exist then a white screen is rendered.
+You can enable or disable the splash screen with the ShowSplashScreen setting. 0 means no and 1 means yes.
 
 
 *** Credits ***
