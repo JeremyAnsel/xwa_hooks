@@ -144,11 +144,9 @@ EB36                    jmp 0043D979, 0043D979 - 0043D943 = 36
 7426                    je 0045B7FC
 6683F941                cmp cx, 0041
 
-51                      push ecx
-E84AD31400              call 005A8B20, 005A8B20 - 0045B7D6 = 0014D34A
-59                      pop ecx
-85C9                    test ecx, ecx
-90                      nop
+E84BD31400              call 005A8B20, 005A8B20 - 0045B7D5 = 0014D34B
+EB20                    jmp 0045B7F7, 0045B7F7 - 0045B7D7 = 20
+909090                  nop
 
 
 // Weapon sounds

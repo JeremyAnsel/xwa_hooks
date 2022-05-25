@@ -4,6 +4,18 @@
 #include <map>
 #include <fstream>
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 class FlightModelsList
 {
 public:
@@ -76,6 +88,8 @@ public:
 		this->SfxFlyByCount = GetFileKeyValueInt(lines, "sfx_flyby_count");
 		this->SfxEngineWashIndex = GetFileKeyValueInt(lines, "sfx_enginewash_index");
 		this->SfxEngineWashCount = GetFileKeyValueInt(lines, "sfx_enginewash_count");
+		this->SfxTakeOffIndex = GetFileKeyValueInt(lines, "sfx_takeoff_index");
+		this->SfxTakeOffCount = GetFileKeyValueInt(lines, "sfx_takeoff_count");
 		this->SfxWeaponIndex = GetFileKeyValueInt(lines, "sfx_weapon_index");
 		this->SfxWeaponCount = GetFileKeyValueInt(lines, "sfx_weapon_count");
 	}
@@ -88,6 +102,8 @@ public:
 	int SfxFlyByCount;
 	int SfxEngineWashIndex;
 	int SfxEngineWashCount;
+	int SfxTakeOffIndex;
+	int SfxTakeOffCount;
 	int SfxWeaponIndex;
 	int SfxWeaponCount;
 };
@@ -350,10 +366,21 @@ int GetEngineSoundTypeTakeOff(int modelIndex)
 		lines = GetFileLines(path + ".ini", "Sound");
 	}
 
-	int type = GetFileKeyValueInt(lines, "EngineSoundTakeOff");
+	int type = 0;
 
-	if (type == 0)
+	if (lines.size())
 	{
+		type = GetFileKeyValueInt(lines, "EngineSoundTakeOff");
+	}
+	else
+	{
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxTakeOffCount)
+		{
+			return 0;
+		}
+
 		switch (modelIndex)
 		{
 		case 58: // ModelIndex_058_0_45_CorellianTransport2
@@ -1000,22 +1027,42 @@ int WashSoundStopHook(int* params)
 
 int TakeOffSoundHook(int* params)
 {
-	const int modelIndex = (short)params[0];
+	const int modelIndex = (short)params[Params_ECX];
+
+	params[Params_ECX] = *(int*)0x007B33C4;
+
+	const auto playSound = (int(*)(int, int, int))0x0043BF90;
+
+	int s_XwaHangarPlayerObjectIndex = *(int*)0x0068BC08;
+	int s_XwaCurrentPlayerId = *(int*)0x008C1CC8;
 
 	const int type = g_modelIndexSound.GetEngineTypeTakeOff(modelIndex);
 
-	int value;
+	if (type == 0)
+	{
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxTakeOffCount)
+		{
+			if (modelIndex < soundConfig.SfxTakeOffCount)
+			{
+				playSound(soundConfig.SfxTakeOffIndex + modelIndex, s_XwaHangarPlayerObjectIndex, s_XwaCurrentPlayerId);
+				return 0;
+			}
+		}
+	}
 
 	if (type == 2)
 	{
-		value = 0;
+		// MfTakeOff.wav
+		playSound(0x8B, s_XwaHangarPlayerObjectIndex, s_XwaCurrentPlayerId);
 	}
 	else
 	{
-		value = 1;
+		// LandingGearUp.wav
+		playSound(0x84, s_XwaHangarPlayerObjectIndex, s_XwaCurrentPlayerId);
 	}
 
-	params[0] = value;
 	return 0;
 }
 

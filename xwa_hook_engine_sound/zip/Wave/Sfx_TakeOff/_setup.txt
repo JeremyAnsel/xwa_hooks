@@ -1,0 +1,8 @@
+
+To setup Sfx_TakeOff, copy the following files to WAVE\Sfx_TakeOff\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+LandingGearUp.wav
+MfTakeOff.wav
