@@ -59,6 +59,8 @@ static const HookPatchItem g_splashScreenPatch[] =
 static const HookPatchItem g_missionPatch[] =
 {
 	{ 0x0F8CBB, "E8C01D0100", "E870F20A00" },
+	{ 0x0F8C57, "753D", "EB47" },
+	{ 0x0F8CA5, "E8E6FDF8FF", "9090909090" },
 };
 
 static const HookPatch g_patches[] =

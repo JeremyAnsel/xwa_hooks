@@ -45,6 +45,8 @@ At offset 13E9D0, replace A12A709F0083EC74 with E84B950600C39090.
 
 # To call the hook that paused the game
 At offset 0F8CBB, replace E8C01D0100 with E870F20A00.
+At offset 0F8C57, replace 753D with EB47.
+At offset 0F8CA5, replace E8E6FDF8FF with 9090909090.
 
 
 *** Usage ***

@@ -461,9 +461,5 @@ int SplashScreenHook(int* params)
 
 int MissionPausedHook(int* params)
 {
-	const auto L004F2140 = (void(*)())0x004F2140;
-
-	L004F2140();
-
 	return ((int(*)())0x0050B680)();
 }
