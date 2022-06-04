@@ -9,6 +9,9 @@ JoystickFFDeviceIndex = 0
 ; 0 to disable small movement
 ; 1 to enable small movement
 EnableSmallMovement = 1
+SmallMovement_8C1CC2 = 0
+SmallMovement_8C1CC0 = 0
+SmallMovement_8C1CC4 = 0
 
 ; Select the controller used for the main axis and buttons
 MainControllerIndex = 0

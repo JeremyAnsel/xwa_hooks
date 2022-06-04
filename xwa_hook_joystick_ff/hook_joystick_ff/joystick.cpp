@@ -43,6 +43,9 @@ public:
 
 		this->JoystickFFDeviceIndex = GetFileKeyValueInt(lines, "JoystickFFDeviceIndex", 0);
 		this->EnableSmallMovement = GetFileKeyValueInt(lines, "EnableSmallMovement", 1) != 0;
+		this->SmallMovement_8C1CC2 = GetFileKeyValueInt(lines, "SmallMovement_8C1CC2", 0x40);
+		this->SmallMovement_8C1CC0 = GetFileKeyValueInt(lines, "SmallMovement_8C1CC0", 0x18);
+		this->SmallMovement_8C1CC4 = GetFileKeyValueInt(lines, "SmallMovement_8C1CC4", 0x40);
 		this->MainControllerIndex = GetFileKeyValueInt(lines, "MainControllerIndex", 0);
 		this->YawControllerIndex = GetFileKeyValueInt(lines, "YawControllerIndex", 0);
 		this->YawControllerAxisIndex = GetFileKeyValueInt(lines, "YawControllerAxisIndex", 0);
@@ -61,6 +64,9 @@ public:
 
 	int JoystickFFDeviceIndex;
 	bool EnableSmallMovement;
+	int SmallMovement_8C1CC2;
+	int SmallMovement_8C1CC0;
+	int SmallMovement_8C1CC4;
 	int MainControllerIndex;
 	int YawControllerIndex;
 	int YawControllerAxisIndex;
@@ -365,26 +371,26 @@ int JoystickFFEnumHook(int* params)
 
 int JoystickSmallMovement1Hook(int* params)
 {
-	if (g_config.EnableSmallMovement)
-	{
-		return 0;
-	}
+	//if (g_config.EnableSmallMovement)
+	//{
+	//	return 0;
+	//}
 
 	short& V0x008C1CC2 = *(short*)0x008C1CC2;
 	short& V0x008C1CC0 = *(short*)0x008C1CC0;
 	short& V0x008C1CC4 = *(short*)0x008C1CC4;
 
-	if (std::abs(V0x008C1CC2) <= 0x40)
+	if (std::abs(V0x008C1CC2) <= g_config.SmallMovement_8C1CC2)
 	{
 		V0x008C1CC2 = 0;
 	}
 
-	if (std::abs(V0x008C1CC0) <= 0x18)
+	if (std::abs(V0x008C1CC0) <= g_config.SmallMovement_8C1CC0)
 	{
 		V0x008C1CC0 = 0;
 	}
 
-	if (std::abs(V0x008C1CC4) <= 0x40)
+	if (std::abs(V0x008C1CC4) <= g_config.SmallMovement_8C1CC4)
 	{
 		V0x008C1CC4 = 0;
 	}

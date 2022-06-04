@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:XwaJoystickConfig"
         mc:Ignorable="d"
         Title="Xwa Joystick Config"
-        Height="650" Width="800"
+        Height="700" Width="850"
         UseLayoutRounding="True"
         Closed="Window_Closed"
         Loaded="MainWindow_Loaded"
@@ -39,6 +39,24 @@
                         <GroupBox>
                             <StackPanel>
                                 <CheckBox IsChecked="{Binding JoystickSettingEnableSmallMovement}" Content="Enable small joystick movement" />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="120"
+                                               Text="8C1CC2:" />
+                                    <TextBox Width="120"
+                                             Text="{Binding JoystickSettingSmallMovement_8C1CC2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="120"
+                                               Text="8C1CC0:" />
+                                    <TextBox Width="120"
+                                             Text="{Binding JoystickSettingSmallMovement_8C1CC0, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="120"
+                                               Text="8C1CC4:" />
+                                    <TextBox Width="120"
+                                             Text="{Binding JoystickSettingSmallMovement_8C1CC4, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
                             </StackPanel>
                         </GroupBox>
                         <TextBlock />

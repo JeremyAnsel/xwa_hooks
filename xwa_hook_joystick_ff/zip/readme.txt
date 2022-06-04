@@ -62,6 +62,12 @@ When the value is -1, the last feedback device will be selected for force feedba
 EnableSmallMovement = value
 The default value is 1, which enable small movement.
 When the value is 0, small movement is disabled.
+SmallMovement_8C1CC2 = value
+The default value is 64.
+SmallMovement_8C1CC0 = value
+The default value is 24.
+SmallMovement_8C1CC4 = value
+The default value is 64.
 
 MainControllerIndex = controller index
 Select the controller used for the main axis and buttons. The default value is 0.

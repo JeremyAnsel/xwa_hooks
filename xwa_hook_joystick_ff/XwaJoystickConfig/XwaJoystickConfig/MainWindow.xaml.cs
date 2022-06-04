@@ -55,6 +55,12 @@ namespace XwaJoystickConfig
 
         public bool JoystickSettingEnableSmallMovement { get; set; }
 
+        public int JoystickSettingSmallMovement_8C1CC2 { get; set; }
+
+        public int JoystickSettingSmallMovement_8C1CC0 { get; set; }
+
+        public int JoystickSettingSmallMovement_8C1CC4 { get; set; }
+
         public int JoystickSettingMainControllerIndex { get; set; }
 
         public int JoystickSettingYawControllerIndex { get; set; }
@@ -282,6 +288,9 @@ namespace XwaJoystickConfig
         {
             this.JoystickSettingFFDeviceIndex = 0;
             this.JoystickSettingEnableSmallMovement = true;
+            this.JoystickSettingSmallMovement_8C1CC2 = 0;
+            this.JoystickSettingSmallMovement_8C1CC0 = 0;
+            this.JoystickSettingSmallMovement_8C1CC4 = 0;
             this.JoystickSettingMainControllerIndex = 0;
             this.JoystickSettingYawControllerIndex = 0;
             this.JoystickSettingYawControllerAxisIndex = 0;
@@ -411,6 +420,9 @@ namespace XwaJoystickConfig
 
             this.JoystickSettingFFDeviceIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "JoystickFFDeviceIndex", 0);
             this.JoystickSettingEnableSmallMovement = XwaHooksConfig.GetFileKeyValueInt(lines, "EnableSmallMovement", 1) != 0;
+            this.JoystickSettingSmallMovement_8C1CC2 = XwaHooksConfig.GetFileKeyValueInt(lines, "SmallMovement_8C1CC2", 64);
+            this.JoystickSettingSmallMovement_8C1CC0 = XwaHooksConfig.GetFileKeyValueInt(lines, "SmallMovement_8C1CC0", 24);
+            this.JoystickSettingSmallMovement_8C1CC4 = XwaHooksConfig.GetFileKeyValueInt(lines, "SmallMovement_8C1CC4", 64);
             this.JoystickSettingMainControllerIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "MainControllerIndex", 0);
             this.JoystickSettingYawControllerIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "YawControllerIndex", 0);
             this.JoystickSettingYawControllerAxisIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "YawControllerAxisIndex", 0);
@@ -477,6 +489,9 @@ namespace XwaJoystickConfig
                 writer.WriteLine("; 0 to disable small movement");
                 writer.WriteLine("; 1 to enable small movement");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "EnableSmallMovement = {0}", this.JoystickSettingEnableSmallMovement ? 1 : 0));
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "SmallMovement_8C1CC2 = {0}", this.JoystickSettingSmallMovement_8C1CC2));
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "SmallMovement_8C1CC0 = {0}", this.JoystickSettingSmallMovement_8C1CC0));
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "SmallMovement_8C1CC4 = {0}", this.JoystickSettingSmallMovement_8C1CC4));
                 writer.WriteLine();
                 writer.WriteLine("; Select the controller used for the main axis and buttons");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "MainControllerIndex = {0}", this.JoystickSettingMainControllerIndex));
