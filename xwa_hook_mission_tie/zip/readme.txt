@@ -71,6 +71,9 @@ At offset 0F88D5, replace 390C858E2AAE007539 with E846F60A0090909090.
 At offset 0F88E5, replace 7530 with 9090.
 At offset 0F88EE, replace 7527 with 9090.
 At offset 0F88F7, replace 751E with 9090.
+At offset 0902FF, replace 0F849C030000 with E81C7C110090.
+At offset 090356, replace 0F8558020000 with E8C57B110090.
+At offset 065405, replace E8E6470000 with E8162B1400.
 
 
 *** Usage ***
@@ -89,6 +92,8 @@ To define the red alert in hangar, set "IsRedAlertEnabled = 1". The default sett
 To skip hyperspaced messages, "set SkipHyperspacedMessages = 1". The default setting enables SkipHyperspacedMessages for mission id 49.
 To force the player in turret, set "ForcePlayerInTurret = 1". The default setting enables ForcePlayerInTurret for mission id 1.
 To set the force turret time, set the ForcePlayerInTurretHours, ForcePlayerInTurretMinutes and ForcePlayerInTurretSeconds settings. The default values are 0, 0, 8.
+To disable player laser shoot, set "DisablePlayerLaserShoot = 1". The default value is 0.
+To disable player warhead shoot, set "DisablePlayerWarheadShoot = 1". The default value is 0.
 
 See "mission.txt".
 

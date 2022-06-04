@@ -357,3 +357,22 @@ E846F60A00              call 005A8B20, 005A8B20 - 004F94DA = 000AF646
 751E                    jne 004F9517
 
 9090                    nop
+
+; player shoot
+:00490EFF - 0x0902FF
+0F849C030000            je 004912A1
+
+E81C7C1100              call 005A8B20, 005A8B20 - 00490F04 = 00117C1C
+90                      nop
+
+:00490F56 - 0x090356
+0F8558020000            jne 004911B4
+
+E8C57B1100              call 005A8B20, 005A8B20 - 00490F5B = 00117BC5
+90                      nop
+
+; draw laser charge 3D
+:00466005 - 0x065405
+E8E6470000              call 0046A7F0
+
+E8162B1400              call 005A8B20, 005A8B20 - 0046600A = 00142B16

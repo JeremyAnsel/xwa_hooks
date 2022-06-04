@@ -113,6 +113,18 @@ public:
 		return this->_forcePlayerInTurretSeconds;
 	}
 
+	bool DisablePlayerLaserShoot()
+	{
+		this->UpdateIfChanged();
+		return this->_disablePlayerLaserShoot;
+	}
+
+	bool DisablePlayerWarheadShoot()
+	{
+		this->UpdateIfChanged();
+		return this->_disablePlayerWarheadShoot;
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -139,6 +151,8 @@ private:
 			this->_forcePlayerInTurretHours = GetFileKeyValueInt(lines, "ForcePlayerInTurretHours", 0);
 			this->_forcePlayerInTurretMinutes = GetFileKeyValueInt(lines, "ForcePlayerInTurretMinutes", 0);
 			this->_forcePlayerInTurretSeconds = GetFileKeyValueInt(lines, "ForcePlayerInTurretSeconds", 8);
+			this->_disablePlayerLaserShoot = GetFileKeyValueInt(lines, "DisablePlayerLaserShoot", 0) != 0;
+			this->_disablePlayerWarheadShoot = GetFileKeyValueInt(lines, "DisablePlayerWarheadShoot", 0) != 0;
 		}
 	}
 
@@ -184,6 +198,8 @@ private:
 	int _forcePlayerInTurretHours;
 	int _forcePlayerInTurretMinutes;
 	int _forcePlayerInTurretSeconds;
+	bool _disablePlayerLaserShoot;
+	bool _disablePlayerWarheadShoot;
 };
 
 MissionConfig g_missionConfig;
@@ -1384,6 +1400,68 @@ int MissionIdForcePlayerInTurret2Hook(int* params)
 	{
 		params[Params_ReturnAddress] = 0x004F9517;
 	}
+
+	return 0;
+}
+
+int MissionPlayerShootHook(int* params)
+{
+	const int objectIndex = params[Params_EBP];
+
+	bool disableLaser = g_missionConfig.DisablePlayerLaserShoot();
+	bool disableWarhead = g_missionConfig.DisablePlayerWarheadShoot();
+
+	if (objectIndex == 0xFFFF || (disableLaser && disableWarhead))
+	{
+		params[Params_ReturnAddress] = 0x004912A1;
+	}
+
+	return 0;
+}
+
+int MissionPlayerTypeShootHook(int* params)
+{
+	unsigned char player_m034 = (unsigned char)params[Params_EAX];
+
+	bool disableLaser = g_missionConfig.DisablePlayerLaserShoot();
+	bool disableWarhead = g_missionConfig.DisablePlayerWarheadShoot();
+
+	if (player_m034 == 0)
+	{
+		if (disableLaser)
+		{
+			params[Params_ReturnAddress] = 0x004912A1;
+		}
+		else
+		{
+			params[Params_ReturnAddress] = 0x00490F5C;
+		}
+	}
+	else
+	{
+		if (disableWarhead)
+		{
+			params[Params_ReturnAddress] = 0x004912A1;
+		}
+		else
+		{
+			params[Params_ReturnAddress] = 0x004911B4;
+		}
+	}
+
+	return 0;
+}
+
+int MissionDrawLaserCharge3DHook(int* params)
+{
+	if (g_missionConfig.DisablePlayerLaserShoot())
+	{
+		return 0;
+	}
+
+	const auto DrawLaserCharge3D = (void(*)())0x0046A7F0;
+
+	DrawLaserCharge3D();
 
 	return 0;
 }

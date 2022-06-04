@@ -19,3 +19,6 @@ int MissionIdRedAlertHook(int* params);
 int MissionIdSkipHyperspacedMessagesHook(int* params);
 int MissionIdForcePlayerInTurret1Hook(int* params);
 int MissionIdForcePlayerInTurret2Hook(int* params);
+int MissionPlayerShootHook(int* params);
+int MissionPlayerTypeShootHook(int* params);
+int MissionDrawLaserCharge3DHook(int* params);

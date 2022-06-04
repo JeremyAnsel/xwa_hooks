@@ -39,6 +39,9 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x498D33, MissionIdSkipHyperspacedMessagesHook },
 	{ 0x501472, MissionIdForcePlayerInTurret1Hook },
 	{ 0x4F94DA, MissionIdForcePlayerInTurret2Hook },
+	{ 0x490F04, MissionPlayerShootHook },
+	{ 0x490F5B, MissionPlayerTypeShootHook },
+	{ 0x46600A, MissionDrawLaserCharge3DHook },
 };
 
 static const HookPatchItem g_overrideTiePatch[] =
@@ -122,6 +125,9 @@ static const HookPatchItem g_missionIdsCheckPatch[] =
 	{ 0x0F88E5, "7530", "9090" },
 	{ 0x0F88EE, "7527", "9090" },
 	{ 0x0F88F7, "751E", "9090" },
+	{ 0x0902FF, "0F849C030000", "E81C7C110090" },
+	{ 0x090356, "0F8558020000", "E8C57B110090" },
+	{ 0x065405, "E8E6470000", "E8162B1400" },
 };
 
 static const HookPatch g_patches[] =

@@ -9,3 +9,5 @@ ForcePlayerInTurret = 0
 ForcePlayerInTurretHours = 0
 ForcePlayerInTurretMinutes = 0
 ForcePlayerInTurretSeconds = 8
+DisablePlayerLaserShoot = 0
+DisablePlayerWarheadShoot = 0
