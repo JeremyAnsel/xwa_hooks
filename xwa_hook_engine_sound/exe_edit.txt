@@ -149,6 +149,20 @@ EB20                    jmp 0045B7F7, 0045B7F7 - 0045B7D7 = 20
 909090                  nop
 
 
+// Engine Slowing sound
+:0045BEE4 - 0x05B2E4
+E8A700FEFF              call 0043BF90
+
+E837CC1400              call 005A8B20, 005A8B20 - 0045BEE9 = 0014CC37
+
+
+// Canopy Opening sound
+:0045C089 - 0x05B489
+E802FFFDFF              call 0043BF90
+
+E892CA1400              call 005A8B20, 005A8B20 - 0045C08E = 0014CA92
+
+
 // Weapon sounds
 :0043C1DE - 0x03B5DE
 8DB8E8FEFFFF            lea edi, dword ptr [eax+FFFFFEE8]

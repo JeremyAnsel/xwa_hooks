@@ -9,6 +9,8 @@ int LaunchSoundHook(int* params);
 int WashSoundHook(int* params);
 int WashSoundStopHook(int* params);
 int TakeOffSoundHook(int* params);
+int EngineSlowingSoundHook(int* params);
+int CanopyOpeningSoundHook(int* params);
 
 int WeaponSoundHook(int* params);
 

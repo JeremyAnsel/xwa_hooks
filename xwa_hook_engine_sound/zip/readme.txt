@@ -29,6 +29,16 @@ Copy files:
 LandingGearUp.wav
 MfTakeOff.wav
 
+To setup Sfx_EngineSlowing, copy the following files to WAVE\Sfx_EngineSlowing\
+From WAVE\FE_HIGH_RES\
+Copy files:
+LandingGearDown.wav
+
+To setup Sfx_CanopyOpening, copy the following files to WAVE\Sfx_CanopyOpening\
+From WAVE\FE_HIGH_RES\
+Copy files:
+LandingGearDown.wav
+
 To setup Sfx_FlyBy, copy the following files to WAVE\Sfx_FlyBy\
 From WAVE\FE_HIGH_RES\
 Copy files:
@@ -87,6 +97,8 @@ At offset 039733, replace 7726 with EB26.
 At offset 03CC6F, replace 3D89000000741A3D8A000000 with 50E8BBB216008BF858EB1B90.
 At offset 03CD3C, replace 52E80EEF090083C404 with E8DFB11600EB369090.
 At offset 05ABD0, replace 6683F93A74266683F941 with E84BD31400EB20909090.
+At offset 05B2E4, replace E8A700FEFF with E837CC1400.
+At offset 05B489, replace E802FFFDFF with E892CA1400.
 
 # To call the hook that defines weapon sounds
 At offset 03B5DE, replace 8DB8E8FEFFFF83FF190F870801000033D28A972CC34300FF2495FCC24300 with 8B56230FBF929500000050525551E83FC9160083C4105F5E5DC390909090.
@@ -303,6 +315,8 @@ For Interior sounds, when the type is 0, sounds defined in "Wave\Sfx_Interior.ls
 For FlyBy sounds, when the type is 0, sounds defined in "Wave\Sfx_FlyBy.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 For EngineWash sounds, when the type is 0, sounds defined in "Wave\Sfx_EngineWash.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 For TakeOff sounds, when the type is 0, sounds defined in "Wave\Sfx_TakeOff.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+For Engine Slowing sounds, sounds defined in "Wave\Sfx_EngineSlowing.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+For Canopy Opening sounds, sounds defined in "Wave\Sfx_CanopyOpening.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 
 For weapon sounds, when the behavior is empty, sounds defined in "Wave\Sfx_Weapon.lst" are used if the lst file exists.
 For each craft, there are 10 items. The last item is for the open weapon.

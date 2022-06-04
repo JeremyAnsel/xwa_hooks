@@ -1,0 +1,7 @@
+
+To setup Sfx_Landing, copy the following files to WAVE\Sfx_EngineSlowing\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+LandingGearDown.wav

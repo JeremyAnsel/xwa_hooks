@@ -90,6 +90,10 @@ public:
 		this->SfxEngineWashCount = GetFileKeyValueInt(lines, "sfx_enginewash_count");
 		this->SfxTakeOffIndex = GetFileKeyValueInt(lines, "sfx_takeoff_index");
 		this->SfxTakeOffCount = GetFileKeyValueInt(lines, "sfx_takeoff_count");
+		this->SfxEngineSlowingIndex = GetFileKeyValueInt(lines, "sfx_engineslowing_index");
+		this->SfxEngineSlowingCount = GetFileKeyValueInt(lines, "sfx_engineslowing_count");
+		this->SfxCanopyOpeningIndex = GetFileKeyValueInt(lines, "sfx_canopyopening_index");
+		this->SfxCanopyOpeningCount = GetFileKeyValueInt(lines, "sfx_canopyopening_count");
 		this->SfxWeaponIndex = GetFileKeyValueInt(lines, "sfx_weapon_index");
 		this->SfxWeaponCount = GetFileKeyValueInt(lines, "sfx_weapon_count");
 	}
@@ -104,6 +108,10 @@ public:
 	int SfxEngineWashCount;
 	int SfxTakeOffIndex;
 	int SfxTakeOffCount;
+	int SfxEngineSlowingIndex;
+	int SfxEngineSlowingCount;
+	int SfxCanopyOpeningIndex;
+	int SfxCanopyOpeningCount;
 	int SfxWeaponIndex;
 	int SfxWeaponCount;
 };
@@ -1065,6 +1073,59 @@ int TakeOffSoundHook(int* params)
 
 	return 0;
 }
+
+int EngineSlowingSoundHook(int* params)
+{
+	int soundIndex = params[0];
+	int xwaHangarPlayerObjectIndex = params[1];
+	int xwaCurrentPlayerId = params[2];
+
+	const auto playSound = (int(*)(int, int, int))0x0043BF90;
+
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const int modelIndex = XwaObjects[xwaHangarPlayerObjectIndex].ModelIndex;
+
+	const auto& soundConfig = GetSoundsConfig();
+
+	if (soundConfig.SoundsCountHookExists && soundConfig.SfxEngineSlowingCount)
+	{
+		if (modelIndex < soundConfig.SfxEngineSlowingCount)
+		{
+			soundIndex = soundConfig.SfxEngineSlowingIndex + modelIndex;
+		}
+	}
+
+	playSound(soundIndex, xwaHangarPlayerObjectIndex, xwaCurrentPlayerId);
+
+	return 0;
+}
+
+int CanopyOpeningSoundHook(int* params)
+{
+	int soundIndex = params[0];
+	int xwaHangarPlayerObjectIndex = params[1];
+	int xwaCurrentPlayerId = params[2];
+
+	const auto playSound = (int(*)(int, int, int))0x0043BF90;
+
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const int modelIndex = XwaObjects[xwaHangarPlayerObjectIndex].ModelIndex;
+
+	const auto& soundConfig = GetSoundsConfig();
+
+	if (soundConfig.SoundsCountHookExists && soundConfig.SfxCanopyOpeningCount)
+	{
+		if (modelIndex < soundConfig.SfxCanopyOpeningCount)
+		{
+			soundIndex = soundConfig.SfxCanopyOpeningIndex + modelIndex;
+		}
+	}
+
+	playSound(soundIndex, xwaHangarPlayerObjectIndex, xwaCurrentPlayerId);
+
+	return 0;
+}
+
 
 int WeaponModelIndexToSoundIndex(int weaponIndex)
 {
