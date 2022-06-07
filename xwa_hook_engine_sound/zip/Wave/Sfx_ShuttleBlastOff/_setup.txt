@@ -1,0 +1,7 @@
+
+To setup Sfx_ShuttleBlastOff, copy the following files to WAVE\Sfx_ShuttleBlastOff\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+ImperialShuttleBlastOff.wav

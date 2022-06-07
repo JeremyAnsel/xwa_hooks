@@ -94,6 +94,13 @@ public:
 		this->SfxEngineSlowingCount = GetFileKeyValueInt(lines, "sfx_engineslowing_count");
 		this->SfxCanopyOpeningIndex = GetFileKeyValueInt(lines, "sfx_canopyopening_index");
 		this->SfxCanopyOpeningCount = GetFileKeyValueInt(lines, "sfx_canopyopening_count");
+		this->SfxShuttleTakeOffIndex = GetFileKeyValueInt(lines, "sfx_shuttletakeoff_index");
+		this->SfxShuttleTakeOffCount = GetFileKeyValueInt(lines, "sfx_shuttletakeoff_count");
+		this->SfxShuttleBlastOffIndex = GetFileKeyValueInt(lines, "sfx_shuttleblastoff_index");
+		this->SfxShuttleBlastOffCount = GetFileKeyValueInt(lines, "sfx_shuttleblastoff_count");
+		this->SfxShuttleShutDownIndex = GetFileKeyValueInt(lines, "sfx_shuttleshutdown_index");
+		this->SfxShuttleShutDownCount = GetFileKeyValueInt(lines, "sfx_shuttleshutdown_count");
+
 		this->SfxWeaponIndex = GetFileKeyValueInt(lines, "sfx_weapon_index");
 		this->SfxWeaponCount = GetFileKeyValueInt(lines, "sfx_weapon_count");
 	}
@@ -112,6 +119,12 @@ public:
 	int SfxEngineSlowingCount;
 	int SfxCanopyOpeningIndex;
 	int SfxCanopyOpeningCount;
+	int SfxShuttleTakeOffIndex;
+	int SfxShuttleTakeOffCount;
+	int SfxShuttleBlastOffIndex;
+	int SfxShuttleBlastOffCount;
+	int SfxShuttleShutDownIndex;
+	int SfxShuttleShutDownCount;
 	int SfxWeaponIndex;
 	int SfxWeaponCount;
 };
@@ -1126,6 +1139,86 @@ int CanopyOpeningSoundHook(int* params)
 	return 0;
 }
 
+int HangarShuttleSoundsHook(int* params)
+{
+	int soundIndex = params[0];
+	int xwaObjectIndex = params[1];
+	int xwaCurrentPlayerId = params[2];
+
+	const auto playSound = (int(*)(int, int, int))0x0043BF90;
+
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const int modelIndex = xwaObjectIndex == 0xffff ? -1 : XwaObjects[xwaObjectIndex].ModelIndex;
+
+	const auto& soundConfig = GetSoundsConfig();
+
+	switch (soundIndex)
+	{
+	case 0x84:
+		// LandingGearUp
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxTakeOffCount)
+		{
+			if (modelIndex < soundConfig.SfxTakeOffCount)
+			{
+				soundIndex = soundConfig.SfxTakeOffIndex + modelIndex;
+			}
+		}
+
+		break;
+
+	case 0x95:
+		// ImperialShuttleTakeOff
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxShuttleTakeOffCount)
+		{
+			if (modelIndex < soundConfig.SfxShuttleTakeOffCount)
+			{
+				soundIndex = soundConfig.SfxShuttleTakeOffIndex + modelIndex;
+			}
+		}
+
+		break;
+
+	case 0x92:
+		// ImperialShuttleBlastOff
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxShuttleBlastOffCount)
+		{
+			if (modelIndex < soundConfig.SfxShuttleBlastOffCount)
+			{
+				soundIndex = soundConfig.SfxShuttleBlastOffIndex + modelIndex;
+			}
+		}
+
+		break;
+
+	case 0x94:
+		// ImperialShuttleShutDown
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxShuttleShutDownCount)
+		{
+			if (modelIndex < soundConfig.SfxShuttleShutDownCount)
+			{
+				soundIndex = soundConfig.SfxShuttleShutDownIndex + modelIndex;
+			}
+		}
+
+		break;
+
+	case 0x83:
+		// LandingGearDown
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxEngineSlowingCount)
+		{
+			if (modelIndex < soundConfig.SfxEngineSlowingCount)
+			{
+				soundIndex = soundConfig.SfxEngineSlowingIndex + modelIndex;
+			}
+		}
+
+		break;
+	}
+
+	playSound(soundIndex, xwaObjectIndex, xwaCurrentPlayerId);
+
+	return 0;
+}
 
 int WeaponModelIndexToSoundIndex(int weaponIndex)
 {

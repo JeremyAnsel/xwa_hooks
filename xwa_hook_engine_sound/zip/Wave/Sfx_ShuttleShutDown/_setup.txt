@@ -1,0 +1,7 @@
+
+To setup Sfx_ShuttleShutDown, copy the following files to WAVE\Sfx_ShuttleShutDown\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+ImperialShuttleShutDown.wav

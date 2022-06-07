@@ -60,6 +60,21 @@ EngineIntTI.wav
 EngineIntXW.wav
 EngineIntYW.wav
 
+To setup Sfx_ShuttleBlastOff, copy the following files to WAVE\Sfx_ShuttleBlastOff\
+From WAVE\FE_HIGH_RES\
+Copy files:
+ImperialShuttleBlastOff.wav
+
+To setup Sfx_ShuttleShutDown, copy the following files to WAVE\Sfx_ShuttleShutDown\
+From WAVE\FE_HIGH_RES\
+Copy files:
+ImperialShuttleShutDown.wav
+
+To setup Sfx_ShuttleTakeOff, copy the following files to WAVE\Sfx_ShuttleTakeOff\
+From WAVE\FE_HIGH_RES\
+Copy files:
+ImperialShuttleTakeOff.wav
+
 To setup Sfx_Weapon, copy the following files to WAVE\Sfx_Weapon\
 From WAVE\FE_HIGH_RES\
 Copy files:
@@ -99,6 +114,10 @@ At offset 03CD3C, replace 52E80EEF090083C404 with E8DFB11600EB369090.
 At offset 05ABD0, replace 6683F93A74266683F941 with E84BD31400EB20909090.
 At offset 05B2E4, replace E8A700FEFF with E837CC1400.
 At offset 05B489, replace E802FFFDFF with E892CA1400.
+At offset 05E0EE, replace E89DD2FDFF with E82D9E1400.
+At offset 05E103, replace E888D2FDFF with E8189E1400.
+At offset 05EFD9, replace E8B2C3FDFF with E8428F1400.
+At offset 05EFEE, replace E89DC3FDFF with E82D8F1400.
 
 # To call the hook that defines weapon sounds
 At offset 03B5DE, replace 8DB8E8FEFFFF83FF190F870801000033D28A972CC34300FF2495FCC24300 with 8B56230FBF929500000050525551E83FC9160083C4105F5E5DC390909090.
@@ -317,6 +336,9 @@ For EngineWash sounds, when the type is 0, sounds defined in "Wave\Sfx_EngineWas
 For TakeOff sounds, when the type is 0, sounds defined in "Wave\Sfx_TakeOff.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 For Engine Slowing sounds, sounds defined in "Wave\Sfx_EngineSlowing.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 For Canopy Opening sounds, sounds defined in "Wave\Sfx_CanopyOpening.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+For Shuttle Blast Off sounds, sounds defined in "Wave\Sfx_ShuttleBlastOff.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+For Shuttle Shut Down sounds, sounds defined in "Wave\Sfx_ShuttleShutDown.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+For Shuttle Take Off sounds, sounds defined in "Wave\Sfx_ShuttleTakeOff.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 
 For weapon sounds, when the behavior is empty, sounds defined in "Wave\Sfx_Weapon.lst" are used if the lst file exists.
 For each craft, there are 10 items. The last item is for the open weapon.
