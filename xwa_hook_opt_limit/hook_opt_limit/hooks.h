@@ -123,6 +123,11 @@ static const HookPatchItem g_briefingWireframeOverlayPatch[] =
 	{ 0x07E1B9, "47", "90" },
 };
 
+static const HookPatchItem g_disableHitzoneBoundsCheckOnRenderPatch[] =
+{
+	{ 0x081A38, "7562", "EB62" },
+};
+
 static const HookPatchItem g_texturesSizePatch[] =
 {
 	{ 0x19564A, "81790C000100007717", "909090909090909090" },
@@ -753,6 +758,7 @@ static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
 	MAKE_HOOK_PATCH("'disable briefing wireframe overlay' patch", g_briefingWireframeOverlayPatch),
+	MAKE_HOOK_PATCH("disable hitzone bounds check on render patch", g_disableHitzoneBoundsCheckOnRenderPatch),
 	MAKE_HOOK_PATCH("'remove textures size limit' patch", g_texturesSizePatch),
 	MAKE_HOOK_PATCH("'opt textures count limit' patch", g_texturesCountPatch),
 	MAKE_HOOK_PATCH("To call the hook that removes the opt limit of 512 vertices per mesh", g_optLimitPatch),

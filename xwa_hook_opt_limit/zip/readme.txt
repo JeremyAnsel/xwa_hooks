@@ -31,6 +31,9 @@ At offset 07E09C, replace 7D with EB.
 At offset 07E12E, replace 7D with EB.
 At offset 07E1B9, replace 47 with 90.
 
+# disable hitzone bounds check on render
+At offset 081A38, replace 7562 with EB62.
+
 # 'remove textures size limit' patch
 At offset 19564A, replace 81790C000100007717 with 909090909090909090.
 At offset 1956C2, replace 817A10000100007717 with 909090909090909090.

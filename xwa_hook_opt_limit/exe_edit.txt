@@ -27,6 +27,13 @@ EB
 90
 
 
+; disable hitzone bounds check on render
+:00482638 - 0x081A38
+7562                    jne 0048269C
+
+EB62                    jmp 0048269C
+
+
 ; remove textures size limit
 :0059624A - 0x19564A
 81790C000100007717
