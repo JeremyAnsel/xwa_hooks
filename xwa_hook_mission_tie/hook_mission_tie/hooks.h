@@ -35,6 +35,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4BA8AF, StatsProfiles_HasHyperdrive_Hook },
 	{ 0x4BCA6F, StatsProfiles_HasHyperdrive_Hook },
 	{ 0x4BDE11, StatsProfiles_HasHyperdrive_Hook },
+	{ 0x45C2E9, MissionIdRedAlertFilterHook },
 	{ 0x45C35E, MissionIdRedAlertHook },
 	{ 0x498D33, MissionIdSkipHyperspacedMessagesHook },
 	{ 0x501472, MissionIdForcePlayerInTurret1Hook },
@@ -117,8 +118,8 @@ static const HookPatchItem g_statsProfilesPatch[] =
 
 static const HookPatchItem g_missionIdsCheckPatch[] =
 {
+	{ 0x05B6E4, "668B01663D8700", "E837C814009090" },
 	{ 0x05B759, "83FE147523", "E8C2C71400" },
-	{ 0x05B6EB, "7416", "EB16" },
 	{ 0x09812A, "83F9318B4C24107522", "8B4C2410E8EDFD1000" },
 	{ 0x10086D, "0F8411040000", "E8AE760A0090" },
 	{ 0x0F88D5, "390C858E2AAE007539", "E846F60A0090909090" },

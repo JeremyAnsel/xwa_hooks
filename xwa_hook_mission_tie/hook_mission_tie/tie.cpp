@@ -1346,6 +1346,28 @@ int StatsProfiles_HasHyperdrive_Hook(int* params)
 	return hasHyperdrive;
 }
 
+int MissionIdRedAlertFilterHook(int* params)
+{
+	const XwaObject* currentObject = (XwaObject*)(params[Params_ECX] - 0x02);
+	ShipCategoryEnum shipCategory = (ShipCategoryEnum)currentObject->ShipCategory;
+
+	bool isHostCraft;
+
+	if (currentObject->ModelIndex == 0)
+	{
+		isHostCraft = false;
+	}
+	else
+	{
+		//isHostCraft = shipCategory == ShipCategory_Starship || shipCategory == ShipCategory_Platform;
+		isHostCraft = true;
+	}
+
+	params[Params_ReturnAddress] = isHostCraft ? 0x0045C303 : 0x0045C2F9;
+
+	return 0;
+}
+
 int MissionIdRedAlertHook(int* params)
 {
 	bool isRedAlertEnabled = g_missionConfig.IsRedAlertEnabled();
