@@ -89,6 +89,7 @@
     <ClCompile Include="config.cpp" />
     <ClCompile Include="hookmain.cpp" />
     <ClCompile Include="joystick.cpp" />
+    <ClCompile Include="SharedMem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
@@ -96,6 +97,7 @@
     <ClInclude Include="hook_function.h" />
     <ClInclude Include="joystick.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SharedMem.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
