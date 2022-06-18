@@ -68,6 +68,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4B915B, HangarFoldOutsideHook },
 	{ 0x4B9467, HangarFoldInsideHook },
 	{ 0x45C544, HangarAmbientSoundHook },
+	{ 0x458518, HangarLightHook },
+	{ 0x4586CD, HangarLightHook },
 };
 
 static const HookPatchItem g_selectHangarTypePatch[] =
@@ -283,6 +285,12 @@ static const HookPatchItem g_hangarAmbientSoundsPatch[] =
 	{ 0x05B93F, "81C297000000", "E8DCC5140090" },
 };
 
+static const HookPatchItem g_hangarLightPatch[] =
+{
+	{ 0x057913, "E8F809FEFF", "E808061500" },
+	{ 0x057AC8, "E84308FEFF", "E853041500" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that selects the hangar type", g_selectHangarTypePatch),
@@ -314,4 +322,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that disable shadow when inverted", g_hangarDisableShadowWhenInvertedPatch),
 	MAKE_HOOK_PATCH("To call the hook that set hangar fold outside and inside", g_hangarFoldOutsideInsidePatch),
 	MAKE_HOOK_PATCH("To call the hook that defines hangar ambient sounds", g_hangarAmbientSoundsPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines hangar light", g_hangarLightPatch),
 };

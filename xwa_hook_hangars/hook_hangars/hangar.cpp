@@ -18,6 +18,18 @@ enum ParamsEnum
 	Params_EDI = -10,
 };
 
+unsigned int GetFileKeyValueUnsignedInt(const std::vector<std::string>& lines, const std::string& key, unsigned int defaultValue = 0)
+{
+	std::string value = GetFileKeyValue(lines, key);
+
+	if (value.empty())
+	{
+		return defaultValue;
+	}
+
+	return std::stoul(value, 0, 16);
+}
+
 class FlightModelsList
 {
 public:
@@ -880,6 +892,18 @@ public:
 		return this->IsPlayerFloorInverted;
 	}
 
+	unsigned int GetLightColorIntensity()
+	{
+		this->UpdateIfChanged();
+		return this->LightColorIntensity;
+	}
+
+	unsigned int GetLightColorRgb()
+	{
+		this->UpdateIfChanged();
+		return this->LightColorRgb;
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -923,6 +947,8 @@ private:
 			this->PlayerOffsetY = GetFileKeyValueInt(lines, "PlayerOffsetY", 0);
 			this->PlayerOffsetZ = GetFileKeyValueInt(lines, "PlayerOffsetZ", 0);
 			this->IsPlayerFloorInverted = GetFileKeyValueInt(lines, "IsPlayerFloorInverted", 0) != 0;
+			this->LightColorIntensity = GetFileKeyValueUnsignedInt(lines, "LightColorIntensity", 0xC0);
+			this->LightColorRgb = GetFileKeyValueUnsignedInt(lines, "LightColorRgb", 0xFFFFFF);
 		}
 	}
 
@@ -963,6 +989,8 @@ private:
 	int PlayerOffsetY = 0;
 	int PlayerOffsetZ = 0;
 	bool IsPlayerFloorInverted = false;
+	unsigned int LightColorIntensity = 0;
+	unsigned int LightColorRgb = 0;
 
 	bool HasChanged()
 	{
@@ -3452,6 +3480,29 @@ int HangarAmbientSoundHook(int* params)
 	}
 
 	params[Params_EDX] = 0x97 + selectedSoundIndex;
+
+	return 0;
+}
+
+int HangarLightHook(int* params)
+{
+	const int positionX = params[0];
+	const int positionY = params[1];
+	const int positionZ = params[2];
+
+	const auto XwaAddGlobalLight = (void(*)(int, int, int, float, float, float, float))0x00438F10;
+
+	const unsigned short hangarModelIndex = *(unsigned short*)0x09C6754;
+
+	unsigned int colorIntensity = g_hangarObjects.GetLightColorIntensity();
+	float colorI = (colorIntensity & 0xFFU) / 255.0f;
+
+	unsigned int colorRgb = g_hangarObjects.GetLightColorRgb();
+	float colorR = ((colorRgb >> 16) & 0xFFU) / 255.0f;
+	float colorG = ((colorRgb >> 8) & 0xFFU) / 255.0f;
+	float colorB = (colorRgb & 0xFFU) / 255.0f;
+
+	XwaAddGlobalLight(positionX, positionY, positionZ, colorI, colorR, colorG, colorB);
 
 	return 0;
 }

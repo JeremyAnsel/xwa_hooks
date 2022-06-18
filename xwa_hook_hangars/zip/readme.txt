@@ -193,6 +193,10 @@ At offset 0B8862, replace 8A42273C027417 with E8B9F60E00EB17.
 # To call the hook that defines hangar ambient sounds
 At offset 05B93F, replace 81C297000000 with E8DCC5140090.
 
+# To call the hook that defines hangar light color
+At offset 057913, replace E8F809FEFF with E808061500.
+At offset 057AC8, replace E84308FEFF with E853041500.
+
 
 *** Usage ***
 
@@ -325,6 +329,8 @@ To set the x position offset of the player craft, set "PlayerOffsetX = value". v
 To set the y position offset of the player craft, set "PlayerOffsetY = value". value is an integer. The default value is 0.
 To set the z position offset of the player craft, set "PlayerOffsetZ = value". value is an integer. The default value is 0.
 To invert the hangar floor for the player craft, set "IsPlayerFloorInverted = 1". When set to 0, the floor is below the player craft. When set to 1, the floor is above the player craft.
+To define the light color intensity of the hangar, set "value". value is an integer. The default value is 192.
+To define the light color of the hangar, set "LightColorRgb = ######". The default value is FFFFFF.
 See "HangarObjects.txt".
 
 Apply to hangar:

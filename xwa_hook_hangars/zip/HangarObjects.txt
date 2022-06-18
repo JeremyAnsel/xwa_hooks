@@ -34,4 +34,6 @@ PlayerOffsetX = 0
 PlayerOffsetY = 0
 PlayerOffsetZ = 0
 IsPlayerFloorInverted = 0
+LightColorIntensity = 192
+LightColorRgb = FFFFFF
 FlightModels\YWing.opt = FlightModels\TieFighter.opt

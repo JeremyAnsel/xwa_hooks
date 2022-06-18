@@ -61,3 +61,4 @@ int HangarDisableShadowWhenInvertedHook(int* params);
 int HangarFoldOutsideHook(int* params);
 int HangarFoldInsideHook(int* params);
 int HangarAmbientSoundHook(int* params);
+int HangarLightHook(int* params);
