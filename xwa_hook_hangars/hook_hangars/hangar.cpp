@@ -370,13 +370,50 @@ public:
 
 CraftSelectionValues g_craftSelectionValues;
 
+std::vector<std::string> GetCustomFileLinesBase(const std::string& name)
+{
+	static std::vector<std::string> _lines;
+	static std::string _name;
+	static std::string _mission;
+
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	if (_name != name || _mission != xwaMissionFileName)
+	{
+		_name = name;
+		_mission = xwaMissionFileName;
+
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		_lines = GetFileLines(mission + "_" + name + ".txt");
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines(mission + ".ini", name);
+		}
+
+		if (!_lines.size())
+		{
+			const std::string path = "FlightModels\\";
+			_lines = GetFileLines(path + name + ".txt");
+		}
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines("FlightModels\\default.ini", name);
+		}
+	}
+
+	return _lines;
+}
+
 int GetCommandShipModelIndex()
 {
 	const unsigned short* exeSpecies = (unsigned short*)0x05B0F70;
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const TieFlightGroupEx* xwaTieFlightGroups = (TieFlightGroupEx*)0x080DC80;
 	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
-	const int playerObjectIndex = *(int*)0x068BC08;
+	//const int playerObjectIndex = *(int*)0x068BC08;
+	const int playerObjectIndex = *(int*)0x068BB98;
 	const int currentPlayerId = *(int*)0x08C1CC8;
 
 	if (playerObjectIndex == 0xffff)
@@ -422,7 +459,8 @@ std::string GetCommandShipLstLine()
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const TieFlightGroupEx* xwaTieFlightGroups = (TieFlightGroupEx*)0x080DC80;
 	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
-	const int playerObjectIndex = *(int*)0x068BC08;
+	//const int playerObjectIndex = *(int*)0x068BC08;
+	const int playerObjectIndex = *(int*)0x068BB98;
 	const int currentPlayerId = *(int*)0x08C1CC8;
 
 	if (playerObjectIndex == 0xffff)
@@ -436,6 +474,8 @@ std::string GetCommandShipLstLine()
 	{
 		return std::string();
 	}
+
+	std::string lstLine;
 
 	if (mothershipObjectIndex == 0)
 	{
@@ -454,18 +494,30 @@ std::string GetCommandShipLstLine()
 			commandShipModelIndex = exeSpecies[commandShipCraftId];
 		}
 
-		if (commandShipModelIndex != -1)
+		if (commandShipModelIndex == -1)
 		{
-			std::string lstLine = g_flightModelsList.GetLstLine(commandShipModelIndex);
-			return lstLine;
+			return std::string();
 		}
 
-		return std::string();
+		lstLine = g_flightModelsList.GetLstLine(commandShipModelIndex);
+	}
+	else
+	{
+		const int mothershipModelIndex = xwaObjects[mothershipObjectIndex].ModelIndex;
+
+		lstLine = g_flightModelsList.GetLstLine(mothershipModelIndex);
 	}
 
-	const int mothershipModelIndex = xwaObjects[mothershipObjectIndex].ModelIndex;
+	{
+		const auto objectLines = GetCustomFileLinesBase("Objects");
+		const std::string objectValue = GetFileKeyValue(objectLines, lstLine + ".opt");
 
-	std::string lstLine = g_flightModelsList.GetLstLine(mothershipModelIndex);
+		if (!objectValue.empty() && std::ifstream(objectValue))
+		{
+			lstLine = GetStringWithoutExtension(objectValue);
+		}
+	}
+
 	return lstLine;
 }
 
@@ -474,7 +526,8 @@ unsigned char GetCommandShipIff()
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const TieFlightGroupEx* xwaTieFlightGroups = (TieFlightGroupEx*)0x080DC80;
 	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
-	const int playerObjectIndex = *(int*)0x068BC08;
+	//const int playerObjectIndex = *(int*)0x068BC08;
+	const int playerObjectIndex = *(int*)0x068BB98;
 	const int currentPlayerId = *(int*)0x08C1CC8;
 
 	if (playerObjectIndex == 0xffff)
@@ -1001,7 +1054,7 @@ private:
 			if (!this->lastIsProvingGround)
 			{
 				this->lastMissionFileName = (const char*)0x06002E8;
-				this->lastCommandShip = GetCommandShipLstLine();
+				this->lastCommandShip = GetCommandShipModelIndex();
 				this->lastCommandShipIff = GetCommandShipIff();
 			}
 
@@ -1028,7 +1081,7 @@ private:
 			return true;
 		}
 
-		const std::string ship = GetCommandShipLstLine();
+		const int ship = GetCommandShipModelIndex();
 		if (this->lastCommandShip != ship)
 		{
 			this->lastCommandShip = ship;
@@ -1048,7 +1101,7 @@ private:
 	bool isInit = false;
 	bool lastIsProvingGround = false;
 	std::string lastMissionFileName;
-	std::string lastCommandShip;
+	int lastCommandShip;
 	unsigned char lastCommandShipIff = 0;
 };
 
@@ -1377,7 +1430,8 @@ int HangarCameraPositionHook(int* params)
 
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const unsigned short hangarModelIndex = *(unsigned short*)0x09C6754;
-	const int playerObjectIndex = *(int*)0x068BC08;
+	//const int playerObjectIndex = *(int*)0x068BC08;
+	const int playerObjectIndex = *(int*)0x068BB98;
 	const int V0x0686B94 = *(int*)0x0686B94;
 
 	const auto ModelGetSizeX = (int(*)(unsigned int))0x04857A0;
