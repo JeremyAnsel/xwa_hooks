@@ -34,5 +34,4 @@ PlayerOffsetX = 0
 PlayerOffsetY = 0
 PlayerOffsetZ = 0
 IsPlayerFloorInverted = 0
-FoldOutside = 0
 FlightModels\YWing.opt = FlightModels\TieFighter.opt
