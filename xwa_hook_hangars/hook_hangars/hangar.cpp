@@ -1037,19 +1037,6 @@ void ReadIsHangarFloorInverted()
 	g_isPlayerFloorInverted = g_hangarObjects.GetIsPlayerFloorInverted();
 }
 
-bool GetCraftFoldOutside(unsigned short modelIndex)
-{
-	const std::string lstLine = g_flightModelsList.GetLstLine(modelIndex);
-	auto lines = GetFileLines(lstLine + "HangarObjects.txt");
-
-	if (!lines.size())
-	{
-		lines = GetFileLines(lstLine + ".ini", "HangarObjects");
-	}
-
-	return GetFileKeyValueInt(lines, "FoldOutside", 0) != 0;
-}
-
 int GetCraftElevation(unsigned short modelIndex, bool isHangarFloorInverted)
 {
 	const auto ModelGetSizeZ = (int(*)(unsigned int))0x0485820;
@@ -1104,22 +1091,6 @@ int GetCraftElevation(unsigned short modelIndex, bool isHangarFloorInverted)
 class ModelIndexHangar
 {
 public:
-	bool GetFoldOutside(int modelIndex)
-	{
-		auto it = this->_foldOutside.find(modelIndex);
-
-		if (it != this->_foldOutside.end())
-		{
-			return it->second;
-		}
-		else
-		{
-			bool value = GetCraftFoldOutside(modelIndex);
-			this->_foldOutside.insert(std::make_pair(modelIndex, value));
-			return value;
-		}
-	}
-
 	int GetClosedSFoilsElevation(int modelIndex)
 	{
 		auto it = this->_closedSFoilsElevation.find(modelIndex);
@@ -1153,7 +1124,6 @@ public:
 	}
 
 private:
-	std::map<int, bool> _foldOutside;
 	std::map<int, int> _closedSFoilsElevation;
 	std::map<int, int> _closedSFoilsElevationInverted;
 };
@@ -3413,31 +3383,24 @@ int HangarFoldOutsideHook(int* params)
 	}
 
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
-	short hangarObjectIndex = *(short*)(*(int*)(0x07CA1A0 + 0x10) + 0x38);
-	unsigned short hangarModelIndex = xwaObjects[hangarObjectIndex].ModelIndex;
 
-	bool foldOutside = g_modelIndexHangar.GetFoldOutside(hangarModelIndex);
-
-	if (foldOutside)
+	for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x07CA3B8; objectIndex++)
 	{
-		for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x07CA3B8; objectIndex++)
+		if (xwaObjects[objectIndex].ModelIndex == 0)
 		{
-			if (xwaObjects[objectIndex].ModelIndex == 0)
-			{
-				continue;
-			}
+			continue;
+		}
 
-			if (xwaObjects[objectIndex].TieFlightGroupIndex != *(int*)(0x07CA1A0 + 0x1C))
-			{
-				continue;
-			}
+		if (xwaObjects[objectIndex].TieFlightGroupIndex != *(int*)(0x07CA1A0 + 0x1C))
+		{
+			continue;
+		}
 
-			XwaCraft* craft = xwaObjects[objectIndex].pMobileObject->pCraft;
+		XwaCraft* craft = xwaObjects[objectIndex].pMobileObject->pCraft;
 
-			if (craft->SFoilsState != 0x02)
-			{
-				craft->SFoilsState = 0x03;
-			}
+		if (craft->SFoilsState != 0x02)
+		{
+			craft->SFoilsState = 0x03;
 		}
 	}
 
