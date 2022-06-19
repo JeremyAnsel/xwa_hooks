@@ -1430,8 +1430,8 @@ int HangarCameraPositionHook(int* params)
 
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const unsigned short hangarModelIndex = *(unsigned short*)0x09C6754;
-	//const int playerObjectIndex = *(int*)0x068BC08;
-	const int playerObjectIndex = *(int*)0x068BB98;
+	const int playerObjectIndex = *(int*)0x068BC08;
+	//const int playerObjectIndex = *(int*)0x068BB98;
 	const int V0x0686B94 = *(int*)0x0686B94;
 
 	const auto ModelGetSizeX = (int(*)(unsigned int))0x04857A0;
