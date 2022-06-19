@@ -807,34 +807,34 @@ public:
 		return this->DroidsPositionZ;
 	}
 
-	int GetDroid1PositionZ()
-	{
-		this->UpdateIfChanged();
-		return this->Droid1PositionZ;
-	}
-
-	int GetDroid2PositionZ()
-	{
-		this->UpdateIfChanged();
-		return this->Droid2PositionZ;
-	}
-
 	bool GetIsDroidsFloorInverted()
 	{
 		this->UpdateIfChanged();
 		return this->IsDroidsFloorInverted;
 	}
 
+	bool GetLoadDroid1()
+	{
+		this->UpdateIfChanged();
+		return this->LoadDroids && this->LoadDroid1;
+	}
+
+	int GetDroid1PositionZ()
+	{
+		this->UpdateIfChanged();
+		return this->Droid1PositionZ;
+	}
+
+	bool GetIsDroid1FloorInverted()
+	{
+		this->UpdateIfChanged();
+		return this->IsDroidsFloorInverted || this->IsDroid1FloorInverted;
+	}
+
 	bool GetDroid1Update()
 	{
 		this->UpdateIfChanged();
-		return this->Droid1Update;
-	}
-
-	bool GetDroid2Update()
-	{
-		this->UpdateIfChanged();
-		return this->Droid2Update;
+		return GetLoadDroid1() && this->Droid1Update;
 	}
 
 	unsigned short GetDroid1ModelIndex()
@@ -847,6 +847,30 @@ public:
 	{
 		this->UpdateIfChanged();
 		return this->Droid1Markings;
+	}
+
+	bool GetLoadDroid2()
+	{
+		this->UpdateIfChanged();
+		return this->LoadDroids && this->LoadDroid2;
+	}
+
+	int GetDroid2PositionZ()
+	{
+		this->UpdateIfChanged();
+		return this->Droid2PositionZ;
+	}
+
+	bool GetIsDroid2FloorInverted()
+	{
+		this->UpdateIfChanged();
+		return this->IsDroidsFloorInverted || this->IsDroid2FloorInverted;
+	}
+
+	bool GetDroid2Update()
+	{
+		this->UpdateIfChanged();
+		return GetLoadDroid2() && this->Droid2Update;
 	}
 
 	unsigned short GetDroid2ModelIndex()
@@ -977,13 +1001,17 @@ private:
 			this->ShuttleAnimationElevation = GetFileKeyValueInt(lines, "ShuttleAnimationElevation", 0);
 			this->LoadDroids = GetFileKeyValueInt(lines, "LoadDroids", 1) == 1;
 			this->DroidsPositionZ = GetFileKeyValueInt(lines, "DroidsPositionZ", 0);
-			this->Droid1PositionZ = GetFileKeyValueInt(lines, "Droid1PositionZ", this->DroidsPositionZ);
-			this->Droid2PositionZ = GetFileKeyValueInt(lines, "Droid2PositionZ", this->DroidsPositionZ);
 			this->IsDroidsFloorInverted = GetFileKeyValueInt(lines, "IsDroidsFloorInverted", 0) != 0;
+			this->LoadDroid1 = GetFileKeyValueInt(lines, "LoadDroid1", 1) == 1;
+			this->Droid1PositionZ = GetFileKeyValueInt(lines, "Droid1PositionZ", this->DroidsPositionZ);
+			this->IsDroid1FloorInverted = GetFileKeyValueInt(lines, "IsDroid1FloorInverted", 0) != 0;
 			this->Droid1Update = GetFileKeyValueInt(lines, "Droid1Update", 1) != 0;
-			this->Droid2Update = GetFileKeyValueInt(lines, "Droid2Update", 1) != 0;
 			this->Droid1ModelIndex = (unsigned short)GetFileKeyValueInt(lines, "Droid1ModelIndex", 311); // ModelIndex_311_1_33_HangarDroid
 			this->Droid1Markings = GetFileKeyValueInt(lines, "Droid1Markings", 0);
+			this->LoadDroid2 = GetFileKeyValueInt(lines, "LoadDroid2", 1) == 1;
+			this->Droid2PositionZ = GetFileKeyValueInt(lines, "Droid2PositionZ", this->DroidsPositionZ);
+			this->IsDroid2FloorInverted = GetFileKeyValueInt(lines, "IsDroid2FloorInverted", 0) != 0;
+			this->Droid2Update = GetFileKeyValueInt(lines, "Droid2Update", 1) != 0;
 			this->Droid2ModelIndex = (unsigned short)GetFileKeyValueInt(lines, "Droid2ModelIndex", 312); // ModelIndex_312_1_34_HangarDroid2
 			this->Droid2Markings = GetFileKeyValueInt(lines, "Droid2Markings", 0);
 			this->HangarRoofCranePositionX = GetFileKeyValueInt(lines, "HangarRoofCranePositionX", -1400);
@@ -1019,13 +1047,17 @@ private:
 	int ShuttleAnimationElevation = 0;
 	bool LoadDroids = false;
 	int DroidsPositionZ = 0;
-	int Droid1PositionZ = 0;
-	int Droid2PositionZ = 0;
 	bool IsDroidsFloorInverted = 0;
+	bool LoadDroid1 = false;
+	int Droid1PositionZ = 0;
+	bool IsDroid1FloorInverted = 0;
 	bool Droid1Update = false;
-	bool Droid2Update = false;
 	unsigned short Droid1ModelIndex = 0;
 	int Droid1Markings = 0;
+	bool LoadDroid2 = false;
+	int Droid2PositionZ = 0;
+	bool IsDroid2FloorInverted = 0;
+	bool Droid2Update = false;
 	unsigned short Droid2ModelIndex = 0;
 	int Droid2Markings = 0;
 	int HangarRoofCranePositionX = 0;
@@ -1501,7 +1533,7 @@ int HangarCameraPositionHook(int* params)
 			const S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
 			int& V0x068BCC0 = *(int*)0x068BCC0;
 
-			bool value = g_hangarObjects.GetLoadDroids();
+			bool value = g_hangarObjects.GetLoadDroid1();
 
 			if (value)
 			{
@@ -1535,7 +1567,7 @@ int HangarCameraPositionHook(int* params)
 			const S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
 			int& V0x068BCC0 = *(int*)0x068BCC0;
 
-			bool value = g_hangarObjects.GetLoadDroids();
+			bool value = g_hangarObjects.GetLoadDroid2();
 
 			if (value)
 			{
@@ -2071,27 +2103,44 @@ int HangarLoadDroidsHook(int* params)
 	if (value)
 	{
 		bool isHangarFloorInverted = g_isHangarFloorInverted;
-		g_isHangarFloorInverted = g_hangarObjects.GetIsDroidsFloorInverted();
 
 		// ModelIndex_311_1_33_HangarDroid
-		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(g_hangarObjects.GetDroid1ModelIndex(), 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
-		V0x09C6780[V0x068BC10].m04 = 0;
-		V0x09C6780[V0x068BC10].m26 = 0;
-		V0x09C6780[V0x068BC10].m22 = 0;
-		V0x09C6780[V0x068BC10].m08 = 0;
-		HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, g_hangarObjects.GetDroid1PositionZ());
-		xwaObjects[V0x09C6780[V0x068BC10].ObjectIndex].pMobileObject->Markings = g_hangarObjects.GetDroid1Markings();
-		V0x068BC10++;
+		if (g_hangarObjects.GetLoadDroid1())
+		{
+			g_isHangarFloorInverted = g_hangarObjects.GetIsDroid1FloorInverted();
+			V0x09C6780[V0x068BC10].ObjectIndex = AddObject(g_hangarObjects.GetDroid1ModelIndex(), 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
+			V0x09C6780[V0x068BC10].m04 = 0;
+			V0x09C6780[V0x068BC10].m26 = 0;
+			V0x09C6780[V0x068BC10].m22 = 0;
+			V0x09C6780[V0x068BC10].m08 = 0;
+			HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, g_hangarObjects.GetDroid1PositionZ());
+			xwaObjects[V0x09C6780[V0x068BC10].ObjectIndex].pMobileObject->Markings = g_hangarObjects.GetDroid1Markings();
+			V0x068BC10++;
+		}
+		else
+		{
+			V0x09C6780[V0x068BC10].ObjectIndex = 0;
+			V0x068BC10++;
+		}
 
 		// ModelIndex_312_1_34_HangarDroid2
-		V0x09C6780[V0x068BC10].ObjectIndex = AddObject(g_hangarObjects.GetDroid2ModelIndex(), 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
-		V0x09C6780[V0x068BC10].m04 = 0;
-		V0x09C6780[V0x068BC10].m26 = 0;
-		V0x09C6780[V0x068BC10].m22 = 0;
-		V0x09C6780[V0x068BC10].m08 = 0;
-		HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, g_hangarObjects.GetDroid2PositionZ());
-		xwaObjects[V0x09C6780[V0x068BC10].ObjectIndex].pMobileObject->Markings = g_hangarObjects.GetDroid2Markings();
-		V0x068BC10++;
+		if (g_hangarObjects.GetLoadDroid2())
+		{
+			g_isHangarFloorInverted = g_hangarObjects.GetIsDroid2FloorInverted();
+			V0x09C6780[V0x068BC10].ObjectIndex = AddObject(g_hangarObjects.GetDroid2ModelIndex(), 0xE3, 0x15F, 0x7FFFFFFF, 0xE570, 0);
+			V0x09C6780[V0x068BC10].m04 = 0;
+			V0x09C6780[V0x068BC10].m26 = 0;
+			V0x09C6780[V0x068BC10].m22 = 0;
+			V0x09C6780[V0x068BC10].m08 = 0;
+			HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, g_hangarObjects.GetDroid2PositionZ());
+			xwaObjects[V0x09C6780[V0x068BC10].ObjectIndex].pMobileObject->Markings = g_hangarObjects.GetDroid2Markings();
+			V0x068BC10++;
+		}
+		else
+		{
+			V0x09C6780[V0x068BC10].ObjectIndex = 0;
+			V0x068BC10++;
+		}
 
 		g_isHangarFloorInverted = isHangarFloorInverted;
 	}
@@ -2127,7 +2176,7 @@ int HangarDroidsUpdateHook(int* params)
 		return g_hangarObjects.GetDroid2Update() ? 1 : 0;
 	}
 
-	return 1;
+	return 0;
 }
 
 int HangarLoadHangarRoofCraneHook(int* params)
