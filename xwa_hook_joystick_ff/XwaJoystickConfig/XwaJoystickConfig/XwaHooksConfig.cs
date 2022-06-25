@@ -16,21 +16,88 @@ namespace XwaJoystickConfig
 
         public static int ToInt32(string text)
         {
-            text = text.Trim();
+            var sb = new StringBuilder(text.Length);
+            int length = text.Length;
+            int index = 0;
 
-            bool isNegative = text.StartsWith("-");
-            if (isNegative)
+            while (index < length && char.IsWhiteSpace(text, index))
             {
-                text = text.Substring(1).TrimStart();
+                index++;
             }
 
-            int index = text.IndexOf('.');
-            if (index != -1)
+            if (index == length)
             {
-                text = text.Substring(0, index);
+                return 0;
             }
 
-            int value = (int)Int32Converter.ConvertFromInvariantString(text);
+            bool isNegative = false;
+
+            if (text[index] == '+')
+            {
+                index++;
+            }
+            else if (text[index] == '-')
+            {
+                isNegative = true;
+                index++;
+            }
+
+            while (index < length && char.IsWhiteSpace(text, index))
+            {
+                index++;
+            }
+
+            if (index == length)
+            {
+                return 0;
+            }
+
+            bool isHex = false;
+
+            if (index + 2 <= length)
+            {
+                if (text[index] == '0')
+                {
+                    if (text[index + 1] == 'x' || text[index + 1] == 'X')
+                    {
+                        isHex = true;
+                        sb.Append("0x");
+                        index += 2;
+                    }
+                }
+            }
+
+            while (index < length)
+            {
+                char c = text[index];
+
+                bool isDigit;
+
+                if (isHex)
+                {
+                    isDigit = (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+                }
+                else
+                {
+                    isDigit = c >= '0' && c <= '9';
+                }
+
+                if (!isDigit)
+                {
+                    break;
+                }
+
+                sb.Append(c);
+                index++;
+            }
+
+            if (sb.Length == 0)
+            {
+                return 0;
+            }
+
+            int value = (int)Int32Converter.ConvertFromInvariantString(sb.ToString());
+
             if (isNegative)
             {
                 value = -value;
@@ -46,7 +113,7 @@ namespace XwaJoystickConfig
 
         public static IList<string> GetFileLines(string path, string section = null)
         {
-            section = section ?? string.Empty;
+            section ??= string.Empty;
 
             var values = new List<string>();
 
