@@ -52,6 +52,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x5015B8, MapAIHook },
 	{ 0x5014DA, SpecRegionChangeHook },
 	//{ 0x5319A7, CombatDescriptionLoadHook },
+	{ 0x546B9F, TourModeButtonHook },
 
 	{ 0x543CFC, Test1Hook },
 };
@@ -157,6 +158,7 @@ static const HookPatchItem g_multiPatch[] =
 	// TODO
 	// Allow new pilots to access Tour mode even if they haven't beaten the first mission
 	//{ 0x145F9A, "0F84A2030000", "909090909090" },
+	{ 0x145F9A, "0F84A2030000", "E8811F060090" },
 
 	{ 0x146160, "7521", "EB21" },
 	{ 0x146441, "7514", "EB14" },

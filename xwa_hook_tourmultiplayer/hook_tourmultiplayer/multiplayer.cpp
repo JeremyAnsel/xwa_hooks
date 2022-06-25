@@ -44,11 +44,13 @@ public:
 
 		this->SettingsBar = GetFileKeyValueInt(lines, "SettingsBar", 0) != 0;
 		this->ChangeCombatSimMusic = GetFileKeyValueInt(lines, "ChangeCombatSimMusic", 1) != 0;
+		this->TourOfDutyButtonRequiredMissionIndex = GetFileKeyValueInt(lines, "TourOfDutyButtonRequiredMissionIndex", 1);
 	}
 
 	std::string SimulatorBackground;
 	bool SettingsBar;
 	bool ChangeCombatSimMusic;
+	int TourOfDutyButtonRequiredMissionIndex;
 };
 
 Config g_config;
@@ -1354,7 +1356,7 @@ int IFFColorOrangeMessageLogHook(int* params)
 int HangarMultiplayerHook(int* params)
 {
 	int playerIndex = params[Params_EDI];
-	Object* ObjectTable = *(Object **)0x7B33C4;
+	Object* ObjectTable = *(Object**)0x7B33C4;
 	int playerObjectIndex = PlayerPtr[playerIndex].objectIndex;
 	__int16 playerFGIndex = PlayerPtr[playerIndex].playerFG;
 	__int16 DepartMothershipFGIndex = GetFlightGroupLeaderCraft(FlightGroupPtr[playerFGIndex].DepartureMothership);
@@ -1580,6 +1582,18 @@ int SpecRegionChangeHook(int* params)
 		}
 
 		params[-1] = 0x501884;
+	}
+
+	return 0;
+}
+
+int TourModeButtonHook(int* params)
+{
+	const int missionIndex = *(int*)0x0ABC970;
+
+	if (missionIndex < g_config.TourOfDutyButtonRequiredMissionIndex)
+	{
+		params[Params_ReturnAddress] = 0x00546F42;
 	}
 
 	return 0;

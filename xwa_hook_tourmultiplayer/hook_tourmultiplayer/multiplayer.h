@@ -48,5 +48,6 @@ int KeyHook1(int* params);
 int MapAIHook(int* params);
 int SpecRegionChangeHook(int* params);
 //int CombatDescriptionLoadHook(int* params);
+int TourModeButtonHook(int* params);
 
 int Test1Hook(int* params);
