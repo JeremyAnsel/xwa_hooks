@@ -17,6 +17,9 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x43F463, OfficerSoundsBuffer3Hook },
 	{ 0x4C085A, FriendlyCraftListHook },
 	{ 0x4C195C, EnemyCraftListHook },
+	{ 0x475B0E, Radar2DItemsCountHook },
+	{ 0x476346, Radar2DItemsCount1Hook },
+	{ 0x476404, Radar2DItemsCount2Hook },
 };
 
 static const HookPatchItem g_craftsCountPatch[] =
@@ -41,8 +44,16 @@ static const HookPatchItem g_rsCraftsCountPatch[] =
 	{ 0x03B4E9, "7407", "EB07" },
 };
 
+static const HookPatchItem g_radar2DItemsCountPatch[] =
+{
+	{ 0x074F09, "742AC70568C86800C8BE6800", "E812301300EB4D9090909090" },
+	{ 0x075741, "0F85C300000066C70558C868002F00", "E8DA27130090909090909090909090" },
+	{ 0x0757FF, "750966C7055CC868002F00", "E81C271300909090909090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that defines crafts count", g_craftsCountPatch),
 	MAKE_HOOK_PATCH("To call the hook that applies RS's crafts count", g_rsCraftsCountPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines radar2d items count", g_radar2DItemsCountPatch),
 };

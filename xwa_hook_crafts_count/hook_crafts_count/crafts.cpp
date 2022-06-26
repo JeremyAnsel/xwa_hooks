@@ -31,15 +31,18 @@ public:
 		this->CraftsCount = GetFileKeyValueInt(lines, "CraftsCount", 3072);
 		this->ProjectilesCount = GetFileKeyValueInt(lines, "ProjectilesCount", 1024);
 		this->ExplosionsCount = GetFileKeyValueInt(lines, "ExplosionsCount", 256);
+		this->Radar2DItemsCount = GetFileKeyValueInt(lines, "Radar2DItemsCount", 48);
 
 		OutputDebugString(("Hook_Crafts_Count CraftsCount=" + std::to_string(this->CraftsCount)).c_str());
 		OutputDebugString(("Hook_Crafts_Count ProjectilesCount=" + std::to_string(this->ProjectilesCount)).c_str());
 		OutputDebugString(("Hook_Crafts_Count ExplosionsCount=" + std::to_string(this->ExplosionsCount)).c_str());
+		OutputDebugString(("Hook_Crafts_Count Radar2DItemsCount=" + std::to_string(this->Radar2DItemsCount)).c_str());
 	}
 
 	int CraftsCount;
 	int ProjectilesCount;
 	int ExplosionsCount;
+	int Radar2DItemsCount;
 };
 
 Config g_config;
@@ -171,3 +174,67 @@ int EnemyCraftListHook(int* params)
 
 	return 0;
 }
+
+int Radar2DItemsCountHook(int* params)
+{
+	static std::vector<unsigned char> s_V0x0068BEC8;
+	static std::vector<unsigned char> s_V0x0068BDA8;
+	static std::vector<unsigned char> s_V0x0068C300;
+	static std::vector<unsigned char> s_V0x0068C1E0;
+	static bool isInitialized = false;
+
+	if (!isInitialized)
+	{
+		isInitialized = true;
+
+		int itemsCount = g_config.Radar2DItemsCount;
+		s_V0x0068BEC8.reserve(6 * itemsCount);
+		s_V0x0068BDA8.reserve(6 * itemsCount);
+		s_V0x0068C300.reserve(6 * itemsCount);
+		s_V0x0068C1E0.reserve(6 * itemsCount);
+	}
+
+	bool s_V0x068C950 = *(unsigned char*)0x0068C950 != 0;
+
+	if (s_V0x068C950)
+	{
+		*(unsigned char**)0x0068C868 = s_V0x0068BEC8.data();
+		*(unsigned char**)0x0068C870 = s_V0x0068BDA8.data();
+		*(unsigned char**)0x0068C86C = s_V0x0068C300.data();
+		*(unsigned char**)0x0068C874 = s_V0x0068C1E0.data();
+	}
+	else
+	{
+		*(unsigned char**)0x0068C868 = s_V0x0068BDA8.data();
+		*(unsigned char**)0x0068C870 = s_V0x0068BEC8.data();
+		*(unsigned char**)0x0068C86C = s_V0x0068C1E0.data();
+		*(unsigned char**)0x0068C874 = s_V0x0068C300.data();
+	}
+
+	return 0;
+}
+
+int Radar2DItemsCount1Hook(int* params)
+{
+	short& s_V0x068C858 = *(short*)0x0068C858;
+
+	if (s_V0x068C858 == g_config.Radar2DItemsCount)
+	{
+		s_V0x068C858 = g_config.Radar2DItemsCount - 1;
+	}
+
+	return 0;
+}
+
+int Radar2DItemsCount2Hook(int* params)
+{
+	short& s_V0x068C85C = *(short*)0x0068C85C;
+
+	if (s_V0x068C85C == g_config.Radar2DItemsCount)
+	{
+		s_V0x068C85C = g_config.Radar2DItemsCount - 1;
+	}
+
+	return 0;
+}
+
