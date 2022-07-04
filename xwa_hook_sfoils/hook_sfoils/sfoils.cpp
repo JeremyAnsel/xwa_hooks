@@ -1198,7 +1198,9 @@ int SFoilsAIOutOfHyperspace1Hook(int* params)
 
 	if (settings.CloseSFoilsInHyperspace)
 	{
-		for (unsigned int i = 0; i < 50; i++)
+		int meshesCount = g_craftConfig.MeshesCount == 0 ? 50 : g_craftConfig.MeshesCount;
+
+		for (unsigned int i = 0; i < meshesCount; i++)
 		{
 			currentCraftMeshRotationAngles[i] = 0;
 		}
