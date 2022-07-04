@@ -18,6 +18,8 @@ namespace hook_32bpp_net
         private static IList<string> _getCustomFileLines_lines;
         private static string _getCustomFileLines_name;
         private static string _getCustomFileLines_mission;
+        private static string _getCustomFileLines_hangar;
+        private static byte _getCustomFileLines_hangarIff;
 
         private static SevenZip.Compression.LZMA.Decoder _decoder;
         private static byte[] _decoderProperties;
@@ -28,12 +30,16 @@ namespace hook_32bpp_net
             int currentGameState = Marshal.ReadInt32(new IntPtr(0x09F60E0 + 0x25FA9));
             int updateCallback = Marshal.ReadInt32(new IntPtr(0x09F60E0 + 0x25FB1 + currentGameState * 0x850 + 0x844));
             bool isTechLibraryGameStateUpdate = updateCallback == 0x00574D70;
+            string hangar = Marshal.PtrToStringAnsi(new IntPtr(0x00ABD680));
+            byte hangarIff = Marshal.ReadByte(new IntPtr(0x00ABD680) + 255);
 
             if (isTechLibraryGameStateUpdate)
             {
                 _getCustomFileLines_name = name;
                 _getCustomFileLines_mission = null;
                 _getCustomFileLines_lines = XwaHooksConfig.GetFileLines("FlightModels\\" + name + ".txt");
+                _getCustomFileLines_hangar = null;
+                _getCustomFileLines_hangarIff = 0;
 
                 if (_getCustomFileLines_lines.Count == 0)
                 {
@@ -42,10 +48,15 @@ namespace hook_32bpp_net
             }
             else
             {
-                if (_getCustomFileLines_name != name || _getCustomFileLines_mission != xwaMissionFileName)
+                if (_getCustomFileLines_name != name
+                    || _getCustomFileLines_mission != xwaMissionFileName
+                    || _getCustomFileLines_hangar != hangar
+                    || _getCustomFileLines_hangarIff != hangarIff)
                 {
                     _getCustomFileLines_name = name;
                     _getCustomFileLines_mission = xwaMissionFileName;
+                    _getCustomFileLines_hangar = hangar;
+                    _getCustomFileLines_hangarIff = hangarIff;
 
                     string mission = XwaHooksConfig.GetStringWithoutExtension(xwaMissionFileName);
                     _getCustomFileLines_lines = XwaHooksConfig.GetFileLines(mission + "_" + name + ".txt");
@@ -53,6 +64,36 @@ namespace hook_32bpp_net
                     if (_getCustomFileLines_lines.Count == 0)
                     {
                         _getCustomFileLines_lines = XwaHooksConfig.GetFileLines(mission + ".ini", name);
+                    }
+
+                    if (_getCustomFileLines_hangar != null && !_getCustomFileLines_hangar.EndsWith("\\"))
+                    {
+                        IList<string> hangarLines = new List<string>();
+
+                        if (hangarLines.Count == 0)
+                        {
+                            hangarLines = XwaHooksConfig.GetFileLines(_getCustomFileLines_hangar + name + _getCustomFileLines_hangarIff + ".txt");
+                        }
+
+                        if (hangarLines.Count == 0)
+                        {
+                            hangarLines = XwaHooksConfig.GetFileLines(_getCustomFileLines_hangar + ".ini", name + _getCustomFileLines_hangarIff);
+                        }
+
+                        if (hangarLines.Count == 0)
+                        {
+                            hangarLines = XwaHooksConfig.GetFileLines(_getCustomFileLines_hangar + name + ".txt");
+                        }
+
+                        if (hangarLines.Count == 0)
+                        {
+                            hangarLines = XwaHooksConfig.GetFileLines(_getCustomFileLines_hangar + ".ini", name);
+                        }
+
+                        foreach (string line in hangarLines)
+                        {
+                            _getCustomFileLines_lines.Add(line);
+                        }
                     }
 
                     if (_getCustomFileLines_lines.Count == 0)

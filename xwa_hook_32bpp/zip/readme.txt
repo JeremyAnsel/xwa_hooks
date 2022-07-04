@@ -82,7 +82,9 @@ See "Skins\XWing\Default\Tex00033.png" for an example for the vanilla X-Wing.
 To reduce the count of textures files, you can compress the directories of skins. If the directory is "FlightModels\Skins\[Model]\[Skin1]\", you can create "FlightModels\Skins\[Model]\[Skin1].zip" or "FlightModels\Skins\[Model]\[Skin1].7z". The textures are at the root of the arhive file.
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".
+Suppose that the hangar is "FlightModels\[Model]Hangar.opt".
 To define a skin for a craft, create a file named "[MissionDir]\[Mission]_Skins.txt" or create a section named "[Skins]" in "[MissionDir]\[Mission].ini".
+To define a skin for a craft in the hangar, create a file named "FlightModels\[Model]Skins.txt" or create a section named "[Skins]" in "FlightModels\[Model].ini".
 The format is
 CraftOptName = SkinNameA, SkinNameB
 CraftOptName_fgc_# = SkinName1, SkinName2, SkinName3

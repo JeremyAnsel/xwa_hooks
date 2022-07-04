@@ -119,11 +119,11 @@ std::vector<unsigned char> g_illumMapBuffer;
 class NetFunctions
 {
 public:
-	typedef int(_cdecl * readOptFunction)(const char*);
-	typedef int(_cdecl * getOptVersionFunction)();
-	typedef void(_cdecl * writeOptFunction)(void*);
+	typedef int(_cdecl* readOptFunction)(const char*);
+	typedef int(_cdecl* getOptVersionFunction)();
+	typedef void(_cdecl* writeOptFunction)(void*);
 
-	typedef int(_cdecl * readCompressedDatImageFunction)(void*, int, const void*, int);
+	typedef int(_cdecl* readCompressedDatImageFunction)(void*, int, const void*, int);
 
 	NetFunctions()
 	{
@@ -512,7 +512,7 @@ int ComputeGlobalLightsHook(int* params)
 int DatImage32Hook(int* params)
 {
 	const auto ConvertDatImage24To32 = (void(*)(const DatImageDescription*, int, int, int, XwaSpeciesTMInfo*, int))0x004CE4F0;
-	const auto XwaMemMalloc = (void*(*)(const char*, unsigned int))0x0050E070;
+	const auto XwaMemMalloc = (void* (*)(const char*, unsigned int))0x0050E070;
 
 	const DatImageDescription* A4 = (DatImageDescription*)params[0];
 	const int A8 = params[1];
