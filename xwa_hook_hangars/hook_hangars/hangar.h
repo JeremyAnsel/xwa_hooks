@@ -62,3 +62,4 @@ int HangarFoldOutsideHook(int* params);
 int HangarFoldInsideHook(int* params);
 int HangarAmbientSoundHook(int* params);
 int HangarLightHook(int* params);
+int HangarExitHook(int* params);

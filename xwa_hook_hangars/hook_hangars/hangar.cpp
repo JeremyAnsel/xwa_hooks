@@ -81,6 +81,34 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class CraftConfig
+{
+public:
+	CraftConfig()
+	{
+		auto lines = GetFileLines("hook_opt_limit.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_opt_limit");
+		}
+
+		this->MeshesCount = GetFileKeyValueInt(lines, "MeshesCount", 0);
+		this->Craft_Size = 0x3F9 + GetFileKeyValueInt(lines, "Craft_ExtraSize", 0);
+		this->Craft_Offset_22E = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_22E", 0);
+		this->Craft_Offset_260 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_260", 0);
+		this->Craft_Offset_292 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_292", 0);
+	}
+
+	int MeshesCount;
+	int Craft_Size;
+	int Craft_Offset_22E;
+	int Craft_Offset_260;
+	int Craft_Offset_292;
+};
+
+CraftConfig g_craftConfig;
+
 class SoundsConfig
 {
 public:
@@ -156,7 +184,9 @@ static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 struct ExeEnableEntry
 {
-	char unk00[8];
+	unsigned char m00; // flags
+	unsigned char m01; // flags
+	char unk02[6];
 	void* pData1;
 	void* pData2;
 	char unk10[8];
@@ -173,9 +203,11 @@ struct XwaCraft
 	char SFoilsState;
 	char unk028[355];
 	unsigned char m18B;
-	char unk18C[212];
+	char unk18C[162];
+	char XwaCraft_m22E[50];
 	unsigned char MeshRotationAngles[50];
-	char unk292[359];
+	char XwaCraft_m292[50];
+	char unk2C4[309];
 };
 
 static_assert(sizeof(XwaCraft) == 1017, "size of XwaCraft must be 1017");
@@ -650,6 +682,7 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 		if (!ship.empty())
 		{
 			ship = GetStringWithoutExtension(ship);
+
 			lines = GetFileLines(ship + name + ".txt");
 
 			if (!lines.size())
@@ -745,6 +778,12 @@ public:
 	{
 		this->UpdateIfChanged();
 		return this->ShuttleMarkings;
+	}
+
+	std::string GetShuttleObjectProfile()
+	{
+		this->UpdateIfChanged();
+		return this->ShuttleObjectProfile;
 	}
 
 	int GetShuttlePositionX()
@@ -849,6 +888,12 @@ public:
 		return this->Droid1Markings;
 	}
 
+	std::string GetDroid1ObjectProfile()
+	{
+		this->UpdateIfChanged();
+		return this->Droid1ObjectProfile;
+	}
+
 	bool GetLoadDroid2()
 	{
 		this->UpdateIfChanged();
@@ -883,6 +928,12 @@ public:
 	{
 		this->UpdateIfChanged();
 		return this->Droid2Markings;
+	}
+
+	std::string GetDroid2ObjectProfile()
+	{
+		this->UpdateIfChanged();
+		return this->Droid2ObjectProfile;
 	}
 
 	int GetHangarRoofCranePositionX()
@@ -991,6 +1042,13 @@ private:
 			this->LoadShuttle = GetFileKeyValueInt(lines, "LoadShuttle", 1) == 1;
 			this->ShuttleModelIndex = (unsigned short)GetFileKeyValueInt(lines, "ShuttleModelIndex");
 			this->ShuttleMarkings = GetFileKeyValueInt(lines, "ShuttleMarkings");
+			this->ShuttleObjectProfile = GetFileKeyValue(lines, "ShuttleObjectProfile");
+
+			if (this->ShuttleObjectProfile.empty())
+			{
+				this->ShuttleObjectProfile = "Default";
+			}
+
 			this->ShuttlePositionX = GetFileKeyValueInt(lines, "ShuttlePositionX", 0x467);
 			this->ShuttlePositionY = GetFileKeyValueInt(lines, "ShuttlePositionY", 0x3BF);
 			this->ShuttlePositionZ = GetFileKeyValueInt(lines, "ShuttlePositionZ", 0);
@@ -1008,12 +1066,26 @@ private:
 			this->Droid1Update = GetFileKeyValueInt(lines, "Droid1Update", 1) != 0;
 			this->Droid1ModelIndex = (unsigned short)GetFileKeyValueInt(lines, "Droid1ModelIndex", 311); // ModelIndex_311_1_33_HangarDroid
 			this->Droid1Markings = GetFileKeyValueInt(lines, "Droid1Markings", 0);
+			this->Droid1ObjectProfile = GetFileKeyValue(lines, "Droid1ObjectProfile");
+
+			if (this->Droid1ObjectProfile.empty())
+			{
+				this->Droid1ObjectProfile = "Default";
+			}
+
 			this->LoadDroid2 = GetFileKeyValueInt(lines, "LoadDroid2", 1) == 1;
 			this->Droid2PositionZ = GetFileKeyValueInt(lines, "Droid2PositionZ", this->DroidsPositionZ);
 			this->IsDroid2FloorInverted = GetFileKeyValueInt(lines, "IsDroid2FloorInverted", 0) != 0;
 			this->Droid2Update = GetFileKeyValueInt(lines, "Droid2Update", 1) != 0;
 			this->Droid2ModelIndex = (unsigned short)GetFileKeyValueInt(lines, "Droid2ModelIndex", 312); // ModelIndex_312_1_34_HangarDroid2
 			this->Droid2Markings = GetFileKeyValueInt(lines, "Droid2Markings", 0);
+			this->Droid2ObjectProfile = GetFileKeyValue(lines, "Droid2ObjectProfile");
+
+			if (this->Droid2ObjectProfile.empty())
+			{
+				this->Droid2ObjectProfile = "Default";
+			}
+
 			this->HangarRoofCranePositionX = GetFileKeyValueInt(lines, "HangarRoofCranePositionX", -1400);
 			this->HangarRoofCranePositionY = GetFileKeyValueInt(lines, "HangarRoofCranePositionY", 786);
 			this->HangarRoofCranePositionZ = GetFileKeyValueInt(lines, "HangarRoofCranePositionZ", -282);
@@ -1037,6 +1109,7 @@ private:
 	bool LoadShuttle = false;
 	unsigned short ShuttleModelIndex = 0;
 	int ShuttleMarkings = 0;
+	std::string ShuttleObjectProfile;
 	int ShuttlePositionX = 0;
 	int ShuttlePositionY = 0;
 	int ShuttlePositionZ = 0;
@@ -1053,6 +1126,7 @@ private:
 	bool IsDroid1FloorInverted = 0;
 	bool Droid1Update = false;
 	unsigned short Droid1ModelIndex = 0;
+	std::string Droid1ObjectProfile;
 	int Droid1Markings = 0;
 	bool LoadDroid2 = false;
 	int Droid2PositionZ = 0;
@@ -1060,6 +1134,7 @@ private:
 	bool Droid2Update = false;
 	unsigned short Droid2ModelIndex = 0;
 	int Droid2Markings = 0;
+	std::string Droid2ObjectProfile;
 	int HangarRoofCranePositionX = 0;
 	int HangarRoofCranePositionY = 0;
 	int HangarRoofCranePositionZ = 0;
@@ -1243,8 +1318,56 @@ private:
 
 ModelIndexHangar g_modelIndexHangar;
 
+void SetXwaTempString()
+{
+	char* s_XwaTempString = (char*)0x00ABD680;
+
+	if (*(int*)0x0068BBB8 != 0)
+	{
+		s_XwaTempString[0] = 0;
+		s_XwaTempString[254] = 0;
+		s_XwaTempString[255] = 0;
+		return;
+	}
+
+	s_XwaTempString[0] = 0;
+	s_XwaTempString[254] = 1;
+	s_XwaTempString[255] = 0;
+
+	const bool isProvingGround = *(unsigned char*)(0x08053E0 + 0x05) != 0;
+
+	if (isProvingGround)
+	{
+		std::string ship = g_config.ProvingGroundHangarModel;
+
+		if (!ship.empty())
+		{
+			ship = GetStringWithoutExtension(ship);
+			strcpy_s(s_XwaTempString, 254, ship.c_str());
+			return;
+		}
+	}
+	else
+	{
+		const std::string ship = GetCommandShipLstLine();
+		const unsigned char shipIff = GetCommandShipIff();
+
+		if (!ship.empty())
+		{
+			strcpy_s(s_XwaTempString, 254, ship.c_str());
+			s_XwaTempString[255] = shipIff;
+			return;
+		}
+	}
+
+	const std::string path = "FlightModels\\";
+	strcpy_s(s_XwaTempString, 254, path.c_str());
+}
+
 int HangarOptLoadHook(int* params)
 {
+	SetXwaTempString();
+
 	const char* argOpt = (char*)params[0];
 	const unsigned short argModelIndex = (unsigned short)params[0x60];
 
@@ -1948,6 +2071,83 @@ int HangarCameraPositionHook(int* params)
 	return 0;
 }
 
+std::string GetShipPath(int modelIndex)
+{
+	const std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	{
+		const auto objectLines = GetCustomFileLines("Objects");
+		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+		if (!objectValue.empty() && std::ifstream(objectValue))
+		{
+			return GetStringWithoutExtension(objectValue);
+		}
+	}
+
+	{
+		const auto objectLines = GetCustomFileLines("HangarObjects");
+		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+		if (!objectValue.empty() && std::ifstream(objectValue))
+		{
+			return GetStringWithoutExtension(objectValue);
+		}
+	}
+
+	return shipPath;
+}
+
+void ApplyObjectProfile(unsigned short modelIndex, std::string objectProfile, XwaCraft* pCraft)
+{
+	int meshesCount;
+	char* m292;
+	char* m22E;
+
+	if (g_craftConfig.MeshesCount == 0)
+	{
+		meshesCount = 49;
+		m292 = pCraft->XwaCraft_m292;
+		m22E = pCraft->XwaCraft_m22E;
+	}
+	else
+	{
+		meshesCount = g_craftConfig.MeshesCount - 1;
+		m292 = (char*)((int)pCraft + g_craftConfig.Craft_Offset_292);
+		m22E = (char*)((int)pCraft + g_craftConfig.Craft_Offset_22E);
+	}
+
+	std::string shipPath = GetShipPath(modelIndex);
+
+	auto lines = GetFileLines(shipPath + "ObjectProfiles.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", "ObjectProfiles");
+	}
+
+	const auto values = Tokennize(GetFileKeyValue(lines, objectProfile));
+
+	for (int index = 0; index < meshesCount; index++)
+	{
+		m292[index] = 0xFF;
+		m22E[index] = 0;
+	}
+
+	for (const std::string& value : values)
+	{
+		int index = std::stoi(value);
+
+		if (index < 0 || index >= meshesCount)
+		{
+			continue;
+		}
+
+		m292[index] = 0;
+		m22E[index] = 4;
+	}
+}
+
 int HangarLoadShuttleHook(int* params)
 {
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
@@ -1990,6 +2190,7 @@ int HangarLoadShuttleHook(int* params)
 		g_isHangarFloorInverted = isHangarFloorInverted;
 
 		xwaObjects[objectIndex].pMobileObject->Markings = shuttleMarkings;
+		ApplyObjectProfile(shuttleModelIndex, g_hangarObjects.GetShuttleObjectProfile(), xwaObjects[objectIndex].pMobileObject->pCraft);
 
 		xwaObjects[objectIndex].PositionZ += shuttlePositionZ;
 		xwaObjects[objectIndex].pMobileObject->PositionZ = xwaObjects[objectIndex].PositionZ;
@@ -2115,6 +2316,7 @@ int HangarLoadDroidsHook(int* params)
 			V0x09C6780[V0x068BC10].m08 = 0;
 			HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, g_hangarObjects.GetDroid1PositionZ());
 			xwaObjects[V0x09C6780[V0x068BC10].ObjectIndex].pMobileObject->Markings = g_hangarObjects.GetDroid1Markings();
+			ApplyObjectProfile(g_hangarObjects.GetDroid1ModelIndex(), g_hangarObjects.GetDroid1ObjectProfile(), xwaObjects[V0x09C6780[V0x068BC10].ObjectIndex].pMobileObject->pCraft);
 			V0x068BC10++;
 		}
 		else
@@ -2134,6 +2336,7 @@ int HangarLoadDroidsHook(int* params)
 			V0x09C6780[V0x068BC10].m08 = 0;
 			HangarLoadDroidsSetPositionZ(V0x09C6780[V0x068BC10].ObjectIndex, g_hangarObjects.GetDroid2PositionZ());
 			xwaObjects[V0x09C6780[V0x068BC10].ObjectIndex].pMobileObject->Markings = g_hangarObjects.GetDroid2Markings();
+			ApplyObjectProfile(g_hangarObjects.GetDroid2ModelIndex(), g_hangarObjects.GetDroid2ObjectProfile(), xwaObjects[V0x09C6780[V0x068BC10].ObjectIndex].pMobileObject->pCraft);
 			V0x068BC10++;
 		}
 		else
@@ -2344,8 +2547,9 @@ int HangarMapHook(int* params)
 			int positionZ;
 			short orientationXY;
 			short orientationZ;
+			std::string objectProfile;
 
-			if (value.size() == 7)
+			if (value.size() == 8)
 			{
 				modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
 				markings = std::stoi(value[1], 0, 0);
@@ -2354,8 +2558,20 @@ int HangarMapHook(int* params)
 				positionZ = std::stoi(value[4], 0, 0);
 				orientationXY = static_cast<short>(std::stoi(value[5], 0, 0));
 				orientationZ = static_cast<short>(std::stoi(value[6], 0, 0));
+				objectProfile = value[7];
 			}
-			else
+			else if (value.size() == 7)
+			{
+				modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
+				markings = std::stoi(value[1], 0, 0);
+				positionX = std::stoi(value[2], 0, 0);
+				positionY = std::stoi(value[3], 0, 0);
+				positionZ = std::stoi(value[4], 0, 0);
+				orientationXY = static_cast<short>(std::stoi(value[5], 0, 0));
+				orientationZ = static_cast<short>(std::stoi(value[6], 0, 0));
+				objectProfile = "Default";
+			}
+			else if (value.size() == 6)
 			{
 				modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
 				markings = 0;
@@ -2364,11 +2580,17 @@ int HangarMapHook(int* params)
 				positionZ = std::stoi(value[3], 0, 0);
 				orientationXY = static_cast<short>(std::stoi(value[4], 0, 0));
 				orientationZ = static_cast<short>(std::stoi(value[5], 0, 0));
+				objectProfile = "Default";
+			}
+			else
+			{
+				continue;
 			}
 
 			short objectIndex = AddObject(modelIndex, positionX, positionY, positionZ, orientationXY, orientationZ);
 
 			xwaObjects[objectIndex].pMobileObject->Markings = markings;
+			ApplyObjectProfile(modelIndex, objectProfile, xwaObjects[objectIndex].pMobileObject->pCraft);
 
 			switch (i)
 			{
@@ -2454,8 +2676,9 @@ int FamHangarMapHook(int* params)
 			int positionZ;
 			short orientationXY;
 			short orientationZ;
+			std::string objectProfile;
 
-			if (value.size() == 7)
+			if (value.size() == 8)
 			{
 				modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
 				markings = std::stoi(value[1], 0, 0);
@@ -2464,8 +2687,20 @@ int FamHangarMapHook(int* params)
 				positionZ = std::stoi(value[4], 0, 0);
 				orientationXY = static_cast<short>(std::stoi(value[5], 0, 0));
 				orientationZ = static_cast<short>(std::stoi(value[6], 0, 0));
+				objectProfile = value[7];
 			}
-			else
+			else if (value.size() == 7)
+			{
+				modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
+				markings = std::stoi(value[1], 0, 0);
+				positionX = std::stoi(value[2], 0, 0);
+				positionY = std::stoi(value[3], 0, 0);
+				positionZ = std::stoi(value[4], 0, 0);
+				orientationXY = static_cast<short>(std::stoi(value[5], 0, 0));
+				orientationZ = static_cast<short>(std::stoi(value[6], 0, 0));
+				objectProfile = "Default";
+			}
+			else if (value.size() == 6)
 			{
 				modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
 				markings = 0;
@@ -2474,11 +2709,17 @@ int FamHangarMapHook(int* params)
 				positionZ = std::stoi(value[3], 0, 0);
 				orientationXY = static_cast<short>(std::stoi(value[4], 0, 0));
 				orientationZ = static_cast<short>(std::stoi(value[5], 0, 0));
+				objectProfile = "Default";
+			}
+			else
+			{
+				continue;
 			}
 
 			short objectIndex = AddObject(modelIndex, positionX, positionY, positionZ, orientationXY, orientationZ);
 
 			xwaObjects[objectIndex].pMobileObject->Markings = markings;
+			ApplyObjectProfile(modelIndex, objectProfile, xwaObjects[objectIndex].pMobileObject->pCraft);
 
 			switch (i)
 			{
@@ -3606,6 +3847,79 @@ int HangarLightHook(int* params)
 	float colorB = (colorRgb & 0xFFU) / 255.0f;
 
 	XwaAddGlobalLight(positionX, positionY, positionZ, colorI, colorR, colorG, colorB);
+
+	return 0;
+}
+
+std::vector<unsigned short> GetHangarObjects()
+{
+	std::vector<unsigned short> objects;
+
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarObjectIndex = *(int*)0x068BCC4;
+	const unsigned char hangarTieFlightGroupIndex = xwaObjects[hangarObjectIndex].TieFlightGroupIndex;
+
+	for (int eax = 0; eax < *(int*)0x07FFD80; eax++)
+	{
+		XwaObject* object = &xwaObjects[eax];
+
+		if (object->ModelIndex == 0)
+			continue;
+
+		if (object->TieFlightGroupIndex != hangarTieFlightGroupIndex)
+			continue;
+
+		// Hangar or FamilyBase
+		if (object->ModelIndex == 0x134 || object->ModelIndex == 0xB3)
+			continue;
+
+		objects.push_back(object->ModelIndex);
+	}
+
+	return objects;
+}
+
+int HangarExitHook(int* params)
+{
+	*(int*)0x0068BBB8 = 1;
+
+	const auto HangarOptLoad = (int(*)(unsigned short))0x00456FA0;
+	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
+
+	unsigned short* OptModelFileMemHandles = (unsigned short*)0x007CA6E0;
+	const int OptModelFileMemHandlesCount = 557;
+	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+
+	bool modelIndexes[OptModelFileMemHandlesCount];
+	memset(modelIndexes, 0, sizeof(modelIndexes));
+
+	std::vector<unsigned short> hangarObjects = GetHangarObjects();
+
+	for (unsigned short modelIndex : hangarObjects)
+	{
+		modelIndexes[modelIndex] = true;
+	}
+
+	for (unsigned short modelIndex = 0; modelIndex < OptModelFileMemHandlesCount; modelIndex++)
+	{
+		if (!modelIndexes[modelIndex] || OptModelFileMemHandles[modelIndex] == 0)
+		{
+			continue;
+		}
+
+		OptUnload(OptModelFileMemHandles[modelIndex]);
+
+		OptModelFileMemHandles[modelIndex] = 0;
+		ExeEnableTable[modelIndex].pData1 = nullptr;
+		ExeEnableTable[modelIndex].pData2 = nullptr;
+
+		if ((ExeEnableTable[modelIndex].m01 & 0x18) == 0)
+		{
+			continue;
+		}
+
+		HangarOptLoad(modelIndex);
+	}
 
 	return 0;
 }

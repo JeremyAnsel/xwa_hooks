@@ -197,6 +197,12 @@ At offset 05B93F, replace 81C297000000 with E8DCC5140090.
 At offset 057913, replace E8F809FEFF with E808061500.
 At offset 057AC8, replace E84308FEFF with E853041500.
 
+# To call the hook that defines hangar exit
+At offset 05AEBB, replace C705B8BB680001000000 with E860D014009090909090.
+At offset 05B8C9, replace C705B8BB680001000000 with E852C614009090909090.
+At offset 05BBEE, replace 8935B8BB6800 with E82DC3140090.
+At offset 05C55F, replace C705B8BB680001000000 with E8BCB914009090909090.
+
 
 *** Usage ***
 
@@ -254,6 +260,7 @@ The possible involved files are:
 - "[MissionDir]\[Mission].ini"
 - "[MissionDir]\[Mission]_Hangar.opt"
 - "[MissionDir]\[Mission]_HangarObjects.txt"
+- "[MissionDir]\[Mission]_Skins.txt"
 - "[MissionDir]\[Mission]_HangarCamera.txt"
 - "[MissionDir]\[Mission]_FamHangarCamera.txt"
 - "[MissionDir]\[Mission]_HangarMap.txt"
@@ -261,6 +268,7 @@ The possible involved files are:
 - "FlightModels\[Model].ini"
 - "FlightModels\[Model]Hangar.opt"
 - "FlightModels\[Model]HangarObjects.txt"
+- "FlightModels\[Model]Skins.txt"
 - "FlightModels\[Model]HangarCamera.txt"
 - "FlightModels\[Model]FamHangarCamera.txt"
 - "FlightModels\[Model]HangarMap.txt"
@@ -268,6 +276,7 @@ The possible involved files are:
 - "FlightModels\default.ini"
 - "FlightModels\Hangar.opt"
 - "FlightModels\HangarObjects.txt"
+- "FlightModels\Skins.txt"
 - "FlightModels\HangarCamera.txt"
 - "FlightModels\FamHangarCamera.txt"
 - "FlightModels\HangarMap.txt"
@@ -299,6 +308,7 @@ To remove an object, use an empty invisible opt.
 To not load the shuttle, set "LoadShuttle = 0".
 To set the shuttle model index, set "ShuttleModelIndex = value". value is an integer. The default value is 50 (Shuttle).
 To set the shuttle markings, set "ShuttleMarkings = value". value is an integer. The default value is 0.
+To set the shuttle object profile, set "ShuttleObjectProfile = value". The default value is Default.
 To set the shuttle x position, set "ShuttlePositionX = value". value is an integer. The default value is 1127.
 To set the shuttle y position, set "ShuttlePositionY = value". value is an integer. The default value is 959.
 To set the shuttle z position, set "ShuttlePositionZ = value". value is an integer. The default value is 0.
@@ -316,12 +326,14 @@ To invert the hangar floor for the first droid, set "IsDroid1FloorInverted = 1".
 To not update the first droid, set "Droid1Update = 0".
 To set the first droid model index, set "Droid1ModelIndex = value". value is an integer. The default value is 311 (HangarDroid).
 To set the first droid markings, set "Droid1Markings = value". value is an integer. The default value is 0.
+To set the first droid object profile, set "Droid1ObjectProfile = value". The default value is Default.
 To not load the second droid, set "LoadDroid2 = 0".
 To set the second droid z position, set "Droid2PositionZ = value". value is an integer. The default value is the DroidsPositionZ value.
 To invert the hangar floor for the second droid, set "IsDroid2FloorInverted = 1". When set to 0, the floor is below the droids. When set to 1, the floor is above the droids.
 To not update the second droid, set "Droid2Update = 0".
 To set the second droid model index, set "Droid2ModelIndex = value". value is an integer. The default value is 312 (HangarDroid2).
 To set the second droid markings, set "Droid2Markings = value". value is an integer. The default value is 0.
+To set the second droid object profile, set "Droid2ObjectProfile = value". The default value is Default.
 To set the Hangar Roof Crane position, set "HangarRoofCranePositionX = value X", "HangarRoofCranePositionY = value Y" and "HangarRoofCranePositionZ = value Z". The values are integers. The default value for HangarRoofCranePositionX is -1400. The default value for HangarRoofCranePositionY is 786. The default value for HangarRoofCranePositionZ is -282.
 To set the Hangar Roof Crane axis, set "HangarRoofCraneAxis = value". 0 means the X axis. 1 means the Y axis. 2 means the Z axis. The default value is 0.
 To define the range of Hangar Roof Crane animation, set "HangarRoofCraneLowOffset = value" and "HangarRoofCraneHighOffset = value". The values are relative to the Hangar Roof Crane initial position.
@@ -336,6 +348,20 @@ To invert the hangar floor for the player craft, set "IsPlayerFloorInverted = 1"
 To define the light color intensity of the hangar, set "LightColorIntensity = value". value is an integer. The default value is 192.
 To define the light color of the hangar, set "LightColorRgb = ######". The default value is FFFFFF.
 See "HangarObjects.txt".
+
+To define a skin for a craft in the hangar, create a file named "FlightModels\[Model]Skins.txt" or create a section named "[Skins]" in "FlightModels\[Model].ini".
+The dll searches a "Skins.txt" file in this order (from first to last):
+- "[MissionDir]\[Mission]_Skins.txt"
+- "[MissionDir]\[Mission].ini", section "[Skins]"
+- "FlightModels\[Model]Skins.txt"
+- "FlightModels\[Model].ini", section "[Skins]"
+- "FlightModels\Skins.txt"
+- "FlightModels\default.ini", section "[Skins]"
+The format is
+CraftOptName = SkinNameA, SkinNameB
+CraftOptName_fgc_# = SkinName1, SkinName2, SkinName3
+# in CraftOptName_fgc_# is an integer for the opt color marking index, starting at 0.
+The default SkinName is "Default".
 
 Apply to hangar:
 To set the position of the camera, create a file named "FlightModels\[Model]HangarCamera.txt" or "[MissionDir]\[Mission]_HangarCamera.txt".
@@ -399,8 +425,10 @@ If a "HangarMap.txt" file doesn't exist, default values are used.
 The file must contain at least 4 object line.
 The format is : model index, position X, position Y, position Z, heading XY, heading Z.
 or : model index, markings, position X, position Y, position Z, heading XY, heading Z.
+or : model index, markings, position X, position Y, position Z, heading XY, heading Z, object profile.
 The numbers can be  written in decimal or hexadecimal (0x) notation.
 When position Z is set to 0x7FFFFFFF, this means that the object stands at the ground.
+The default value for object profile is Default.
 See "HangarMap.txt".
 
 Apply to family base:
@@ -417,8 +445,10 @@ If a "FamHangarMap.txt" file doesn't exist, default values are used.
 The file must contain at least 4 object line.
 The format is : model index, position X, position Y, position Z, heading XY, heading Z.
 or : model index, markings, position X, position Y, position Z, heading XY, heading Z.
+or : model index, markings, position X, position Y, position Z, heading XY, heading Z, object profile.
 The numbers can be  written in decimal or hexadecimal (0x) notation.
 When position Z is set to 0x7FFFFFFF, this means that the object stands at the ground.
+The default value for object profile is Default.
 See "FamHangarMap.txt".
 
 To load a file based on the IFF of the arrival craft, append the IFF index (starting at 0) to the file name.
