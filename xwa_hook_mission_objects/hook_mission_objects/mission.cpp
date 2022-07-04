@@ -643,6 +643,11 @@ std::vector<std::vector<CraftData>> g_craftsData;
 
 int MissionObjectsHook(int* params)
 {
+	auto& s_XwaTempString = *(char(*)[256])0x00ABD680;
+	s_XwaTempString[0] = 0;
+	s_XwaTempString[254] = 0;
+	s_XwaTempString[255] = 0;
+
 	const char* argOpt = (char*)params[0];
 
 	const auto OptLoad = (int(*)(const char*))0x004CC940;
@@ -660,6 +665,11 @@ int MissionObjectsHook(int* params)
 
 int MissionObjectsStatsHook(int* params)
 {
+	auto& s_XwaTempString = *(char(*)[256])0x00ABD680;
+	s_XwaTempString[0] = 0;
+	s_XwaTempString[254] = 0;
+	s_XwaTempString[255] = 0;
+
 	static bool s_init = false;
 	static short s_CockpitPositionX[265]{};
 	static short s_CockpitPositionY[265]{};
@@ -765,6 +775,11 @@ int MissionObjectsStatsHook(int* params)
 
 void TurretOptReload(int gunnerModelIndex, int playerModelIndex, int turretIndex)
 {
+	auto& s_XwaTempString = *(char(*)[256])0x00ABD680;
+	s_XwaTempString[0] = 0;
+	s_XwaTempString[254] = 0;
+	s_XwaTempString[255] = 0;
+
 	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
 	const auto OptLoad = (short(*)(const char*))0x004CC940;
 	const auto Lock_Handle = (void*(*)(short))0x0050E2F0;
