@@ -1353,7 +1353,7 @@ int MissionIdRedAlertFilterHook(int* params)
 
 	bool isHostCraft;
 
-	if (currentObject->ModelIndex == 0)
+	if (currentObject->ModelIndex == 0 || currentObject->ModelIndex == 0xFFFF)
 	{
 		isHostCraft = false;
 	}
