@@ -111,6 +111,24 @@ namespace hook_32bpp_net
             return _getCustomFileLines_lines;
         }
 
+        private static int GetFlightgroupsDefaultCount(string optName)
+        {
+            int count = 0;
+
+            for (int index = 255; index >= 0; index--)
+            {
+                string skinName = "Default_" + index.ToString(CultureInfo.InvariantCulture);
+
+                if (GetSkinDirectoryLocatorPath(optName, skinName) != null)
+                {
+                    count = index + 1;
+                    break;
+                }
+            }
+
+            return count;
+        }
+
         private static int GetFlightgroupsCount(IList<string> objectLines, string optName)
         {
             int count = 0;
@@ -192,7 +210,7 @@ namespace hook_32bpp_net
             string optName = Path.GetFileNameWithoutExtension(optFilename);
             IList<string> objectLines = GetCustomFileLines("Skins");
             IList<string> baseSkins = XwaHooksConfig.Tokennize(XwaHooksConfig.GetFileKeyValue(objectLines, optName));
-            bool hasDefaultSkin = GetSkinDirectoryLocatorPath(optName, "Default") != null;
+            bool hasDefaultSkin = GetSkinDirectoryLocatorPath(optName, "Default") != null || GetFlightgroupsDefaultCount(optName) != 0;
             int fgCount = GetFlightgroupsCount(objectLines, optName);
             bool hasSkins = hasDefaultSkin || baseSkins.Count != 0 || fgCount != 0;
 
@@ -200,6 +218,7 @@ namespace hook_32bpp_net
             {
                 var opt = OptFile.FromFile(optFilename);
                 fgCount = Math.Max(fgCount, opt.MaxTextureVersion);
+                fgCount = Math.Max(fgCount, GetFlightgroupsDefaultCount(optName));
                 UpdateOptFile(optName, opt, objectLines, baseSkins, fgCount, hasDefaultSkin);
                 //opt.Save("temp.opt", false);
 
@@ -262,7 +281,16 @@ namespace hook_32bpp_net
 
                 if (skins.Count == 0)
                 {
-                    skins.Add("Default");
+                    string skinName = "Default_" + i.ToString(CultureInfo.InvariantCulture);
+
+                    if (GetSkinDirectoryLocatorPath(optName, skinName) != null)
+                    {
+                        skins.Add(skinName);
+                    }
+                    else
+                    {
+                        skins.Add("Default");
+                    }
                 }
 
                 fgSkins.Add(skins);

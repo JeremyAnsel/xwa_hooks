@@ -89,7 +89,7 @@ The format is
 CraftOptName = SkinNameA, SkinNameB
 CraftOptName_fgc_# = SkinName1, SkinName2, SkinName3
 # in CraftOptName_fgc_# is an integer for the opt color marking index, starting at 0.
-The default SkinName is "Default".
+The default SkinName is "Default" or "Default_#" where # is the markings index.
 See "Skins.txt"
 
 
