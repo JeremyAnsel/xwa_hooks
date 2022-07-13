@@ -30,7 +30,7 @@ This hook permits to modify the concourse items.
 
 This hook fixes countermeasures count when reloading.
 
-## WIP xwa_hook_crafts_count
+## xwa_hook_crafts_count
 
 This hook increases the crafts count.
 

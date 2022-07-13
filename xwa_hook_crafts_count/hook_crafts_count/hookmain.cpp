@@ -5,8 +5,6 @@
 
 #include "config.h"
 
-#include <Windows.h>
-
 class MainConfig
 {
 public:
@@ -19,9 +17,7 @@ public:
 			lines = GetFileLines("hooks.ini", "hook_crafts_count");
 		}
 
-		this->IsHookEnabled = GetFileKeyValueInt(lines, "IsHookEnabled", 1) != 0;
-
-		OutputDebugString(("Hook_Crafts_Count IsHookEnabled=" + std::to_string(this->IsHookEnabled ? 1 : 0)).c_str());
+		this->IsHookEnabled = GetFileKeyValueInt(lines, "IsHookEnabled", 0) != 0;
 	}
 
 	bool IsHookEnabled;

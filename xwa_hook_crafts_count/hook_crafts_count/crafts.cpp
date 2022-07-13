@@ -2,8 +2,6 @@
 #include "crafts.h"
 #include "config.h"
 
-#include <Windows.h>
-
 enum ParamsEnum
 {
 	Params_ReturnAddress = -1,
@@ -32,11 +30,6 @@ public:
 		this->ProjectilesCount = GetFileKeyValueInt(lines, "ProjectilesCount", 1024);
 		this->ExplosionsCount = GetFileKeyValueInt(lines, "ExplosionsCount", 256);
 		this->Radar2DItemsCount = GetFileKeyValueInt(lines, "Radar2DItemsCount", 48);
-
-		OutputDebugString(("Hook_Crafts_Count CraftsCount=" + std::to_string(this->CraftsCount)).c_str());
-		OutputDebugString(("Hook_Crafts_Count ProjectilesCount=" + std::to_string(this->ProjectilesCount)).c_str());
-		OutputDebugString(("Hook_Crafts_Count ExplosionsCount=" + std::to_string(this->ExplosionsCount)).c_str());
-		OutputDebugString(("Hook_Crafts_Count Radar2DItemsCount=" + std::to_string(this->Radar2DItemsCount)).c_str());
 	}
 
 	int CraftsCount;
