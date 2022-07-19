@@ -126,6 +126,7 @@ At offset 03B5DE, replace 8DB8E8FEFFFF83FF190F870801000033D28A972CC34300FF2495FC
 At offset 00326A, replace E821810300 with E8B14C1A00.
 At offset 003353, replace 7528 with 9090.
 At offset 003375, replace E816800300 with E8A64B1A00.
+At offset 002FC5, replace E8C6830300 with E8564F1A00.
 
 
 *** Usage ***
@@ -342,6 +343,10 @@ For Shuttle Take Off sounds, sounds defined in "Wave\Sfx_ShuttleTakeOff.lst" are
 
 For weapon sounds, when the behavior is empty, sounds defined in "Wave\Sfx_Weapon.lst" are used if the lst file exists.
 For each craft, there are 10 items. The last item is for the open weapon.
+
+
+When a region in included in the "Region" setting of the "[Interdiction]" section in the mission ini file, the sound "HyperAbort.wav" will be played instead of "HyperEnd.wav" on hyper out the region.
+See "Interdiction.txt".
 
 
 *** Credits ***

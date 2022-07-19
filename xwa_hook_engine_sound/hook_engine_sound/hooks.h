@@ -25,6 +25,7 @@ static const HookFunction g_hookFunctions[] =
 
 	{ 0x403E6F, HyperStartSoundHook },
 	{ 0x403F7A, HyperZoomSoundHook },
+	{ 0x403BCA, HyperEndSoundHook },
 };
 
 static const HookPatchItem g_replaceMissionSoundsPatch[] =
@@ -64,6 +65,7 @@ static const HookPatchItem g_hyperSoundsPatch[] =
 	{ 0x00326A, "E821810300", "E8B14C1A00" },
 	{ 0x003353, "7528", "9090" },
 	{ 0x003375, "E816800300", "E8A64B1A00" },
+	{ 0x002FC5, "E8C6830300", "E8564F1A00" },
 };
 
 static const HookPatch g_patches[] =

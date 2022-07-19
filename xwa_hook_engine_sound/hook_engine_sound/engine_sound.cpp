@@ -151,12 +151,50 @@ struct XwaPlayer
 	int ObjectIndex;
 	char Unk0004[6];
 	short Iff;
-	char Unk000C[3011];
+	char Unk000C[71];
+	short m053;
+	char Unk0055[2938];
 };
 
 static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 #pragma pack(pop)
+
+std::vector<std::string> GetCustomFileLines(const std::string& name)
+{
+	static std::vector<std::string> _lines;
+	static std::string _name;
+	static std::string _mission;
+
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	if (_name != name || _mission != xwaMissionFileName)
+	{
+		_name = name;
+		_mission = xwaMissionFileName;
+
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		_lines = GetFileLines(mission + "_" + name + ".txt");
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines(mission + ".ini", name);
+		}
+
+		if (!_lines.size())
+		{
+			const std::string path = "FlightModels\\";
+			_lines = GetFileLines(path + name + ".txt");
+		}
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines("FlightModels\\default.ini", name);
+		}
+	}
+
+	return _lines;
+}
 
 int GetEngineSoundTypeInterior(int modelIndex)
 {
@@ -1567,6 +1605,51 @@ int HyperZoomSoundHook(int* params)
 			playSound(0x74, 0xFFFF, playerIndex);
 			break;
 		}
+	}
+
+	return 0;
+}
+
+bool HasRegionInterdictor(int region)
+{
+	std::vector<std::string> lines = GetCustomFileLines("Interdiction");
+
+	const auto values = Tokennize(GetFileKeyValue(lines, "Region"));
+
+	for (const std::string& value : values)
+	{
+		int index = std::stoi(value);
+
+		if (index == region)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+int HyperEndSoundHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+	const int playerIndex = params[2];
+	const auto playSound = (int(*)(int, int, int))0x0043BF90;
+
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const int modelIndex = XwaObjects[XwaPlayers[playerIndex].ObjectIndex].ModelIndex;
+	const int region = XwaPlayers[playerIndex].m053;
+
+	if (HasRegionInterdictor(region))
+	{
+		// HyperAbort.wav
+		playSound(0x77, 0xFFFF, playerIndex);
+	}
+	else
+	{
+		// HyperEnd.wav
+		playSound(0x75, 0xFFFF, playerIndex);
 	}
 
 	return 0;
