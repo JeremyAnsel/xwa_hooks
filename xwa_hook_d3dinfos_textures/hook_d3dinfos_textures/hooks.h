@@ -7,6 +7,7 @@ static const HookFunction g_hookFunctions[] =
 {
 	{ 0x441755, InitD3DInfosHook },
 	{ 0x443921, TestTextureIlluminationHook },
+	{ 0x482970, RenderOptNodeHook },
 };
 
 static const HookPatchItem g_removeD3DInfosCountLimitPatch[] =
@@ -17,6 +18,7 @@ static const HookPatchItem g_removeD3DInfosCountLimitPatch[] =
 static const HookPatchItem g_testTextureIlluminationPatch[] =
 {
 	{ 0x042D1C, "0F8478020000", "E8FF51160090" },
+	{ 0x081D6B, "8B8EA8000000", "E8B061120090" },
 };
 
 static const HookPatch g_patches[] =

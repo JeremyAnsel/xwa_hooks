@@ -2,11 +2,25 @@
 #include "d3dinfos.h"
 #include "config.h"
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 #pragma pack(push, 1)
 
 struct XwaD3DInfo
 {
-	char m00[0x53];
+	char Unk0000[35];
+	char ColorMap[24];
+	char LightMap[24];
 	XwaD3DInfo* pNext;
 	XwaD3DInfo* pPrevious;
 };
@@ -42,7 +56,10 @@ static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 struct SceneCompData
 {
 	XwaObject* pObject;
-	char unk04[280];
+	char unk04[180];
+	XwaD3DInfo* D3DInfo;
+	char unkBC[96];
+
 };
 
 static_assert(sizeof(SceneCompData) == 284, "size of SceneCompData must be 284");
@@ -136,6 +153,36 @@ int TestTextureIlluminationHook(int* params)
 	{
 		params[-1] = 0x443B9A;
 	}
+
+	return 0;
+}
+
+int RenderOptNodeHook(int* params)
+{
+	static XwaD3DInfo s_d3dInfos;
+
+	SceneCompData* AC = (SceneCompData*)params[Params_ESI];
+
+	bool jump = false;
+
+	if (AC->pObject != nullptr && AC->pObject->pMobileObject != nullptr && AC->pObject->pMobileObject->pCraft != nullptr)
+	{
+		const XwaCraft* craft = AC->pObject->pMobileObject->pCraft;
+
+		if (craft->m185 == 0)
+		{
+			jump = true;
+		}
+	}
+
+	if (AC->D3DInfo && jump)
+	{
+		s_d3dInfos = *AC->D3DInfo;
+		memset(s_d3dInfos.LightMap, 0, sizeof(s_d3dInfos.LightMap));
+		AC->D3DInfo = &s_d3dInfos;
+	}
+
+	params[Params_ECX] = *(int*)(params[Params_ESI] + 0xA8);
 
 	return 0;
 }
