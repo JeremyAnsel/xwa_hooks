@@ -38,7 +38,7 @@ The second modification calls a hook and preserves the return value.
 
 *** Usage ***
 
-The hooks are downloadable from OneDrive (https://onedrive.live.com/redir?resid=A8E80620371994FB%21116) or from GitHub (https://github.com/JeremyAnsel/xwa_hooks).
+The hooks are downloadable from GitHub (https://github.com/JeremyAnsel/xwa_hooks) or via the XwaHooksSetup tool (https://github.com/JeremyAnsel/XwaHooksSetup/tree/master/XwaHooksSetup/zip).
 
 Each hook is implemented in a separate dll. The name of the dll must begin with "hook_" or "Hook_".
 
