@@ -105,16 +105,33 @@ static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 
 #pragma pack(pop)
 
-int GetWeaponDechargeRate(int modelIndex)
+std::vector<std::string> GetShipLines(int modelIndex)
 {
 	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
 
-	auto lines = GetFileLines(ship + "WeaponRate.txt");
+	auto lines = GetFileLines("FlightModels\\WeaponRate.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "WeaponRate");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + "WeaponRate.txt");
+	}
 
 	if (!lines.size())
 	{
 		lines = GetFileLines(ship + ".ini", "WeaponRate");
 	}
+
+	return lines;
+}
+
+int GetWeaponDechargeRate(int modelIndex)
+{
+	auto lines = GetShipLines(modelIndex);
 
 	int rate = GetFileKeyValueInt(lines, "DechargeRate", -1);
 
@@ -149,14 +166,7 @@ int GetWeaponDechargeRate(int modelIndex)
 
 int GetWeaponRechargeRate(int modelIndex)
 {
-	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
-
-	auto lines = GetFileLines(ship + "WeaponRate.txt");
-
-	if (!lines.size())
-	{
-		lines = GetFileLines(ship + ".ini", "WeaponRate");
-	}
+	auto lines = GetShipLines(modelIndex);
 
 	int rate = GetFileKeyValueInt(lines, "RechargeRate", -1);
 
@@ -180,14 +190,7 @@ int GetWeaponRechargeRate(int modelIndex)
 
 int GetWeaponCooldownTime(int modelIndex)
 {
-	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
-
-	auto lines = GetFileLines(ship + "WeaponRate.txt");
-
-	if (!lines.size())
-	{
-		lines = GetFileLines(ship + ".ini", "WeaponRate");
-	}
+	auto lines = GetShipLines(modelIndex);
 
 	int rate = GetFileKeyValueInt(lines, "CooldownTimeFactor", 0x2F);
 

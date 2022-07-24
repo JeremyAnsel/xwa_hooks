@@ -30,6 +30,8 @@ At offset 090C66, replace A1FC0D910083FBFF with E8B5721100EB2990.
 Suppose that the craft is "FlightModels\[Model].opt".
 
 To define the decharge and recharge rates, create a file named "FlightModels\[Model]WeaponRate.txt" or create a section named "[WeaponRate]" in "FlightModels\[Model].ini".
+You can override the settings in "FlightModels\WeaponRate.txt" or in the "[WeaponRate]" section in "FlightModels\default.ini".
+
 The format is:
 DechargeRate = decharge value
 RechargeRate = recharge value
