@@ -4,6 +4,25 @@
 #include <fstream>
 #include <map>
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
+std::string GetFileNameWithoutExtension(const std::string& str)
+{
+	auto a = str.find_last_of('\\');
+
+	return a == -1 ? str : str.substr(a + 1, -1);
+}
+
 class FlightModelsList
 {
 public:
@@ -231,7 +250,13 @@ static_assert(sizeof(XwaCraft) == 1017, "size of XwaCraft must be 1017");
 
 struct XwaMobileObject
 {
-	char Unk0000[221];
+	char Unk0000[147];
+	short ObjectIndex;
+	unsigned short ModelIndex;
+	unsigned char Iff;
+	char Unk0098[1];
+	unsigned char Markings;
+	char Unk009A[67];
 	XwaCraft* pCraft;
 	char Unk00E1[4];
 };
@@ -241,7 +266,7 @@ static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 2
 struct XwaObject
 {
 	char Unk0000[2];
-	short ModelIndex;
+	unsigned short ModelIndex;
 	char Unk0004[1];
 	unsigned char TieFlightGroupIndex;
 	char Unk0006[25];
@@ -782,11 +807,11 @@ void TurretOptReload(int gunnerModelIndex, int playerModelIndex, int turretIndex
 
 	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
 	const auto OptLoad = (short(*)(const char*))0x004CC940;
-	const auto Lock_Handle = (void*(*)(short))0x0050E2F0;
+	const auto Lock_Handle = (void* (*)(short))0x0050E2F0;
 	const auto L004328B0 = (void(*)(int, int))0x004328B0;
 	const auto OptGetNumOfMeshes = (int(*)(int))0x00485190;
 	const auto OptGetMeshType = (int(*)(int, int))0x00485A70;
-	const auto OptGetMeshDescriptor = (void*(*)(int, int))0x004859B0;
+	const auto OptGetMeshDescriptor = (void* (*)(int, int))0x004859B0;
 
 	int& s_V0x077333C = *(int*)0x0077333C;
 	unsigned short* OptModelFileMemHandles = (unsigned short*)0x007CA6E0;
@@ -1761,5 +1786,43 @@ int BriefingObjectProfileHook(int* params)
 
 	ApplyProfile(modelIndex, flightgroupIndex, craft);
 
+	return 0;
+}
+
+int RenderOptObjectProfileHook(int* params)
+{
+	const XwaObject* currentObject = (XwaObject*)params[Params_EBP];
+	const XwaCraft* currentCraft = currentObject->pMobileObject->pCraft;
+
+	if (currentCraft == nullptr)
+	{
+		unsigned short modelIndex = currentObject->ModelIndex;
+		unsigned short originModelIndex = currentObject->pMobileObject->ModelIndex;
+		int meshIndex = params[Params_EDI] - 1;
+
+		const auto objectLines = GetCustomFileLines("Objects");
+		const std::string shipName = GetFileNameWithoutExtension(g_flightModelsList.GetLstLine(originModelIndex));
+
+		std::string profileKey = "ObjectProfile_" + shipName + "_" + std::to_string(modelIndex);
+		std::string profile = GetFileKeyValue(objectLines, profileKey);
+
+		if (profile.empty())
+		{
+			profile = "Default";
+		}
+
+		const auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, profile);
+
+		for (const int index : indices)
+		{
+			if (index == meshIndex)
+			{
+				params[Params_ReturnAddress] = 0x00481609;
+				break;
+			}
+		}
+	}
+
+	params[Params_EAX] = (int)currentCraft;
 	return 0;
 }

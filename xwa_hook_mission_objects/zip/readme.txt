@@ -92,6 +92,7 @@ At offset 0902F3, replace 8BAEE0948B0081FDFFFF0000 with 53E8377C11005D85C0909090
 At offset 01BD27, replace 803D04979E00050F85A7000000 with E8F4C11800909090E9A7000000.
 At offset 056351, replace E85AA7FAFF with E8CA1B1500.
 At offset 10DE08, replace 66891D0F267800 with E813A109009090.
+At offset 08056A, replace 8B80DD000000 with E8B179120090.
 
 
 *** Usage ***
@@ -186,6 +187,16 @@ The format is
 ObjectProfile_fg_# = ProfileName
 Replace # with the flightgroup index.
 The default ProfileName is "Default".
+See "Objects.txt"
+
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+To define an object profile for a weapon, create a file named "[MissionDir]\[Mission]_Objects.txt" or create a section named "[Objects]" in "[MissionDir]\[Mission].ini".
+The format is
+ObjectProfile_#1_#2 = ProfileName
+Replace #1 with the craft name.
+Replace #2 with the weapon model index.
+The default ProfileName is "Default".
+For example, if the craft is a BWing and the weapon model index is 281, then the key is ObjectProfile_BWing_281.
 See "Objects.txt"
 
 

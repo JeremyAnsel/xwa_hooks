@@ -53,6 +53,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x41C92C, ObjectProfileHook },
 	{ 0x456F56, AddObjectProfileHook },
 	{ 0x50EA0D, BriefingObjectProfileHook },
+	{ 0x48116F, RenderOptObjectProfileHook },
 };
 
 static const HookPatchItem g_loadMissionObjectsPatch[] =
@@ -141,6 +142,7 @@ static const HookPatchItem g_objectProfilePatch[] =
 	{ 0x01BD27, "803D04979E00050F85A7000000", "E8F4C11800909090E9A7000000" },
 	{ 0x056351, "E85AA7FAFF", "E8CA1B1500" },
 	{ 0x10DE08, "66891D0F267800", "E813A109009090" },
+	{ 0x08056A, "8B80DD000000", "E8B179120090" },
 };
 
 static const HookPatch g_patches[] =

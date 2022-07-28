@@ -21,3 +21,10 @@ E8CA1B1500              call 005A8B20, 005A8B20 - 00456F56 = 00151BCA
 
 E813A10900              call 005A8B20, 005A8B20 - 0050EA0D = 0009A113
 9090                    nop
+
+; from L00480A80
+:0048116A - 0x08056A
+8B80DD000000            mov eax, dword ptr [eax+000000DD]
+
+E8B1791200              call 005A8B20, 005A8B20 - 0048116F = 001279B1
+90                      nop
