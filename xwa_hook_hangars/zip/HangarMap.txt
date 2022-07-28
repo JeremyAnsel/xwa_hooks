@@ -2,6 +2,7 @@
 ; Format is : model index, position X, position Y, position Z, heading XY, heading Z
 ; or : model index, markings, position X, position Y, position Z, heading XY, heading Z
 ; or : model index, markings, position X, position Y, position Z, heading XY, heading Z, object profile
+; or : model index, markings, position X, position Y, position Z, heading XY, heading Z, object profile, isFloorInverted
 ; Numbers can be in decimal or hexadecimal (0x) notation.
 ; When position Z is set to 0x7FFFFFFF, this means that the object stands at the ground.
 

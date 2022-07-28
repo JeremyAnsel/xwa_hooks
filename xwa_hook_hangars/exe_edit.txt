@@ -785,7 +785,7 @@ EB67                    je 00459D32
 
 
 ; from L0045A520
-; disable shadow when inverted
+; disable shadow
 :0045AF19 - 0x05A319
 E8D2870200              call 004836F0
 

@@ -26,6 +26,12 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4095B5, SelectHangarInsideAnimation },
 	{ 0x457F80, SelectHangarModelIndex },
 	{ 0x46264F, CraftElevationHook },
+	{ 0x455D89, CraftElevationHook },
+	{ 0x456EFA, CraftElevationHook },
+	{ 0x45BB92, CraftElevationHook },
+	{ 0x45BE09, CraftElevationHook },
+	{ 0x45BF56, CraftElevationHook },
+	{ 0x45C9AA, CraftElevationHook },
 	{ 0x455670, CraftSelectionMissionHook },
 	{ 0x455741, CraftSelectionMeleeHook },
 	{ 0x45B836, HangarLaunchAnimation1Hook },
@@ -64,7 +70,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x45F822, HangarShuttleAnimationSound9Hook },
 	{ 0x45FAA5, HangarShuttleAnimationSound10Hook },
 	{ 0x459CBF, HangarGetCraftIndexHook },
-	{ 0x45AF1E, HangarDisableShadowWhenInvertedHook },
+	{ 0x45AF1E, HangarDisableShadowHook },
 	{ 0x4B915B, HangarFoldOutsideHook },
 	{ 0x4B9467, HangarFoldInsideHook },
 	{ 0x45C544, HangarAmbientSoundHook },
@@ -273,7 +279,7 @@ static const HookPatchItem g_hangarGetCraftIndexPatch[] =
 	{ 0x0590C9, "7467", "EB67" },
 };
 
-static const HookPatchItem g_hangarDisableShadowWhenInvertedPatch[] =
+static const HookPatchItem g_hangarDisableShadowPatch[] =
 {
 	{ 0x05A319, "E8D2870200", "E802DC1400" },
 };
@@ -331,7 +337,7 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the shuttle launch and re-enter animations", g_hangarShuttleLaunchReenterAnimationsPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the shuttle animation sounds", g_hangarShuttleAnimationSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that gets the craft index", g_hangarGetCraftIndexPatch),
-	MAKE_HOOK_PATCH("To call the hook that disable shadow when inverted", g_hangarDisableShadowWhenInvertedPatch),
+	MAKE_HOOK_PATCH("To call the hook that disable shadow", g_hangarDisableShadowPatch),
 	MAKE_HOOK_PATCH("To call the hook that set hangar fold outside and inside", g_hangarFoldOutsideInsidePatch),
 	MAKE_HOOK_PATCH("To call the hook that defines hangar ambient sounds", g_hangarAmbientSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines hangar light", g_hangarLightPatch),

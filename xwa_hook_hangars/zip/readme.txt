@@ -183,7 +183,7 @@ At offset 05EEA0, replace 2BC20560090000 with E88B90140085C0.
 At offset 0590BA, replace E871310800 with E871EE1400.
 At offset 0590C9, replace 7467 with EB67.
 
-# To call the hook that disable shadow when inverted
+# To call the hook that disable shadow
 At offset 05A319, replace E8D2870200 with E802DC1400.
 
 # To call the hook that set hangar fold outside and inside
@@ -338,13 +338,21 @@ To set the Hangar Roof Crane position, set "HangarRoofCranePositionX = value X",
 To set the Hangar Roof Crane axis, set "HangarRoofCraneAxis = value". 0 means the X axis. 1 means the Y axis. 2 means the Z axis. The default value is 0.
 To define the range of Hangar Roof Crane animation, set "HangarRoofCraneLowOffset = value" and "HangarRoofCraneHighOffset = value". The values are relative to the Hangar Roof Crane initial position.
 To invert the hangar floor, set "IsHangarFloorInverted = 1". When set to 0, the floor is below the static crafts. When set to 1, the floor is above the static crafts.
+To define the height of the inverted floor, set "HangarFloorInvertedHeight = value". The value is an integer. The default value is 0.
 To set the hangar flightgroup color, set "HangarIff = value". value is an integer. The default value is -1. -1 means that the IFF of the command ship is used.
+To disable the hangar shadows, set "DrawShadows = value". values can be 0 or 1. 0 means disabled. 1 means enabled.
 To set the elevation delta of the player craft animation, set "PlayerAnimationElevation = value". value is an integer. The default value is 0.
+To set the elevation delta of the player craft animation when inverted, set "PlayerAnimationInvertedElevation = value". value is an integer. The default value is 0.
 To set the player craft straight line animation length, set "PlayerAnimationStraightLine = value". value is an integer. The default value is 0.
 To set the x position offset of the player craft, set "PlayerOffsetX = value". value is an integer. The default value is 0.
 To set the y position offset of the player craft, set "PlayerOffsetY = value". value is an integer. The default value is 0.
 To set the z position offset of the player craft, set "PlayerOffsetZ = value". value is an integer. The default value is 0.
+To set the x position offset of the player craft when inverted, set "PlayerInvertedOffsetX = value". value is an integer. The default value is 0.
+To set the y position offset of the player craft when inverted, set "PlayerInvertedOffsetY = value". value is an integer. The default value is 0.
+To set the z position offset of the player craft when inverted, set "PlayerInvertedOffsetZ = value". value is an integer. The default value is 0.
+To auto set the position offset of the player craft, add the model index to the "PlayerModelIndices" setting and x y z position to the "PlayerOffsetsX" "PlayerOffsetsY" "PlayerOffsetsZ" settings. The values are comma separated.
 To invert the hangar floor for the player craft, set "IsPlayerFloorInverted = 1". When set to 0, the floor is below the player craft. When set to 1, the floor is above the player craft.
+To auto invert the hangar floor for the player craft, add the model index to the "PlayerFloorInvertedModelIndices" setting. The values are comma separated.
 To define the light color intensity of the hangar, set "LightColorIntensity = value". value is an integer. The default value is 192.
 To define the light color of the hangar, set "LightColorRgb = ######". The default value is FFFFFF.
 See "HangarObjects.txt".
@@ -426,9 +434,11 @@ The file must contain at least 4 object line.
 The format is : model index, position X, position Y, position Z, heading XY, heading Z.
 or : model index, markings, position X, position Y, position Z, heading XY, heading Z.
 or : model index, markings, position X, position Y, position Z, heading XY, heading Z, object profile.
+or : model index, markings, position X, position Y, position Z, heading XY, heading Z, object profile, isFloorInverted.
 The numbers can be  written in decimal or hexadecimal (0x) notation.
 When position Z is set to 0x7FFFFFFF, this means that the object stands at the ground.
 The default value for object profile is Default.
+isFloorInverted can be 0 or 1. 0 means not inverted. 1 means inverted.
 See "HangarMap.txt".
 
 Apply to family base:
@@ -446,9 +456,11 @@ The file must contain at least 4 object line.
 The format is : model index, position X, position Y, position Z, heading XY, heading Z.
 or : model index, markings, position X, position Y, position Z, heading XY, heading Z.
 or : model index, markings, position X, position Y, position Z, heading XY, heading Z, object profile.
+or : model index, markings, position X, position Y, position Z, heading XY, heading Z, object profile, isFloorInverted.
 The numbers can be  written in decimal or hexadecimal (0x) notation.
 When position Z is set to 0x7FFFFFFF, this means that the object stands at the ground.
 The default value for object profile is Default.
+isFloorInverted can be 0 or 1. 0 means not inverted. 1 means inverted.
 See "FamHangarMap.txt".
 
 To load a file based on the IFF of the arrival craft, append the IFF index (starting at 0) to the file name.
