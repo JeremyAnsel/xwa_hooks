@@ -55,6 +55,7 @@ value can be -1, 0, or 1
 For EnterHyperspace sounds, sounds defined in "Wave\Sfx_EnterHyperspace.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 For ExitHyperspace sounds, sounds defined in "Wave\Sfx_ExitHyperspace.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 
+
 *** Credits ***
 
 - Jérémy Ansel (JeremyaFr)
