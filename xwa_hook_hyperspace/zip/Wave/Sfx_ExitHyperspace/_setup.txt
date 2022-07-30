@@ -1,0 +1,2 @@
+
+To setup Sfx_ExitHyperspace, copy the sound files here

@@ -74,6 +74,10 @@ This hook enables setting hull icon for any craft.
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=9&t=11761
 
+## xwa_hook_hyperspace
+
+This hook permits to define the hyperspace effect.
+
 ## xwa_hook_interdictor
 
 This hook permits to enable interdictor feature for any craft.

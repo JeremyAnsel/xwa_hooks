@@ -1,0 +1,2 @@
+
+To setup Sfx_EnterHyperspace, copy the sound files here

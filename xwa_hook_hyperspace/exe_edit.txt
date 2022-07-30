@@ -1,0 +1,49 @@
+
+; AI Out of Hyperspace
+
+:004AFD72 - 0x0AF172
+66C78085000000100E      mov word ptr [eax+00000085], 0E10
+
+E8A98D0F00              call 005A8B20, 005A8B20 - 004AFD77 = 000F8DA9
+90909090                nop
+
+:004AFD89 - 0x0AF189
+C74062EC000000          mov [eax+62], 000000EC
+
+E8928D0F00              call 005A8B20, 005A8B20 - 004AFD8E = 000F8D92
+9090                    nop
+
+:004AFDE4 - 0x0AF1E4
+C7425E240A0000          mov [edx+5E], 00000A24
+
+E8378D0F00              call 005A8B20, 005A8B20 - 004AFDE9 = 000F8D37
+9090                    nop
+
+:004AFE7E - 0x0AF27E
+66898285000000          mov word ptr [edx+00000085], ax
+
+E89D8C0F00              call 005A8B20, 005A8B20 - 004AFE83 = 000F8C9D
+9090                    nop
+
+:004AFEF5 - 0x0AF2F5
+750F                    jne 004AFF06
+3B484B                  cmp ecx, dword ptr [eax+4B]
+7E0D                    jle 004AFF09
+
+E8268C0F00              call 005A8B20, 005A8B20 - 004AFEFA = 000F8C26
+EB23                    jmp 004AFF1F, 004AFF1F - 004AFEFC = 23
+
+===============================================================================
+
+; AI Into Hyperspace
+
+:004AEFB3 - 0x0AE3B3
+E8589DFEFF              call 00498D10
+
+E8689B0F00              call 005A8B20, 005A8B20 - 004AEFB8 = 000F9B68
+
+:0042CA9C - 0x02BE9C
+66399085000000          cmp word ptr [eax+00000085], dx
+
+E87FC01700              call 005A8B20, 005A8B20 - 0042CAA1 = 0017C07F
+EB0D                    jmp 0042CAB0, 0042CAB0 - 0042CAA3 = 0D
