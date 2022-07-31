@@ -1702,15 +1702,24 @@ int TurretIndex2BlockedHook(int* params)
 	return 1;
 }
 
-void ApplyProfile(unsigned short modelIndex, unsigned short flightgroupIndex, XwaCraft* s_pXwaCurrentCraft)
+void ApplyProfile(short objectIndex, unsigned short modelIndex, unsigned short flightgroupIndex, XwaCraft* s_pXwaCurrentCraft)
 {
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	unsigned char markings = 0;
+
+	if (objectIndex != -1 && XwaObjects[objectIndex].pMobileObject != nullptr)
+	{
+		markings = XwaObjects[objectIndex].pMobileObject->Markings;
+	}
+
 	const auto objectLines = GetCustomFileLines("Objects");
 
 	std::string profile = GetFileKeyValue(objectLines, "ObjectProfile_fg_" + std::to_string(flightgroupIndex));
 
 	if (profile.empty())
 	{
-		profile = "Default";
+		profile = "Default_" + std::to_string(markings);
 	}
 
 	char* m292;
@@ -1731,6 +1740,11 @@ void ApplyProfile(unsigned short modelIndex, unsigned short flightgroupIndex, Xw
 
 	for (const int index : indices)
 	{
+		if (index == -1)
+		{
+			continue;
+		}
+
 		m292[index] = 0;
 		m22E[index] = 4;
 	}
@@ -1738,11 +1752,13 @@ void ApplyProfile(unsigned short modelIndex, unsigned short flightgroupIndex, Xw
 
 int ObjectProfileHook(int* params)
 {
+	const short objectIndex = (short)params[10];
+
 	const unsigned short modelIndex = *(unsigned short*)0x09E96F2;
 	const unsigned short flightgroupIndex = *(unsigned short*)0x09E9708;
 	XwaCraft* s_pXwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 
-	ApplyProfile(modelIndex, flightgroupIndex, s_pXwaCurrentCraft);
+	ApplyProfile(objectIndex, modelIndex, flightgroupIndex, s_pXwaCurrentCraft);
 
 	return 0;
 }
@@ -1765,7 +1781,7 @@ int AddObjectProfileHook(int* params)
 		return 0;
 	}
 
-	ApplyProfile(modelIndex, flightgroupIndex, s_pXwaCurrentCraft);
+	ApplyProfile(objectIndex, modelIndex, flightgroupIndex, s_pXwaCurrentCraft);
 
 	return 0;
 }
@@ -1784,7 +1800,7 @@ int BriefingObjectProfileHook(int* params)
 		flightgroupIndex = 0xffff;
 	}
 
-	ApplyProfile(modelIndex, flightgroupIndex, craft);
+	ApplyProfile(-1, modelIndex, flightgroupIndex, craft);
 
 	return 0;
 }
@@ -1815,6 +1831,11 @@ int RenderOptObjectProfileHook(int* params)
 
 		for (const int index : indices)
 		{
+			if (index == -1)
+			{
+				continue;
+			}
+
 			if (index == meshIndex)
 			{
 				params[Params_ReturnAddress] = 0x00481609;

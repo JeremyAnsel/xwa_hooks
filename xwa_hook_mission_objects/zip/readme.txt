@@ -195,7 +195,7 @@ The format is
 ObjectProfile_#1_#2 = ProfileName
 Replace #1 with the craft name.
 Replace #2 with the weapon model index.
-The default ProfileName is "Default".
+The default ProfileName is "Default" or "Default_#" where # is the markings index.
 For example, if the craft is a BWing and the weapon model index is 281, then the key is ObjectProfile_BWing_281.
 See "Objects.txt"
 
