@@ -1591,7 +1591,7 @@ int TourModeButtonHook(int* params)
 {
 	const int missionIndex = *(int*)0x0ABC970;
 
-	if (missionIndex < g_config.TourOfDutyButtonRequiredMissionIndex)
+	if (missionIndex != 0 && missionIndex < g_config.TourOfDutyButtonRequiredMissionIndex)
 	{
 		params[Params_ReturnAddress] = 0x00546F42;
 	}
