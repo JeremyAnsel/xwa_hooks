@@ -1,0 +1,6 @@
+To setup Sfx_HyperAbort, copy the following files to WAVE\Sfx_HyperAbort\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+HyperAbort.wav

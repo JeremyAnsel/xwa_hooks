@@ -1,0 +1,6 @@
+To setup Sfx_HyperZoom, copy the following files to WAVE\Sfx_HyperZoom\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+HyperZoomImp.wav

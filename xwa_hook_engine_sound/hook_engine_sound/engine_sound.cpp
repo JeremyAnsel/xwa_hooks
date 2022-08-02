@@ -103,6 +103,15 @@ public:
 
 		this->SfxWeaponIndex = GetFileKeyValueInt(lines, "sfx_weapon_index");
 		this->SfxWeaponCount = GetFileKeyValueInt(lines, "sfx_weapon_count");
+
+		this->SfxHyperStartIndex = GetFileKeyValueInt(lines, "sfx_hyperstart_index");
+		this->SfxHyperStartCount = GetFileKeyValueInt(lines, "sfx_hyperstart_count");
+		this->SfxHyperZoomIndex = GetFileKeyValueInt(lines, "sfx_hyperzoom_index");
+		this->SfxHyperZoomCount = GetFileKeyValueInt(lines, "sfx_hyperzoom_count");
+		this->SfxHyperEndIndex = GetFileKeyValueInt(lines, "sfx_hyperend_index");
+		this->SfxHyperEndCount = GetFileKeyValueInt(lines, "sfx_hyperend_count");
+		this->SfxHyperAbortIndex = GetFileKeyValueInt(lines, "sfx_hyperabort_index");
+		this->SfxHyperAbortCount = GetFileKeyValueInt(lines, "sfx_hyperabort_count");
 	}
 
 	bool SoundsCountHookExists;
@@ -127,6 +136,15 @@ public:
 	int SfxShuttleShutDownCount;
 	int SfxWeaponIndex;
 	int SfxWeaponCount;
+
+	int SfxHyperStartIndex;
+	int SfxHyperStartCount;
+	int SfxHyperZoomIndex;
+	int SfxHyperZoomCount;
+	int SfxHyperEndIndex;
+	int SfxHyperEndCount;
+	int SfxHyperAbortIndex;
+	int SfxHyperAbortCount;
 };
 
 SoundsConfig& GetSoundsConfig()
@@ -1540,7 +1558,20 @@ int HyperStartSoundHook(int* params)
 
 	if (behavior == -1)
 	{
-		playSound(iff == 1 ? 0x73 : 0x76, 0xFFFF, playerIndex);
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxHyperStartCount)
+		{
+			if (modelIndex < soundConfig.SfxHyperStartCount)
+			{
+				int sound = soundConfig.SfxHyperStartIndex + modelIndex;
+				playSound(sound, 0xFFFF, playerIndex);
+			}
+		}
+		else
+		{
+			playSound(iff == 1 ? 0x73 : 0x76, 0xFFFF, playerIndex);
+		}
 	}
 	else
 	{
@@ -1583,9 +1614,22 @@ int HyperZoomSoundHook(int* params)
 
 	if (behavior == -1)
 	{
-		if (iff == 1)
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxHyperZoomCount)
 		{
-			playSound(0x74, 0xFFFF, playerIndex);
+			if (modelIndex < soundConfig.SfxHyperZoomCount)
+			{
+				int sound = soundConfig.SfxHyperZoomIndex + modelIndex;
+				playSound(sound, 0xFFFF, playerIndex);
+			}
+		}
+		else
+		{
+			if (iff == 1)
+			{
+				playSound(0x74, 0xFFFF, playerIndex);
+			}
 		}
 	}
 	else
@@ -1643,13 +1687,39 @@ int HyperEndSoundHook(int* params)
 
 	if (HasRegionInterdictor(region))
 	{
-		// HyperAbort.wav
-		playSound(0x77, 0xFFFF, playerIndex);
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxHyperAbortCount)
+		{
+			if (modelIndex < soundConfig.SfxHyperAbortCount)
+			{
+				int sound = soundConfig.SfxHyperAbortIndex + modelIndex;
+				playSound(sound, 0xFFFF, playerIndex);
+			}
+		}
+		else
+		{
+			// HyperAbort.wav
+			playSound(0x77, 0xFFFF, playerIndex);
+		}
 	}
 	else
 	{
-		// HyperEnd.wav
-		playSound(0x75, 0xFFFF, playerIndex);
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxHyperEndCount)
+		{
+			if (modelIndex < soundConfig.SfxHyperEndCount)
+			{
+				int sound = soundConfig.SfxHyperEndIndex + modelIndex;
+				playSound(sound, 0xFFFF, playerIndex);
+			}
+		}
+		else
+		{
+			// HyperEnd.wav
+			playSound(0x75, 0xFFFF, playerIndex);
+		}
 	}
 
 	return 0;

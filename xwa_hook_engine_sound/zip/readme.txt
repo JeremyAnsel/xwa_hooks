@@ -91,6 +91,27 @@ RebelLaser.wav
 RebelLaserStarship.wav
 RebelLaserTurbo.wav
 
+To setup Sfx_HyperStart, copy the following files to WAVE\Sfx_HyperStart\
+From WAVE\FE_HIGH_RES\
+Copy files:
+HyperStartImp.wav
+HyperStartReb.wav
+
+To setup Sfx_HyperZoom, copy the following files to WAVE\Sfx_HyperZoom\
+From WAVE\FE_HIGH_RES\
+Copy files:
+HyperZoomImp.wav
+
+To setup Sfx_HyperEnd, copy the following files to WAVE\Sfx_HyperEnd\
+From WAVE\FE_HIGH_RES\
+Copy files:
+HyperEnd.wav
+
+To setup Sfx_HyperAbort, copy the following files to WAVE\Sfx_HyperAbort\
+From WAVE\FE_HIGH_RES\
+Copy files:
+HyperAbort.wav
+
 
 *** Patch ***
 
@@ -347,6 +368,12 @@ For each craft, there are 10 items. The last item is for the open weapon.
 
 When a region in included in the "Region" setting of the "[Interdiction]" section in the mission ini file, the sound "HyperAbort.wav" will be played instead of "HyperEnd.wav" on hyper out the region.
 See "Interdiction.txt".
+
+
+For HyperStart sounds, sounds defined in "Wave\Sfx_HyperStart.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+For HyperZoom sounds, sounds defined in "Wave\Sfx_HyperZoom.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+For HyperEnd sounds, sounds defined in "Wave\Sfx_HyperEnd.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+For HyperAbort sounds, sounds defined in "Wave\Sfx_HyperAbort.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 
 
 *** Credits ***

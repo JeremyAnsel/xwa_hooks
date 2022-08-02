@@ -1,0 +1,6 @@
+To setup Sfx_HyperEnd, copy the following files to WAVE\Sfx_HyperEnd\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+HyperEnd.wav

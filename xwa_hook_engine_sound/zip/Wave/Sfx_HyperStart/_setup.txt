@@ -1,0 +1,7 @@
+To setup Sfx_HyperStart, copy the following files to WAVE\Sfx_HyperStart\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+HyperStartImp.wav
+HyperStartReb.wav
