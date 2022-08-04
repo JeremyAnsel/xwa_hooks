@@ -361,7 +361,8 @@ struct XwaObject
 	int PositionZ;
 	short HeadingXY;
 	short HeadingZ;
-	char unk17[12];
+	char unk17[8];
+	int PlayerIndex;
 	XwaMobileObject* pMobileObject;
 };
 
@@ -747,10 +748,14 @@ bool IsPloHyperspace(PloEnum plo)
 int AIIntoHyperspaceSpeedHook(int* params)
 {
 	XwaMobileObject* pMobileObject = (XwaMobileObject*)params[Params_EAX];
+	const short objectIndex = (short)params[6];
+
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	XwaObject* pObject = &xwaObjects[objectIndex];
 
 	int effectType = GetShortHyperspaceEffectType();
 
-	if (effectType == 0 || !IsPloHyperspace(pMobileObject->pCraft->AIData.Pln1))
+	if (effectType == 0 || pObject->PlayerIndex != -1 || !IsPloHyperspace(pMobileObject->pCraft->AIData.Pln1))
 	{
 		if (pMobileObject->Speed > 0xE10)
 		{
