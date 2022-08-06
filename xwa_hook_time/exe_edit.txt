@@ -62,6 +62,13 @@ XwaRunGameStateLoop
 909090909090
 
 
+; L00473D00 - s_StringsCockpitOverlay[StringsCockpitOverlay_Time]
+:004742E9 - 0x0736E9
+E8C20CFCFF              call 00434FB0
+
+E832481300              call 005A8B20, 005A8B20 - 004742EE = 00134832
+
+
 ; inflight 1
 
 ;:005107D5 - 0x10FBD5

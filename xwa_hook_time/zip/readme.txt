@@ -30,6 +30,7 @@ At offset 13EC26, replace F77C2404 with 33C04090.
 At offset 13FED3, replace A142709F0085C0750EEBC1 with 6A30FF1574905A0090EB0C.
 At offset 13DEEF, replace 0F844AFDFFFF with 909090909090.
 At offset 13F262, replace 0F84C1FEFFFF with 909090909090.
+At offset 0736E9, replace E8C20CFCFF with E832481300.
 
 # To call the hook that sets full FPS
 At offset 10FBD2, replace 83FA08 with 83FA01.
@@ -55,11 +56,16 @@ At offset 001A33, replace 0F84D5000000 with E8E8641A0090.
 At offset 001017, replace 25FFFF0000 with E8046F1A00.
 At offset 00193A, replace 66817DFCDE00752B with E8E1651A00909090.
 
+
 *** Usage ***
 
 To define the duration of an animation frame for explosions, set the ExplosionAnimationTimeFrame setting in "hook_time.cfg". The setting is an integer value. The default value is 60.
 To define the duration of an animation frame for small debris, set the SmallDebrisAnimationTimeFrame setting in "hook_time.cfg". The setting is an integer value. The default value is 60.
 See "hook_time.cfg"
+
+Press Ctrl+Q to speed up the time.
+Press Ctrl+A to slow down the time.
+
 
 *** Credits ***
 

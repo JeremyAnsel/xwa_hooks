@@ -112,6 +112,63 @@ static int loopSources[] =
 	0x00510CD6,
 };
 
+static bool g_isTimeMultiplicatorEnabled = false;
+static bool g_isTimeDivisorEnabled = false;
+
+int GetTimeMultiplicator()
+{
+	const unsigned short Key_CONTROL_Q = 287;
+
+	static bool isKeyQPressed = false;
+
+	unsigned short key = *(unsigned short*)0x008053C0;
+
+	if (!isKeyQPressed && key == Key_CONTROL_Q)
+	{
+		isKeyQPressed = true;
+	}
+
+	if (isKeyQPressed && key != Key_CONTROL_Q)
+	{
+		isKeyQPressed = false;
+		g_isTimeMultiplicatorEnabled = !g_isTimeMultiplicatorEnabled;
+	}
+
+	if (g_isTimeMultiplicatorEnabled)
+	{
+		return 4;
+	}
+
+	return 1;
+}
+
+int GetTimeDivisor()
+{
+	const unsigned short Key_CONTROL_A = 271;
+
+	static bool isKeyAPressed = false;
+
+	unsigned short key = *(unsigned short*)0x008053C0;
+
+	if (!isKeyAPressed && key == Key_CONTROL_A)
+	{
+		isKeyAPressed = true;
+	}
+
+	if (isKeyAPressed && key != Key_CONTROL_A)
+	{
+		isKeyAPressed = false;
+		g_isTimeDivisorEnabled = !g_isTimeDivisorEnabled;
+	}
+
+	if (g_isTimeDivisorEnabled)
+	{
+		return 8;
+	}
+
+	return 1;
+}
+
 int L0050E410Hook(int* params)
 {
 	auto& s_V0x0781E64 = *(DWORD*)0x0781E64;
@@ -134,6 +191,14 @@ int L0050E410Hook(int* params)
 		Sleep(8);
 	}
 
+	int mul = GetTimeMultiplicator();
+	int div = GetTimeDivisor();
+
+	if (mul != 1)
+	{
+		div = 1;
+	}
+
 	DWORD eax = timeGetTime();
 	DWORD ecx = s_V0x0781E64;
 
@@ -142,9 +207,11 @@ int L0050E410Hook(int* params)
 		ecx = eax;
 	}
 
-	eax = (eax - ecx) / 4;
+	eax = (eax - ecx) / 4 / div;
 
-	s_V0x0781E64 = ecx + eax * 4;
+	s_V0x0781E64 = ecx + eax * 4 * div;
+
+	eax *= mul;
 
 	return eax;
 }
@@ -168,6 +235,28 @@ int L0050E430Hook(int* params)
 	s_V0x077D028 = ecx + eax * 4;
 
 	return eax;
+}
+
+int RenderHudTimeHook(int* params)
+{
+	const char* text = (const char*)params[0];
+
+	const auto RenderText = (void(*)(const char*))0x00434FB0;
+
+	std::string str = std::string(text);
+
+	if (g_isTimeMultiplicatorEnabled)
+	{
+		str += "+";
+	}
+	else if (g_isTimeDivisorEnabled)
+	{
+		str += "-";
+	}
+
+	RenderText(str.c_str());
+
+	return 0;
 }
 
 int AsteroidsAnimationHook(int* params)
