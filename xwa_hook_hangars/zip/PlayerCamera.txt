@@ -2,6 +2,14 @@ X = 100
 Y = 150
 Z = 50
 
+InvertedX = 100
+InvertedY = 150
+InvertedZ = 50
+
 FamX = 100
 FamY = 150
 FamZ = 50
+
+FamInvertedX = 100
+FamInvertedY = 150
+FamInvertedZ = 50

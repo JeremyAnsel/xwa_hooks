@@ -1056,17 +1056,17 @@ public:
 		}
 	}
 
-	bool GetIsPlayerFloorInverted()
-	{
-		this->UpdateIfChanged();
-		return this->IsPlayerFloorInverted;
-	}
+	//bool GetIsPlayerFloorInverted()
+	//{
+	//	this->UpdateIfChanged();
+	//	return this->IsPlayerFloorInverted;
+	//}
 
-	const std::vector<int>& GetPlayerFloorInvertedModelIndices()
-	{
-		this->UpdateIfChanged();
-		return this->PlayerFloorInvertedModelIndices;
-	}
+	//const std::vector<int>& GetPlayerFloorInvertedModelIndices()
+	//{
+	//	this->UpdateIfChanged();
+	//	return this->PlayerFloorInvertedModelIndices;
+	//}
 
 	bool GetIsPlayerModelIndexFloorInverted(unsigned short modelIndex)
 	{
@@ -1908,9 +1908,33 @@ int HangarCameraPositionHook(int* params)
 
 				if (optCameraLines.size())
 				{
-					positionX = playerPositionX + GetFileKeyValueInt(optCameraLines, "X");
-					positionY = playerPositionY + GetFileKeyValueInt(optCameraLines, "Y");
-					positionZ = playerPositionZ + GetFileKeyValueInt(optCameraLines, "Z");
+					int x;
+					int y;
+					int z;
+
+					if (g_hangarObjects.GetIsPlayerModelIndexFloorInverted(playerModelIndex))
+					{
+						x = GetFileKeyValueInt(optCameraLines, "InvertedX");
+						y = GetFileKeyValueInt(optCameraLines, "InvertedY");
+						z = GetFileKeyValueInt(optCameraLines, "InvertedZ");
+
+						if (x == 0 && y == 0 && z == 0)
+						{
+							x = GetFileKeyValueInt(optCameraLines, "X");
+							y = GetFileKeyValueInt(optCameraLines, "Y");
+							z = GetFileKeyValueInt(optCameraLines, "Z");
+						}
+					}
+					else
+					{
+						x = GetFileKeyValueInt(optCameraLines, "X");
+						y = GetFileKeyValueInt(optCameraLines, "Y");
+						z = GetFileKeyValueInt(optCameraLines, "Z");
+					}
+
+					positionX = playerPositionX + x;
+					positionY = playerPositionY + y;
+					positionZ = playerPositionZ + z;
 				}
 				else
 				{
@@ -2127,15 +2151,49 @@ int HangarCameraPositionHook(int* params)
 
 				if (optCameraLines.size())
 				{
-					int x = GetFileKeyValueInt(optCameraLines, "FamX");
-					int y = GetFileKeyValueInt(optCameraLines, "FamY");
-					int z = GetFileKeyValueInt(optCameraLines, "FamZ");
+					int x;
+					int y;
+					int z;
 
-					if (x == 0 && y == 0 && z == 0)
+					if (g_hangarObjects.GetIsPlayerModelIndexFloorInverted(playerModelIndex))
 					{
-						x = GetFileKeyValueInt(optCameraLines, "X");
-						y = GetFileKeyValueInt(optCameraLines, "Y");
-						z = GetFileKeyValueInt(optCameraLines, "Z");
+						x = GetFileKeyValueInt(optCameraLines, "FamInvertedX");
+						y = GetFileKeyValueInt(optCameraLines, "FamInvertedY");
+						z = GetFileKeyValueInt(optCameraLines, "FamInvertedZ");
+
+						if (x == 0 && y == 0 && z == 0)
+						{
+							x = GetFileKeyValueInt(optCameraLines, "FamX");
+							y = GetFileKeyValueInt(optCameraLines, "FamY");
+							z = GetFileKeyValueInt(optCameraLines, "FamZ");
+
+							if (x == 0 && y == 0 && z == 0)
+							{
+								x = GetFileKeyValueInt(optCameraLines, "InvertedX");
+								y = GetFileKeyValueInt(optCameraLines, "InvertedY");
+								z = GetFileKeyValueInt(optCameraLines, "InvertedZ");
+
+								if (x == 0 && y == 0 && z == 0)
+								{
+									x = GetFileKeyValueInt(optCameraLines, "X");
+									y = GetFileKeyValueInt(optCameraLines, "Y");
+									z = GetFileKeyValueInt(optCameraLines, "Z");
+								}
+							}
+						}
+					}
+					else
+					{
+						x = GetFileKeyValueInt(optCameraLines, "FamX");
+						y = GetFileKeyValueInt(optCameraLines, "FamY");
+						z = GetFileKeyValueInt(optCameraLines, "FamZ");
+
+						if (x == 0 && y == 0 && z == 0)
+						{
+							x = GetFileKeyValueInt(optCameraLines, "X");
+							y = GetFileKeyValueInt(optCameraLines, "Y");
+							z = GetFileKeyValueInt(optCameraLines, "Z");
+						}
 					}
 
 					positionX = playerPositionX + x;

@@ -414,9 +414,15 @@ The format is:
 "X = value"
 "Y = value"
 "Z = value"
+"InvertedX = value"
+"InvertedY = value"
+"InvertedZ = value"
 "FamX = value"
 "FamY = value"
 "FamZ = value"
+"FamInvertedX = value"
+"FamInvertedY = value"
+"FamInvertedZ = value"
 See "PlayerCamera.txt".
 
 Apply to hangar:
