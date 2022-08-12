@@ -15,9 +15,6 @@ const auto& g_joyGetDevCapsA = *(decltype(joyGetDevCapsA)**)0x005A92A8;
 const auto& g_joyGetPosEx = *(decltype(joyGetPosEx)**)0x005A92A4;
 
 #include "SharedMem.h"
-SharedDataProxy *g_pSharedData = NULL;
-// ddraw is loaded after the hooks, so here we open an existing shared memory handle:
-SharedMem g_SharedMem(false);
 
 enum KeyEnum : unsigned short
 {
@@ -33,10 +30,6 @@ enum KeyEnum : unsigned short
 	Key_NUMPAD8 = 186,
 	Key_NUMPAD9 = 187,
 };
-
-void InitSharedMem() {
-	g_pSharedData = (SharedDataProxy *)g_SharedMem.GetMemoryPtr();
-}
 
 class Config
 {
@@ -1008,9 +1001,9 @@ int UpdateControllerHook(int* params)
 	}
 	float normYaw = 2.0f * (esp10.dwXpos / 65535.0f - 0.5f); // -1: Left, 1: Right
 	float normPitch = 2.0f * (esp10.dwYpos / 65535.0f - 0.5f); // -1: Up, 1: Down
-	if (g_pSharedData != NULL && g_pSharedData->bDataReady) {
-		g_pSharedData->pSharedData->JoystickYaw = normYaw;
-		g_pSharedData->pSharedData->JoystickPitch = normPitch;
+	if (g_pSharedData != NULL) {
+		g_pSharedData->JoystickYaw = normYaw;
+		g_pSharedData->JoystickPitch = normPitch;
 	}
 
 	return 0;
