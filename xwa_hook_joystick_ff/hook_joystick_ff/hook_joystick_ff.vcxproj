@@ -98,6 +98,7 @@
     <ClInclude Include="joystick.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SharedMem.h" />
+    <ClInclude Include="SharedMemTemplate.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
