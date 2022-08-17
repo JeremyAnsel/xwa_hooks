@@ -1705,6 +1705,18 @@ int HangarCameraPositionHook(int* params)
 	const auto ModelGetSizeY = (int(*)(unsigned int))0x04857E0;
 	const auto ModelGetSizeZ = (int(*)(unsigned int))0x0485820;
 
+	const auto CockpitOptReadInfos = (void(*)())0x004314B0;
+	const auto ExteriorOptReadInfos = (void(*)())0x00431960;
+
+	if (A4 == 0)
+	{
+		CockpitOptReadInfos();
+	}
+	else
+	{
+		ExteriorOptReadInfos();
+	}
+
 	if (hangarModelIndex == 0x134)
 	{
 		// hangar
@@ -4105,6 +4117,8 @@ int HangarExitHook(int* params)
 
 	const auto HangarOptLoad = (int(*)(unsigned short))0x00456FA0;
 	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
+	const auto CockpitOptReadInfos = (void(*)())0x004314B0;
+	const auto ExteriorOptReadInfos = (void(*)())0x00431960;
 
 	unsigned short* OptModelFileMemHandles = (unsigned short*)0x007CA6E0;
 	const int OptModelFileMemHandlesCount = 557;
@@ -4140,6 +4154,9 @@ int HangarExitHook(int* params)
 
 		HangarOptLoad(modelIndex);
 	}
+
+	CockpitOptReadInfos();
+	ExteriorOptReadInfos();
 
 	return 0;
 }
