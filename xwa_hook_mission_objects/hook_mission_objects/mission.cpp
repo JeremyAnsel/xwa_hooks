@@ -1736,7 +1736,12 @@ void ApplyProfile(short objectIndex, unsigned short modelIndex, unsigned short f
 		m22E = (char*)((int)s_pXwaCurrentCraft + g_craftConfig.Craft_Offset_22E);
 	}
 
-	const auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, profile);
+	auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, profile);
+
+	if (indices.empty())
+	{
+		indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, "Default");
+	}
 
 	for (const int index : indices)
 	{
