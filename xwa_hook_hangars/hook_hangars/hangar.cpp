@@ -18,6 +18,13 @@ enum ParamsEnum
 	Params_EDI = -10,
 };
 
+std::string GetFileNameWithoutExtension(const std::string& str)
+{
+	auto a = str.find_last_of('\\');
+
+	return a == -1 ? str : str.substr(a + 1, -1);
+}
+
 unsigned int GetFileKeyValueUnsignedInt(const std::vector<std::string>& lines, const std::string& key, unsigned int defaultValue = 0)
 {
 	std::string value = GetFileKeyValue(lines, key);
@@ -28,6 +35,21 @@ unsigned int GetFileKeyValueUnsignedInt(const std::vector<std::string>& lines, c
 	}
 
 	return std::stoul(value, 0, 16);
+}
+
+void CombineFileLines(std::vector<std::string>& a, const std::vector<std::string>& b, bool append)
+{
+	if (append)
+	{
+		a.insert(std::end(a), std::begin(b), std::end(b));
+	}
+	else
+	{
+		if (a.empty())
+		{
+			a.insert(std::end(a), std::begin(b), std::end(b));
+		}
+	}
 }
 
 class FlightModelsList
@@ -402,7 +424,7 @@ public:
 
 CraftSelectionValues g_craftSelectionValues;
 
-std::vector<std::string> GetCustomFileLinesBase(const std::string& name)
+std::vector<std::string> GetCustomFileLinesBase(const std::string& name, bool append)
 {
 	static std::vector<std::string> _lines;
 	static std::string _name;
@@ -414,25 +436,13 @@ std::vector<std::string> GetCustomFileLinesBase(const std::string& name)
 	{
 		_name = name;
 		_mission = xwaMissionFileName;
+		_lines.clear();
 
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
-		_lines = GetFileLines(mission + "_" + name + ".txt");
-
-		if (!_lines.size())
-		{
-			_lines = GetFileLines(mission + ".ini", name);
-		}
-
-		if (!_lines.size())
-		{
-			const std::string path = "FlightModels\\";
-			_lines = GetFileLines(path + name + ".txt");
-		}
-
-		if (!_lines.size())
-		{
-			_lines = GetFileLines("FlightModels\\default.ini", name);
-		}
+		CombineFileLines(_lines, GetFileLines(mission + "_" + name + ".txt"), append);
+		CombineFileLines(_lines, GetFileLines(mission + ".ini", name), append);
+		CombineFileLines(_lines, GetFileLines(std::string("FlightModels\\") + name + ".txt"), append);
+		CombineFileLines(_lines, GetFileLines("FlightModels\\default.ini", name), append);
 	}
 
 	return _lines;
@@ -541,7 +551,7 @@ std::string GetCommandShipLstLine()
 	}
 
 	{
-		const auto objectLines = GetCustomFileLinesBase("Objects");
+		const auto objectLines = GetCustomFileLinesBase("Objects", false);
 		const std::string objectValue = GetFileKeyValue(objectLines, lstLine + ".opt");
 
 		if (!objectValue.empty() && std::ifstream(objectValue))
@@ -669,7 +679,7 @@ std::string GetCustomFilePath(const std::string& name)
 	return path;
 }
 
-std::vector<std::string> GetCustomFileLines(const std::string& name)
+std::vector<std::string> GetCustomFileLines(const std::string& name, bool append)
 {
 	const bool isProvingGround = *(unsigned char*)(0x08053E0 + 0x05) != 0;
 	const char* xwaMissionFileName = (const char*)0x06002E8;
@@ -683,72 +693,44 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 		{
 			ship = GetStringWithoutExtension(ship);
 
-			lines = GetFileLines(ship + name + ".txt");
-
-			if (!lines.size())
-			{
-				lines = GetFileLines(ship + ".ini", name);
-			}
-
-			if (lines.size())
-			{
-				return lines;
-			}
+			CombineFileLines(lines, GetFileLines(ship + name + ".txt"), append);
+			CombineFileLines(lines, GetFileLines(ship + ".ini", name), append);
 		}
 	}
 	else
 	{
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
-		lines = GetFileLines(mission + "_" + name + ".txt");
-
-		if (!lines.size())
-		{
-			lines = GetFileLines(mission + ".ini", name);
-		}
-
-		if (lines.size())
-		{
-			return lines;
-		}
-
 		const std::string ship = GetCommandShipLstLine();
 		const unsigned char shipIff = GetCommandShipIff();
 
 		if (!ship.empty())
 		{
+			const std::string shipName = GetFileNameWithoutExtension(ship);
+
+			CombineFileLines(lines, GetFileLines(mission + "_" + name + "_" + shipName + "_" + std::to_string(shipIff) + ".txt"), append);
+			CombineFileLines(lines, GetFileLines(mission + ".ini", name + "_" + shipName + "_" + std::to_string(shipIff)), append);
+			CombineFileLines(lines, GetFileLines(mission + "_" + name + "_" + shipName + ".txt"), append);
+			CombineFileLines(lines, GetFileLines(mission + ".ini", name + "_" + shipName), append);
+		}
+
+		CombineFileLines(lines, GetFileLines(mission + "_" + name + ".txt"), append);
+		CombineFileLines(lines, GetFileLines(mission + ".ini", name), append);
+
+		if (!ship.empty())
+		{
 			const std::string nameIff = name + std::to_string(shipIff);
 
-			lines = GetFileLines(ship + nameIff + ".txt");
-
-			if (!lines.size())
-			{
-				lines = GetFileLines(ship + ".ini", nameIff);
-			}
-
-			if (!lines.size())
-			{
-				lines = GetFileLines(ship + name + ".txt");
-			}
-
-			if (!lines.size())
-			{
-				lines = GetFileLines(ship + ".ini", name);
-			}
-
-			if (lines.size())
-			{
-				return lines;
-			}
+			CombineFileLines(lines, GetFileLines(ship + nameIff + ".txt"), append);
+			CombineFileLines(lines, GetFileLines(ship + ".ini", nameIff), append);
+			CombineFileLines(lines, GetFileLines(ship + name + ".txt"), append);
+			CombineFileLines(lines, GetFileLines(ship + ".ini", name), append);
 		}
 	}
 
 	const std::string path = "FlightModels\\";
-	lines = GetFileLines(path + name + ".txt");
 
-	if (!lines.size())
-	{
-		lines = GetFileLines(path + "default.ini", name);
-	}
+	CombineFileLines(lines, GetFileLines(path + name + ".txt"), append);
+	CombineFileLines(lines, GetFileLines(path + "default.ini", name), append);
 
 	return lines;
 }
@@ -1098,7 +1080,7 @@ private:
 	{
 		if (this->HasChanged())
 		{
-			const auto lines = GetCustomFileLines("HangarObjects");
+			const auto lines = GetCustomFileLines("HangarObjects", true);
 			this->_lines = lines;
 			this->LoadShuttle = GetFileKeyValueInt(lines, "LoadShuttle", 1) == 1;
 			this->ShuttleModelIndex = (unsigned short)GetFileKeyValueInt(lines, "ShuttleModelIndex");
@@ -1726,7 +1708,7 @@ int HangarCameraPositionHook(int* params)
 		// Key 7 is either the same as key 3, either related to the player model.
 		// Key 8 is related to the hangar roof crane.
 
-		const auto cameraLines = GetCustomFileLines("HangarCamera");
+		const auto cameraLines = GetCustomFileLines("HangarCamera", false);
 
 		switch (A4)
 		{
@@ -2021,7 +2003,7 @@ int HangarCameraPositionHook(int* params)
 		// Key 4 is related to the work droid 1.
 		// Key 5 is related to the player model.
 
-		const auto cameraLines = GetCustomFileLines("FamHangarCamera");
+		const auto cameraLines = GetCustomFileLines("FamHangarCamera", false);
 
 		switch (A4)
 		{
@@ -2258,7 +2240,7 @@ std::string GetShipPath(int modelIndex)
 	const std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
 
 	{
-		const auto objectLines = GetCustomFileLines("Objects");
+		const auto objectLines = GetCustomFileLinesBase("Objects", false);
 		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
 
 		if (!objectValue.empty() && std::ifstream(objectValue))
@@ -2268,7 +2250,7 @@ std::string GetShipPath(int modelIndex)
 	}
 
 	{
-		const auto objectLines = GetCustomFileLines("HangarObjects");
+		const auto objectLines = GetCustomFileLines("HangarObjects", true);
 		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
 
 		if (!objectValue.empty() && std::ifstream(objectValue))
@@ -2709,7 +2691,7 @@ int HangarMapHook(int* params)
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 
-	const auto lines = GetCustomFileLines("HangarMap");
+	const auto lines = GetCustomFileLines("HangarMap", false);
 
 	if (lines.size())
 	{
@@ -2861,7 +2843,7 @@ int FamHangarMapHook(int* params)
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
 
-	const auto lines = GetCustomFileLines("FamHangarMap");
+	const auto lines = GetCustomFileLines("FamHangarMap", false);
 
 	if (lines.size())
 	{

@@ -294,6 +294,7 @@ The dll searches a "Hangar.opt" file in this order (from first to last):
 
 To replace the objects, create a file named "FlightModels\[Model]HangarObjects.txt" or "[MissionDir]\[Mission]_HangarObjects.txt".
 Or create a section named "[HangarObjects]" in "FlightModels\[Model].ini" or "[MissionDir]\[Mission].ini".
+Or create a section named "HangarObjects_[Model]" in "[MissionDir]\[Mission].ini".
 The dll searches a "HangarObjects.txt" file in this order (from first to last):
 - "[MissionDir]\[Mission]_HangarObjects.txt"
 - "[MissionDir]\[Mission].ini", section "[HangarObjects]"
