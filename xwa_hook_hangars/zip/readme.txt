@@ -474,6 +474,10 @@ To load a file based on the IFF of the arrival craft, append the IFF index (star
 This apply to HangarObjects, HangarCamera, FamHangarCamera, HangarMap, FamHangarMap.
 For instance, if the IFF index is 1 and the file name is HangarObjects, then the name of the section in the ini file will be HangarObjects1. If HangarObjects1 doesn't exist then HangarObjects is used.
 
+To define per-mothership sections, append the ship name to the section name with a '_' char: [SectionName_Shipname].
+The SectionName_CraftName apply to HangarObjects, HangarCamera, FamHangarCamera, HangarMap, FamHangarMap.
+To can also append the IFF of the craft: [SectionName_Shipname_IFF].
+
 To set the elevation of the craft with closed S-Foils, create a file named "FlightModels\[Player]Size.txt".
 Or create a section named "[Size]" in "FlightModels\[Player].ini".
 If the hangar floor is inverted, the ClosedSFoilsElevationInverted setting is used, else the ClosedSFoilsElevation setting is used.
