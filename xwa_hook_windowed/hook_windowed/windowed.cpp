@@ -415,6 +415,21 @@ int CursorZeroHook(int* params)
 	return SetCursorPos(x, y);
 }
 
+bool IsSplashScreenEnabled(int returnAdress)
+{
+	if (!g_windowConfig.ShowSplashScreen)
+	{
+		return false;
+	}
+
+	if (returnAdress == 0x0053A065)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 int SplashScreenHook(int* params)
 {
 	const auto XwaFrontSurfaceLock = (char* (*)())0x0053EF80;
@@ -430,7 +445,7 @@ int SplashScreenHook(int* params)
 
 	s_pXwaCurrentSurfaceData = XwaFrontSurfaceLock();
 
-	if (g_windowConfig.ShowSplashScreen)
+	if (IsSplashScreenEnabled(params[0]))
 	{
 		if (std::ifstream("Splash.jpg"))
 		{
