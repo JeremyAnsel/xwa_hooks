@@ -145,9 +145,9 @@ To require landing gears being closed before enter hyperspace, set the CloseLand
 When set to 0, normal behavior
 When set to 1, landing gears must be closed before enter hyperspace
 
-To manualy control the s-foils and landing gears, set the AutoCloseSFoils setting.
-When set to 0, s-foils and landing gears are manualy closed
-When set to 1, s-foils and landing gears are automaticaly closed
+To manually control the s-foils and landing gears, set the AutoCloseSFoils setting.
+When set to 0, s-foils and landing gears are manually closed
+When set to 1, s-foils and landing gears are automatically closed
 The default value is 1.
 
 To set the language of the messages, set the Language setting.
