@@ -211,7 +211,9 @@ struct ExeEnableEntry
 	char unk02[6];
 	void* pData1;
 	void* pData2;
-	char unk10[8];
+	char unk10[2];
+	short CraftIndex;
+	char unk14[4];
 };
 
 static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24");
@@ -2264,6 +2266,13 @@ std::string GetShipPath(int modelIndex)
 
 void ApplyObjectProfile(unsigned short modelIndex, std::string objectProfile, XwaCraft* pCraft)
 {
+	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+
+	if (ExeEnableTable[modelIndex].CraftIndex == -1)
+	{
+		return;
+	}
+
 	int meshesCount;
 	char* m292;
 	char* m22E;
@@ -3968,11 +3977,17 @@ int HangarFoldOutsideHook(int* params)
 		return 0;
 	}
 
+	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 
 	for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x07CA3B8; objectIndex++)
 	{
 		if (xwaObjects[objectIndex].ModelIndex == 0)
+		{
+			continue;
+		}
+
+		if (ExeEnableTable[xwaObjects[objectIndex].ModelIndex].CraftIndex == -1)
 		{
 			continue;
 		}
@@ -3995,11 +4010,17 @@ int HangarFoldOutsideHook(int* params)
 
 int HangarFoldInsideHook(int* params)
 {
+	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 
 	for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x07CA3B8; objectIndex++)
 	{
 		if (xwaObjects[objectIndex].ModelIndex == 0)
+		{
+			continue;
+		}
+
+		if (ExeEnableTable[xwaObjects[objectIndex].ModelIndex].CraftIndex == -1)
 		{
 			continue;
 		}
