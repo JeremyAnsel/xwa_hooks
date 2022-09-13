@@ -194,6 +194,7 @@ const auto configUpdateRate = (__int8*)0xB0C876;
 const auto latestNonInstantiatedRegion = (int*)0x80DB60;
 const auto ticksPerFrame = (int*)0x8C1640;
 const auto missionScrollPosition = (int*)0x7830E8;
+const auto IsObjectEnemy = (bool(*)(unsigned __int16 objectIndex, int playerTeam))0x505D40;
 
 // Unknown Globals
 
