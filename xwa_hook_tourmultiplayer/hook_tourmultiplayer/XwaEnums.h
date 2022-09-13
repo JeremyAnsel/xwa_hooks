@@ -2295,5 +2295,12 @@ enum FlightTextColorMapIndex
 	FlightTextColor_LighestSteel2 = 0x66,
 	FlightTextColor_DarkestSteel2 = 0x67,
 	FlightTextColor_MediumSteel2 = 0x68,
+	FlightTextColor_OtherPal_Teal = 0xC0,
+	FlightTextColor_OtherPal_LightestOrange = 0xC1,
+	FlightTextColor_OtherPal_LightOrange = 0xC2,
+	FlightTextColor_OtherPal_LightestRed2 = 0xC3,
+	FlightTextColor_OtherPal_LightRed2 = 0xC4,
+	FlightTextColor_OtherPalDarkRed2 = 0xC5,
+	FlightTextColor_OtherPal_LightestPurple2 = 0xD3,
 	FlightTextColor_ColorSelectionCode = 0xFE,
 };

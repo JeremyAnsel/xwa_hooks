@@ -216,7 +216,7 @@ int IFFColorsCraftShortNameHook(int* params)
 			break;
 
 		default:
-			color = FlightTextColor_DarkYellow;
+			color = FlightTextColor_MainPal_DarkGray;
 			break;
 		}
 	}
@@ -273,7 +273,7 @@ int IFFColorsCraftNameHook(int* params)
 			break;
 
 		default:
-			color = FlightTextColor_LightYellow;
+			color = FlightTextColor_MainPal_White;
 			break;
 		}
 	}
@@ -330,7 +330,7 @@ int IFFColorsFGIDHook(int* params)
 			break;
 
 		default:
-			color = FlightTextColor_DarkYellow;
+			color = FlightTextColor_MainPal_DarkGray;
 			break;
 		}
 	}
@@ -362,38 +362,36 @@ int IFFColorsFGNameHook(int* params)
 	}
 	else
 	{
+		switch (targetIFF)
+		{
+		case IFF_Rebel:
+			color = FlightTextColor_LightGreen;
+			break;
 
-	}
+		case IFF_Imperial:
+			color = FlightTextColor_LightRed;
+			break;
 
-	switch (targetIFF)
-	{
-	case IFF_Rebel:
-		color = FlightTextColor_LightGreen;
-		break;
+		case IFF_Red:
+			color = FlightTextColor_LightestRed;
+			break;
 
-	case IFF_Imperial:
-		color = FlightTextColor_LightRed;
-		break;
+		case IFF_Blue:
+			color = FlightTextColor_LightBlue;
+			break;
 
-	case IFF_Red:
-		color = FlightTextColor_LightestRed;
-		break;
+		case IFF_Purple:
+			color = FlightTextColor_LightPurple;
+			break;
 
-	case IFF_Blue:
-		color = FlightTextColor_LightBlue;
-		break;
+		case IFF_Yellow:
+			color = FlightTextColor_LightYellow;
+			break;
 
-	case IFF_Purple:
-		color = FlightTextColor_LightPurple;
-		break;
-
-	case IFF_Yellow:
-		color = FlightTextColor_LightYellow;
-		break;
-
-	default:
-		color = FlightTextColor_LightYellow;
-		break;
+		default:
+			color = FlightTextColor_MainPal_White;
+			break;
+		}
 	}
 
 	params[Params_EAX] = color;
@@ -428,8 +426,7 @@ int IFFColorsPlayerTargetBoxHook(int* params)
 			break;
 
 		case IFF_Imperial:
-			//color = 0xC3;
-			color = FlightTextColor_MainPal_LightRed;
+			color = FlightTextColor_OtherPal_LightestRed2;
 			break;
 
 		case IFF_Blue:
@@ -441,17 +438,15 @@ int IFFColorsPlayerTargetBoxHook(int* params)
 			break;
 
 		case IFF_Red:
-			//color = 0xC2;
-			color = FlightTextColor_MainPal_LightestRed;
+			color = FlightTextColor_OtherPal_LightestOrange;
 			break;
 
 		case IFF_Purple:
-			//color = 0xD3;
-			color = FlightTextColor_LightestPurple;
+			color = FlightTextColor_OtherPal_LightestPurple2;
 			break;
 
 		default:
-			color = 0x86;
+			color = FlightTextColor_MainPal_White;
 			break;
 		}
 	}
@@ -490,8 +485,7 @@ int IFFColorsMapPlayerTargetBoxHook(int* params)
 			break;
 
 		case IFF_Imperial:
-			//color = 0xC3;
-			color = FlightTextColor_MainPal_LightRed;
+			color = FlightTextColor_OtherPal_LightestRed2;
 			break;
 
 		case IFF_Blue:
@@ -503,17 +497,15 @@ int IFFColorsMapPlayerTargetBoxHook(int* params)
 			break;
 
 		case IFF_Red:
-			//color = 0xC2;
-			color = FlightTextColor_MainPal_LightestRed;
+			color = FlightTextColor_OtherPal_LightOrange;
 			break;
 
 		case IFF_Purple:
-			//color = 0xD3;
-			color = FlightTextColor_LightestPurple;
+			color = FlightTextColor_OtherPal_LightestPurple2;
 			break;
 
 		default:
-			color = 0x86;
+			color = FlightTextColor_MainPal_White;
 			break;
 		}
 	}
@@ -573,7 +565,7 @@ int IFFColorFGMapMarkerHook(int* params)
 			break;
 
 		default:
-			color = 0x86;
+			color = FlightTextColor_MainPal_White;
 			break;
 		}
 	}
@@ -633,7 +625,7 @@ int IFFColorCraftListNames(int* params)
 			break;
 
 		default:
-			color = 0x87;
+			color = FlightTextColor_MainPal_White;
 			break;
 		}
 	}
