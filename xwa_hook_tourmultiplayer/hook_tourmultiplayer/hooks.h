@@ -13,7 +13,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x55127A, ShowRankRosterHook1 },
 	{ 0x5512D3, ShowRankRosterHook2 },
 
-	{ 0x472FDA, IFFColorsCraftShortNameHook },
+	{ 0x472FDA, IFFColorsCraftSpeciesHook },
 	{ 0x4730B8, IFFColorsCraftNameHook },
 	{ 0x473396, IFFColorsFGIDHook },
 	{ 0x47342E, IFFColorsFGNameHook },
