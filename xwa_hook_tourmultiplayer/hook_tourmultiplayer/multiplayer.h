@@ -8,7 +8,7 @@ int FixBackButtonRacingHook(int* params);
 int ShowRankRosterHook1(int* params);
 int ShowRankRosterHook2(int* params);
 
-int IFFColorsCraftSpeciesHook(int* params);
+int IFFColorsCraftShortNameHook(int* params);
 int IFFColorsCraftNameHook(int* params);
 int IFFColorsFGIDHook(int* params);
 int IFFColorsFGNameHook(int* params);

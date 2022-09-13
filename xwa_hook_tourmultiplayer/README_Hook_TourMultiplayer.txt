@@ -1,10 +1,14 @@
 ==================================================================================
-X-Wing Alliance Tour/Combat Engagements hook for Multiplayer by Justagai (v 2.1.1)
+X-Wing Alliance Tour/Combat Engagements hook for Multiplayer by Justagai (v 2.1.2)
 ==================================================================================
 
 ===============================
 CHANGELOG
 ===============================
+
+2.1.2
+
+- Added config option to change IFF colors to green for friendlies and red for enemies
 
 2.1.1
 
