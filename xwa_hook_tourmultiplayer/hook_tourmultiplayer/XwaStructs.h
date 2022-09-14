@@ -1,6 +1,7 @@
 #pragma once
 
 #include "XwaTypes.h"
+#include "XwaEnums.h"
 
 struct MobileObject;
 struct Projectile;
@@ -2636,6 +2637,21 @@ struct MissionLSTEntry
 	char MissionTitle[128];
 	__int32 IDNumber;
 	__int32 IsUnselectable;
+};
+
+struct HudMessage
+{
+	InFlightStrings StringsMessageLineIndex;
+	__int16 S0x09B6320_m02;
+	__int16 S0x09B6320_m04;
+	char TimeSeconds;
+	char TimeMinutes;
+	char TimeHours;
+	char S0x09B6320_m09;
+	__int16 IFFCode;
+	char S0x09B6320_m0C;
+	char S0x09B6320_m0D;
+	char Text[70];
 };
 
 

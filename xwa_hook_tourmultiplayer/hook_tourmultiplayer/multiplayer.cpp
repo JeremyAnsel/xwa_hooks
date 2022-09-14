@@ -45,12 +45,14 @@ public:
 		this->SettingsBar = GetFileKeyValueInt(lines, "SettingsBar", 0) != 0;
 		this->ChangeCombatSimMusic = GetFileKeyValueInt(lines, "ChangeCombatSimMusic", 1) != 0;
 		this->TourOfDutyButtonRequiredMissionIndex = GetFileKeyValueInt(lines, "TourOfDutyButtonRequiredMissionIndex", 1);
+		this->GreenAndRedForIFFColorsOnly = GetFileKeyValueInt(lines, "GreenAndRedForIFFColorsOnly", 0);
 	}
 
 	std::string SimulatorBackground;
 	bool SettingsBar;
 	bool ChangeCombatSimMusic;
 	int TourOfDutyButtonRequiredMissionIndex;
+	bool GreenAndRedForIFFColorsOnly;
 };
 
 Config g_config;
@@ -167,43 +169,58 @@ int ShowRankRosterHook2(int* params)
 	return 0;
 }
 
-int IFFColorsCraftSpeciesHook(int* params)
+int IFFColorsCraftShortNameHook(int* params)
 {
 	unsigned char targetIFF = (unsigned char)params[Params_EAX];
+	int targetIndex = params[Params_ESI] / sizeof(Object);
 
-	int color;
+	int color = 0;
 
-	switch (targetIFF)
+	if (g_config.GreenAndRedForIFFColorsOnly)
 	{
-	case IFF_Rebel:
-		color = 0x51;
-		break;
-
-	case IFF_Imperial:
-		color = 0x49;
-		break;
-
-	case IFF_Red:
-		color = 0x4A;
-		break;
-
-	case IFF_Blue:
-		color = 0x45;
-		break;
-
-	case IFF_Purple:
-		color = 0x55;
-		break;
-
-	case IFF_Yellow:
-		color = 0x4D;
-		break;
-
-	default:
-		color = 0x4D;
-		break;
+		if (IsObjectEnemy(targetIndex, PlayerPtr[*thisPlayerIndex].team))
+		{
+			color = FlightTextColor_DarkRed;
+		}
+		else
+		{
+			color = FlightTextColor_DarkGreen;
+		}
 	}
+	else
+	{
+		switch (targetIFF)
+		{
+		case IFF_Rebel:
+			color = FlightTextColor_DarkGreen;
+			break;
 
+		case IFF_Imperial:
+			color = FlightTextColor_DarkRed;
+			break;
+
+		case IFF_Red:
+			color = FlightTextColor_LightRed;
+			break;
+
+		case IFF_Blue:
+			color = FlightTextColor_DarkBlue;
+			break;
+
+		case IFF_Purple:
+			color = FlightTextColor_DarkPurple;
+			break;
+
+		case IFF_Yellow:
+			color = FlightTextColor_DarkYellow;
+			break;
+
+		default:
+			color = FlightTextColor_MainPal_DarkGray;
+			break;
+		}
+	}
+	
 	params[Params_EAX] = color;
 
 	return 0;
@@ -212,38 +229,53 @@ int IFFColorsCraftSpeciesHook(int* params)
 int IFFColorsCraftNameHook(int* params)
 {
 	unsigned char targetIFF = (unsigned char)params[Params_EAX];
+	int targetIndex = params[Params_ESI] / sizeof(Object);
 
 	int color;
 
-	switch (targetIFF)
+	if (g_config.GreenAndRedForIFFColorsOnly)
 	{
-	case IFF_Rebel:
-		color = 0x52;
-		break;
+		if (IsObjectEnemy(targetIndex, PlayerPtr[*thisPlayerIndex].team))
+		{
+			color = FlightTextColor_LightRed;
+		}
+		else
+		{
+			color = FlightTextColor_LightGreen;
+		}
+	}
+	else
+	{
+		switch (targetIFF)
+		{
+		case IFF_Rebel:
+			color = FlightTextColor_LightGreen;
+			break;
 
-	case IFF_Imperial:
-		color = 0x4A;
-		break;
+		case IFF_Imperial:
+			color = FlightTextColor_LightRed;
+			break;
 
-	case IFF_Red:
-		color = 0x4B;
-		break;
+		case IFF_Red:
+			color = FlightTextColor_LightestRed;
+			break;
 
-	case IFF_Blue:
-		color = 0x46;
-		break;
+		case IFF_Blue:
+			color = FlightTextColor_LightBlue;
+			break;
 
-	case IFF_Purple:
-		color = 0x56;
-		break;
+		case IFF_Purple:
+			color = FlightTextColor_LightPurple;
+			break;
 
-	case IFF_Yellow:
-		color = 0x4E;
-		break;
+		case IFF_Yellow:
+			color = FlightTextColor_LightYellow;
+			break;
 
-	default:
-		color = 0x4E;
-		break;
+		default:
+			color = FlightTextColor_MainPal_White;
+			break;
+		}
 	}
 
 	params[Params_EAX] = color;
@@ -254,39 +286,56 @@ int IFFColorsCraftNameHook(int* params)
 int IFFColorsFGIDHook(int* params)
 {
 	unsigned char targetIFF = (unsigned char)params[Params_EBX];
+	int targetIndex = params[Params_ESI] / sizeof(Object);
 
 	int color;
 
-	switch (targetIFF)
+	if (g_config.GreenAndRedForIFFColorsOnly)
 	{
-	case IFF_Rebel:
-		color = 0x51;
-		break;
-
-	case IFF_Imperial:
-		color = 0x49;
-		break;
-
-	case IFF_Red:
-		color = 0x4A;
-		break;
-
-	case IFF_Blue:
-		color = 0x45;
-		break;
-
-	case IFF_Purple:
-		color = 0x55;
-		break;
-
-	case IFF_Yellow:
-		color = 0x4D;
-		break;
-
-	default:
-		color = 0x4D;
-		break;
+		if (IsObjectEnemy(targetIndex, PlayerPtr[*thisPlayerIndex].team))
+		{
+			color = FlightTextColor_DarkRed;
+		}
+		else
+		{
+			color = FlightTextColor_DarkGreen;
+		}
 	}
+	else
+	{
+		switch (targetIFF)
+		{
+		case IFF_Rebel:
+			color = FlightTextColor_DarkGreen;
+			break;
+
+		case IFF_Imperial:
+			color = FlightTextColor_DarkRed;
+			break;
+
+		case IFF_Red:
+			color = FlightTextColor_LightRed;
+			break;
+
+		case IFF_Blue:
+			color = FlightTextColor_DarkBlue;
+			break;
+
+		case IFF_Purple:
+			color = FlightTextColor_LightPurple;
+			break;
+
+		case IFF_Yellow:
+			color = FlightTextColor_DarkYellow;
+			break;
+
+		default:
+			color = FlightTextColor_MainPal_DarkGray;
+			break;
+		}
+	}
+
+	
 
 	params[Params_EAX] = color;
 
@@ -296,38 +345,53 @@ int IFFColorsFGIDHook(int* params)
 int IFFColorsFGNameHook(int* params)
 {
 	unsigned char targetIFF = (unsigned char)params[Params_EBX];
+	int targetIndex = params[Params_ESI] / sizeof(Object);
 
 	int color;
 
-	switch (targetIFF)
+	if (g_config.GreenAndRedForIFFColorsOnly)
 	{
-	case IFF_Rebel:
-		color = 0x52;
-		break;
+		if (IsObjectEnemy(targetIndex, PlayerPtr[*thisPlayerIndex].team))
+		{
+			color = FlightTextColor_LightRed;
+		}
+		else
+		{
+			color = FlightTextColor_LightGreen;
+		}
+	}
+	else
+	{
+		switch (targetIFF)
+		{
+		case IFF_Rebel:
+			color = FlightTextColor_LightGreen;
+			break;
 
-	case IFF_Imperial:
-		color = 0x4A;
-		break;
+		case IFF_Imperial:
+			color = FlightTextColor_LightRed;
+			break;
 
-	case IFF_Red:
-		color = 0x4B;
-		break;
+		case IFF_Red:
+			color = FlightTextColor_LightestRed;
+			break;
 
-	case IFF_Blue:
-		color = 0x46;
-		break;
+		case IFF_Blue:
+			color = FlightTextColor_LightBlue;
+			break;
 
-	case IFF_Purple:
-		color = 0x56;
-		break;
+		case IFF_Purple:
+			color = FlightTextColor_LightPurple;
+			break;
 
-	case IFF_Yellow:
-		color = 0x4E;
-		break;
+		case IFF_Yellow:
+			color = FlightTextColor_LightYellow;
+			break;
 
-	default:
-		color = 0x4E;
-		break;
+		default:
+			color = FlightTextColor_MainPal_White;
+			break;
+		}
 	}
 
 	params[Params_EAX] = color;
@@ -338,39 +402,56 @@ int IFFColorsFGNameHook(int* params)
 int IFFColorsPlayerTargetBoxHook(int* params)
 {
 	unsigned char targetIFF = (unsigned char)params[Params_EAX];
+	int targetIndex = params[Params_ECX] / sizeof(Object);
 
 	int color;
 
-	switch (targetIFF)
+	if (g_config.GreenAndRedForIFFColorsOnly)
 	{
-	case IFF_Rebel:
-		color = 0x3F;
-		break;
-
-	case IFF_Imperial:
-		color = 0xC3;
-		break;
-
-	case IFF_Blue:
-		color = 0x33;
-		break;
-
-	case IFF_Yellow:
-		color = 0x3B;
-		break;
-
-	case IFF_Red:
-		color = 0xC2;
-		break;
-
-	case IFF_Purple:
-		color = 0xD3;
-		break;
-
-	default:
-		color = 0x86;
-		break;
+		if (IsObjectEnemy(targetIndex, PlayerPtr[*thisPlayerIndex].team))
+		{
+			color = FlightTextColor_MainPal_LightestRed;
+		}
+		else
+		{
+			color = FlightTextColor_MainPal_LightestGreen;
+		}
 	}
+	else
+	{
+		switch (targetIFF)
+		{
+		case IFF_Rebel:
+			color = FlightTextColor_MainPal_LightestGreen;
+			break;
+
+		case IFF_Imperial:
+			color = FlightTextColor_OtherPal_LightestRed2;
+			break;
+
+		case IFF_Blue:
+			color = FlightTextColor_MainPal_LightestBlue;
+			break;
+
+		case IFF_Yellow:
+			color = FlightTextColor_MainPal_LightestYellow;
+			break;
+
+		case IFF_Red:
+			color = FlightTextColor_OtherPal_LightestOrange;
+			break;
+
+		case IFF_Purple:
+			color = FlightTextColor_OtherPal_LightestPurple2;
+			break;
+
+		default:
+			color = FlightTextColor_MainPal_White;
+			break;
+		}
+	}
+
+	
 
 	params[Params_EDX] = color;
 
@@ -380,39 +461,57 @@ int IFFColorsPlayerTargetBoxHook(int* params)
 int IFFColorsMapPlayerTargetBoxHook(int* params)
 {
 	unsigned char targetIFF = (unsigned char)params[Params_EAX];
+	int targetIndex = params[Params_ESI] / sizeof(Object);
 
 	int color;
 
-	switch (targetIFF)
+	if (g_config.GreenAndRedForIFFColorsOnly)
 	{
-	case IFF_Rebel:
-		color = 0x3F;
-		break;
-
-	case IFF_Imperial:
-		color = 0xC3;
-		break;
-
-	case IFF_Blue:
-		color = 0x46;
-		break;
-
-	case IFF_Yellow:
-		color = 0x3B;
-		break;
-
-	case IFF_Red:
-		color = 0xC2;
-		break;
-
-	case IFF_Purple:
-		color = 0xD3;
-		break;
-
-	default:
-		color = 0x86;
-		break;
+		if (IsObjectEnemy(targetIndex, PlayerPtr[*thisPlayerIndex].team))
+		{
+			color = FlightTextColor_MainPal_LightestRed;
+		}
+		else
+		{
+			color = FlightTextColor_MainPal_LightestGreen;
+		}
 	}
+	else
+	{
+		switch (targetIFF)
+		{
+		case IFF_Rebel:
+			color = FlightTextColor_MainPal_LightestGreen;
+			break;
+
+		case IFF_Imperial:
+			color = FlightTextColor_OtherPal_LightestRed2;
+			break;
+
+		case IFF_Blue:
+			color = FlightTextColor_MainPal_LightestBlue;
+			break;
+
+		case IFF_Yellow:
+			color = FlightTextColor_MainPal_LightestYellow;
+			break;
+
+		case IFF_Red:
+			color = FlightTextColor_OtherPal_LightOrange;
+			break;
+
+		case IFF_Purple:
+			color = FlightTextColor_OtherPal_LightestPurple2;
+			break;
+
+		default:
+			color = FlightTextColor_MainPal_White;
+			break;
+		}
+	}
+	
+
+	
 
 	params[Params_EAX] = color;
 
@@ -422,39 +521,57 @@ int IFFColorsMapPlayerTargetBoxHook(int* params)
 int IFFColorFGMapMarkerHook(int* params)
 {
 	unsigned char targetIFF = (unsigned char)params[Params_EAX];
+	int targetIndex = params[Params_ESI] / sizeof(Object);
 
 	int color;
 
-	switch (targetIFF)
+	if (g_config.GreenAndRedForIFFColorsOnly)
 	{
-	case IFF_Rebel:
-		color = 0x51;
-		break;
-
-	case IFF_Imperial:
-		color = 0x49;
-		break;
-
-	case IFF_Blue:
-		color = 0x45;
-		break;
-
-	case IFF_Yellow:
-		color = 0x4D;
-		break;
-
-	case IFF_Red:
-		color = 0x4A;
-		break;
-
-	case IFF_Purple:
-		color = 0x55;
-		break;
-
-	default:
-		color = 0x86;
-		break;
+		if (IsObjectEnemy(targetIndex, PlayerPtr[*thisPlayerIndex].team))
+		{
+			color = FlightTextColor_MainPal_LightestRed;
+		}
+		else
+		{
+			color = FlightTextColor_MainPal_LightestGreen;
+		}
 	}
+	else
+	{
+		switch (targetIFF)
+		{
+		case IFF_Rebel:
+			color = FlightTextColor_MainPal_LightestGreen;
+			break;
+
+		case IFF_Imperial:
+			color = FlightTextColor_MainPal_LightRed;
+			break;
+
+		case IFF_Blue:
+			color = FlightTextColor_MainPal_LightestBlue;
+			break;
+
+		case IFF_Yellow:
+			color = FlightTextColor_MainPal_LightestYellow;
+			break;
+
+		case IFF_Red:
+			color = FlightTextColor_MainPal_LightestRed;
+			break;
+
+		case IFF_Purple:
+			color = FlightTextColor_LightPurple;
+			break;
+
+		default:
+			color = FlightTextColor_MainPal_White;
+			break;
+		}
+	}
+	
+
+	
 
 	params[Params_EAX] = color;
 
@@ -464,39 +581,57 @@ int IFFColorFGMapMarkerHook(int* params)
 int IFFColorCraftListNames(int* params)
 {
 	unsigned char targetIFF = (unsigned char)params[Params_EAX];
+	int targetIndex = params[Params_EDI] / sizeof(Object);
 
 	int color;
 
-	switch (targetIFF)
+	if (g_config.GreenAndRedForIFFColorsOnly)
 	{
-	case IFF_Rebel:
-		color = 0x52;
-		break;
-
-	case IFF_Imperial:
-		color = 0x4A;
-		break;
-
-	case IFF_Blue:
-		color = 0x46;
-		break;
-
-	case IFF_Yellow:
-		color = 0x4E;
-		break;
-
-	case IFF_Red:
-		color = 0x4B;
-		break;
-
-	case IFF_Purple:
-		color = 0x56;
-		break;
-
-	default:
-		color = 0x87;
-		break;
+		if (IsObjectEnemy(targetIndex, PlayerPtr[*thisPlayerIndex].team))
+		{
+			color = FlightTextColor_LightRed;
+		}
+		else
+		{
+			color = FlightTextColor_LightGreen;
+		}
 	}
+	else
+	{
+		switch (targetIFF)
+		{
+		case IFF_Rebel:
+			color = FlightTextColor_LightGreen;
+			break;
+
+		case IFF_Imperial:
+			color = FlightTextColor_LightRed;
+			break;
+
+		case IFF_Blue:
+			color = FlightTextColor_LightBlue;
+			break;
+
+		case IFF_Yellow:
+			color = FlightTextColor_LightYellow;
+			break;
+
+		case IFF_Red:
+			color = FlightTextColor_LightestRed;
+			break;
+
+		case IFF_Purple:
+			color = FlightTextColor_LightPurple;
+			break;
+
+		default:
+			color = FlightTextColor_MainPal_White;
+			break;
+		}
+	}
+	
+
+	
 
 	params[Params_EAX] = color;
 
@@ -1323,32 +1458,47 @@ int QuitMessageHook(int* params)
 
 int IFFColorOrangeMessageHook(int* params)
 {
-	// Change IFF Red message to IFF Orange
+	// Change IFF Red message to Orange
 
-	params[-5] = *missionMessageBufferColor;
+	HudMessage* HudReadyMessageText = (HudMessage*)0x7C9DC0;
 
-	if (*missionMessageBufferColor == IFF_Red)
-		params[Params_EAX] = 0x4B;
+	params[Params_EDX] = HudReadyMessageText->IFFCode;
+	if (g_config.GreenAndRedForIFFColorsOnly)
+	{
+		params[Params_EAX] = FlightTextColor_MainPal_White;
+	}
 	else
-		params[Params_EAX] = MissionMessageColorTable[*missionMessageBufferColor];
-
-	params[-1] = 0x47A9A0;
+	{
+		if (HudReadyMessageText->IFFCode == IFF_Red)
+			params[Params_EAX] = FlightTextColor_LightestRed;
+		else
+			params[Params_EAX] = MissionMessageColorTable[*missionMessageBufferColor];
+	}
+	
+	params[Params_ReturnAddress] = 0x47A9A0;
 
 	return 0;
 }
 
 int IFFColorOrangeMessageLogHook(int* params)
 {
-	// Change IFF Red message in message log to IFF Orange
+	// Change IFF Red message in message log to Orange
 
-	__int16 messageIFF = params[-4];
+	__int16 messageIFF = params[Params_ECX];
 
-	if (messageIFF == IFF_Red)
-		params[Params_EAX] = 0x4B;
+	if (g_config.GreenAndRedForIFFColorsOnly)
+	{
+		params[Params_EAX] = FlightTextColor_MainPal_White;
+	}
 	else
-		params[Params_EAX] = MissionMessageColorTable[messageIFF];
+	{
+		if (messageIFF == IFF_Red)
+			params[Params_EAX] = FlightTextColor_LightestRed;
+		else
+			params[Params_EAX] = MissionMessageColorTable[messageIFF];
+	}
 
-	params[-1] = 0x49A159;
+	params[Params_ReturnAddress] = 0x49A159;
 
 	return 0;
 }
