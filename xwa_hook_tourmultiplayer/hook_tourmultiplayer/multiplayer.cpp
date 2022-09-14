@@ -45,7 +45,7 @@ public:
 		this->SettingsBar = GetFileKeyValueInt(lines, "SettingsBar", 0) != 0;
 		this->ChangeCombatSimMusic = GetFileKeyValueInt(lines, "ChangeCombatSimMusic", 1) != 0;
 		this->TourOfDutyButtonRequiredMissionIndex = GetFileKeyValueInt(lines, "TourOfDutyButtonRequiredMissionIndex", 1);
-		this->GreenAndRedForIFFColorsOnly = GetFileKeyValueInt(lines, "GreenAndRedForIFFColorsOnly", 0);
+		this->GreenAndRedForIFFColorsOnly = GetFileKeyValueInt(lines, "GreenAndRedForIFFColorsOnly", 0) != 0;
 	}
 
 	std::string SimulatorBackground;
