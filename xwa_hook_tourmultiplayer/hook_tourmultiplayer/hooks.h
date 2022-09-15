@@ -21,6 +21,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x49FA30, IFFColorsMapPlayerTargetBoxHook },
 	{ 0x49FE63, IFFColorFGMapMarkerHook },
 	{ 0x4C292C, IFFColorCraftListNames },
+	{ 0x4761D5, IFFRadarBlipColorHook},
 
 	{ 0x546A05, PanelButtonsHook },
 	{ 0x551476, FixCraftSelectionTourHook },
@@ -90,6 +91,8 @@ static const HookPatchItem g_multiPatch[] =
 	{ 0x09F25C, "7723FF2485A0044A00", "9090E8BD8C1000EB21" },
 	// IFF Craft Names List Hook
 	{ 0x0C1D27, "84C075046A52", "E8F4610E0050" },
+	// IFF Color Radar Blip
+	{ 0x755D0, "8BC283F8057732FF248578644700", "E84B2913008945FCEB2F90909090"},
 
 	// Combat Button Hook
 	{ 0x145E00, "0F8460010000", "E81B21060090" },

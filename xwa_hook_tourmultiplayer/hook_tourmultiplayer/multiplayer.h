@@ -16,6 +16,7 @@ int IFFColorsPlayerTargetBoxHook(int* params);
 int IFFColorsMapPlayerTargetBoxHook(int* params);
 int IFFColorFGMapMarkerHook(int* params);
 int IFFColorCraftListNames(int* params);
+int IFFRadarBlipColorHook(int* params);
 
 int PanelButtonsHook(int* params);
 int FixCraftSelectionTourHook(int* params);

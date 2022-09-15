@@ -273,7 +273,7 @@ int IFFColorsCraftNameHook(int* params)
 			break;
 
 		default:
-			color = FlightTextColor_MainPal_White;
+			color = FlightTextColor_MainPal_Gray;
 			break;
 		}
 	}
@@ -410,11 +410,11 @@ int IFFColorsPlayerTargetBoxHook(int* params)
 	{
 		if (IsObjectEnemy(targetIndex, PlayerPtr[*thisPlayerIndex].team))
 		{
-			color = FlightTextColor_MainPal_LightestRed;
+			color = MainPal_LightestRed;
 		}
 		else
 		{
-			color = FlightTextColor_MainPal_LightestGreen;
+			color = MainPal_LightestGreen;
 		}
 	}
 	else
@@ -422,31 +422,31 @@ int IFFColorsPlayerTargetBoxHook(int* params)
 		switch (targetIFF)
 		{
 		case IFF_Rebel:
-			color = FlightTextColor_MainPal_LightestGreen;
+			color = MainPal_LightestGreen;
 			break;
 
 		case IFF_Imperial:
-			color = FlightTextColor_OtherPal_LightestRed2;
+			color = OtherPal_LightestRed2;
 			break;
 
 		case IFF_Blue:
-			color = FlightTextColor_MainPal_LightestBlue;
+			color = MainPal_LightestBlue;
 			break;
 
 		case IFF_Yellow:
-			color = FlightTextColor_MainPal_LightestYellow;
+			color = MainPal_LightestYellow;
 			break;
 
 		case IFF_Red:
-			color = FlightTextColor_OtherPal_LightestOrange;
+			color = MainPal_LightestRed;
 			break;
 
 		case IFF_Purple:
-			color = FlightTextColor_OtherPal_LightestPurple2;
+			color = OtherPal_LightestPurple2;
 			break;
 
 		default:
-			color = FlightTextColor_MainPal_White;
+			color = MainPal_White;
 			break;
 		}
 	}
@@ -469,11 +469,11 @@ int IFFColorsMapPlayerTargetBoxHook(int* params)
 	{
 		if (IsObjectEnemy(targetIndex, PlayerPtr[*thisPlayerIndex].team))
 		{
-			color = FlightTextColor_MainPal_LightestRed;
+			color = MainPal_LightestRed;
 		}
 		else
 		{
-			color = FlightTextColor_MainPal_LightestGreen;
+			color = MainPal_LightestGreen;
 		}
 	}
 	else
@@ -481,31 +481,31 @@ int IFFColorsMapPlayerTargetBoxHook(int* params)
 		switch (targetIFF)
 		{
 		case IFF_Rebel:
-			color = FlightTextColor_MainPal_LightestGreen;
+			color = MainPal_LightestGreen;
 			break;
 
 		case IFF_Imperial:
-			color = FlightTextColor_OtherPal_LightestRed2;
+			color = OtherPal_LightestRed2;
 			break;
 
 		case IFF_Blue:
-			color = FlightTextColor_MainPal_LightestBlue;
+			color = MainPal_LightestBlue;
 			break;
 
 		case IFF_Yellow:
-			color = FlightTextColor_MainPal_LightestYellow;
+			color = MainPal_LightestYellow;
 			break;
 
 		case IFF_Red:
-			color = FlightTextColor_OtherPal_LightOrange;
+			color = MainPal_LightestRed;
 			break;
 
 		case IFF_Purple:
-			color = FlightTextColor_OtherPal_LightestPurple2;
+			color = OtherPal_LightestPurple2;
 			break;
 
 		default:
-			color = FlightTextColor_MainPal_White;
+			color = MainPal_White;
 			break;
 		}
 	}
@@ -632,6 +632,63 @@ int IFFColorCraftListNames(int* params)
 	
 
 	
+
+	params[Params_EAX] = color;
+
+	return 0;
+}
+
+int IFFRadarBlipColorHook(int* params)
+{
+	int objectIndex = params[Params_ECX] / sizeof(Object);
+
+	char IFF = params[Params_EDX];
+	int color;
+
+	if (g_config.GreenAndRedForIFFColorsOnly)
+	{
+		if (IsObjectEnemy(objectIndex, PlayerPtr[*thisPlayerIndex].team))
+		{
+			color = MainPal_LightestRed;
+		}
+		else
+		{
+			color = MainPal_LightestGreen;
+		}
+	}
+	else
+	{
+		switch (IFF)
+		{
+		case IFF_Rebel:
+			color = MainPal_LightestGreen;
+			break;
+
+		case IFF_Imperial:
+			color = MainPal_LightRed;
+			break;
+
+		case IFF_Blue:
+			color = MainPal_LightestBlue;
+			break;
+
+		case IFF_Yellow:
+			color = MainPal_LightestYellow;
+			break;
+
+		case IFF_Red:
+			color = MainPal_LightestRed;
+			break;
+
+		case IFF_Purple:
+			color = OtherPal_LightestPurple2;
+			break;
+
+		default:
+			color = MainPal_White;
+			break;
+		}
+	}
 
 	params[Params_EAX] = color;
 
