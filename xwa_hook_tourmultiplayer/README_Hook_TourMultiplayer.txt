@@ -1,10 +1,14 @@
 ==================================================================================
-X-Wing Alliance Tour/Combat Engagements hook for Multiplayer by Justagai (v 2.1.2)
+X-Wing Alliance Tour/Combat Engagements hook for Multiplayer by Justagai (v 2.1.3)
 ==================================================================================
 
 ===============================
 CHANGELOG
 ===============================
+
+2.1.3
+
+- Fixed bug where radar blip colors were not affected by the new IFF color config option
 
 2.1.2
 
