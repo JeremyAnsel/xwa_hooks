@@ -69,6 +69,15 @@ E8C20CFCFF              call 00434FB0
 E832481300              call 005A8B20, 005A8B20 - 004742EE = 00134832
 
 
+// L0045C680
+void XwaHangarCheckInputs(  )
+:0045C686 - 0x05BA86
+8A0D68DB8000            mov cl, byte ptr [0080DB68]
+
+E895C41400              call 005A8B20, 005A8B20 - 0045C68B = 0014C495
+90                      nop
+
+
 ; inflight 1
 
 ;:005107D5 - 0x10FBD5

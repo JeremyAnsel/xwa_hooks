@@ -31,6 +31,7 @@ At offset 13FED3, replace A142709F0085C0750EEBC1 with 6A30FF1574905A0090EB0C.
 At offset 13DEEF, replace 0F844AFDFFFF with 909090909090.
 At offset 13F262, replace 0F84C1FEFFFF with 909090909090.
 At offset 0736E9, replace E8C20CFCFF with E832481300.
+At offset 05BA86, replace 8A0D68DB8000 with E895C4140090.
 
 # To call the hook that sets full FPS
 At offset 10FBD2, replace 83FA08 with 83FA01.

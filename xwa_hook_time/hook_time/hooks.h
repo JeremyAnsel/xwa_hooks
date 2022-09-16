@@ -8,6 +8,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x50E415, L0050E410Hook },
 	{ 0x50E435, L0050E430Hook },
 	{ 0x4742EE, RenderHudTimeHook },
+	{ 0x45C68B, HangarCheckInputsHook },
 	{ 0x401B82, AsteroidsAnimationHook },
 	{ 0x401BA1, AsteroidsAnimationHook },
 	{ 0x401BC7, AsteroidsAnimationHook },
@@ -26,6 +27,7 @@ static const HookPatchItem g_reduceCPUUsagePatch[] =
 	{ 0x13DEEF, "0F844AFDFFFF", "909090909090" },
 	{ 0x13F262, "0F84C1FEFFFF", "909090909090" },
 	{ 0x0736E9, "E8C20CFCFF", "E832481300" },
+	{ 0x05BA86, "8A0D68DB8000", "E895C4140090" },
 };
 
 static const HookPatchItem g_fullFpsPatch[] =

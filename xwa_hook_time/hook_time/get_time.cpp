@@ -259,6 +259,17 @@ int RenderHudTimeHook(int* params)
 	return 0;
 }
 
+int HangarCheckInputsHook(int* params)
+{
+	params[Params_ECX] = *(unsigned char*)0x0080DB68;
+
+	*(unsigned short*)0x008053C0 = 0;
+	g_isTimeMultiplicatorEnabled = false;
+	g_isTimeDivisorEnabled = false;
+
+	return 0;
+}
+
 int AsteroidsAnimationHook(int* params)
 {
 	const short elapsedTime = *(short*)0x08C1640;
