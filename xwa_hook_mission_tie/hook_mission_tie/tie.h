@@ -23,3 +23,4 @@ int MissionIdForcePlayerInTurret2Hook(int* params);
 int MissionPlayerShootHook(int* params);
 int MissionPlayerTypeShootHook(int* params);
 int MissionDrawLaserCharge3DHook(int* params);
+int WarheadCollisionDamagesHook(int* params);

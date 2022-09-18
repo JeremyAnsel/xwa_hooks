@@ -43,6 +43,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x490F04, MissionPlayerShootHook },
 	{ 0x490F5B, MissionPlayerTypeShootHook },
 	{ 0x46600A, MissionDrawLaserCharge3DHook },
+	{ 0x40F41D, WarheadCollisionDamagesHook },
 };
 
 static const HookPatchItem g_overrideTiePatch[] =
@@ -129,6 +130,7 @@ static const HookPatchItem g_missionIdsCheckPatch[] =
 	{ 0x0902FF, "0F849C030000", "E81C7C110090" },
 	{ 0x090356, "0F8558020000", "E8C57B110090" },
 	{ 0x065405, "E8E6470000", "E8162B1400" },
+	{ 0x00E818, "0F8C1B010000", "E80397190090" },
 };
 
 static const HookPatch g_patches[] =

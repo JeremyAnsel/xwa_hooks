@@ -74,6 +74,7 @@ At offset 0F88F7, replace 751E with 9090.
 At offset 0902FF, replace 0F849C030000 with E81C7C110090.
 At offset 090356, replace 0F8558020000 with E8C57B110090.
 At offset 065405, replace E8E6470000 with E8162B1400.
+At offset 00E818, replace 0F8C1B010000 with E80397190090.
 
 
 *** Usage ***
@@ -94,6 +95,7 @@ To force the player in turret, set "ForcePlayerInTurret = 1". The default settin
 To set the force turret time, set the ForcePlayerInTurretHours, ForcePlayerInTurretMinutes and ForcePlayerInTurretSeconds settings. The default values are 0, 0, 8.
 To disable player laser shoot, set "DisablePlayerLaserShoot = 1". The default value is 0.
 To disable player warhead shoot, set "DisablePlayerWarheadShoot = 1". The default value is 0.
+To disable warhead collision damages, set "IsWarheadCollisionDamagesEnabled = 0". The default value is 1.
 
 See "mission.txt".
 

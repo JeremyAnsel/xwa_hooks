@@ -67,6 +67,26 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class Config
+{
+public:
+	Config()
+	{
+		auto lines = GetFileLines("hook_mission_tie.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_mission_tie");
+		}
+
+		this->IsWarheadCollisionDamagesEnabled = GetFileKeyValueInt(lines, "IsWarheadCollisionDamagesEnabled", 1) != 0;
+	}
+
+	bool IsWarheadCollisionDamagesEnabled;
+};
+
+Config g_config;
+
 class MissionConfig
 {
 public:
@@ -125,6 +145,12 @@ public:
 		return this->_disablePlayerWarheadShoot;
 	}
 
+	bool IsWarheadCollisionDamagesEnabled()
+	{
+		this->UpdateIfChanged();
+		return this->_isWarheadCollisionDamagesEnabled;
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -153,6 +179,7 @@ private:
 			this->_forcePlayerInTurretSeconds = GetFileKeyValueInt(lines, "ForcePlayerInTurretSeconds", 8);
 			this->_disablePlayerLaserShoot = GetFileKeyValueInt(lines, "DisablePlayerLaserShoot", 0) != 0;
 			this->_disablePlayerWarheadShoot = GetFileKeyValueInt(lines, "DisablePlayerWarheadShoot", 0) != 0;
+			this->_isWarheadCollisionDamagesEnabled = GetFileKeyValueInt(lines, "IsWarheadCollisionDamagesEnabled", 1) != 0;
 		}
 	}
 
@@ -200,6 +227,7 @@ private:
 	int _forcePlayerInTurretSeconds;
 	bool _disablePlayerLaserShoot;
 	bool _disablePlayerWarheadShoot;
+	bool _isWarheadCollisionDamagesEnabled;
 };
 
 MissionConfig g_missionConfig;
@@ -1484,6 +1512,20 @@ int MissionDrawLaserCharge3DHook(int* params)
 	const auto DrawLaserCharge3D = (void(*)())0x0046A7F0;
 
 	DrawLaserCharge3D();
+
+	return 0;
+}
+
+int WarheadCollisionDamagesHook(int* params)
+{
+	const int tieVersion = params[Params_EAX];
+
+	bool enable = g_config.IsWarheadCollisionDamagesEnabled && g_missionConfig.IsWarheadCollisionDamagesEnabled();
+
+	if (!enable || tieVersion < 0x0E)
+	{
+		params[Params_ReturnAddress] = 0x0040F539;
+	}
 
 	return 0;
 }

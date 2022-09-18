@@ -378,3 +378,10 @@ E8C57B1100              call 005A8B20, 005A8B20 - 00490F5B = 00117BC5
 E8E6470000              call 0046A7F0
 
 E8162B1400              call 005A8B20, 005A8B20 - 0046600A = 00142B16
+
+; warhead collision damages
+:0040F418 - 0x00E818
+0F8C1B010000            jl 0040F539
+
+E803971900              call 005A8B20, 005A8B20 - 0040F41D = 00199703
+90                      nop

@@ -11,3 +11,4 @@ ForcePlayerInTurretMinutes = 0
 ForcePlayerInTurretSeconds = 8
 DisablePlayerLaserShoot = 0
 DisablePlayerWarheadShoot = 0
+IsWarheadCollisionDamagesEnabled = 1
