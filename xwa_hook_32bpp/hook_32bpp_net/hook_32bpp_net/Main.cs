@@ -1,6 +1,7 @@
 ﻿using JeremyAnsel.IO.Locator;
 using JeremyAnsel.Xwa.Opt;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -208,6 +209,12 @@ namespace hook_32bpp_net
             }
 
             string optName = Path.GetFileNameWithoutExtension(optFilename);
+
+            if (!Directory.Exists($"FlightModels\\Skins\\{optName}"))
+            {
+                return 0;
+            }
+
             IList<string> objectLines = GetCustomFileLines("Skins");
             IList<string> baseSkins = XwaHooksConfig.Tokennize(XwaHooksConfig.GetFileKeyValue(objectLines, optName));
             bool hasDefaultSkin = GetSkinDirectoryLocatorPath(optName, "Default") != null || GetFlightgroupsDefaultCount(optName) != 0;
@@ -348,23 +355,22 @@ namespace hook_32bpp_net
                 return;
             }
 
-            var newTextures = new List<Texture>();
+            var newTextures = new ConcurrentBag<Texture>();
 
-            foreach (var texture in opt.Textures)
+            opt.Textures
+                .Where(texture => texturesExist.Contains(texture.Key))
+                .AsParallel()
+                .ForAll(texture =>
             {
-                if (!texturesExist.Contains(texture.Key))
-                {
-                    continue;
-                }
+                texture.Value.Convert8To32();
 
                 foreach (int i in fgColors)
                 {
-                    texture.Value.Convert8To32();
                     Texture newTexture = texture.Value.Clone();
                     newTexture.Name += "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]);
                     newTextures.Add(newTexture);
                 }
-            }
+            });
 
             foreach (var newTexture in newTextures)
             {
@@ -409,13 +415,13 @@ namespace hook_32bpp_net
 
         private static void UpdateSkins(string optName, OptFile opt, List<string> distinctSkins, List<List<string>> fgSkins)
         {
-            var locatorsPath = new Dictionary<string, string>(distinctSkins.Count, StringComparer.OrdinalIgnoreCase);
-            var filesSets = new Dictionary<string, SortedSet<string>>(distinctSkins.Count, StringComparer.OrdinalIgnoreCase);
+            var locatorsPath = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var filesSets = new ConcurrentDictionary<string, SortedSet<string>>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (string skin in distinctSkins)
+            distinctSkins.AsParallel().ForAll(skin =>
             {
                 string path = GetSkinDirectoryLocatorPath(optName, skin);
-                locatorsPath.Add(skin, path);
+                locatorsPath[skin] = path;
 
                 SortedSet<string> filesSet = null;
 
@@ -433,10 +439,13 @@ namespace hook_32bpp_net
                     }
                 }
 
-                filesSets.Add(skin, filesSet ?? new SortedSet<string>());
-            }
+                filesSets[skin] = filesSet ?? new SortedSet<string>();
+            });
 
-            opt.Textures.AsParallel().ForAll(texture =>
+            opt.Textures
+                .Where(texture => texture.Key.IndexOf("_fg_") != -1)
+                .AsParallel()
+                .ForAll(texture =>
             {
                 int position = texture.Key.IndexOf("_fg_");
 
