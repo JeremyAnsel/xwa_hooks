@@ -1,4 +1,9 @@
 
+planet_position_left = 0
+planet_position_right = 640
+planet_position_top = 55
+planet_position_bottom = 125
+
 tourdoor_posX = 231
 tourdoor_posY = 174
 

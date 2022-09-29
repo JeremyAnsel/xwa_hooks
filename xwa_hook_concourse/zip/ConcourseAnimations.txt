@@ -1,0 +1,6 @@
+; The format is:
+;roomName, positionX, positionY, datGroupId, delayMin, delayMax, groupName, missionIds
+
+concourse, 0, 0, 30001, 0, 0, group1, -1
+concourse, 0, 0, 30002, 0, 0, groupB, 8 9 10
+concourse, 0, 0, 30003, 0, 0, group3, 11 ~12

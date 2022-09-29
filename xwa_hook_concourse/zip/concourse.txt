@@ -1,0 +1,3 @@
+FrontPlanetIndex = 15010
+FrontPlanetPositionX = 0
+FrontPlanetPositionY = 0

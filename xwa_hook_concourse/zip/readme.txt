@@ -64,6 +64,11 @@ At offset 02F512, replace 0F83CB070000 with 909090909090.
 At offset 02F535, replace 3B2C95A8305B00720D with 55E8E58917005DEB0D.
 
 # To call the hook that draws the concourse doors
+At offset 13DCC2, replace 8B154114A200 with E859A2060090.
+At offset 13DD08, replace 891D8DC0A100 with E813A2060090.
+At offset 13A002, replace E8A9120600 with 33C0909090.
+At offset 13A011, replace E89A120600 with 33C0909090.
+At offset 13A024, replace 83C2372BD7 with E8F7DE0600.
 At offset 139506, replace 68AE00000068E7000000 with E815EA0600EB7D909090.
 At offset 1395BD, replace E80EEB0100 with E85EE90600.
 At offset 13972B, replace E8A0E90100 with E8F0E70600.
@@ -113,6 +118,14 @@ At offset 128D30, replace B801000000 with E8FBF10700.
 At offset 12811B, replace E8F0200700 with E810FE0700.
 At offset 162670, replace 893D104B9F00 with E8AB58040090.
 
+# To call the hook that generates concourse starfield
+At offset 1394CB, replace E8800B0000 with E860EA0600.
+At offset 1394FE, replace E84D0C0000 with E82DEA0600.
+
+# To call the hook that loads the front planet image
+At offset 13936A, replace 0F8495000000 with E8B1EB060090.
+At offset 139446, replace E8553C0200 with E8D5EA0600.
+
 
 *** Usage ***
 
@@ -127,8 +140,28 @@ The format of the file is a line per cutscene:
 points level, cutscene name
 See CustomMoviesOnPointsList.txt.
 
-To define the doors positions, edit the "ConcourseDoors.txt" file.
+To define the planet and the doors positions, edit the "ConcourseDoors.txt" file.
 See ConcourseDoors.txt.
+
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+To override the mission settings, create a file named "[MissionDir]\[Mission]_concourse.txt" or create a section named "[concourse]" in "[MissionDir]\[Mission].ini".
+To define the front planet image index, set "FrontPlanetIndex = value". value is the planet index as defined in the "FrontPlanet.dat" file. If the setting is not defined or is -1 then the default game behavior is used.
+To define the position of the front planet, set "FrontPlanetPositionX = valueX" and "FrontPlanetPositionY = valueY". When valueX or valueY is -1 then the default behavior is used.
+
+To define animations for the concourse, edit the "ConcourseAnimations.txt" file.
+The format is:
+roomName, positionX, positionY, datGroupId, delayMin, delayMax, groupName, missionIds
+Each line defines an animation.
+The valid values for roomName are: concourse.
+The datGroupId is the id of the image group in a dat file. The custom dat files are defined in the "Resdata.txt" file.
+The delay between animations is random from delayMin to delayMax.
+Only 1 animation per groupName is rendered at the same time.
+To define the animations on a per-mission basis, set the missionIds setting. It is a space separated list. If an Id is -1 then the animation is played for all missions. If an Id begins with ~ then the animation is not played for the mission.
+
+To define a sound for an animation,
+- copy the sound .waw file in the "Sfx" directory
+- reference the file in "Sfx\Sfx.lst"
+The key for the sound is "concourse_anim_" followed by the image id. For example, if the id is 32002 then the key is "concourse_anim_32002".
 
 To set the medals positions in the medals case, edit the "MedalsPositions.txt" file.
 To set the medals descriptions, edit the "MedalsDescriptions.txt" file.

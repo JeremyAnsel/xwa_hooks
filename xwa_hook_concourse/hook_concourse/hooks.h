@@ -47,6 +47,9 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x51139A, CustomMoviesOnPoints1Hook },
 	{ 0x57EDEC, CustomMoviesOnPointsPlayHook },
 	{ 0x43013B, CustomPointsCheckHook },
+	{ 0x53E8C7, LoadGameStateHook },
+	{ 0x53E90D, FreeGameStateHook },
+	{ 0x53AC29, DrawConcoursePlanetHook },
 	{ 0x53A10B, DrawConcourseDoorsHook },
 	{ 0x53A1C2, TrainDoorRectHook },
 	{ 0x53A330, CombatDoorRectHook },
@@ -70,6 +73,10 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x529935, ReadPilotHook },
 	{ 0x528D20, CreatePilotHook },
 	{ 0x563275, ReadEmailTxtHook },
+	{ 0x53A0D0, SetupConcourseStarfieldHook },
+	{ 0x53A103, DrawConcourseStarfieldHook },
+	{ 0x539F6F, SwitchFrontPlanetImageHook },
+	{ 0x53A04B, LoadFrontPlanetImageHook },
 };
 
 static const std::string g_RankPointsArray = int_to_hex(GetRankPointsArrayPtr() + 0x00);
@@ -129,6 +136,11 @@ static const HookPatchItem g_customMoviesOnPointsPatch[] =
 
 static const HookPatchItem g_concourseDoorsPatch[] =
 {
+	{ 0x13DCC2, "8B154114A200", "E859A2060090" },
+	{ 0x13DD08, "891D8DC0A100", "E813A2060090" },
+	{ 0x13A002, "E8A9120600", "33C0909090" },
+	{ 0x13A011, "E89A120600", "33C0909090" },
+	{ 0x13A024, "83C2372BD7", "E8F7DE0600" },
 	{ 0x139506, "68AE00000068E7000000", "E815EA0600EB7D909090" },
 	{ 0x1395BD, "E80EEB0100", "E85EE90600" },
 	{ 0x13972B, "E8A0E90100", "E8F0E70600" },
@@ -189,6 +201,18 @@ static const HookPatchItem g_emailsPatch[] =
 	{ 0x162670, "893D104B9F00", "E8AB58040090" },
 };
 
+static const HookPatchItem g_concourseStarfieldPatch[] =
+{
+	{ 0x1394CB, "E8800B0000", "E860EA0600" },
+	{ 0x1394FE, "E84D0C0000", "E82DEA0600" },
+};
+
+static const HookPatchItem g_concoursePlanetPatch[] =
+{
+	{ 0x13936A, "0F8495000000", "E8B1EB060090" },
+	{ 0x139446, "E8553C0200", "E8D5EA0600" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that loads medal details", g_medalDetailsPatch),
@@ -200,4 +224,6 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the rank points", g_rankPointsPatch),
 	MAKE_HOOK_PATCH("To call the hook that plays per-mission movies", g_perMissionMoviesPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines emails", g_emailsPatch),
+	MAKE_HOOK_PATCH("To call the hook that generates concourse starfield", g_concourseStarfieldPatch),
+	MAKE_HOOK_PATCH("To call the hook that loads the front planet image", g_concoursePlanetPatch),
 };
