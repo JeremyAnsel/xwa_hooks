@@ -741,11 +741,13 @@ int FreeGameStateHook(int* params)
 {
 	*(int*)0x00A1C08D = 0;
 
+	const auto StopSound = (int(*)(const char*))0x00538C50;
 	const auto XwaFrontResFreeItem = (void(*)(const char*))0x00532080;
 	const auto XwaFreeResDataItem = (short(*)(short))0x004CDE40;
 
 	for (const auto& animation : g_concourseAnimations.animations)
 	{
+		StopSound(animation.name.c_str());
 		XwaFrontResFreeItem(animation.name.c_str());
 		XwaFreeResDataItem(animation.nameGroupId);
 	}
