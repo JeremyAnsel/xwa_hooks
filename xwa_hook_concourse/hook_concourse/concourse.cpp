@@ -809,7 +809,16 @@ void DrawConcourseAnimations(const char* currentRoom, int frameIndex)
 
 		if (XwaFrontResGetCurrentImage(animation.name.c_str()) == 0)
 		{
-			ConcourseAnimation* randomAnimation = g_concourseAnimations.GetRandomAnimation(currentRoom, animation.group.c_str());
+			ConcourseAnimation* randomAnimation;
+
+			if (animation.group[0] == '+')
+			{
+				randomAnimation = &animation;
+			}
+			else
+			{
+				randomAnimation = g_concourseAnimations.GetRandomAnimation(currentRoom, animation.group.c_str());
+			}
 
 			if (randomAnimation != nullptr)
 			{

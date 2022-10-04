@@ -155,7 +155,7 @@ Each line defines an animation.
 The valid values for roomName are: concourse.
 The datGroupId is the id of the image group in a dat file. The custom dat files are defined in the "Resdata.txt" file.
 The delay between animations is random from delayMin to delayMax.
-Only 1 animation per groupName is rendered at the same time.
+Only 1 animation per groupName is rendered at the same time. If the group name starts with a '+' character then the animation is looped until the room is reloaded.
 To define the animations on a per-mission basis, set the missionIds setting. It is a space separated list. If an Id is -1 then the animation is played for all missions. If an Id begins with ~ then the animation is not played for the mission.
 
 To define a sound for an animation,
