@@ -4,6 +4,11 @@ E8E1A40000              call 00420300
 
 E8112D1900              call 005A8B30, 005A8B30 - 00415E1F = 00192D11
 
+:0057ECCD - 0x17E0CD
+E8AE94FDFF              call 00558180
+
+E85E9E0200              call 005A8B30, 005A8B30 - 0057ECD2 = 00029E5E
+
 :0041D2FF - 0x01C6FF
 668B442428              mov ax, word ptr [esp+28]
 

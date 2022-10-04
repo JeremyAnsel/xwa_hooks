@@ -3,6 +3,11 @@ fg, 0, index, 1, markings, 3
 fg, 0, iff, 1
 fg, 0, pilotvoice, IP1
 
+craft, 0, name, X-Wing
+craft, 0, specname, X-Wing
+craft, 0, pluralname, X-Wings
+craft, 0, shortname, X-W
+
 IsRedAlertEnabled = 0
 SkipHyperspacedMessages = 0
 ForcePlayerInTurret = 0

@@ -264,14 +264,18 @@ struct ExeEnableEntry
 {
 	char unk00[3];
 	ShipCategoryEnum ShipCategory;
-	char unk04[20];
+	char unk04[14];
+	unsigned short CraftIndex;
+	char unk14[4];
 };
 
 static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24");
 
 struct ExeCraftEntry
 {
-	char unk000[12];
+	const char* SpecShortName;
+	const char* SpecName;
+	char unk008[4];
 	bool HasHyperdrive;
 	char unk00D[1];
 	bool HasShieldGenerator;
@@ -370,6 +374,14 @@ struct TieFlightGroupEx
 };
 
 static_assert(sizeof(TieFlightGroupEx) == 3650, "size of TieFlightGroupEx must be 3650");
+
+struct ShiplistEntry
+{
+	char Name[256];
+	char unk100[40];
+};
+
+static_assert(sizeof(ShiplistEntry) == 296, "size of ShiplistEntry must be 296");
 
 #pragma pack(pop)
 
@@ -880,6 +892,183 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 	currentObject->pMobileObject->Speed = newSpeed;
 }
 
+struct SpecEntry
+{
+	char Name[256];
+	char SpecName[256];
+	unsigned char Gender;
+	char PluralName[256];
+	char ShortName[256];
+};
+
+int GetCraftIndex(int craftId)
+{
+	const auto XwaGetCraftIndex = (int(*)(int))0x004DCE30;
+	const unsigned short* ExeSpecies = (const unsigned short*)0x005B0F70;
+
+	int modelIndex = ExeSpecies[craftId];
+	int craftIndex = XwaGetCraftIndex(modelIndex);
+	return craftIndex;
+}
+
+int GetCraftId(int craftIndex)
+{
+	const auto XwaGetModelCraftId = (int(*)(int))0x00422B50;
+	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+
+	int modelIndex = 0;
+
+	for (int i = 0; i < 557; i++)
+	{
+		if (ExeEnableTable[i].CraftIndex == craftIndex)
+		{
+			modelIndex = i;
+			break;
+		}
+	}
+
+	int craftId = XwaGetModelCraftId(modelIndex);
+	return craftId;
+}
+
+class SpecTable
+{
+public:
+	SpecTable()
+	{
+		this->SetDefaultValues();
+	}
+
+	void SetDefaultValues()
+	{
+		const ShiplistEntry* ShiplistEntries = *(ShiplistEntry**)0x00ABD22C;
+		const int* ShiplistEntriesIndexFromId = (int*)0x00ABD280;
+		const ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+		const unsigned char* SpecGender = (unsigned char*)0x009CF640;
+		const char** SpecPluralName = (const char**)0x0091B4C0;
+
+		this->_defaultEntries.reserve(218);
+		this->_currentEntries.reserve(218);
+
+		for (int i = 0; i < 218; i++)
+		{
+			SpecEntry* entry = this->_defaultEntries.data() + i;
+
+			int craftId = GetCraftId(i);
+			strcpy_s(entry->Name, ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].Name);
+			strcpy_s(entry->SpecName, ExeCraftTable[i].SpecName);
+			entry->Gender = SpecGender[i];
+			strcpy_s(entry->PluralName, SpecPluralName[i]);
+			strcpy_s(entry->ShortName, ExeCraftTable[i].SpecShortName);
+		}
+	}
+
+	void RestoreDefaultValues()
+	{
+		ShiplistEntry* ShiplistEntries = *(ShiplistEntry**)0x00ABD22C;
+		const int* ShiplistEntriesIndexFromId = (int*)0x00ABD280;
+		ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+		unsigned char* SpecGender = (unsigned char*)0x009CF640;
+		const char** SpecPluralName = (const char**)0x0091B4C0;
+
+		for (int i = 0; i < 218; i++)
+		{
+			SpecEntry* entry = this->_defaultEntries.data() + i;
+
+			int craftId = GetCraftId(i);
+			strcpy_s(ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].Name, entry->Name);
+			ExeCraftTable[i].SpecName = entry->SpecName;
+			SpecGender[i] = entry->Gender;
+			SpecPluralName[i] = entry->PluralName;
+			ExeCraftTable[i].SpecShortName = entry->ShortName;
+		}
+	}
+
+	void SetName(int craftIndex, const char* name)
+	{
+		if (craftIndex < 0 || craftIndex >= 218)
+		{
+			return;
+		}
+
+		ShiplistEntry* ShiplistEntries = *(ShiplistEntry**)0x00ABD22C;
+		const int* ShiplistEntriesIndexFromId = (int*)0x00ABD280;
+		SpecEntry* entry = this->_currentEntries.data() + craftIndex;
+
+		int craftId = GetCraftId(craftIndex);
+
+		strcpy_s(entry->Name, name);
+		strcpy_s(ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].Name, entry->Name);
+	}
+
+	void SetSpecName(int craftIndex, const char* specName)
+	{
+		if (craftIndex < 0 || craftIndex >= 218)
+		{
+			return;
+		}
+
+		ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+		SpecEntry* entry = this->_currentEntries.data() + craftIndex;
+
+		strcpy_s(entry->SpecName, specName);
+		ExeCraftTable[craftIndex].SpecName = entry->SpecName;
+	}
+
+	void SetGender(int craftIndex, unsigned char gender)
+	{
+		if (craftIndex < 0 || craftIndex >= 218)
+		{
+			return;
+		}
+
+		unsigned char* SpecGender = (unsigned char*)0x009CF640;
+		SpecEntry* entry = this->_currentEntries.data() + craftIndex;
+
+		entry->Gender = gender;
+		SpecGender[craftIndex] = entry->Gender;
+	}
+
+	void SetPluralName(int craftIndex, const char* pluralName)
+	{
+		if (craftIndex < 0 || craftIndex >= 218)
+		{
+			return;
+		}
+
+		const char** SpecPluralName = (const char**)0x0091B4C0;
+		SpecEntry* entry = this->_currentEntries.data() + craftIndex;
+
+		strcpy_s(entry->PluralName, pluralName);
+		SpecPluralName[craftIndex] = entry->PluralName;
+	}
+
+	void SetShortName(int craftIndex, const char* shortName)
+	{
+		if (craftIndex < 0 || craftIndex >= 218)
+		{
+			return;
+		}
+
+		ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+		SpecEntry* entry = this->_currentEntries.data() + craftIndex;
+
+		strcpy_s(entry->ShortName, shortName);
+		ExeCraftTable[craftIndex].SpecShortName = entry->ShortName;
+	}
+
+private:
+	std::vector<SpecEntry> _defaultEntries;
+	std::vector<SpecEntry> _currentEntries;
+};
+
+SpecTable& GetSpecTable()
+{
+	static SpecTable _specTable;
+
+	return _specTable;
+}
+
 TieFlightGroupEx* s_XwaTieFlightGroups = (TieFlightGroupEx*)0x80DC80;
 
 std::vector<std::vector<std::string>> g_tieLines;
@@ -899,6 +1088,8 @@ int TieHook(int* params)
 	{
 		return 0;
 	}
+
+	GetSpecTable().RestoreDefaultValues();
 
 	const std::string path = GetStringWithoutExtension(fileName);
 	auto file = GetFileLines(path + ".txt");
@@ -935,7 +1126,7 @@ int TieHook(int* params)
 
 			int fg = std::stoi(line[1]);
 
-			if (fg < 0 || fg > 192)
+			if (fg < 0 || fg >= 192)
 			{
 				continue;
 			}
@@ -959,9 +1150,55 @@ int TieHook(int* params)
 				s_XwaTieFlightGroups[fg].PilotVoice[len] = 0;
 			}
 		}
+		else if (_stricmp(group.c_str(), "craft") == 0)
+		{
+			if (line.size() < 4)
+			{
+				continue;
+			}
+
+			int craft = std::stoi(line[1]);
+
+			if (craft < 0 || craft >= 218)
+			{
+				continue;
+			}
+
+			const auto& element = line[2];
+
+			if (_stricmp(element.c_str(), "name") == 0)
+			{
+				std::string value = line[3];
+				GetSpecTable().SetName(craft, value.c_str());
+			}
+			else if (_stricmp(element.c_str(), "specname") == 0)
+			{
+				std::string value = line[3];
+				GetSpecTable().SetSpecName(craft, value.c_str());
+			}
+			else if (_stricmp(element.c_str(), "pluralname") == 0)
+			{
+				std::string value = line[3];
+				GetSpecTable().SetPluralName(craft, value.c_str());
+			}
+			else if (_stricmp(element.c_str(), "shortname") == 0)
+			{
+				std::string value = line[3];
+				GetSpecTable().SetShortName(craft, value.c_str());
+			}
+		}
 	}
 
 	return 1;
+}
+
+int MissionFreeHook(int* params)
+{
+	const auto L00558180 = (int(*)())0x00558180;
+
+	GetSpecTable().RestoreDefaultValues();
+
+	return L00558180();
 }
 
 int CreateObjectHook(int* params)

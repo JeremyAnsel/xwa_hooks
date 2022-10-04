@@ -22,6 +22,7 @@ The following modifications are applied at runtime to xwingalliance.exe:
 
 # To call the hook that override tie mission
 At offset 1521A, replace E8E1A40000 with E8112D1900.
+At offset 17E0CD, replace E8AE94FDFF with E85E9E0200.
 At offset 1C6FF, replace 668B442428 with E82CB81800.
 
 # 'crafts count per region' patch
@@ -88,6 +89,11 @@ To replace the flight group markings, the format is: "fg", fg number, "markings"
 To replace the flight group wingman markings, the format is: "fg", fg number, "index", wingman index, "markings", value.
 To replace the flight group iff, the format is: "fg", fg number, "iff", value.
 To replace the flight group pilot voice, the format is: "fg", fg number, "pilotvoice", value.
+
+To replace the craft name in shiplist.txt, the format is: "craft", craft index, "name", value.
+To replace the craft spec name in strings.txt, the format is: "craft", craft index, "specname", value.
+To replace the craft plural name in strings.txt, the format is: "craft", craft index, "pluralname", value.
+To replace the craft short name in strings.txt, the format is: "craft", craft index, "shortname", value.
 
 To define the red alert in hangar, set "IsRedAlertEnabled = 1". The default setting enables IsRedAlertEnabled for mission id 20.
 To skip hyperspaced messages, "set SkipHyperspacedMessages = 1". The default setting enables SkipHyperspacedMessages for mission id 49.

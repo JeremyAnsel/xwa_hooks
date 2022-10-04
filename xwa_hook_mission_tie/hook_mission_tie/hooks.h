@@ -6,6 +6,7 @@
 static const HookFunction g_hookFunctions[] =
 {
 	{ 0x415E1F, TieHook },
+	{ 0x57ECD2, MissionFreeHook },
 	{ 0x41D304, CreateObjectHook },
 	{ 0x41FF48, StatsProfiles_L0041FA00_Speed_Hook },
 	{ 0x42CFE7, StatsProfiles_L0042CF90_Acceleration_Hook },
@@ -49,6 +50,7 @@ static const HookFunction g_hookFunctions[] =
 static const HookPatchItem g_overrideTiePatch[] =
 {
 	{ 0x01521A, "E8E1A40000", "E8112D1900" },
+	{ 0x17E0CD, "E8AE94FDFF", "E85E9E0200" },
 	{ 0x01C6FF, "668B442428", "E82CB81800" },
 };
 

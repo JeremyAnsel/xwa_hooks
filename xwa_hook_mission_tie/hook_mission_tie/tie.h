@@ -1,6 +1,7 @@
 #pragma once
 
 int TieHook(int* params);
+int MissionFreeHook(int* params);
 int CreateObjectHook(int* params);
 
 int StatsProfiles_L0041FA00_Speed_Hook(int* params);
