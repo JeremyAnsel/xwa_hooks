@@ -4,6 +4,18 @@
 #include <iostream>
 #include <fstream>
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 #pragma pack(push, 1)
 
 struct TieFlightGroupWaypoint
@@ -51,6 +63,32 @@ struct XwaMission
 };
 
 static_assert(sizeof(XwaMission) == 1290432, "size of XwaMission must be 1290432");
+
+struct XwaPlayer
+{
+	char unk0000[16];
+	unsigned char Region;
+	char unk0011[3006];
+};
+
+static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
+
+struct XwaObject
+{
+	char unk00[2];
+	unsigned short ModelIndex;
+	unsigned char ShipCategory;
+	unsigned char TieFlightGroupIndex;
+	unsigned char Region;
+	int PositionX;
+	int PositionY;
+	int PositionZ;
+	short HeadingXY;
+	short HeadingZ;
+	char unk17[16];
+};
+
+static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 
 #pragma pack(pop)
 
@@ -118,6 +156,10 @@ int g_planetsImageCount[] =
 	7, // 6113
 	7, // 6114
 };
+
+int g_lastBuoyRegion;
+int g_previousBuoyRegion;
+int g_currentRegion;
 
 int BackdropsHook(int* params)
 {
@@ -352,6 +394,10 @@ void CopyFileContent(const std::string& out, const std::vector<std::string>& lin
 
 int LoadMissionHook(int* params)
 {
+	g_lastBuoyRegion = -1;
+	g_previousBuoyRegion = -1;
+	g_currentRegion = -1;
+
 	const char* fileName = (const char*)params[0];
 	const auto LoadMission = (int(*)(const char*))0x00415760;
 
@@ -382,4 +428,212 @@ int LoadMissionHook(int* params)
 	}
 
 	return LoadMission(fileName);
+}
+
+int SwitchHyperBuoyHook(int* params)
+{
+	const auto XwaShowMessage = (void(*)(int, int))0x00497D40;
+
+	const int nextRegion = params[Params_ESI];
+	const int currentRegion = *(int*)0x008C1CD8;
+
+	g_lastBuoyRegion = currentRegion;
+
+	XwaShowMessage(params[0], params[1]);
+
+	return 0;
+}
+
+int GetBackdropIndexFromFG(int fg)
+{
+	const XwaMission* mission = *(XwaMission**)0x09EB8E0;
+
+	if (fg < 0 || fg >= 192)
+	{
+		return -1;
+	}
+
+	if (mission->FlightGroups[fg].CraftId != 0xB7)
+	{
+		return -1;
+	}
+
+	int region = mission->FlightGroups[fg].StartPointRegions[0];
+	int backdrop = region * 32;
+
+	for (int fgIndex = 0; fgIndex < fg; fgIndex++)
+	{
+		if (mission->FlightGroups[fgIndex].PlanetId == 0)
+		{
+			continue;
+		}
+
+		if (mission->FlightGroups[fgIndex].CraftId != 0xB7)
+		{
+			continue;
+		}
+
+		if (mission->FlightGroups[fgIndex].StartPointRegions[0] != region)
+		{
+			continue;
+		}
+
+		backdrop++;
+	}
+
+	return backdrop;
+}
+
+int BackdropRenderFilterHook(int* params)
+{
+	static int _backdropsFromRegion[160];
+	static std::string _mission;
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	if (_mission != xwaMissionFileName)
+	{
+		_mission = xwaMissionFileName;
+
+		for (int i = 0; i < 160; i++)
+		{
+			_backdropsFromRegion[i] = -1;
+		}
+
+		const std::string path = GetStringWithoutExtension(_mission);
+
+		auto file = GetFileLines(path + ".txt");
+
+		if (!file.size())
+		{
+			file = GetFileLines(path + ".ini", "mission_tie");
+		}
+
+		const auto lines = GetFileListValues(file);
+
+		for (const auto& line : lines)
+		{
+			const auto& group = line[0];
+
+			if (_stricmp(group.c_str(), "backdrop") == 0)
+			{
+				if (line.size() < 4)
+				{
+					continue;
+				}
+
+				int backdropFG = std::stoi(line[1]);
+				int backdrop = GetBackdropIndexFromFG(backdropFG);
+
+				if (backdrop < 0 || backdrop >= 160)
+				{
+					continue;
+				}
+
+				const auto& element = line[2];
+
+				if (_stricmp(element.c_str(), "from_region") == 0)
+				{
+					int value = std::stoi(line[3]);
+					_backdropsFromRegion[backdrop] = value;
+				}
+			}
+		}
+	}
+
+	const int backdropIndex = params[Params_ESI];
+	const int backdropFromRegion = _backdropsFromRegion[backdropIndex];
+	const XwaPlayer* players = (XwaPlayer*)0x008B94E0;
+	const int currentPlayerId = *(int*)0x008C1CC8;
+	const int currentRegion = players[currentPlayerId].Region;
+
+	if (currentRegion != g_currentRegion)
+	{
+		g_currentRegion = currentRegion;
+		g_previousBuoyRegion = g_lastBuoyRegion;
+	}
+
+	if (g_previousBuoyRegion != -1 && backdropFromRegion != -1 && backdropFromRegion != g_previousBuoyRegion)
+	{
+		params[Params_ReturnAddress] = 0x004072E4;
+	}
+
+	params[Params_ECX] = *(unsigned char*)0x00910DF4;
+
+	return 0;
+}
+
+int ShowBuoyRegionNameHook(int* params)
+{
+	static std::string _buoyRegionNames[192];
+	static std::string _mission;
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	if (_mission != xwaMissionFileName)
+	{
+		_mission = xwaMissionFileName;
+
+		for (int i = 0; i < 192; i++)
+		{
+			_buoyRegionNames[i].clear();
+		}
+
+		const std::string path = GetStringWithoutExtension(_mission);
+
+		auto file = GetFileLines(path + ".txt");
+
+		if (!file.size())
+		{
+			file = GetFileLines(path + ".ini", "mission_tie");
+		}
+
+		const auto lines = GetFileListValues(file);
+
+		for (const auto& line : lines)
+		{
+			const auto& group = line[0];
+
+			if (_stricmp(group.c_str(), "buoy") == 0)
+			{
+				if (line.size() < 4)
+				{
+					continue;
+				}
+
+				int fg = std::stoi(line[1]);
+
+				if (fg < 0 || fg >= 192)
+				{
+					continue;
+				}
+
+				const auto& element = line[2];
+
+				if (_stricmp(element.c_str(), "region_name") == 0)
+				{
+					_buoyRegionNames[fg] = line[3];
+				}
+			}
+		}
+	}
+
+	const unsigned short A4 = (unsigned short)params[0];
+	const char* A8 = (const char*)params[1];
+
+	const auto L00498CE0 = (void(*)(unsigned short, const char*))0x00498CE0;
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+
+	int buoyObjectIndex = params[Params_EBX];
+	int buoyFG = xwaObjects[buoyObjectIndex].TieFlightGroupIndex;
+
+	if (_buoyRegionNames[buoyFG].empty())
+	{
+		L00498CE0(A4, A8);
+	}
+	else
+	{
+		L00498CE0(A4, _buoyRegionNames[buoyFG].c_str());
+	}
+
+	return 0;
 }
