@@ -828,6 +828,11 @@ void DrawConcourseAnimations(const char* currentRoom, int frameIndex)
 	}
 }
 
+static int g_planetImageLeft = 0;
+static int g_planetImageTop = 0;
+static int g_planetImageWidthOver2 = 0;
+static int g_planetImageHeightOver2 = 0;
+
 int DrawConcoursePlanetHook(int* params)
 {
 	const auto Xwa_rand = (int(*)())0x0059BEB0;
@@ -885,6 +890,11 @@ int DrawConcoursePlanetHook(int* params)
 
 	params[Params_EBX] = (_planetPositionX != -1 ? _planetPositionX : positionX) - planetWidthOver2;
 	params[Params_EDX] = (_planetPositionY != -1 ? _planetPositionY : positionY) - planetHeightOver2;
+
+	g_planetImageLeft = params[Params_EBX];
+	g_planetImageTop = params[Params_EDX];
+	g_planetImageWidthOver2 = planetWidthOver2;
+	g_planetImageHeightOver2 = planetHeightOver2;
 
 	return 0;
 }
@@ -1407,6 +1417,7 @@ int RandInteger(int min, int max)
 	return min + (value % (max - min));
 }
 
+static bool g_isPlanetImageLoaded = false;
 static unsigned short g_concourseStarfieldColors[31];
 static std::vector<int> g_concourseStarfieldPositionsX;
 static std::vector<int> g_concourseStarfieldPositionsY;
@@ -1423,6 +1434,11 @@ int SetupConcourseStarfieldHook(int* params)
 	const auto XwaGetCurrentSurfacePitch = (int(*)())0x0053FA60;
 	const auto XwaGetColor = (unsigned int(*)(unsigned char, unsigned char, unsigned char))0x0055D270;
 	const auto Xwa_rand = (int(*)())0x0059BEB0;
+	const auto XwaFrontResDraw = (int(*)(const char*, short, short))0x00534A60;
+	const auto XwaSaveDrawingSurfaceToFile = (int(*)(const char*, void*, int, int, int, int, int, void*))0x005375E0;
+
+	void*& s_pXwaCurrentSurfaceData = *(void**)0x009F60D4;
+	int& XwaGlobalVariables_CurrentSurfacePitch = *(int*)(0x09F60E0 + 0x0F1A);
 
 	for (int i = 0; i < 16; i++)
 	{
@@ -1445,7 +1461,21 @@ int SetupConcourseStarfieldHook(int* params)
 	std::vector<std::tuple<int, int>> pixels;
 	pixels.reserve(width * height);
 
-	for (int y = 0; y < height; y++)
+	void* currentSurfaceData = s_pXwaCurrentSurfaceData;
+	int currentSurfacePitch = XwaGlobalVariables_CurrentSurfacePitch;
+	std::vector<unsigned short> surface;
+	surface.reserve(width * height);
+	memset(surface.data(), 0x80, width * height * 2);
+	s_pXwaCurrentSurfaceData = surface.data();
+	XwaGlobalVariables_CurrentSurfacePitch = width * 2;
+
+	XwaFrontResDraw("planet", g_planetImageLeft, g_planetImageTop);
+	XwaFrontResDraw("concourse", 0, 0);
+	//XwaSaveDrawingSurfaceToFile("concourse.bmp", surface.data(), width, height, width * 2, 16, 0, nullptr);
+
+	int starfieldHeight = g_isPlanetImageLoaded ? height : std::min(height, 125);
+
+	for (int y = 0; y < starfieldHeight; y++)
 	{
 		for (int x = 0; x < width; x++)
 		{
@@ -1454,11 +1484,20 @@ int SetupConcourseStarfieldHook(int* params)
 				continue;
 			}
 
+			if (surface.data()[width * y + x] != 0x8080)
+			{
+				continue;
+			}
+
 			pixels.push_back(std::make_tuple(x, y));
 		}
 	}
 
-	int count = pixels.size() * 256 / 50000;
+	surface.reserve(0);
+	s_pXwaCurrentSurfaceData = currentSurfaceData;
+	XwaGlobalVariables_CurrentSurfacePitch = currentSurfacePitch;
+
+	int count = pixels.size() * 2048 / 50000;
 
 	g_concourseStarfieldPositionsX.resize(count);
 	g_concourseStarfieldPositionsY.resize(count);
@@ -1518,8 +1557,6 @@ int DrawConcourseStarfieldHook(int* params)
 
 	return 1;
 }
-
-static bool g_isPlanetImageLoaded = false;
 
 int GetMissionFrontPlanetImageIndex(const std::string& mission)
 {
