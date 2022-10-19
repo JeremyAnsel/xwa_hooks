@@ -128,6 +128,19 @@ int InitD3DInfosHook(int* params)
 	return 0;
 }
 
+static bool IsInTechLibraryOrBriefing()
+{
+	int currentGameState = *(int*)(0x09F60E0 + 0x25FA9);
+	int updateCallback = *(int*)(0x09F60E0 + 0x25FB1 + currentGameState * 0x850 + 0x0844);
+
+	int XwaTechLibraryGameStateUpdate = 0x00574D70;
+	bool isInTechLibrary = updateCallback == XwaTechLibraryGameStateUpdate;
+
+	bool isBriefingIsPlaying = *(short*)0x009EB826 != 0;
+
+	return isInTechLibrary || isBriefingIsPlaying;
+}
+
 int TestTextureIlluminationHook(int* params)
 {
 	const int esp14 = params[5];
@@ -139,7 +152,7 @@ int TestTextureIlluminationHook(int* params)
 	{
 		jump = true;
 	}
-	else if (A4->pObject != nullptr && A4->pObject->pMobileObject != nullptr && A4->pObject->pMobileObject->pCraft != nullptr)
+	else if (!IsInTechLibraryOrBriefing() && A4->pObject != nullptr && A4->pObject->pMobileObject != nullptr && A4->pObject->pMobileObject->pCraft != nullptr)
 	{
 		const XwaCraft* craft = A4->pObject->pMobileObject->pCraft;
 
@@ -165,7 +178,7 @@ int RenderOptNodeHook(int* params)
 
 	bool jump = false;
 
-	if (AC->pObject != nullptr && AC->pObject->pMobileObject != nullptr && AC->pObject->pMobileObject->pCraft != nullptr)
+	if (!IsInTechLibraryOrBriefing() && AC->pObject != nullptr && AC->pObject->pMobileObject != nullptr && AC->pObject->pMobileObject->pCraft != nullptr)
 	{
 		const XwaCraft* craft = AC->pObject->pMobileObject->pCraft;
 
