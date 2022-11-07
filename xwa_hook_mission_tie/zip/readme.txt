@@ -77,6 +77,10 @@ At offset 090356, replace 0F8558020000 with E8C57B110090.
 At offset 065405, replace E8E6470000 with E8162B1400.
 At offset 00E818, replace 0F8C1B010000 with E80397190090.
 
+# To call the hook that override order of battle strings
+At offset 178064, replace E8171A0200 with E8B7FE0200.
+At offset 178159, replace E822190200 with E8C2FD0200.
+
 
 *** Usage ***
 

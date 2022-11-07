@@ -45,6 +45,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x490F5B, MissionPlayerTypeShootHook },
 	{ 0x46600A, MissionDrawLaserCharge3DHook },
 	{ 0x40F41D, WarheadCollisionDamagesHook },
+	{ 0x578C69, OrderOfBattleHook },
+	{ 0x578D5E, OrderOfBattleHook },
 };
 
 static const HookPatchItem g_overrideTiePatch[] =
@@ -135,10 +137,17 @@ static const HookPatchItem g_missionIdsCheckPatch[] =
 	{ 0x00E818, "0F8C1B010000", "E80397190090" },
 };
 
+static const HookPatchItem g_orderOfBattlePatch[] =
+{
+	{ 0x178064, "E8171A0200", "E8B7FE0200" },
+	{ 0x178159, "E822190200", "E8C2FD0200" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that override tie mission", g_overrideTiePatch),
 	MAKE_HOOK_PATCH("'crafts count per region' patch", g_craftsCountPerRegionPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the stats profiles", g_statsProfilesPatch),
 	MAKE_HOOK_PATCH("To call the hook that checks mission ids", g_missionIdsCheckPatch),
+	MAKE_HOOK_PATCH("To call the hook that override order of battle strings", g_orderOfBattlePatch),
 };

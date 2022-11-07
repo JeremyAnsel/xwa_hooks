@@ -383,6 +383,17 @@ struct ShiplistEntry
 
 static_assert(sizeof(ShiplistEntry) == 296, "size of ShiplistEntry must be 296");
 
+struct XwaMissionDescription
+{
+	char MissionFileName[64];
+	char MissionDesciption[128];
+	char BattleDescription[128];
+	int Id;
+	int m144;
+};
+
+static_assert(sizeof(XwaMissionDescription) == 328, "size of XwaMissionDescription must be 328");
+
 #pragma pack(pop)
 
 struct CraftStats
@@ -1073,6 +1084,77 @@ TieFlightGroupEx* s_XwaTieFlightGroups = (TieFlightGroupEx*)0x80DC80;
 
 std::vector<std::vector<std::string>> g_tieLines;
 
+std::string GetMissionFileName()
+{
+	const int missionDirectoryId = *(int*)(0x00AE2A60 + 0x002A);
+	const char* missionDirectory = ((const char**)0x00603168)[missionDirectoryId];
+	const int s_V0x09F5E74 = *(int*)0x009F5E74;
+	const XwaMissionDescription* s_XwaMissionDescriptions = *(XwaMissionDescription**)0x009F4B98;
+	std::string missionFilename = std::string(missionDirectory) + std::string("\\") + std::string(s_XwaMissionDescriptions[s_V0x09F5E74].MissionFileName);
+	return missionFilename;
+}
+
+std::string GetCraftName(int craftIndex, const std::string& mission)
+{
+	static std::string _mission;
+	static std::vector<std::vector<std::string>> _lines;
+
+	if (mission != _mission)
+	{
+		_mission = mission;
+
+		const std::string path = GetStringWithoutExtension(mission);
+		auto file = GetFileLines(path + ".txt");
+
+		if (!file.size())
+		{
+			file = GetFileLines(path + ".ini", "mission_tie");
+		}
+
+		_lines = GetFileListValues(file);
+	}
+
+	if (!_lines.size())
+	{
+		return std::string();
+	}
+
+	for (const auto& line : _lines)
+	{
+		const auto& group = line[0];
+
+		if (_stricmp(group.c_str(), "craft") == 0)
+		{
+			if (line.size() < 4)
+			{
+				continue;
+			}
+
+			int craft = std::stoi(line[1]);
+
+			if (craft < 0 || craft >= 218)
+			{
+				continue;
+			}
+
+			if (craft != craftIndex)
+			{
+				continue;
+			}
+
+			const auto& element = line[2];
+
+			if (_stricmp(element.c_str(), "name") == 0)
+			{
+				std::string value = line[3];
+				return value;
+			}
+		}
+	}
+
+	return std::string();
+}
+
 int TieHook(int* params)
 {
 	// init music state
@@ -1762,6 +1844,34 @@ int WarheadCollisionDamagesHook(int* params)
 	if (!enable || tieVersion < 0x0E)
 	{
 		params[Params_ReturnAddress] = 0x0040F539;
+	}
+
+	return 0;
+}
+
+int OrderOfBattleHook(int* params)
+{
+	const int tieFlightGroupPtr = params[Params_EAX];
+	const unsigned char craftId = *(unsigned char*)(tieFlightGroupPtr + 0x006B);
+	char* buffer = (char*)params[0];
+	const char* format = (const char*)params[1];
+	const char* craftTypeName = (const char*)params[2];
+	const char* fgName = (const char*)params[3];
+	const int fgIndex = params[11];
+
+	const auto L0059A680 = (int(*)(char*, const char*, ...))0x0059A680;
+
+	int craftIndex = GetCraftIndex(craftId);
+	std::string missionFileName = GetMissionFileName();
+	std::string craftName = GetCraftName(craftIndex, missionFileName);
+
+	if (craftName.empty())
+	{
+		L0059A680(buffer, format, craftTypeName, fgName);
+	}
+	else
+	{
+		L0059A680(buffer, format, craftName.c_str(), fgName);
 	}
 
 	return 0;
