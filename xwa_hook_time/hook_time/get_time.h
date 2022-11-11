@@ -11,3 +11,5 @@ int AsteroidsAnimationHook(int* params);
 int NullMobileObjectAnimationHook(int* params);
 int ShipAnimationHook(int* params);
 int ExplosionAnimationHook(int* params);
+
+int TimeGetTimeHook(int* params);

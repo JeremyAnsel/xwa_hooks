@@ -57,6 +57,9 @@ At offset 001A33, replace 0F84D5000000 with E8E8641A0090.
 At offset 001017, replace 25FFFF0000 with E8046F1A00.
 At offset 00193A, replace 66817DFCDE00752B with E8E1651A00909090.
 
+# To call the hook that returns time
+At offset 10D040, replace FF25AC925A00 with E8EBAE0900C3.
+
 
 *** Usage ***
 

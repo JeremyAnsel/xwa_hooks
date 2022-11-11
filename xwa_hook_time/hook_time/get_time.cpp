@@ -3,6 +3,7 @@
 #include "config.h"
 #include <Windows.h>
 #include <map>
+#include <chrono>
 
 #pragma comment(lib, "Winmm.lib")
 
@@ -183,7 +184,6 @@ int L0050E410Hook(int* params)
 			fromLoop = true;
 			break;
 		}
-
 	}
 
 	if (fromLoop)
@@ -199,7 +199,7 @@ int L0050E410Hook(int* params)
 		div = 1;
 	}
 
-	DWORD eax = timeGetTime();
+	DWORD eax = TimeGetTimeHook(nullptr);
 	DWORD ecx = s_V0x0781E64;
 
 	if (ecx == 0)
@@ -222,7 +222,7 @@ int L0050E430Hook(int* params)
 
 	Sleep(8);
 
-	DWORD eax = timeGetTime();
+	DWORD eax = TimeGetTimeHook(nullptr);
 	DWORD ecx = s_V0x077D028;
 
 	if (ecx == 0)
@@ -363,4 +363,17 @@ int ExplosionAnimationHook(int* params)
 	}
 
 	return 0;
+}
+
+int TimeGetTimeHook(int* params)
+{
+	static auto start = std::chrono::high_resolution_clock::now();
+
+	auto end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<long long, std::nano> durationNano = end - start;
+	std::chrono::milliseconds durationMilli = std::chrono::duration_cast<std::chrono::milliseconds>(durationNano);
+
+	int milli = (int)durationMilli.count();
+
+	return milli;
 }

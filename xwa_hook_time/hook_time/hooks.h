@@ -15,6 +15,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x402638, NullMobileObjectAnimationHook },
 	{ 0x401C1C, ShipAnimationHook },
 	{ 0x40253F, ExplosionAnimationHook },
+	{ 0x50DC45, TimeGetTimeHook },
 };
 
 static const HookPatchItem g_reduceCPUUsagePatch[] =
@@ -62,10 +63,16 @@ static const HookPatchItem g_animationsSpeedPatch[] =
 	{ 0x00193A, "66817DFCDE00752B", "E8E1651A00909090" },
 };
 
+static const HookPatchItem g_timeGetTimePatch[] =
+{
+	{ 0x10D040, "FF25AC925A00", "E8EBAE0900C3" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that reduces CPU usage", g_reduceCPUUsagePatch),
 	MAKE_HOOK_PATCH("To call the hook that sets full FPS", g_fullFpsPatch),
 	MAKE_HOOK_PATCH("To call the hook that disables flush texture cache inflight", g_disableFlushTextureCacheInflightPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the animations speed", g_animationsSpeedPatch),
+	MAKE_HOOK_PATCH("To call the hook that returns time", g_timeGetTimePatch),
 };
