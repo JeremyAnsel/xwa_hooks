@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hook_diag", "hook_diag\hook_diag.vcxproj", "{90489DCE-0C1D-4C62-B882-F3966616CB50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90489DCE-0C1D-4C62-B882-F3966616CB50}.Debug|x86.ActiveCfg = Debug|Win32
+		{90489DCE-0C1D-4C62-B882-F3966616CB50}.Debug|x86.Build.0 = Debug|Win32
+		{90489DCE-0C1D-4C62-B882-F3966616CB50}.Release|x86.ActiveCfg = Release|Win32
+		{90489DCE-0C1D-4C62-B882-F3966616CB50}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {16D0905B-5F74-4F88-B6C8-A0BADFE6BA0F}
+	EndGlobalSection
+EndGlobal

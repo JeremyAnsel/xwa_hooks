@@ -1,0 +1,28 @@
+
+; Loading screen step
+
+; L004CC920
+:004CC92A - 0x0CBD2A
+E8114F0600              call 00531840
+
+E801C20D00              call 005A8B30, 005A8B30 - 004CC92F = 000DC201
+
+===============================================================================
+
+; concourse present
+; L0053F040
+:0053F040 - 0x13E440
+A12A709F00              mov eax, dword ptr [009F702A]
+
+E8DB9A0600              call 005A8B20, 005A8B20 - 0053F045 = 00069ADB
+
+; show framerate - in-flight present
+:0045AFE5 - 0x05A3E5
+A1B0127700              mov eax, dword ptr [007712B0]
+
+E836DB1400              call 005A8B20, 005A8B20 - 0045AFEA = 0014DB36
+
+:004F2255 - 0x0F1655
+A1B0127700              mov eax, dword ptr [007712B0]
+
+E8C6680B00              call 005A8B20, 005A8B20 - 004F225A = 000B68C6
