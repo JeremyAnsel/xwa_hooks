@@ -43,6 +43,8 @@ The hooks are downloadable from GitHub (https://github.com/JeremyAnsel/xwa_hooks
 Each hook is implemented in a separate dll. The name of the dll must begin with "hook_" or "Hook_".
 
 When the game's exe ends, statistics about the hooks are written to OutputDebugString.
+When the game crashes a dump file will be generated if the GenerateDumpFilesOnCrash setting is set to 1. The default value is 1.
+
 See the "dinput.cfg" file or the "dinput" section of "hooks.ini".
 
 

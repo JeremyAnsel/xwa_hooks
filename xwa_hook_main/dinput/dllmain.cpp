@@ -2,6 +2,7 @@
 #include "hook.h"
 #include "hook_function.h"
 #include "hooks.h"
+#include "config.h"
 #include <string>
 #include <Windows.h>
 #include <DbgHelp.h>
@@ -9,6 +10,26 @@
 #pragma comment(lib, "Dbghelp")
 
 std::string int_to_hex(int i);
+
+class MainConfig
+{
+public:
+	MainConfig()
+	{
+		auto lines = GetFileLines("dinput.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "dinput");
+		}
+
+		this->GenerateDumpFilesOnCrash = GetFileKeyValueInt(lines, "GenerateDumpFilesOnCrash", 1) != 0;
+	}
+
+	bool GenerateDumpFilesOnCrash;
+};
+
+MainConfig g_mainconfig;
 
 const char* GetModuleName(void* address)
 {
@@ -158,7 +179,10 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 
 			VirtualProtectMemoryExecuteReadWrite();
 
-			SetUnhandledExceptionFilter(TopLevelExceptionHandler);
+			if (g_mainconfig.GenerateDumpFilesOnCrash)
+			{
+				SetUnhandledExceptionFilter(TopLevelExceptionHandler);
+			}
 		}
 
 		break;
