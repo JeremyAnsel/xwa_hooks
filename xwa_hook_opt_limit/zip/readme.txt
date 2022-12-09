@@ -127,6 +127,13 @@ To regenerate the "spec.rci" file, delete it. The file will be generated when yo
 
 To use default values for the meshes count limit, set "MeshesCount = 0".
 
+Suppose that the craft is "FlightModels\[Model].opt".
+To define which engine glows are rendered based on the craft speed, create a file named "FlightModels\[Model]EngineGlows.txt" or create a section named "[EngineGlows]" in "FlightModels\[Model].ini".
+The format is a line per engine:
+engine index, percent, mglt.
+If the percent value is -1 then it is not used.
+If the mglt value is -1 then it is not used.
+
 
 *** Credits ***
 

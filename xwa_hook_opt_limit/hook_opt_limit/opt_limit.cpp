@@ -1,6 +1,8 @@
 #include "targetver.h"
 #include "opt_limit.h"
 #include "config.h"
+#include <fstream>
+#include <map>
 
 enum ParamsEnum
 {
@@ -13,6 +15,57 @@ enum ParamsEnum
 	Params_ESI = -9,
 	Params_EDI = -10,
 };
+
+class FlightModelsList
+{
+public:
+	FlightModelsList()
+	{
+		for (const auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		{
+			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
+		}
+
+		for (const auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		{
+			this->_equipmentList.push_back(GetStringWithoutExtension(line));
+		}
+	}
+
+	std::string GetLstLine(int modelIndex)
+	{
+		const int xwaObjectStats = 0x05FB240;
+		const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
+		const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
+
+		switch (dataIndex1)
+		{
+		case 0:
+			if ((unsigned int)dataIndex2 < this->_spacecraftList.size())
+			{
+				return this->_spacecraftList[dataIndex2];
+			}
+
+			break;
+
+		case 1:
+			if ((unsigned int)dataIndex2 < this->_equipmentList.size())
+			{
+				return this->_equipmentList[dataIndex2];
+			}
+
+			break;
+		}
+
+		return std::string();
+	}
+
+private:
+	std::vector<std::string> _spacecraftList;
+	std::vector<std::string> _equipmentList;
+};
+
+FlightModelsList g_flightModelsList;
 
 #pragma pack(push, 1)
 
@@ -27,7 +80,9 @@ static_assert(sizeof(HitData) == 9, "size of HitData must be 9");
 
 struct XwaMobileObject
 {
-	char Unk0000[221];
+	char Unk0000[133];
+	short Speed;
+	char Unk0087[86];
 	int pCraft;
 	char Unk00E1[4];
 };
@@ -36,13 +91,22 @@ static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 2
 
 struct XwaObject
 {
-	char Unk00[35];
+	char Unk00[2];
+	unsigned short ModelIndex;
+	char Unk04[31];
 	XwaMobileObject* pMobileObject;
 };
 
 static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 
 #pragma pack(pop)
+
+struct EngineGlow
+{
+	int engineIndex;
+	int skipThrottlePercent;
+	int skipSpeedMglt;
+};
 
 class Config
 {
@@ -91,6 +155,140 @@ const Config& GetConfig()
 	static Config s_config;
 	return s_config;
 }
+
+std::string GetShipPath(int modelIndex)
+{
+	static std::vector<std::string> _lines;
+	static std::string _mission;
+
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	if (_mission != xwaMissionFileName)
+	{
+		_mission = xwaMissionFileName;
+
+		const std::string name = "Objects";
+
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		_lines = GetFileLines(mission + "_" + name + ".txt");
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines(mission + ".ini", name);
+		}
+
+		if (!_lines.size())
+		{
+			const std::string path = "FlightModels\\";
+			_lines = GetFileLines(path + name + ".txt");
+		}
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines("FlightModels\\default.ini", name);
+		}
+	}
+
+	{
+		const std::string objectValue = GetFileKeyValue(_lines, shipPath + ".opt");
+
+		if (!objectValue.empty() && std::ifstream(objectValue))
+		{
+			shipPath = GetStringWithoutExtension(objectValue);
+		}
+	}
+
+	return shipPath;
+}
+
+std::vector<EngineGlow> GetEngineGlowList(int modelIndex)
+{
+	const std::string ship = GetShipPath(modelIndex);
+
+	auto lines = GetFileLines(ship + "EngineGlows.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", "EngineGlows");
+	}
+
+	const auto engines = GetFileListValues(lines);
+
+	std::vector<EngineGlow> values;
+
+	for (unsigned int i = 0; i < engines.size(); i++)
+	{
+		const auto& value = engines[i];
+
+		if (value.size() < 3)
+		{
+			continue;
+		}
+
+		EngineGlow engine{};
+		engine.engineIndex = std::stoi(value[0], 0, 0);
+		engine.skipThrottlePercent = std::stoi(value[1], 0, 0);
+		engine.skipSpeedMglt = std::stoi(value[2], 0, 0);
+
+		values.push_back(engine);
+	}
+
+	return values;
+}
+
+class ModelIndexEngineGlows
+{
+public:
+	EngineGlow GetEngineGlow(int modelIndex, int engineIndex)
+	{
+		this->UpdateIfChanged();
+
+		auto it = this->_engines.find(std::make_tuple(modelIndex, engineIndex));
+
+		if (it != this->_engines.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto values = GetEngineGlowList(modelIndex);
+			EngineGlow engine{ -1, -1, -1 };
+
+			for (const auto& value : values)
+			{
+				if (value.engineIndex == engineIndex)
+				{
+					engine = value;
+					break;
+				}
+			}
+
+			this->_engines.insert(std::make_pair(std::make_tuple(modelIndex, engineIndex), engine));
+			return engine;
+		}
+	}
+
+private:
+	void UpdateIfChanged()
+	{
+		static std::string _mission;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+
+		if (_mission != xwaMissionFileName)
+		{
+			_mission = xwaMissionFileName;
+
+			this->_engines.clear();
+		}
+	}
+
+	std::map<std::tuple<int, int>, EngineGlow> _engines;
+};
+
+ModelIndexEngineGlows g_modelIndexEngineGlows;
 
 class HitDataArray
 {
@@ -872,17 +1070,86 @@ int L004E0FA0_ComputePercentOfActiveEnginesHook(int* params)
 	return 0;
 }
 
+bool EvalSkipEngineGlowCondition(int engineCount, int engineIndex, int meshIndex, XwaObject* pObject)
+{
+	if (pObject == 0 || pObject->pMobileObject == 0 || pObject->pMobileObject->pCraft == 0)
+	{
+		return true;
+	}
+
+	if (engineCount <= 0 || engineIndex < 0 || engineIndex >= engineCount)
+	{
+		return true;
+	}
+
+	unsigned short modelIndex = pObject->ModelIndex;
+	XwaMobileObject* pMobileObject = pObject->pMobileObject;
+	int pCraft = pMobileObject->pCraft;
+
+	short mobileSpeed = pMobileObject->Speed;
+	short craftSpeed = *(short*)(pCraft + 0xC4);
+
+	if (craftSpeed == 0)
+	{
+		return false;
+	}
+
+	int speedPercent = mobileSpeed * 100 / craftSpeed;
+
+	EngineGlow engine = g_modelIndexEngineGlows.GetEngineGlow(modelIndex, engineIndex);
+
+	if (engine.engineIndex == -1)
+	{
+		return false;
+	}
+
+	if (engine.skipThrottlePercent != -1)
+	{
+		if (speedPercent < engine.skipThrottlePercent)
+		{
+			return true;
+		}
+	}
+
+	if (engine.skipSpeedMglt != -1)
+	{
+		int rawSkipSpeed = (int)(engine.skipSpeedMglt * 2.25f + 0.5f);
+
+		if (mobileSpeed < rawSkipSpeed)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 int L004F22B0_EngineGlowIsDisabledHook(int* params)
 {
+	XwaObject* pObject = (XwaObject*)params[Params_ESI];
 	XwaMobileObject* pMobileObject = (XwaMobileObject*)params[Params_ECX];
 	int pCraft = pMobileObject->pCraft;
+	unsigned short modelIndex = pObject->ModelIndex;
 
 	params[Params_EAX] = pCraft;
 
+	int engineCount = params[7];
+	int engineIndex = params[4];
 	int meshIndex = (unsigned char)params[6];
 	unsigned char* pCraft_292 = (unsigned char*)(pCraft + GetCraftOffset_292());
 
-	if (pCraft_292[meshIndex] == 0)
+	bool skipEngine = false;
+
+	if (pCraft == 0 || pCraft_292[meshIndex] == 0)
+	{
+		skipEngine = true;
+	}
+	else
+	{
+		skipEngine = EvalSkipEngineGlowCondition(engineCount, engineIndex, meshIndex, pObject);
+	}
+
+	if (skipEngine)
 	{
 		params[Params_ReturnAddress] = 0x004F2E31;
 	}
@@ -892,13 +1159,31 @@ int L004F22B0_EngineGlowIsDisabledHook(int* params)
 
 int L0042D590_EngineGlowIsDisabledHook(int* params)
 {
+	int engineCount = (short)params[4];
+	int engineIndex = params[6];
 	int meshIndex = (unsigned char)params[9];
+	int objectIndex = params[Params_EBP];
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	XwaObject* pObject = &XwaObjects[objectIndex];
+	XwaMobileObject* pMobileObject = pObject->pMobileObject;
 	int pCraft = *(int*)0x00910DFC;
 	unsigned char* pCraft_292 = (unsigned char*)(pCraft + GetCraftOffset_292());
+	unsigned short modelIndex = pObject->ModelIndex;
 
 	int ebx = params[Params_EBX];
 
+	bool skipEngine = false;
+
 	if (pCraft == 0 || pCraft_292[meshIndex] == 0 || *(int*)ebx != 0)
+	{
+		skipEngine = true;
+	}
+	else
+	{
+		skipEngine = EvalSkipEngineGlowCondition(engineCount, engineIndex, meshIndex, pObject);
+	}
+
+	if (skipEngine)
 	{
 		params[Params_ReturnAddress] = 0x0042D922;
 	}
