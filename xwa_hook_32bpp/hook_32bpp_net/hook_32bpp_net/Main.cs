@@ -116,16 +116,50 @@ namespace hook_32bpp_net
         {
             int count = 0;
 
-            for (int index = 255; index >= 0; index--)
-            {
-                string skinName = "Default_" + index.ToString(CultureInfo.InvariantCulture);
+            //for (int index = 255; index >= 0; index--)
+            //{
+            //    string skinName = "Default_" + index.ToString(CultureInfo.InvariantCulture);
 
-                if (GetSkinDirectoryLocatorPath(optName, skinName) != null)
+            //    if (GetSkinDirectoryLocatorPath(optName, skinName) != null)
+            //    {
+            //        count = index + 1;
+            //        break;
+            //    }
+            //}
+
+            var locker = new object();
+            var partition = Partitioner.Create(0, 256);
+
+            Parallel.ForEach(
+                partition,
+                () => 0,
+                (range, _, localValue) =>
                 {
-                    count = index + 1;
-                    break;
-                }
-            }
+                    int localCount = 0;
+
+                    for (int index = range.Item2 - 1; index >= range.Item1; index--)
+                    {
+                        string skinName = "Default_" + index.ToString(CultureInfo.InvariantCulture);
+
+                        if (GetSkinDirectoryLocatorPath(optName, skinName) != null)
+                        {
+                            localCount = index + 1;
+                            break;
+                        }
+                    }
+
+                    return Math.Max(localCount, localValue);
+                },
+                localCount =>
+                {
+                    lock (locker)
+                    {
+                        if (localCount > count)
+                        {
+                            count = localCount;
+                        }
+                    }
+                });
 
             return count;
         }
@@ -134,17 +168,52 @@ namespace hook_32bpp_net
         {
             int count = 0;
 
-            for (int index = 255; index >= 0; index--)
-            {
-                string key = optName + "_fgc_" + index.ToString(CultureInfo.InvariantCulture);
-                string value = XwaHooksConfig.GetFileKeyValue(objectLines, key);
+            //for (int index = 255; index >= 0; index--)
+            //{
+            //    string key = optName + "_fgc_" + index.ToString(CultureInfo.InvariantCulture);
+            //    string value = XwaHooksConfig.GetFileKeyValue(objectLines, key);
 
-                if (!string.IsNullOrEmpty(value))
+            //    if (!string.IsNullOrEmpty(value))
+            //    {
+            //        count = index + 1;
+            //        break;
+            //    }
+            //}
+
+            var locker = new object();
+            var partition = Partitioner.Create(0, 256);
+
+            Parallel.ForEach(
+                partition,
+                () => 0,
+                (range, _, localValue) =>
                 {
-                    count = index + 1;
-                    break;
-                }
-            }
+                    int localCount = 0;
+
+                    for (int index = range.Item2 - 1; index >= range.Item1; index--)
+                    {
+                        string key = optName + "_fgc_" + index.ToString(CultureInfo.InvariantCulture);
+                        string value = XwaHooksConfig.GetFileKeyValue(objectLines, key);
+
+                        if (!string.IsNullOrEmpty(value))
+                        {
+                            localCount = index + 1;
+                            break;
+                        }
+                    }
+
+                    return Math.Max(localCount, localValue);
+                },
+                localCount =>
+                {
+                    lock (locker)
+                    {
+                        if (localCount > count)
+                        {
+                            count = localCount;
+                        }
+                    }
+                });
 
             return count;
         }
@@ -155,16 +224,45 @@ namespace hook_32bpp_net
 
             var colors = new List<int>();
 
-            for (int index = 0; index < 256; index++)
-            {
-                string key = optName + "_fgc_" + index.ToString(CultureInfo.InvariantCulture);
-                string value = XwaHooksConfig.GetFileKeyValue(objectLines, key);
+            //for (int index = 0; index < 256; index++)
+            //{
+            //    string key = optName + "_fgc_" + index.ToString(CultureInfo.InvariantCulture);
+            //    string value = XwaHooksConfig.GetFileKeyValue(objectLines, key);
 
-                if (!string.IsNullOrEmpty(value) || (hasBaseSkins && index < fgCount))
+            //    if (!string.IsNullOrEmpty(value) || (hasBaseSkins && index < fgCount))
+            //    {
+            //        colors.Add(index);
+            //    }
+            //}
+
+            var locker = new object();
+            var partition = Partitioner.Create(0, 256);
+
+            Parallel.ForEach(
+                partition,
+                () => new List<int>(),
+                (range, _, localValue) =>
                 {
-                    colors.Add(index);
-                }
-            }
+                    for (int index = range.Item1; index < range.Item2; index++)
+                    {
+                        string key = optName + "_fgc_" + index.ToString(CultureInfo.InvariantCulture);
+                        string value = XwaHooksConfig.GetFileKeyValue(objectLines, key);
+
+                        if (!string.IsNullOrEmpty(value) || (hasBaseSkins && index < fgCount))
+                        {
+                            localValue.Add(index);
+                        }
+                    }
+
+                    return localValue;
+                },
+                localCount =>
+                {
+                    lock (locker)
+                    {
+                        colors.AddRange(localCount);
+                    }
+                });
 
             return colors;
         }
@@ -346,6 +444,73 @@ namespace hook_32bpp_net
             return texturesExist;
         }
 
+        //private static void CreateSwitchTextures(OptFile opt, ICollection<string> texturesExist, List<List<string>> fgSkins, List<int> fgColors)
+        //{
+        //    int fgCount = fgSkins.Count;
+
+        //    if (fgCount == 0)
+        //    {
+        //        return;
+        //    }
+
+        //    var newTextures = new ConcurrentBag<Texture>();
+
+        //    opt.Textures
+        //        .Where(texture => texturesExist.Contains(texture.Key))
+        //        .AsParallel()
+        //        .ForAll(texture =>
+        //    {
+        //        texture.Value.Convert8To32();
+
+        //        foreach (int i in fgColors)
+        //        {
+        //            Texture newTexture = texture.Value.Clone();
+        //            newTexture.Name += "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]);
+        //            newTextures.Add(newTexture);
+        //        }
+        //    });
+
+        //    foreach (var newTexture in newTextures)
+        //    {
+        //        opt.Textures.Add(newTexture.Name, newTexture);
+        //    }
+
+        //    foreach (var mesh in opt.Meshes)
+        //    {
+        //        foreach (var lod in mesh.Lods)
+        //        {
+        //            foreach (var faceGroup in lod.FaceGroups)
+        //            {
+        //                if (faceGroup.Textures.Count == 0)
+        //                {
+        //                    continue;
+        //                }
+
+        //                string name = faceGroup.Textures[0];
+
+        //                if (!texturesExist.Contains(name))
+        //                {
+        //                    continue;
+        //                }
+
+        //                faceGroup.Textures.Clear();
+
+        //                for (int i = 0; i < fgCount; i++)
+        //                {
+        //                    if (fgColors.Contains(i))
+        //                    {
+        //                        faceGroup.Textures.Add(name + "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]));
+        //                    }
+        //                    else
+        //                    {
+        //                        faceGroup.Textures.Add(name);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
         private static void CreateSwitchTextures(OptFile opt, ICollection<string> texturesExist, List<List<string>> fgSkins, List<int> fgColors)
         {
             int fgCount = fgSkins.Count;
@@ -361,56 +526,54 @@ namespace hook_32bpp_net
                 .Where(texture => texturesExist.Contains(texture.Key))
                 .AsParallel()
                 .ForAll(texture =>
-            {
-                texture.Value.Convert8To32();
-
-                foreach (int i in fgColors)
                 {
-                    Texture newTexture = texture.Value.Clone();
-                    newTexture.Name += "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]);
-                    newTextures.Add(newTexture);
-                }
-            });
+                    texture.Value.Convert8To32();
+
+                    foreach (int i in fgColors)
+                    {
+                        Texture newTexture = texture.Value.Clone();
+                        newTexture.Name += "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]);
+                        newTextures.Add(newTexture);
+                    }
+                });
 
             foreach (var newTexture in newTextures)
             {
                 opt.Textures.Add(newTexture.Name, newTexture);
             }
 
-            foreach (var mesh in opt.Meshes)
-            {
-                foreach (var lod in mesh.Lods)
+            opt.Meshes
+                .SelectMany(t => t.Lods)
+                .SelectMany(t => t.FaceGroups)
+                .AsParallel()
+                .ForAll(faceGroup =>
                 {
-                    foreach (var faceGroup in lod.FaceGroups)
+                    if (faceGroup.Textures.Count == 0)
                     {
-                        if (faceGroup.Textures.Count == 0)
+                        return;
+                    }
+
+                    string name = faceGroup.Textures[0];
+
+                    if (!texturesExist.Contains(name))
+                    {
+                        return;
+                    }
+
+                    faceGroup.Textures.Clear();
+
+                    for (int i = 0; i < fgCount; i++)
+                    {
+                        if (fgColors.Contains(i))
                         {
-                            continue;
+                            faceGroup.Textures.Add(name + "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]));
                         }
-
-                        string name = faceGroup.Textures[0];
-
-                        if (!texturesExist.Contains(name))
+                        else
                         {
-                            continue;
-                        }
-
-                        faceGroup.Textures.Clear();
-
-                        for (int i = 0; i < fgCount; i++)
-                        {
-                            if (fgColors.Contains(i))
-                            {
-                                faceGroup.Textures.Add(name + "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]));
-                            }
-                            else
-                            {
-                                faceGroup.Textures.Add(name);
-                            }
+                            faceGroup.Textures.Add(name);
                         }
                     }
-                }
-            }
+                });
         }
 
         private static void UpdateSkins(string optName, OptFile opt, List<string> distinctSkins, List<List<string>> fgSkins)
@@ -443,8 +606,8 @@ namespace hook_32bpp_net
             });
 
             opt.Textures
-                .Where(texture => texture.Key.IndexOf("_fg_") != -1)
                 .AsParallel()
+                .Where(texture => texture.Key.IndexOf("_fg_") != -1)
                 .ForAll(texture =>
             {
                 int position = texture.Key.IndexOf("_fg_");
@@ -509,14 +672,28 @@ namespace hook_32bpp_net
             byte[] src = newTexture.ImageData;
             byte[] dst = baseTexture.ImageData;
 
-            for (int i = 0; i < size; i++)
-            {
-                int a = src[i * 4 + 3];
+            //for (int i = 0; i < size; i++)
+            //{
+            //    int a = src[i * 4 + 3];
 
-                dst[i * 4 + 0] = (byte)(dst[i * 4 + 0] * (255 - a) / 255 + src[i * 4 + 0] * a / 255);
-                dst[i * 4 + 1] = (byte)(dst[i * 4 + 1] * (255 - a) / 255 + src[i * 4 + 1] * a / 255);
-                dst[i * 4 + 2] = (byte)(dst[i * 4 + 2] * (255 - a) / 255 + src[i * 4 + 2] * a / 255);
-            }
+            //    dst[i * 4 + 0] = (byte)(dst[i * 4 + 0] * (255 - a) / 255 + src[i * 4 + 0] * a / 255);
+            //    dst[i * 4 + 1] = (byte)(dst[i * 4 + 1] * (255 - a) / 255 + src[i * 4 + 1] * a / 255);
+            //    dst[i * 4 + 2] = (byte)(dst[i * 4 + 2] * (255 - a) / 255 + src[i * 4 + 2] * a / 255);
+            //}
+
+            var partition = Partitioner.Create(0, size);
+
+            Parallel.ForEach(partition, range =>
+            {
+                for (int i = range.Item1; i < range.Item2; i++)
+                {
+                    int a = src[i * 4 + 3];
+
+                    dst[i * 4 + 0] = (byte)(dst[i * 4 + 0] * (255 - a) / 255 + src[i * 4 + 0] * a / 255);
+                    dst[i * 4 + 1] = (byte)(dst[i * 4 + 1] * (255 - a) / 255 + src[i * 4 + 1] * a / 255);
+                    dst[i * 4 + 2] = (byte)(dst[i * 4 + 2] * (255 - a) / 255 + src[i * 4 + 2] * a / 255);
+                }
+            });
         }
 
         private static readonly string[] _textureExtensions = new string[] { ".bmp", ".png", ".jpg" };

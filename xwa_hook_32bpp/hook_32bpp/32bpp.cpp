@@ -366,6 +366,7 @@ int ConvertColorMapHook(int* params)
 		unsigned char* illumBuffer = g_illumMapBuffer.data();
 		unsigned char* colorBuffer = g_colorMapBuffer.data();
 
+#pragma omp parallel for
 		for (int i = 0; i < bytesSize; i++)
 		{
 			int colorIndex = *(unsigned char*)(A10 + i);
@@ -396,6 +397,7 @@ int ConvertColorMapHook(int* params)
 			}
 		}
 
+#pragma omp parallel for
 		for (int i = 0; i < bytesSize; i++)
 		{
 			int paletteIndex = 4 + brightnessLevel;
@@ -431,7 +433,10 @@ int ConvertColorMapHook(int* params)
 			A14 = 0;
 		}
 
-		for (int i = 0; i < bytesSize / 4; i++)
+		bytesSize /= 4;
+
+#pragma omp parallel for
+		for (int i = 0; i < bytesSize; i++)
 		{
 			int paletteIndex = 4 + brightnessLevel;
 			unsigned char illum = A14 == 0 ? (unsigned char)0 : *(unsigned char*)(A14 + i);
