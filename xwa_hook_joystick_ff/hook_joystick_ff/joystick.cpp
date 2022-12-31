@@ -999,11 +999,28 @@ int UpdateControllerHook(int* params)
 			}
 		}
 	}
-	float normYaw = 2.0f * (esp10.dwXpos / 65535.0f - 0.5f); // -1: Left, 1: Right
-	float normPitch = 2.0f * (esp10.dwYpos / 65535.0f - 0.5f); // -1: Up, 1: Down
-	if (g_pSharedData != NULL) {
-		g_pSharedData->JoystickYaw = normYaw;
-		g_pSharedData->JoystickPitch = normPitch;
+
+	if (g_pSharedData != NULL)
+	{
+		g_pSharedData->JoystickHookPresent = true;
+		if (!(g_pSharedData->JoystickEmulationEnabled))
+		{
+			float normYaw   = 2.0f * (esp10.dwXpos / 65535.0f - 0.5f); // -1: Left, 1: Right
+			float normPitch = 2.0f * (esp10.dwYpos / 65535.0f - 0.5f); // -1: Up,   1: Down
+			float normRoll  = 2.0f * (esp10.dwRpos / 65535.0f - 0.5f); // -1: Left, 1: Right
+			g_pSharedData->JoystickYaw   = normYaw;
+			g_pSharedData->JoystickPitch = normPitch;
+			g_pSharedData->JoystickRoll  = normRoll;
+
+			if (g_pSharedData->GimbalLockFixActive)
+			{
+				// Nullify the joystick input. This allows the gimbal lock fix code in ddraw
+				// to do its job.
+				esp10.dwXpos = 32767;
+				esp10.dwYpos = 32767;
+				esp10.dwRpos = 32767;
+			}
+		}
 	}
 
 	return 0;
