@@ -1719,6 +1719,12 @@ void ApplyProfile(short objectIndex, unsigned short modelIndex, unsigned short f
 
 	if (profile.empty())
 	{
+		const std::string shipName = GetFileNameWithoutExtension(g_flightModelsList.GetLstLine(modelIndex));
+		profile = GetFileKeyValue(objectLines, "ObjectProfile_" + shipName);
+	}
+
+	if (profile.empty())
+	{
 		profile = "Default_" + std::to_string(markings);
 	}
 

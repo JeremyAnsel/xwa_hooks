@@ -5,5 +5,6 @@ FlightModels\TieFighter_CockpitPovProfile = Default
 CockpitPovProfile = Default
 
 ObjectProfile_fg_0 = Default
+ObjectProfile_XWing = Default
 
 ObjectProfile_BWing_281 = Default

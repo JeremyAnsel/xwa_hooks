@@ -185,6 +185,8 @@ Suppose that the mission is "[MissionDir]\[Mission].tie".
 To define an object profile for a flightgroup, create a file named "[MissionDir]\[Mission]_Objects.txt" or create a section named "[Objects]" in "[MissionDir]\[Mission].ini".
 The format is
 ObjectProfile_fg_# = ProfileName
+or
+ObjectProfile_[Model] = ProfileName
 Replace # with the flightgroup index.
 The default ProfileName is "Default".
 See "Objects.txt"
