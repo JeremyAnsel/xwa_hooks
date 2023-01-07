@@ -46,7 +46,10 @@ struct TieFlightGroup
 	unsigned char GlobalGroupId;
 	char unk079[1];
 	unsigned char WavesCount;
-	char unk07B[3343];
+	char unk07B[47];
+	unsigned char ArrivalDelayMinutes;
+	unsigned char ArrivalDelaySeconds;
+	char unk0AC[3294];
 	TieFlightGroupWaypoint StartPoints[4];
 	char StartPointRegions[4];
 	char unkDAE[100];
@@ -56,10 +59,21 @@ struct TieFlightGroup
 
 static_assert(sizeof(TieFlightGroup) == 3646, "size of TieFlightGroup must be 3646");
 
+struct TieHeader
+{
+	char unk0000[9128];
+	unsigned char TimeLimit;
+	char unk23A9[65];
+};
+
+static_assert(sizeof(TieHeader) == 9194, "size of TieHeader must be 9194");
+
 struct XwaMission
 {
 	TieFlightGroup FlightGroups[192];
-	char unkAAE80[590400];
+	char unkAAE80[18780];
+	TieHeader Header;
+	char unkB1BC6[562426];
 };
 
 static_assert(sizeof(XwaMission) == 1290432, "size of XwaMission must be 1290432");
@@ -484,8 +498,58 @@ int GetBackdropIndexFromFG(int fg)
 	return backdrop;
 }
 
+int GetBackdropFGFromIndex(int backdropIndex)
+{
+	const XwaMission* mission = *(XwaMission**)0x09EB8E0;
+
+	if (backdropIndex < 0 || backdropIndex >= 160)
+	{
+		return -1;
+	}
+
+	int backdrops[5]
+	{
+		0 * 32,
+		1 * 32,
+		2 * 32,
+		3 * 32,
+		4 * 32
+	};
+
+	for (int fg = 0; fg < 192; fg++)
+	{
+		if (mission->FlightGroups[fg].CraftId != 0xB7)
+		{
+			continue;
+		}
+
+		if (mission->FlightGroups[fg].PlanetId == 0)
+		{
+			continue;
+		}
+
+		if (mission->FlightGroups[fg].CraftId != 0xB7)
+		{
+			continue;
+		}
+
+		int region = mission->FlightGroups[fg].StartPointRegions[0];
+
+		if (backdrops[region] == backdropIndex)
+		{
+			return fg;
+		}
+
+		backdrops[region]++;
+	}
+
+	return -1;
+}
+
 int BackdropRenderFilterHook(int* params)
 {
+	const auto XwaGetTotalSecondsFromSecondsMinutesHours = (int(*)(unsigned char, unsigned char, unsigned char))0x004DA310;
+
 	static int _backdropsFromRegion[160];
 	static std::string _mission;
 	const char* xwaMissionFileName = (const char*)0x06002E8;
@@ -540,6 +604,7 @@ int BackdropRenderFilterHook(int* params)
 		}
 	}
 
+	const XwaMission* mission = *(XwaMission**)0x09EB8E0;
 	const int backdropIndex = params[Params_ESI];
 	const int backdropFromRegion = _backdropsFromRegion[backdropIndex];
 	const XwaPlayer* players = (XwaPlayer*)0x008B94E0;
@@ -552,7 +617,36 @@ int BackdropRenderFilterHook(int* params)
 		g_previousBuoyRegion = g_lastBuoyRegion;
 	}
 
-	if (g_previousBuoyRegion != -1 && backdropFromRegion != -1 && backdropFromRegion != g_previousBuoyRegion)
+	bool skip = false;
+
+	if (!skip)
+	{
+		if (g_previousBuoyRegion != -1 && backdropFromRegion != -1 && backdropFromRegion != g_previousBuoyRegion)
+		{
+			skip = true;
+		}
+	}
+
+	if (!skip)
+	{
+		int fg = GetBackdropFGFromIndex(backdropIndex);
+
+		if (fg != -1)
+		{
+			int delaySeconds = mission->FlightGroups[fg].ArrivalDelayMinutes * 60 + mission->FlightGroups[fg].ArrivalDelaySeconds;
+			unsigned char MissionTimeHours = *(unsigned char*)(0x008053E0 + 0x0017);
+			unsigned char MissionTimeMinutes = *(unsigned char*)(0x008053E0 + 0x0018);
+			unsigned char MissionTimeSeconds = *(unsigned char*)(0x008053E0 + 0x0019);
+			int missionTime = XwaGetTotalSecondsFromSecondsMinutesHours(MissionTimeHours, MissionTimeMinutes, MissionTimeSeconds);
+
+			if (delaySeconds > missionTime)
+			{
+				skip = true;
+			}
+		}
+	}
+
+	if (skip)
 	{
 		params[Params_ReturnAddress] = 0x004072E4;
 	}

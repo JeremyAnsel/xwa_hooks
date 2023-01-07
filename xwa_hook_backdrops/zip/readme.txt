@@ -49,6 +49,7 @@ The region index starts from 0.
 To define the destination region name for buoys, the format is: "buoy", buoy fg, "region_name", region name.
 The buoy fg starts from 0.
 
+Defining arrival delay for backdrops is now supported.
 
 *** Credits ***
 
