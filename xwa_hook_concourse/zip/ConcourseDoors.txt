@@ -21,3 +21,12 @@ filmdoor_posY = 286
 
 techdoor_posX = 426
 techdoor_posY = 219
+
+multidoor_posX = 24
+multidoor_posY = 140
+
+singledoor_posX = 373
+singledoor_posY = 313
+
+combatbackdoor_posX = 299
+combatbackdoor_posY = 90

@@ -126,6 +126,15 @@ At offset 1394FE, replace E84D0C0000 with E82DEA0600.
 At offset 13936A, replace 0F8495000000 with E8B1EB060090.
 At offset 139446, replace E8553C0200 with E8D5EA0600.
 
+# To call the hook that draws the combat doors
+At offset 13AB57, replace E80493FFFF with E8C4D30600.
+At offset 13AC45, replace E81692FFFF with E8D6D20600.
+At offset 13B3D9, replace E8828AFFFF with E842CB0600.
+At offset 13B49D, replace E8BE89FFFF with E87ECA0600.
+At offset 13AFE3, replace E8A8D00100 with E838CF0600.
+At offset 13ADDC, replace E8AFD20100 with E83FD10600.
+At offset 13B2FB, replace E890CD0100 with E820CC0600.
+
 
 *** Usage ***
 

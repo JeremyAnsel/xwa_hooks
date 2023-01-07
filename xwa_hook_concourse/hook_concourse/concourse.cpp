@@ -447,6 +447,12 @@ public:
 		this->filmdoor_posY = GetFileKeyValueInt(lines, "filmdoor_posY", 0x11E);
 		this->techdoor_posX = GetFileKeyValueInt(lines, "techdoor_posX", 0x1AA);
 		this->techdoor_posY = GetFileKeyValueInt(lines, "techdoor_posY", 0xDB);
+		this->multidoor_posX = GetFileKeyValueInt(lines, "multidoor_posX", 0x18);
+		this->multidoor_posY = GetFileKeyValueInt(lines, "multidoor_posY", 0x8C);
+		this->singledoor_posX = GetFileKeyValueInt(lines, "singledoor_posX", 0x175);
+		this->singledoor_posY = GetFileKeyValueInt(lines, "singledoor_posY", 0x139);
+		this->combatbackdoor_posX = GetFileKeyValueInt(lines, "combatbackdoor_posX", 0x12B);
+		this->combatbackdoor_posY = GetFileKeyValueInt(lines, "combatbackdoor_posY", 0x5A);
 	}
 
 	int planet_position_left;
@@ -465,6 +471,12 @@ public:
 	int filmdoor_posY;
 	int techdoor_posX;
 	int techdoor_posY;
+	int multidoor_posX;
+	int multidoor_posY;
+	int singledoor_posX;
+	int singledoor_posY;
+	int combatbackdoor_posX;
+	int combatbackdoor_posY;
 };
 
 ConcourseDoors g_concourseDoors;
@@ -1612,6 +1624,78 @@ int LoadFrontPlanetImageHook(int* params)
 	{
 		XwaLoadPlanetImage(planetImageIndex);
 	}
+
+	return 0;
+}
+
+int DrawMultiDoorHook(int* params)
+{
+	const auto XwaFrontResDraw = (int(*)(const char*, int, int))0x00534A60;
+
+	XwaFrontResDraw("multi", g_concourseDoors.multidoor_posX, g_concourseDoors.multidoor_posY);
+
+	return 0;
+}
+
+int DrawSingleDoorHook(int* params)
+{
+	const auto XwaFrontResDraw = (int(*)(const char*, int, int))0x00534A60;
+
+	XwaFrontResDraw("single", g_concourseDoors.singledoor_posX, g_concourseDoors.singledoor_posY);
+
+	return 0;
+}
+
+int DrawCombatBackDoorHook(int* params)
+{
+	const auto XwaFrontResDraw = (int(*)(const char*, int, int))0x00534A60;
+
+	XwaFrontResDraw("doors", g_concourseDoors.combatbackdoor_posX, g_concourseDoors.combatbackdoor_posY);
+
+	return 0;
+}
+
+int MultiDoorRectHook(int* params)
+{
+	const auto XwaRectSet = (void(*)(RECT*, int, int, int, int))0x00558C90;
+
+	RECT* lpRect = (RECT*)params[0];
+	int left = params[1] - 0x18 + g_concourseDoors.multidoor_posX;
+	int top = params[2] - 0x8C + g_concourseDoors.multidoor_posY;
+	int right = params[3] - 0x18 + g_concourseDoors.multidoor_posX;
+	int bottom = params[4] - 0x8C + g_concourseDoors.multidoor_posY;
+
+	XwaRectSet(lpRect, left, top, right, bottom);
+
+	return 0;
+}
+
+int SingleDoorRectHook(int* params)
+{
+	const auto XwaRectSet = (void(*)(RECT*, int, int, int, int))0x00558C90;
+
+	RECT* lpRect = (RECT*)params[0];
+	int left = params[1] - 0x175 + g_concourseDoors.singledoor_posX;
+	int top = params[2] - 0x139 + g_concourseDoors.singledoor_posY;
+	int right = params[3] - 0x175 + g_concourseDoors.singledoor_posX;
+	int bottom = params[4] - 0x139 + g_concourseDoors.singledoor_posY;
+
+	XwaRectSet(lpRect, left, top, right, bottom);
+
+	return 0;
+}
+
+int CombatBackDoorRectHook(int* params)
+{
+	const auto XwaRectSet = (void(*)(RECT*, int, int, int, int))0x00558C90;
+
+	RECT* lpRect = (RECT*)params[0];
+	int left = params[1] - 0x12B + g_concourseDoors.combatbackdoor_posX;
+	int top = params[2] - 0x5A + g_concourseDoors.combatbackdoor_posY;
+	int right = params[3] - 0x12B + g_concourseDoors.combatbackdoor_posX;
+	int bottom = params[4] - 0x5A + g_concourseDoors.combatbackdoor_posY;
+
+	XwaRectSet(lpRect, left, top, right, bottom);
 
 	return 0;
 }

@@ -508,3 +508,49 @@ E8B1EB0600              call 005A8B20, 005A8B20 - 00539F6F = 0006EBB1
 E8553C0200              call 0055DCA0
 
 E8D5EA0600              call 005A8B20, 005A8B20 - 0053A04B = 0006EAD5
+
+===============================================================================
+
+; L0053B500 - BOOL XwaCombatRoomGameStateUpdate( int A4 )
+; doors
+
+; multidoor
+:0053B757 - 0x13AB57
+E80493FFFF              call 00534A60
+
+E8C4D30600              call 005A8B20, 005A8B20 - 0053B75C = 0006D3C4
+
+; singledoor
+:0053B845 - 0x13AC45
+E81692FFFF              call 00534A60
+
+E8D6D20600              call 005A8B20, 005A8B20 - 0053B84A = 0006D2D6
+
+; combatbackdoor
+:0053BFD9 - 0x13B3D9
+E8828AFFFF              call 00534A60
+
+E842CB0600              call 005A8B20, 005A8B20 - 0053BFDE = 0006CB42
+
+:0053C09D - 0x13B49D
+E8BE89FFFF              call 00534A60
+
+E87ECA0600              call 005A8B20, 005A8B20 - 0053C0A2 = 0006CA7E
+
+; multi rect
+:0053BBE3 - 0x13AFE3
+E8A8D00100              call 00558C90
+
+E838CF0600              call 005A8B20, 005A8B20 - 0053BBE8 = 0006CF38
+
+; single rect
+:0053B9DC - 0x13ADDC
+E8AFD20100              call 00558C90
+
+E83FD10600              call 005A8B20, 005A8B20 - 0053B9E1 = 0006D13F
+
+; combat back rect
+:0053BEFB - 0x13B2FB
+E890CD0100              call 00558C90
+
+E820CC0600              call 005A8B20, 005A8B20 - 0053BF00 = 0006CC20
