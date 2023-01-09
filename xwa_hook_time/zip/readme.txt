@@ -59,6 +59,19 @@ At offset 00193A, replace 66817DFCDE00752B with E8E1651A00909090.
 
 # To call the hook that returns time
 At offset 10D040, replace FF25AC925A00 with E8EBAE0900C3.
+At offset 11C4F8, replace FF25AC925A00 with E8430BFFFFC3.
+At offset 10CC00, replace 8B3DAC925A00 with BF40DC500090.
+At offset 10CC81, replace 8B35AC925A00 with BE40DC500090.
+At offset 10A5AE, replace FF15AC925A00 with E88D2A000090.
+At offset 191F1C, replace FF15AC925A00 with E81FB1F7FF90.
+At offset 191F57, replace FF15AC925A00 with E8E4B0F7FF90.
+At offset 192000, replace FF15AC925A00 with E83BB0F7FF90.
+At offset 15E0E0, replace FF25F8905A00 with E84B9E0400C3.
+At offset 13DBB2, replace FF15F8905A00 with E82905020090.
+At offset 13DE7B, replace FF15F8905A00 with E86002020090.
+At offset 13E17F, replace FF15F8905A00 with E85CFF010090.
+At offset 13F10D, replace FF15F8905A00 with E8CEEF010090.
+At offset 13F1E3, replace FF15F8905A00 with E8F8EE010090.
 
 
 *** Usage ***

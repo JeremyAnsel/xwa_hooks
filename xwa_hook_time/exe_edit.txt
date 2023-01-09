@@ -223,3 +223,83 @@ FF25AC925A00            Jmp dword ptr [005A92AC]
 
 E8EBAE0900              call 005A8B30, 005A8B30 - 0050DC45 = 0009AEEB
 C3                      ret
+
+:0051D0F8 - 0x11C4F8
+FF25AC925A00            Jmp dword ptr [005A92AC]
+
+E8430BFFFF              call 0050DC40, 0050DC40 - 0051D0FD = FFFF0B43
+C3                      ret
+
+:0050D800 - 0x10CC00
+8B3DAC925A00            mov edi, dword ptr [005A92AC]
+
+BF40DC5000              mov edi, 0050DC40
+90                      nop
+
+:0050D881 - 0x10CC81
+8B35AC925A00            mov esi, dword ptr [005A92AC]
+
+BE40DC5000              mov esi, 0050DC40
+90                      nop
+
+:0050B1AE - 0x10A5AE
+FF15AC925A00            Call dword ptr [005A92AC]
+
+E88D2A0000              call 0050DC40, 0050DC40 - 0050B1B3 = 00002A8D
+90                      nop
+
+:00592B1C - 0x191F1C
+FF15AC925A00            Call dword ptr [005A92AC]
+
+E81FB1F7FF              call 0050DC40, 0050DC40 - 00592B21 = FFF7B11F
+90                      nop
+
+:00592B57 - 0x191F57
+FF15AC925A00            Call dword ptr [005A92AC]
+
+E8E4B0F7FF              call 0050DC40, 0050DC40 - 00592B5C = FFF7B0E4
+90                      nop
+
+:00592C00 - 0x192000
+FF15AC925A00            Call dword ptr [005A92AC]
+
+E83BB0F7FF              call 0050DC40, 0050DC40 - 00592C05 = FFF7B03B
+90                      nop
+
+; GetTickCount
+
+:0055ECE0 - 0x15E0E0
+FF25F8905A00            Jmp dword ptr [005A90F8]
+
+E84B9E0400              call 005A8B30, 005A8B30 - 0055ECE5 = 00049E4B
+C3                      ret
+
+:0053E7B2 - 0x13DBB2
+FF15F8905A00            Call dword ptr [005A90F8]
+
+E829050200              call 0055ECE0, 0055ECE0 - 0053E7B7 = 00020529
+90                      nop
+
+:0053EA7B - 0x13DE7B
+FF15F8905A00            Call dword ptr [005A90F8]
+
+E860020200              call 0055ECE0, 0055ECE0 - 0053EA80 = 00020260
+90                      nop
+
+:0053ED7F - 0x13E17F
+FF15F8905A00            Call dword ptr [005A90F8]
+
+E85CFF0100              call 0055ECE0, 0055ECE0 - 0053ED84 = 0001FF5C
+90                      nop
+
+:0053FD0D - 0x13F10D
+FF15F8905A00            Call dword ptr [005A90F8]
+
+E8CEEF0100              call 0055ECE0, 0055ECE0 - 0053FD12 = 0001EFCE
+90                      nop
+
+:0053FDE3 - 0x13F1E3
+FF15F8905A00            Call dword ptr [005A90F8]
+
+E8F8EE0100              call 0055ECE0, 0055ECE0 - 0053FDE8 = 0001EEF8
+90                      nop

@@ -377,3 +377,15 @@ int TimeGetTimeHook(int* params)
 
 	return milli;
 }
+
+int GetTickCountHook(int* params)
+{
+	static unsigned long long start = GetTickCount64();
+
+	unsigned long long end = GetTickCount64();
+	unsigned long long duration = end - start;
+
+	int milli = (int)duration;
+
+	return milli;
+}

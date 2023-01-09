@@ -13,3 +13,4 @@ int ShipAnimationHook(int* params);
 int ExplosionAnimationHook(int* params);
 
 int TimeGetTimeHook(int* params);
+int GetTickCountHook(int* params);

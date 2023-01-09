@@ -16,6 +16,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x401C1C, ShipAnimationHook },
 	{ 0x40253F, ExplosionAnimationHook },
 	{ 0x50DC45, TimeGetTimeHook },
+	{ 0x55ECE5, GetTickCountHook },
 };
 
 static const HookPatchItem g_reduceCPUUsagePatch[] =
@@ -66,6 +67,19 @@ static const HookPatchItem g_animationsSpeedPatch[] =
 static const HookPatchItem g_timeGetTimePatch[] =
 {
 	{ 0x10D040, "FF25AC925A00", "E8EBAE0900C3" },
+	{ 0x11C4F8, "FF25AC925A00", "E8430BFFFFC3" },
+	{ 0x10CC00, "8B3DAC925A00", "BF40DC500090" },
+	{ 0x10CC81, "8B35AC925A00", "BE40DC500090" },
+	{ 0x10A5AE, "FF15AC925A00", "E88D2A000090" },
+	{ 0x191F1C, "FF15AC925A00", "E81FB1F7FF90" },
+	{ 0x191F57, "FF15AC925A00", "E8E4B0F7FF90" },
+	{ 0x192000, "FF15AC925A00", "E83BB0F7FF90" },
+	{ 0x15E0E0, "FF25F8905A00", "E84B9E0400C3" },
+	{ 0x13DBB2, "FF15F8905A00", "E82905020090" },
+	{ 0x13DE7B, "FF15F8905A00", "E86002020090" },
+	{ 0x13E17F, "FF15F8905A00", "E85CFF010090" },
+	{ 0x13F10D, "FF15F8905A00", "E8CEEF010090" },
+	{ 0x13F1E3, "FF15F8905A00", "E8F8EE010090" },
 };
 
 static const HookPatch g_patches[] =
