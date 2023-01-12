@@ -335,6 +335,18 @@ E837C81400              call 005A8B20, 005A8B20 - 0045C2E9 = 0014C837
 8B4C2410                mov ecx, dword ptr [esp+10]
 E8EDFD1000              call 005A8B20, 005A8B20 - 00498D33 = 0010FDED
 
+; skip entering area messages
+; L00498990
+:00498C7A - 0x09807A
+E8C1F0FFFF              call 00497D40
+
+E8A1FE1000              call 005A8B20, 005A8B20 - 00498C7F = 0010FEA1
+
+:00498CCB - 0x0980CB
+E870F0FFFF              call 00497D40
+
+E850FE1000              call 005A8B20, 005A8B20 - 00498CD0 = 0010FE50
+
 ; force player in turret
 :0050146D - 0x10086D
 0F8411040000            je 00501884

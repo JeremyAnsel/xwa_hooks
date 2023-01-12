@@ -1739,6 +1739,23 @@ int MissionIdSkipHyperspacedMessagesHook(int* params)
 	return 0;
 }
 
+int MissionIdSkipEnteringAreaMessagesHook(int* params)
+{
+	const auto ShowMessage = (void(*)(int, int))0x00497D40;
+
+	const int A4 = params[0];
+	const int A8 = params[1];
+
+	bool skipHyperspacedMessages = g_missionConfig.SkipHyperspacedMessages();
+
+	if (!skipHyperspacedMessages)
+	{
+		ShowMessage(A4, A8);
+	}
+
+	return 0;
+}
+
 int MissionIdForcePlayerInTurret1Hook(int* params)
 {
 	bool forcePlayerInTurret = g_missionConfig.ForcePlayerInTurret();
