@@ -1,6 +1,7 @@
 #include "targetver.h"
 #include "weapon.h"
 #include "config.h"
+#include <fstream>
 #include <array>
 #include <map>
 #include <utility>
@@ -199,8 +200,55 @@ std::string GetPathFileName(const std::string& str)
 	return a == -1 ? str : str.substr(a + 1, -1);
 }
 
-std::vector<std::string> GetWeaponColorLines(const std::string& ship)
+std::vector<std::string> GetCustomFileLines(const std::string& name)
 {
+	static std::vector<std::string> _lines;
+	static std::string _name;
+	static std::string _mission;
+
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	if (_name != name || _mission != xwaMissionFileName)
+	{
+		_name = name;
+		_mission = xwaMissionFileName;
+
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		_lines = GetFileLines(mission + "_" + name + ".txt");
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines(mission + ".ini", name);
+		}
+
+		const std::string path = "FlightModels\\";
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines(path + name + ".txt");
+		}
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines(path + "default.ini", name);
+		}
+	}
+
+	return _lines;
+}
+
+std::vector<std::string> GetWeaponColorLines(const std::string& shipPath)
+{
+	std::string ship = shipPath;
+
+	const auto objectLines = GetCustomFileLines("Objects");
+	const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		ship = GetStringWithoutExtension(objectValue);
+	}
+
 	const std::string shipName = GetPathFileName(ship);
 
 	auto lines = GetFileLines(ship + "WeaponColor.txt");
