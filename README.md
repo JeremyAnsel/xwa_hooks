@@ -64,6 +64,10 @@ This hook displays the HUD in exterior view.
 
 See https://xwaupgrade.com/phpBB3/viewtopic.php?f=9&t=12471
 
+## xwa_hook_gimbal_lock
+
+This hook fixes the gimbal lock.
+
 ## xwa_hook_hangars
 
 This hook permits to customize the hangars.
