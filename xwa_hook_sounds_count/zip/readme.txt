@@ -535,6 +535,7 @@ At offset 057CA0, replace 5CAB9100 with g_SoundEffectIdsArray_1_00.c_str().
 { 0x0DBCDD, "50B89100", g_SoundEffectBufferArray00.c_str() },
 // Load effect sounds
 At offset 0306B0, replace E89B8E0000 with E86B781700.
+At offset 039618, replace 8A44242C8D74242C with E803E91600909090.
 
 
 *** Usage ***

@@ -625,3 +625,11 @@ E81EEA1600              call 005A8B20, 005A8B20 - 0043A102 = 0016EA1E
 E89B8E0000              call 0043A150
 
 E86B781700              call 005A8B20, 005A8B20 - 004312B5 = 0017786B
+
+; L0043A150
+:0043A218 - 0x039618
+8A44242C                mov al, byte ptr [esp+2C]
+8D74242C                lea esi, dword ptr [esp+2C]
+
+E803E91600              call 005A8B20, 005A8B20 - 0043A21D = 0016E903
+909090                  nop

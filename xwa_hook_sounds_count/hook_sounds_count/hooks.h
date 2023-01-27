@@ -24,6 +24,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x43A075, ResetSoundEffectNamesHook },
 	{ 0x43A102, ResetSoundEffectIdsHook },
 	{ 0x4312B5, LoadEffectSoundsHook },
+	{ 0x43A21D, LoadEffectSoundHook },
 };
 
 static const std::string g_SoundEffectNamesArray00 = int_to_hex(GetSoundEffectNamesArrayPtr() + 0x00);
@@ -606,6 +607,7 @@ static const HookPatchItem g_soundsCountPatch[] =
 
 	// Load effect sounds
 	{ 0x0306B0, "E89B8E0000", "E86B781700" },
+	{ 0x039618, "8A44242C8D74242C", "E803E91600909090" },
 };
 
 static const HookPatch g_patches[] =

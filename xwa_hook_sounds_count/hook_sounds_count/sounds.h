@@ -19,3 +19,4 @@ int GetSoundEffectBufferArrayPtr();
 int ResetSoundEffectNamesHook(int* params);
 int ResetSoundEffectIdsHook(int* params);
 int LoadEffectSoundsHook(int* params);
+int LoadEffectSoundHook(int* params);

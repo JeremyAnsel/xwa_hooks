@@ -5,6 +5,18 @@
 #include <filesystem>
 #include <tuple>
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 std::string GetPathFileName(const std::string& str)
 {
 	auto a = str.find_last_of('\\');
@@ -315,6 +327,25 @@ int LoadEffectSoundsHook(int* params)
 		std::string directory = "Wave\\" + basename + "\\";
 
 		XwaLoadSfxLst(filename.c_str(), (short)index, directory.c_str());
+	}
+
+	return 0;
+}
+
+int LoadEffectSoundHook(int* params)
+{
+	char* esp2C = (char*)params + 0x2C;
+
+	params[Params_ESI] = (int)esp2C;
+	params[Params_EAX] = *esp2C;
+
+	for (; *esp2C; esp2C++)
+	{
+		if (*esp2C == ';')
+		{
+			*esp2C = 0;
+			break;
+		}
 	}
 
 	return 0;
