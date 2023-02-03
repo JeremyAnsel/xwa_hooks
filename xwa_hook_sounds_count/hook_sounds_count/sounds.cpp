@@ -336,17 +336,28 @@ int LoadEffectSoundHook(int* params)
 {
 	char* esp2C = (char*)params + 0x2C;
 
-	params[Params_ESI] = (int)esp2C;
-	params[Params_EAX] = *esp2C;
-
-	for (; *esp2C; esp2C++)
+	for (int i = 0; esp2C[i]; i++)
 	{
-		if (*esp2C == ';')
+		if (esp2C[i] == ';')
 		{
-			*esp2C = 0;
+			esp2C[i] = 0;
 			break;
 		}
 	}
+
+	std::string lstFilename = GetStringWithoutExtension((char*)params[76]);
+
+	if (to_lower(lstFilename).rfind(".\\wave\\sfx_", 0) == 0)
+	{
+		lstFilename = lstFilename.substr(11);
+		lstFilename.append("_");
+		lstFilename += esp2C;
+
+		strcpy_s(esp2C, 256, lstFilename.c_str());
+	}
+
+	params[Params_ESI] = (int)esp2C;
+	params[Params_EAX] = *esp2C;
 
 	return 0;
 }
