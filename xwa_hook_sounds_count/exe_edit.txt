@@ -633,3 +633,10 @@ E86B781700              call 005A8B20, 005A8B20 - 004312B5 = 0017786B
 
 E803E91600              call 005A8B20, 005A8B20 - 0043A21D = 0016E903
 909090                  nop
+
+:0043A3BF - 0x0397BF
+8D7C242C                lea edi, dword ptr [esp+2C]
+83C9FF                  or ecx, FFFFFFFF
+
+E85CE71600              call 005A8B20, 005A8B20 - 0043A3C4 = 0016E75C
+9090                    nop

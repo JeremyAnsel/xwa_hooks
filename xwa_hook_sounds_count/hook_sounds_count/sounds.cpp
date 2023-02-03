@@ -345,19 +345,32 @@ int LoadEffectSoundHook(int* params)
 		}
 	}
 
+	params[Params_ESI] = (int)esp2C;
+	params[Params_EAX] = *esp2C;
+
+	return 0;
+}
+
+int SetEffectSoundNameHook(int* params)
+{
+	static char name[256];
+
+	char* esp2C = (char*)params + 0x2C;
+	strcpy_s(name, 256, esp2C);
+
 	std::string lstFilename = GetStringWithoutExtension((char*)params[76]);
 
 	if (to_lower(lstFilename).rfind(".\\wave\\sfx_", 0) == 0)
 	{
 		lstFilename = lstFilename.substr(11);
 		lstFilename.append("_");
-		lstFilename += esp2C;
+		lstFilename += GetStringWithoutExtension(esp2C);
 
-		strcpy_s(esp2C, 256, lstFilename.c_str());
+		strcpy_s(name, 256, lstFilename.c_str());
 	}
 
-	params[Params_ESI] = (int)esp2C;
-	params[Params_EAX] = *esp2C;
+	params[Params_EDI] = (int)name;
+	params[Params_ECX] = -1;
 
 	return 0;
 }

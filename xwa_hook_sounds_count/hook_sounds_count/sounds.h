@@ -20,3 +20,4 @@ int ResetSoundEffectNamesHook(int* params);
 int ResetSoundEffectIdsHook(int* params);
 int LoadEffectSoundsHook(int* params);
 int LoadEffectSoundHook(int* params);
+int SetEffectSoundNameHook(int* params);
