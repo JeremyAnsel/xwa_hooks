@@ -244,12 +244,9 @@ int GimbalLockUserInputHook(int* params)
 	short pitch, yaw, roll;
 	ExtractEulerFromMatrix(&pitch, &yaw, &roll, m);
 
-	if (abs(pitch - object->HeadingZ) > 0x2000)
-	{
-		pitch = -pitch;
-		yaw += 0x8000;
-		roll += 0x8000;
-	}
+	pitch = -pitch;
+	yaw += 0x8000;
+	roll += 0x8000;
 
 	object->HeadingXY = yaw;
 	object->HeadingZ = pitch;
