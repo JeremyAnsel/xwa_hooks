@@ -1,0 +1,2 @@
+
+FlightModels\AWing_HullIcon = 300

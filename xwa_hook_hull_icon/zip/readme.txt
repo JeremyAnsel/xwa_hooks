@@ -43,6 +43,17 @@ To set the map icon for a craft, open "MapIconList.txt" and change the correspon
 If the file does not exist, default values are used.
 See MapIconList.txt.
 
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+To replace the player hull icon for a given mission, create a file named "[MissionDir]\[Mission]_HullIcon.txt" or create a section named "[HullIcon]" in "[MissionDir]\[Mission].ini".
+The format is:
+PlayerHullIcon = value
+If the value is 0, then no icon is replaced.
+
+To replace the craft hull icon for a given mission, create a file named "[MissionDir]\[Mission]_Objects.txt" or create a section named "[Objects]" in "[MissionDir]\[Mission].ini".
+The format is a line per object: "FlightModels\ObjectA_HullIcon = value"
+If the value is 0, then no icon is replaced.
+See "Objects.txt".
+
 
 *** Credits ***
 

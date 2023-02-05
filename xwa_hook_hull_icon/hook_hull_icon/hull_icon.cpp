@@ -3,6 +3,85 @@
 #include "config.h"
 #include <fstream>
 
+std::string GetFileNameWithoutExtension(const std::string& str)
+{
+	auto a = str.find_last_of('\\');
+
+	return a == -1 ? str : str.substr(a + 1, -1);
+}
+
+class FlightModelsList
+{
+public:
+	FlightModelsList()
+	{
+		for (const auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		{
+			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
+		}
+
+		for (const auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		{
+			this->_equipmentList.push_back(GetStringWithoutExtension(line));
+		}
+	}
+
+	std::string GetLstLine(int modelIndex)
+	{
+		const int xwaObjectStats = 0x05FB240;
+		const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
+		const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
+
+		switch (dataIndex1)
+		{
+		case 0:
+			if ((unsigned int)dataIndex2 < this->_spacecraftList.size())
+			{
+				return this->_spacecraftList[dataIndex2];
+			}
+
+			break;
+
+		case 1:
+			if ((unsigned int)dataIndex2 < this->_equipmentList.size())
+			{
+				return this->_equipmentList[dataIndex2];
+			}
+
+			break;
+		}
+
+		return std::string();
+	}
+
+private:
+	std::vector<std::string> _spacecraftList;
+	std::vector<std::string> _equipmentList;
+};
+
+FlightModelsList g_flightModelsList;
+
+#pragma pack(push, 1)
+
+struct XwaObject
+{
+	char Unk0000[2];
+	unsigned short ModelIndex;
+	char Unk0004[35];
+};
+
+static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
+
+struct XwaPlayer
+{
+	int ObjectIndex;
+	char Unk0004[3019];
+};
+
+static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
+
+#pragma pack(pop)
+
 std::vector<unsigned short> GetDefaultHullIconValues()
 {
 	const auto hudIcons = (const unsigned short*)0x005A9608;
@@ -73,8 +152,96 @@ public:
 
 MapIconValues g_mapIconValues;
 
+unsigned short GetPlayerCraftHullIcon()
+{
+	static std::string _mission;
+	static unsigned short _playerHullIcon;
+
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	if (_mission != xwaMissionFileName)
+	{
+		_mission = xwaMissionFileName;
+
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		std::vector<std::string> lines = GetFileLines(mission + "_HullIcon.txt");
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(mission + ".ini", "HullIcon");
+		}
+
+		_playerHullIcon = (unsigned short)GetFileKeyValueInt(lines, "PlayerHullIcon", 0);
+	}
+
+	return _playerHullIcon;
+}
+
+unsigned short GetCraftHullIcon()
+{
+	static std::string _mission;
+	static unsigned short _hullIcon;
+
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	if (_mission != xwaMissionFileName)
+	{
+		_mission = xwaMissionFileName;
+
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(mission + ".ini", "Objects");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines("FlightModels\\Objects.txt");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines("FlightModels\\default.ini", "Objects");
+		}
+
+		const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+		const XwaPlayer* xwaPlayers = (XwaPlayer*)0x008B94E0;
+		const int currentPlayerId = *(int*)0x008C1CC8;
+
+		int modelIndex = xwaObjects[xwaPlayers[currentPlayerId].ObjectIndex].ModelIndex;
+		std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+		const std::string objectValue = GetFileKeyValue(lines, shipPath + ".opt");
+
+		if (!objectValue.empty() && std::ifstream(objectValue))
+		{
+			shipPath = GetStringWithoutExtension(objectValue);
+		}
+
+		_hullIcon = (unsigned short)GetFileKeyValueInt(lines, shipPath + "_HullIcon", 0);
+	}
+
+	return _hullIcon;
+}
+
 int HullIconHook(int* params)
 {
+	const unsigned short playerHullIcon = GetPlayerCraftHullIcon();
+
+	if (playerHullIcon != 0)
+	{
+		return playerHullIcon;
+	}
+
+	const unsigned short craftHullIcon = GetCraftHullIcon();
+
+	if (craftHullIcon != 0)
+	{
+		return craftHullIcon;
+	}
+
 	const unsigned short modelIndex = (unsigned short)params[0];
 
 	if (modelIndex < g_hullIconValues._hullIcons.size())
