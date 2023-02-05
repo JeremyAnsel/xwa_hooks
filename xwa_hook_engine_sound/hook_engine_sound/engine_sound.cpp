@@ -100,10 +100,10 @@ public:
 		this->SfxShuttleBlastOffCount = GetFileKeyValueInt(lines, "sfx_shuttleblastoff_count");
 		this->SfxShuttleShutDownIndex = GetFileKeyValueInt(lines, "sfx_shuttleshutdown_index");
 		this->SfxShuttleShutDownCount = GetFileKeyValueInt(lines, "sfx_shuttleshutdown_count");
-
 		this->SfxWeaponIndex = GetFileKeyValueInt(lines, "sfx_weapon_index");
 		this->SfxWeaponCount = GetFileKeyValueInt(lines, "sfx_weapon_count");
-
+		this->SfxWeaponRangeIndex = GetFileKeyValueInt(lines, "sfx_weaponrange_index");
+		this->SfxWeaponRangeCount = GetFileKeyValueInt(lines, "sfx_weaponrange_count");
 		this->SfxHyperStartIndex = GetFileKeyValueInt(lines, "sfx_hyperstart_index");
 		this->SfxHyperStartCount = GetFileKeyValueInt(lines, "sfx_hyperstart_count");
 		this->SfxHyperZoomIndex = GetFileKeyValueInt(lines, "sfx_hyperzoom_index");
@@ -112,6 +112,10 @@ public:
 		this->SfxHyperEndCount = GetFileKeyValueInt(lines, "sfx_hyperend_count");
 		this->SfxHyperAbortIndex = GetFileKeyValueInt(lines, "sfx_hyperabort_index");
 		this->SfxHyperAbortCount = GetFileKeyValueInt(lines, "sfx_hyperabort_count");
+		this->SfxStarshipAmbientIndex = GetFileKeyValueInt(lines, "sfx_starshipambient_index");
+		this->SfxStarshipAmbientCount = GetFileKeyValueInt(lines, "sfx_starshipambient_count");
+		this->SfxSoundsIndex = GetFileKeyValueInt(lines, "sfx_sounds_index");
+		this->SfxSoundsCount = GetFileKeyValueInt(lines, "sfx_sounds_count");
 	}
 
 	bool SoundsCountHookExists;
@@ -136,7 +140,8 @@ public:
 	int SfxShuttleShutDownCount;
 	int SfxWeaponIndex;
 	int SfxWeaponCount;
-
+	int SfxWeaponRangeIndex;
+	int SfxWeaponRangeCount;
 	int SfxHyperStartIndex;
 	int SfxHyperStartCount;
 	int SfxHyperZoomIndex;
@@ -145,6 +150,10 @@ public:
 	int SfxHyperEndCount;
 	int SfxHyperAbortIndex;
 	int SfxHyperAbortCount;
+	int SfxStarshipAmbientIndex;
+	int SfxStarshipAmbientCount;
+	int SfxSoundsIndex;
+	int SfxSoundsCount;
 };
 
 SoundsConfig& GetSoundsConfig()
@@ -153,13 +162,91 @@ SoundsConfig& GetSoundsConfig()
 	return g_soundsConfig;
 }
 
+enum SfxSounds
+{
+	SfxSounds_PlayerCraftTargetedSound
+};
+
 #pragma pack(push, 1)
+
+enum ShipCategoryEnum : unsigned char
+{
+	ShipCategory_Starfighter = 0,
+	ShipCategory_Transport = 1,
+	ShipCategory_UtilityVehicle = 2,
+	ShipCategory_Freighter = 3,
+	ShipCategory_Starship = 4,
+	ShipCategory_Platform = 5,
+	ShipCategory_PlayerProjectile = 6,
+	ShipCategory_OtherProjectile = 7,
+	ShipCategory_Mine = 8,
+	ShipCategory_Satellite = 9,
+	ShipCategory_NormalDebris = 10,
+	ShipCategory_SmallDebris = 11,
+	ShipCategory_Backdrop = 12,
+	ShipCategory_Explosion = 13,
+	ShipCategory_Obstacle = 14,
+	ShipCategory_DeathStarII = 15,
+	ShipCategory_People = 16,
+	ShipCategory_Container = 17,
+	ShipCategory_Droid = 18,
+	ShipCategory_Armament = 19,
+	ShipCategory_LargeDebris = 20,
+	ShipCategory_SalvageYard = 21,
+};
+
+struct ExeEnableEntry
+{
+	unsigned char EnableOptions; // flags
+	unsigned char RessourceOptions; // flags
+	unsigned char ObjectCategory;
+	unsigned char ShipCategory;
+	unsigned int ObjectSize;
+	void* pData1;
+	void* pData2;
+	unsigned short GameOptions; // flags
+	unsigned short CraftIndex;
+	short DataIndex1;
+	short DataIndex2;
+};
+
+static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24");
+
+struct XwaMobileObject
+{
+	char Unk0000[191];
+	bool RecalculateForwardVector;
+	short ForwardX;
+	short ForwardY;
+	short ForwardZ;
+	bool RecalculateTransformMatrix;
+	short TransformMatrixFrontX;
+	short TransformMatrixFrontY;
+	short TransformMatrixFrontZ;
+	short TransformMatrixRightX;
+	short TransformMatrixRightY;
+	short TransformMatrixRightZ;
+	short TransformMatrixUpX;
+	short TransformMatrixUpY;
+	short TransformMatrixUpZ;
+	char Unk00D9[12];
+};
+
+static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 229");
 
 struct XwaObject
 {
 	char Unk0000[2];
 	unsigned short ModelIndex;
-	char Unk0004[35];
+	unsigned char ShipCategory;
+	unsigned char TieFlightGroupIndex;
+	unsigned char Region;
+	int PositionX;
+	int PositionY;
+	int PositionZ;
+	char Unk0013[12];
+	int PlayerIndex;
+	XwaMobileObject* pMobileObject;
 };
 
 static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
@@ -169,9 +256,15 @@ struct XwaPlayer
 	int ObjectIndex;
 	char Unk0004[6];
 	short Iff;
-	char Unk000C[71];
+	char Unk000C[4];
+	unsigned char Region;
+	char Unk0011[4];
+	unsigned char MapState;
+	char Unk0016[61];
 	short m053;
-	char Unk0055[2938];
+	char Unk0055[407];
+	int AiObjectIndex;
+	char Unk01F0[2527];
 };
 
 static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
@@ -529,6 +622,37 @@ std::string GetWeaponSoundBehavior(int modelIndex)
 	return behavior;
 }
 
+std::tuple<int, int> GetWeaponSoundRange(int modelIndex, int weaponIndex)
+{
+	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(path + "Sound.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(path + ".ini", "Sound");
+	}
+
+	int rangeStart = GetFileKeyValueInt(lines, "WeaponSoundRangeStart_" + std::to_string(weaponIndex), -1);
+	int rangeCount = GetFileKeyValueInt(lines, "WeaponSoundRangeCount_" + std::to_string(weaponIndex), -1);
+
+	if (rangeStart >= 0 && rangeCount >= 0)
+	{
+		const auto& soundConfig = GetSoundsConfig();
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxWeaponRangeCount)
+		{
+			if (rangeStart + rangeCount > soundConfig.SfxWeaponRangeCount)
+			{
+				rangeStart = -1;
+				rangeCount = -1;
+			}
+		}
+	}
+
+	return std::make_tuple(rangeStart, rangeCount);
+}
+
 int GetHyperSoundBehavior(int modelIndex)
 {
 	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
@@ -552,6 +676,35 @@ int GetHyperSoundBehavior(int modelIndex)
 	}
 
 	return behavior;
+}
+
+struct AmbientSoundSettings
+{
+	int OffsetX;
+	int OffsetY;
+	int OffsetZ;
+	int Distance;
+};
+
+AmbientSoundSettings GetAmbientSoundSettings(int modelIndex)
+{
+	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	auto lines = GetFileLines(path + "Sound.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(path + ".ini", "Sound");
+	}
+
+	AmbientSoundSettings settings;
+
+	settings.OffsetX = GetFileKeyValueInt(lines, "AmbientSoundOffsetX", 0);
+	settings.OffsetY = GetFileKeyValueInt(lines, "AmbientSoundOffsetY", 0);
+	settings.OffsetZ = GetFileKeyValueInt(lines, "AmbientSoundOffsetZ", 0);
+	settings.Distance = GetFileKeyValueInt(lines, "AmbientSoundDistance", 0);
+
+	return settings;
 }
 
 class ModelIndexSound
@@ -637,6 +790,40 @@ public:
 		}
 	}
 
+	std::map<int, std::tuple<int, int>>& GetWeaponRange(int modelIndex)
+	{
+		auto it = this->_weaponRange.find(modelIndex);
+
+		if (it != this->_weaponRange.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = std::map<int, std::tuple<int, int>>();
+			this->_weaponRange.insert(std::make_pair(modelIndex, value));
+			return this->_weaponRange.find(modelIndex)->second;
+		}
+	}
+
+	std::tuple<int, int> GetWeaponRange(int modelIndex, int weaponIndex)
+	{
+		auto& weaponRange = GetWeaponRange(modelIndex);
+
+		auto it = weaponRange.find(weaponIndex);
+
+		if (it != weaponRange.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetWeaponSoundRange(modelIndex, weaponIndex);
+			weaponRange.insert(std::make_pair(weaponIndex, value));
+			return value;
+		}
+	}
+
 	int GetHyperBehavior(int modelIndex)
 	{
 		auto it = this->_hyperBehavior.find(modelIndex);
@@ -653,13 +840,31 @@ public:
 		}
 	}
 
+	AmbientSoundSettings GetAmbientSound(int modelIndex)
+	{
+		auto it = this->_ambientSounds.find(modelIndex);
+
+		if (it != this->_ambientSounds.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			AmbientSoundSettings value = GetAmbientSoundSettings(modelIndex);
+			this->_ambientSounds.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
 private:
 	std::map<int, int> _typeInterior;
 	std::map<int, int> _typeFlyBy;
 	std::map<int, int> _typeWash;
 	std::map<int, int> _typeTakeOff;
 	std::map<int, std::string> _weaponBehavior;
+	std::map<int, std::map<int, std::tuple<int, int>>> _weaponRange;
 	std::map<int, int> _hyperBehavior;
+	std::map<int, AmbientSoundSettings> _ambientSounds;
 };
 
 ModelIndexSound g_modelIndexSound;
@@ -1318,21 +1523,39 @@ int WeaponSoundHook(int* params)
 	const int weaponIndex = params[3];
 
 	const auto playSound = (int(*)(int, int, int))0x0043BF90;
+	const auto XwaRandom = (unsigned short(*)())0x00494E10;
 
 	if (g_modelIndexSound.GetWeaponBehavior(modelIndex).empty())
 	{
-		int weaponSoundIndex = WeaponModelIndexToSoundIndex(weaponIndex);
+		std::tuple<int, int> weaponSoundRange = g_modelIndexSound.GetWeaponRange(modelIndex, weaponIndex);
+		int weaponSoundRangeStart = std::get<0>(weaponSoundRange);
+		int weaponSoundRangeCount = std::get<1>(weaponSoundRange);
 		const auto& soundConfig = GetSoundsConfig();
 
-		if (weaponSoundIndex != -1 && soundConfig.SoundsCountHookExists && soundConfig.SfxWeaponCount)
+		if (soundConfig.SoundsCountHookExists)
 		{
-			if (modelIndex < soundConfig.SfxWeaponCount / 10)
+			if (weaponSoundRangeStart >= 0 && weaponSoundRangeCount >= 0)
 			{
-				int soundIndex = soundConfig.SfxWeaponIndex + modelIndex * 10 + weaponSoundIndex;
+				int soundIndex = soundConfig.SfxWeaponRangeIndex + weaponSoundRangeStart + (XwaRandom() % weaponSoundRangeCount);
 				playSound(soundIndex, A4, A8);
-			}
 
-			return 0;
+				return 0;
+			}
+			else
+			{
+				int weaponSoundIndex = WeaponModelIndexToSoundIndex(weaponIndex);
+
+				if (weaponSoundIndex != -1 && soundConfig.SoundsCountHookExists && soundConfig.SfxWeaponCount)
+				{
+					if (modelIndex < soundConfig.SfxWeaponCount / 10)
+					{
+						int soundIndex = soundConfig.SfxWeaponIndex + modelIndex * 10 + weaponSoundIndex;
+						playSound(soundIndex, A4, A8);
+					}
+
+					return 0;
+				}
+			}
 		}
 	}
 
@@ -1720,6 +1943,175 @@ int HyperEndSoundHook(int* params)
 			// HyperEnd.wav
 			playSound(0x75, 0xFFFF, playerIndex);
 		}
+	}
+
+	return 0;
+}
+
+
+long long int DistanceSquare(const XwaObject* playerObject, const XwaObject* targetObject)
+{
+	const float ScaleFactor = 0.0244140625f;
+
+	AmbientSoundSettings ambientSound = g_modelIndexSound.GetAmbientSound(targetObject->ModelIndex);
+
+	int targetX = targetObject->PositionX
+		+ targetObject->pMobileObject->TransformMatrixFrontX * (int)(ambientSound.OffsetZ / ScaleFactor) / 32767
+		+ targetObject->pMobileObject->TransformMatrixRightX * (int)(ambientSound.OffsetX / ScaleFactor) / 32767
+		+ targetObject->pMobileObject->TransformMatrixUpX * (int)(ambientSound.OffsetY / ScaleFactor) / 32767;
+
+	int targetY = targetObject->PositionY
+		+ targetObject->pMobileObject->TransformMatrixFrontY * (int)(ambientSound.OffsetZ / ScaleFactor) / 32767
+		+ targetObject->pMobileObject->TransformMatrixRightY * (int)(ambientSound.OffsetX / ScaleFactor) / 32767
+		+ targetObject->pMobileObject->TransformMatrixUpY * (int)(ambientSound.OffsetY / ScaleFactor) / 32767;
+
+	int targetZ = targetObject->PositionZ
+		+ targetObject->pMobileObject->TransformMatrixFrontZ * (int)(ambientSound.OffsetZ / ScaleFactor) / 32767
+		+ targetObject->pMobileObject->TransformMatrixRightZ * (int)(ambientSound.OffsetX / ScaleFactor) / 32767
+		+ targetObject->pMobileObject->TransformMatrixUpZ * (int)(ambientSound.OffsetY / ScaleFactor) / 32767;
+
+	long long int deltaX = (long long int)targetX - (long long int)playerObject->PositionX;
+	long long int deltaY = (long long int)targetY - (long long int)playerObject->PositionY;
+	long long int deltaZ = (long long int)targetZ - (long long int)playerObject->PositionZ;
+	long long int delta = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+	return delta;
+}
+
+int CustomSoundsHook(int* params)
+{
+	const float ScaleFactor = 0.0244140625f;
+
+	((void(*)())0x0042BEA0)();
+
+	const auto XwaStopSound = (char(*)(int))0x004DC400;
+	const auto XwaGetPlayingSoundsCount = (int(*)(int))0x004DC850;
+	const auto XwaQueueSound = (int(*)(int, int, int, int, int, int, int, int))0x004DB1A0;
+	const auto XwaSetSoundVolume = (char(*)(int, int))0x004DC5D0;
+
+	const auto& soundConfig = GetSoundsConfig();
+	const int* xwaSoundEffectsBufferId = GetSoundsConfig().SoundEffectIds;
+
+	const int modelIndexDistanceCount = 223;
+	static long long int modelIndexDistanceMin[modelIndexDistanceCount];
+
+	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const int currentPlayerId = *(int*)0x008C1CC8;
+	const int currentPlayerObjectIndex = XwaPlayers[currentPlayerId].MapState != 0 ? XwaPlayers[currentPlayerId].AiObjectIndex : XwaPlayers[currentPlayerId].ObjectIndex;
+	const XwaObject* currentPlayerObject = &XwaObjects[currentPlayerObjectIndex];
+	unsigned char currentPlayerRegion = XwaPlayers[currentPlayerId].Region;
+
+	if (currentPlayerObjectIndex == 0xffff)
+	{
+		return 0;
+	}
+
+	for (int i = 0; i < modelIndexDistanceCount; i++)
+	{
+		modelIndexDistanceMin[i] = 0x7fffffffffffffff;
+	}
+
+	for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x08D9628; objectIndex++)
+	{
+		const XwaObject* pObject = &XwaObjects[objectIndex];
+		const unsigned short modelIndex = pObject->ModelIndex;
+
+		if (modelIndex == 0 || modelIndex >= modelIndexDistanceCount || pObject->Region != currentPlayerRegion || pObject->PlayerIndex == currentPlayerId)
+		{
+			continue;
+		}
+
+		unsigned char category = XwaObjects[objectIndex].ShipCategory;
+
+		if (category != ShipCategory_Starship && category != ShipCategory_Freighter && category != ShipCategory_Platform)
+		{
+			continue;
+		}
+
+		long long int distanceSquare = DistanceSquare(currentPlayerObject, pObject);
+
+		if (distanceSquare < modelIndexDistanceMin[modelIndex])
+		{
+			modelIndexDistanceMin[modelIndex] = distanceSquare;
+		}
+	}
+
+	for (int modelIndex = 0; modelIndex < modelIndexDistanceCount; modelIndex++)
+	{
+		int soundSlot = -1;
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxStarshipAmbientCount)
+		{
+			if (modelIndex < soundConfig.SfxStarshipAmbientCount)
+			{
+				soundSlot = soundConfig.SfxStarshipAmbientIndex + modelIndex;
+			}
+		}
+
+		if (soundSlot == -1 || xwaSoundEffectsBufferId[soundSlot] == -1)
+		{
+			continue;
+		}
+
+		long long int minDistance = modelIndexDistanceMin[modelIndex];
+
+		if (minDistance == 0x7fffffffffffffff)
+		{
+			continue;
+		}
+
+		AmbientSoundSettings ambientSound = g_modelIndexSound.GetAmbientSound(modelIndex);
+
+		long long int modelSize = ambientSound.Distance > 0 ? (int)(ambientSound.Distance / ScaleFactor) : ExeEnableTable[modelIndex].ObjectSize;
+		long long int modelDistance = modelSize * modelSize;
+
+		int soundsCount = XwaGetPlayingSoundsCount(xwaSoundEffectsBufferId[soundSlot]);
+
+		if (minDistance < modelDistance)
+		{
+			int volume = (int)(0x7F * (1.0f - (float)(sqrt(minDistance) / sqrt(modelDistance))));
+
+			if (soundsCount == 0)
+			{
+				XwaQueueSound(xwaSoundEffectsBufferId[soundSlot], 0x01, 0x01, 0x7F, 0x41, 0x40, -1, 0xFFFF);
+				XwaSetSoundVolume(xwaSoundEffectsBufferId[soundSlot], volume);
+			}
+			else
+			{
+				XwaSetSoundVolume(xwaSoundEffectsBufferId[soundSlot], volume);
+			}
+		}
+		else
+		{
+			if (soundsCount != 0)
+			{
+				XwaStopSound(xwaSoundEffectsBufferId[soundSlot]);
+			}
+		}
+	}
+
+	return 0;
+}
+
+int PlayerCraftTargetedSoundHook(int* params)
+{
+	const auto L0043F4C0 = (int(*)(int, int, int, int, int, int))0x0043F4C0;
+
+	const auto& soundConfig = GetSoundsConfig();
+
+	if (soundConfig.SoundsCountHookExists && soundConfig.SfxSoundsCount)
+	{
+		if (SfxSounds_PlayerCraftTargetedSound < soundConfig.SfxSoundsCount)
+		{
+			int sound = soundConfig.SfxSoundsIndex + SfxSounds_PlayerCraftTargetedSound;
+			L0043F4C0(sound, 0, 0, 0, 0xFFFF, 0xFFFF);
+		}
+	}
+	else
+	{
+		// AlarmDanger.wav
+		L0043F4C0(0x3D, 0, 0, 0, 0xFFFF, 0xFFFF);
 	}
 
 	return 0;

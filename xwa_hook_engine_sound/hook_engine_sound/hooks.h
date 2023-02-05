@@ -26,6 +26,9 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x403E6F, HyperStartSoundHook },
 	{ 0x403F7A, HyperZoomSoundHook },
 	{ 0x403BCA, HyperEndSoundHook },
+
+	{ 0x4F69C7, CustomSoundsHook },
+	{ 0x493A94, PlayerCraftTargetedSoundHook },
 };
 
 static const HookPatchItem g_replaceMissionSoundsPatch[] =
@@ -68,10 +71,17 @@ static const HookPatchItem g_hyperSoundsPatch[] =
 	{ 0x002FC5, "E8C6830300", "E8564F1A00" },
 };
 
+static const HookPatchItem g_customSoundsPatch[] =
+{
+	{ 0x0F5DC2, "E8D954F3FF", "E859210B00" },
+	{ 0x092E8F, "E82CBAFAFF", "E88C501100" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that replaces mission sounds", g_replaceMissionSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines engine sounds", g_defineEngineSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines weapon sounds", g_defineWeaponSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines hyper sounds", g_hyperSoundsPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines custom sounds", g_customSoundsPatch),
 };

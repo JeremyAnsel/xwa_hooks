@@ -9,3 +9,8 @@ EngineSoundTakeOff = 0
 WeaponSoundBehavior = 0
 
 HyperSoundBehavior = -1
+
+AmbientSoundOffsetX = 0
+AmbientSoundOffsetY = 0
+AmbientSoundOffsetZ = 0
+AmbientSoundDistance = 0

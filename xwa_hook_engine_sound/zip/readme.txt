@@ -149,6 +149,10 @@ At offset 003353, replace 7528 with 9090.
 At offset 003375, replace E816800300 with E8A64B1A00.
 At offset 002FC5, replace E8C6830300 with E8564F1A00.
 
+# To call the hook that defines custom sounds
+At offset 0F5DC2, replace E8D954F3FF with E859210B00.
+At offset 092E8F, replace E82CBAFAFF with E88C501100.
+
 
 *** Usage ***
 
@@ -364,6 +368,12 @@ For Shuttle Take Off sounds, sounds defined in "Wave\Sfx_ShuttleTakeOff.lst" are
 
 For weapon sounds, when the behavior is empty, sounds defined in "Wave\Sfx_Weapon.lst" are used if the lst file exists.
 For each craft, there are 10 items. The last item is for the open weapon.
+To define random weapon sounds, create a file named "FlightModels\[Model]Sound.txt" or create a section named "[Sound]" in "FlightModels\[Model].ini".
+The format is:
+WeaponSoundRangeStart_XXX = sound range start
+WeaponSoundRangeCount_XXX = sound range count
+XXX is the weapon index starting from 280. For example: WeaponSoundRangeStart_280 and WeaponSoundRangeCount_280.
+Random weapon sounds are defined in "Wave\Sfx_WeaponRange.lst"
 
 
 When a region in included in the "Region" setting of the "[Interdiction]" section in the mission ini file, the sound "HyperAbort.wav" will be played instead of "HyperEnd.wav" on hyper out the region.
@@ -374,6 +384,18 @@ For HyperStart sounds, sounds defined in "Wave\Sfx_HyperStart.lst" are used if t
 For HyperZoom sounds, sounds defined in "Wave\Sfx_HyperZoom.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 For HyperEnd sounds, sounds defined in "Wave\Sfx_HyperEnd.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 For HyperAbort sounds, sounds defined in "Wave\Sfx_HyperAbort.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+
+
+For StarshipAmbient sounds, sounds defined in "Wave\Sfx_StarshipAmbient.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
+Suppose that the craft is "FlightModels\[Model].opt".
+To define which sound is played, create a file named "FlightModels\[Model]Sound.txt" or create a section named "[Sound]" in "FlightModels\[Model].ini".
+The format is:
+AmbientSoundOffsetX = offset in meters
+AmbientSoundOffsetY = offset in meters
+AmbientSoundOffsetZ = offset in meters
+AmbientSoundDistance = distance in meters
+
+Others custom sounds can be replaced in "Wave\Sfx_Sounds.lst".
 
 
 *** Credits ***

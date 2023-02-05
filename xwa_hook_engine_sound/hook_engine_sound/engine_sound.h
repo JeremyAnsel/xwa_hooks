@@ -18,3 +18,6 @@ int WeaponSoundHook(int* params);
 int HyperStartSoundHook(int* params);
 int HyperZoomSoundHook(int* params);
 int HyperEndSoundHook(int* params);
+
+int CustomSoundsHook(int* params);
+int PlayerCraftTargetedSoundHook(int* params);

@@ -1,0 +1,2 @@
+
+To setup Sfx_StarshipAmbient, copy the sound files to WAVE\Sfx_StarshipAmbient\

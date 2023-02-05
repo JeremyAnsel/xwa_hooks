@@ -1,0 +1,2 @@
+
+To setup Sfx_WeaponRange, copy the weapons sounds files to WAVE\Sfx_WeaponRange\

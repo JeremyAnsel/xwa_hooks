@@ -1,0 +1,7 @@
+
+To setup Sfx_Sounds, copy the following files to WAVE\Sfx_Sounds\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+AlarmDanger.wav

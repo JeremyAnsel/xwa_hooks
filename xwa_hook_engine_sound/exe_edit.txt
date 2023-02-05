@@ -232,3 +232,17 @@ E8A64B1A00              call 005A8B20, 005A8B20 - 00403F7A = 001A4BA6
 E8C6830300              call 0043BF90
 
 E8564F1A00              call 005A8B20, 005A8B20 - 00403BCA = 001A4F56
+
+===============================================================================
+
+; Custom sounds
+:004F69C2 - 0x0F5DC2
+E8D954F3FF              call 0042BEA0
+
+E859210B00              call 005A8B20, 005A8B20 - 004F69C7 = 000B2159
+
+; Player craft targeted sound
+:00493A8F - 0x092E8F
+E82CBAFAFF              call 0043F4C0
+
+E88C501100              call 005A8B20, 005A8B20 - 00493A94 = 0011508C
