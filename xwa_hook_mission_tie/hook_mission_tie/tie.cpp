@@ -109,6 +109,12 @@ public:
 		return this->_skipHyperspacedMessages;
 	}
 
+	int SkipObjectsMessagesIff()
+	{
+		this->UpdateIfChanged();
+		return this->_skipObjectsMessagesIff;
+	}
+
 	bool ForcePlayerInTurret()
 	{
 		this->UpdateIfChanged();
@@ -173,6 +179,7 @@ private:
 
 			this->_isRedAlertEnabled = GetFileKeyValueInt(lines, "IsRedAlertEnabled", this->GetDefaultReadAlertEnabled()) != 0;
 			this->_skipHyperspacedMessages = GetFileKeyValueInt(lines, "SkipHyperspacedMessages", this->GetDefaultSkipHyperspacedMessages()) != 0;
+			this->_skipObjectsMessagesIff = GetFileKeyValueInt(lines, "SkipObjectsMessagesIff", this->GetDefaultSkipObjectsMessagesIff());
 			this->_forcePlayerInTurret = GetFileKeyValueInt(lines, "ForcePlayerInTurret", this->GetDefaultForcePlayerInTurret()) != 0;
 			this->_forcePlayerInTurretHours = GetFileKeyValueInt(lines, "ForcePlayerInTurretHours", 0);
 			this->_forcePlayerInTurretMinutes = GetFileKeyValueInt(lines, "ForcePlayerInTurretMinutes", 0);
@@ -207,6 +214,22 @@ private:
 		return 0;
 	}
 
+	int GetDefaultSkipObjectsMessagesIff()
+	{
+		int id = this->GetMissionId();
+
+		switch (id)
+		{
+		case 0x31:
+		case 0x32:
+		case 0x33:
+		case 0x34:
+			return 1;
+		}
+
+		return -1;
+	}
+
 	int GetDefaultForcePlayerInTurret()
 	{
 		int id = this->GetMissionId();
@@ -221,6 +244,7 @@ private:
 
 	bool _isRedAlertEnabled;
 	bool _skipHyperspacedMessages;
+	int _skipObjectsMessagesIff;
 	bool _forcePlayerInTurret;
 	int _forcePlayerInTurretHours;
 	int _forcePlayerInTurretMinutes;
@@ -1751,6 +1775,21 @@ int MissionIdSkipEnteringAreaMessagesHook(int* params)
 	if (!skipHyperspacedMessages)
 	{
 		ShowMessage(A4, A8);
+	}
+
+	return 0;
+}
+
+int MissionIdSkipObjectsMessagesIffHook(int* params)
+{
+	int skipObjectsMessagesIff = g_missionConfig.SkipObjectsMessagesIff();
+	int tieFlightGroup = (short)params[Params_EDI];
+	unsigned char iff = s_XwaTieFlightGroups[tieFlightGroup].Iff;
+
+	if (skipObjectsMessagesIff == 255 || skipObjectsMessagesIff == iff)
+	{
+		params[Params_ReturnAddress] = 0x00498CD3;
+		return 0;
 	}
 
 	return 0;

@@ -20,6 +20,7 @@ int MissionIdRedAlertFilterHook(int* params);
 int MissionIdRedAlertHook(int* params);
 int MissionIdSkipHyperspacedMessagesHook(int* params);
 int MissionIdSkipEnteringAreaMessagesHook(int* params);
+int MissionIdSkipObjectsMessagesIffHook(int* params);
 int MissionIdForcePlayerInTurret1Hook(int* params);
 int MissionIdForcePlayerInTurret2Hook(int* params);
 int MissionPlayerShootHook(int* params);

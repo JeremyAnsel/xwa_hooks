@@ -10,6 +10,7 @@ craft, 0, shortname, X-W
 
 IsRedAlertEnabled = 0
 SkipHyperspacedMessages = 0
+SkipObjectsMessagesIff = -1
 ForcePlayerInTurret = 0
 ForcePlayerInTurretHours = 0
 ForcePlayerInTurretMinutes = 0

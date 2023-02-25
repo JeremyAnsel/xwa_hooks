@@ -347,6 +347,17 @@ E870F0FFFF              call 00497D40
 
 E850FE1000              call 005A8B20, 005A8B20 - 00498CD0 = 0010FE50
 
+; skip objects messages iff
+; L00498990
+:004989A4 - 0x097DA4
+83F831                  cmp eax, 00000031
+7226                    jb 004989CF
+83F834                  cmp eax, 00000034
+
+E877011100              call 005A8B20, 005A8B20 - 004989A9 = 00110177
+EB24                    jmp 004989CF, 004989CF - 004989AB = 24
+90                      nop
+
 ; force player in turret
 :0050146D - 0x10086D
 0F8411040000            je 00501884

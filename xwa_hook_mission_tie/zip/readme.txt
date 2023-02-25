@@ -69,6 +69,7 @@ At offset 05B759, replace 83FE147523 with E8C2C71400.
 At offset 09812A, replace 83F9318B4C24107522 with 8B4C2410E8EDFD1000.
 At offset 09807A, replace E8C1F0FFFF with E8A1FE1000.
 At offset 0980CB, replace E870F0FFFF with E850FE1000.
+At offset 097DA4, replace 83F831722683F834 with E877011100EB2490.
 At offset 10086D, replace 0F8411040000 with E8AE760A0090.
 At offset 0F88D5, replace 390C858E2AAE007539 with E846F60A0090909090.
 At offset 0F88E5, replace 7530 with 9090.
@@ -102,7 +103,8 @@ To replace the craft plural name in strings.txt, the format is: "craft", craft i
 To replace the craft short name in strings.txt, the format is: "craft", craft index, "shortname", value.
 
 To define the red alert in hangar, set "IsRedAlertEnabled = 1". The default setting enables IsRedAlertEnabled for mission id 20.
-To skip hyperspaced messages, "set SkipHyperspacedMessages = 1". The default setting enables SkipHyperspacedMessages for mission id 49.
+To skip hyperspaced messages, set "SkipHyperspacedMessages = 1". The default setting enables SkipHyperspacedMessages for mission id 49.
+To skip objects messages based on iff, set "SkipObjectsMessagesIff = value". When value is -1 no message is skip. When value is 255 all messages are skiped. In other cases the value is the IFF. The default value is 1 for mission id 49, 50, 51, 52.
 To force the player in turret, set "ForcePlayerInTurret = 1". The default setting enables ForcePlayerInTurret for mission id 1.
 To set the force turret time, set the ForcePlayerInTurretHours, ForcePlayerInTurretMinutes and ForcePlayerInTurretSeconds settings. The default values are 0, 0, 8.
 To disable player laser shoot, set "DisablePlayerLaserShoot = 1". The default value is 0.
