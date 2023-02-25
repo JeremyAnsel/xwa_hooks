@@ -26,6 +26,8 @@ The following modifications are applied at runtime to xwingalliance.exe:
 At offset 0025FC, replace 483DCB0000000F87C501000033D28A90F8334000FF2495D4334000 with 508B441E238BA8DD00000055E813591A0083C4085F5E5D5BC39090.
 At offset 0018EB, replace 742A with EB3D.
 At offset 05809E, replace 66A124168C00663BC3 with E8DD8BFAFFEB539090.
+At offset 05D5EF, replace 890DFC0D9100 with E82CA9140090.
+At offset 05D553, replace A3FC0D9100 with E8C8A91400.
 
 
 *** Usage ***
@@ -45,10 +47,13 @@ If the file does not exist, default values are used:
 The format is a line per mesh:
 mesh index, angle, speed, behavior
 Speed must be a multiple of 2.
-Behavior can be 0, 1, or 2:
+Behavior can be 0, 1, 2, 3, 4, 5:
 - 0 means constant rotation
 - 1 means rotation with random
 - 2 means rotation with random and pause
+- 3 means the behavior of the mesh 3 of the vanilla HangarDroid
+- 4 means the behavior of the mesh 1 of the vanilla HangarDroid2
+- 5 means the behavior of the mesh 2 of the vanilla HangarDroid2
 
 To define wich meshes are animated when the cockpit is displayed, create a file named "FlightModels\[Model]PilotCockpit.txt" or create a section named "[PilotCockpit]" in "FlightModels\[Model].ini".
 When the "[PilotCockpit]" is empty, the values of the "[Pilot]" section are used.

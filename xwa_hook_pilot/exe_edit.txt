@@ -34,3 +34,17 @@ EB3D                    jmp 0040252A
 E8DD8BFAFF              call 00401880, 00401880 - 00458CA3 = FFFA8BDD
 EB53                    jmp 00458CF8
 9090                    nop
+
+
+; hangar droid 1
+:0045E1EF - 0x05D5EF
+890DFC0D9100            mov dword ptr [00910DFC], ecx
+
+E82CA91400              call 005A8B20, 005A8B20 - 0045E1F4 = 0014A92C
+90                      nop
+
+; hangar droid 2
+:0045E153 - 0x05D553
+A3FC0D9100              mov dword ptr [00910DFC], eax
+
+E8C8A91400              call 005A8B20, 005A8B20 - 0045E158 = 0014A9C8
