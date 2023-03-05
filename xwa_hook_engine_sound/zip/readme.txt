@@ -394,6 +394,9 @@ AmbientSoundOffsetX = offset in meters
 AmbientSoundOffsetY = offset in meters
 AmbientSoundOffsetZ = offset in meters
 AmbientSoundDistance = distance in meters
+AmbientSoundDistanceX = distance in meters
+AmbientSoundDistanceY = distance in meters
+AmbientSoundDistanceZ = distance in meters
 
 Others custom sounds can be replaced in "Wave\Sfx_Sounds.lst".
 

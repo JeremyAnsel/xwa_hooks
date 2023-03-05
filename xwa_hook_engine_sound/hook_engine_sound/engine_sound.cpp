@@ -244,7 +244,10 @@ struct XwaObject
 	int PositionX;
 	int PositionY;
 	int PositionZ;
-	char Unk0013[12];
+	short HeadingXY;
+	short HeadingZ;
+	short HeadingRoll;
+	char Unk0019[6];
 	int PlayerIndex;
 	XwaMobileObject* pMobileObject;
 };
@@ -684,10 +687,15 @@ struct AmbientSoundSettings
 	int OffsetY;
 	int OffsetZ;
 	int Distance;
+	int DistanceX;
+	int DistanceY;
+	int DistanceZ;
 };
 
 AmbientSoundSettings GetAmbientSoundSettings(int modelIndex)
 {
+	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+
 	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
 
 	auto lines = GetFileLines(path + "Sound.txt");
@@ -699,10 +707,35 @@ AmbientSoundSettings GetAmbientSoundSettings(int modelIndex)
 
 	AmbientSoundSettings settings;
 
+	int modelSize = ExeEnableTable[modelIndex].ObjectSize / 2;
+
 	settings.OffsetX = GetFileKeyValueInt(lines, "AmbientSoundOffsetX", 0);
 	settings.OffsetY = GetFileKeyValueInt(lines, "AmbientSoundOffsetY", 0);
 	settings.OffsetZ = GetFileKeyValueInt(lines, "AmbientSoundOffsetZ", 0);
-	settings.Distance = GetFileKeyValueInt(lines, "AmbientSoundDistance", 0);
+	settings.Distance = GetFileKeyValueInt(lines, "AmbientSoundDistance", modelSize);
+	settings.DistanceX = GetFileKeyValueInt(lines, "AmbientSoundDistanceX", settings.Distance);
+	settings.DistanceY = GetFileKeyValueInt(lines, "AmbientSoundDistanceY", settings.Distance);
+	settings.DistanceZ = GetFileKeyValueInt(lines, "AmbientSoundDistanceZ", settings.Distance);
+
+	if (settings.Distance == 0)
+	{
+		settings.Distance = 1;
+	}
+
+	if (settings.DistanceX == 0)
+	{
+		settings.DistanceX = 1;
+	}
+
+	if (settings.DistanceY == 0)
+	{
+		settings.DistanceY = 1;
+	}
+
+	if (settings.DistanceZ == 0)
+	{
+		settings.DistanceZ = 1;
+	}
 
 	return settings;
 }
@@ -1948,8 +1981,53 @@ int HyperEndSoundHook(int* params)
 	return 0;
 }
 
+void MobileObjectTransform(const XwaMobileObject* mobileObject, int x, int y, int z, int* newX, int* newY, int* newZ)
+{
+	int tempX =
+		(int)((long long)mobileObject->TransformMatrixRightX * x / 32767)
+		+ (int)((long long)mobileObject->TransformMatrixRightY * y / 32767)
+		+ (int)((long long)mobileObject->TransformMatrixRightZ * z / 32767);
 
-long long int DistanceSquare(const XwaObject* playerObject, const XwaObject* targetObject)
+	int tempY =
+		(int)((long long)mobileObject->TransformMatrixFrontX * x / 32767)
+		+ (int)((long long)mobileObject->TransformMatrixFrontY * y / 32767)
+		+ (int)((long long)mobileObject->TransformMatrixFrontZ * z / 32767);
+
+	int tempZ =
+		(int)((long long)mobileObject->TransformMatrixUpX * x / 32767)
+		+ (int)((long long)mobileObject->TransformMatrixUpY * y / 32767)
+		+ (int)((long long)mobileObject->TransformMatrixUpZ * z / 32767);
+
+	*newX = tempX;
+	*newY = -tempY;
+	*newZ = tempZ;
+}
+
+void MobileObjectTransformBack(const XwaMobileObject* mobileObject, int x, int y, int z, int* newX, int* newY, int* newZ)
+{
+	y = -y;
+
+	int tempX =
+		(int)((long long)mobileObject->TransformMatrixRightX * x / 32767)
+		+ (int)((long long)mobileObject->TransformMatrixFrontX * y / 32767)
+		+ (int)((long long)mobileObject->TransformMatrixUpX * z / 32767);
+
+	int tempY =
+		(int)((long long)mobileObject->TransformMatrixRightY * x / 32767)
+		+ (int)((long long)mobileObject->TransformMatrixFrontY * y / 32767)
+		+ (int)((long long)mobileObject->TransformMatrixUpY * z / 32767);
+
+	int tempZ =
+		(int)((long long)mobileObject->TransformMatrixRightZ * x / 32767)
+		+ (int)((long long)mobileObject->TransformMatrixFrontZ * y / 32767)
+		+ (int)((long long)mobileObject->TransformMatrixUpZ * z / 32767);
+
+	*newX = tempX;
+	*newY = tempY;
+	*newZ = tempZ;
+}
+
+float GetRelativeDistance(const XwaObject* playerObject, const XwaObject* targetObject)
 {
 	const float ScaleFactor = 0.0244140625f;
 
@@ -1970,11 +2048,23 @@ long long int DistanceSquare(const XwaObject* playerObject, const XwaObject* tar
 		+ targetObject->pMobileObject->TransformMatrixRightZ * (int)(ambientSound.OffsetX / ScaleFactor) / 32767
 		+ targetObject->pMobileObject->TransformMatrixUpZ * (int)(ambientSound.OffsetY / ScaleFactor) / 32767;
 
-	long long int deltaX = (long long int)targetX - (long long int)playerObject->PositionX;
-	long long int deltaY = (long long int)targetY - (long long int)playerObject->PositionY;
-	long long int deltaZ = (long long int)targetZ - (long long int)playerObject->PositionZ;
-	long long int delta = deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
-	return delta;
+	int offsetX = playerObject->PositionX - targetX;
+	int offsetY = playerObject->PositionY - targetY;
+	int offsetZ = playerObject->PositionZ - targetZ;
+
+	int distX, distY, distZ;
+	MobileObjectTransformBack(targetObject->pMobileObject, offsetX, offsetY, offsetZ, &distX, &distY, &distZ);
+
+	int sizeX = (int)(ambientSound.DistanceX / ScaleFactor);
+	int sizeY = (int)(ambientSound.DistanceY / ScaleFactor);
+	int sizeZ = (int)(ambientSound.DistanceZ / ScaleFactor);
+
+	float dX = ((float)distX / (float)sizeX);
+	float dY = ((float)distY / (float)sizeY);
+	float dZ = ((float)distZ / (float)sizeZ);
+	float d = dX * dX + dY * dY + dZ * dZ;
+
+	return d;
 }
 
 int CustomSoundsHook(int* params)
@@ -1992,9 +2082,8 @@ int CustomSoundsHook(int* params)
 	const int* xwaSoundEffectsBufferId = GetSoundsConfig().SoundEffectIds;
 
 	const int modelIndexDistanceCount = 223;
-	static long long int modelIndexDistanceMin[modelIndexDistanceCount];
+	static float modelIndexDistanceMin[modelIndexDistanceCount];
 
-	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	const int currentPlayerId = *(int*)0x008C1CC8;
@@ -2009,7 +2098,7 @@ int CustomSoundsHook(int* params)
 
 	for (int i = 0; i < modelIndexDistanceCount; i++)
 	{
-		modelIndexDistanceMin[i] = 0x7fffffffffffffff;
+		modelIndexDistanceMin[i] = FLT_MAX;
 	}
 
 	for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x08D9628; objectIndex++)
@@ -2029,11 +2118,11 @@ int CustomSoundsHook(int* params)
 			continue;
 		}
 
-		long long int distanceSquare = DistanceSquare(currentPlayerObject, pObject);
+		float distance = GetRelativeDistance(currentPlayerObject, pObject);
 
-		if (distanceSquare < modelIndexDistanceMin[modelIndex])
+		if (distance < modelIndexDistanceMin[modelIndex])
 		{
-			modelIndexDistanceMin[modelIndex] = distanceSquare;
+			modelIndexDistanceMin[modelIndex] = distance;
 		}
 	}
 
@@ -2054,23 +2143,20 @@ int CustomSoundsHook(int* params)
 			continue;
 		}
 
-		long long int minDistance = modelIndexDistanceMin[modelIndex];
+		float minDistance = modelIndexDistanceMin[modelIndex];
 
-		if (minDistance == 0x7fffffffffffffff)
+		if (minDistance == FLT_MAX)
 		{
 			continue;
 		}
 
 		AmbientSoundSettings ambientSound = g_modelIndexSound.GetAmbientSound(modelIndex);
 
-		long long int modelSize = ambientSound.Distance > 0 ? (int)(ambientSound.Distance / ScaleFactor) : ExeEnableTable[modelIndex].ObjectSize;
-		long long int modelDistance = modelSize * modelSize;
-
 		int soundsCount = XwaGetPlayingSoundsCount(xwaSoundEffectsBufferId[soundSlot]);
 
-		if (minDistance < modelDistance)
+		if (minDistance < 1.0f)
 		{
-			int volume = (int)(0x7F * (1.0f - (float)(sqrt(minDistance) / sqrt(modelDistance))));
+			int volume = (int)(0x7F * (1.0f - minDistance));
 
 			if (soundsCount == 0)
 			{

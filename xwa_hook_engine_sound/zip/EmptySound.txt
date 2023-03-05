@@ -14,3 +14,6 @@ AmbientSoundOffsetX = 0
 AmbientSoundOffsetY = 0
 AmbientSoundOffsetZ = 0
 AmbientSoundDistance = 0
+AmbientSoundDistanceX = 0
+AmbientSoundDistanceY = 0
+AmbientSoundDistanceZ = 0
