@@ -1,6 +1,7 @@
 #include "targetver.h"
 #include "reticle.h"
 #include "config.h"
+#include <fstream>
 #include <map>
 #include <utility>
 
@@ -101,9 +102,36 @@ std::vector<int> GetReticles(int modelIndex)
 		values.push_back(i);
 	}
 
-	const std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	auto lines = GetFileLines(shipPath + "Reticle.txt");
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, shipPath + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		shipPath = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(shipPath + "Reticle.txt");
 
 	if (!lines.size())
 	{
@@ -126,6 +154,8 @@ class ModelIndexReticle
 public:
 	int ReticleIndex(int modelIndex, int imageIndex)
 	{
+		this->Update();
+
 		auto it = this->_reticles.find(modelIndex);
 
 		if (it != this->_reticles.end())
@@ -152,6 +182,20 @@ public:
 	}
 
 private:
+	void Update()
+	{
+		static std::string _mission;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+
+		if (_mission != xwaMissionFileName)
+		{
+			_mission = xwaMissionFileName;
+
+			this->_reticles.clear();
+		}
+	}
+
 	std::map<int, std::vector<int>> _reticles;
 };
 
