@@ -1,6 +1,7 @@
 #include "targetver.h"
 #include "shield.h"
 #include "config.h"
+#include <fstream>
 #include <map>
 #include <utility>
 
@@ -160,9 +161,36 @@ struct ModelShieldRate
 
 ModelShieldRate GetShieldRechargeRate(int modelIndex)
 {
-	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	auto lines = GetFileLines(ship + "Shield.txt");
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, ship + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		ship = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(ship + "Shield.txt");
 
 	if (!lines.size())
 	{
@@ -247,6 +275,7 @@ public:
 			lines = GetFileLines(mission + ".ini", "Shield");
 		}
 
+		this->_shieldRechargeRate.clear();
 		this->_perMissionShieldRechargeRate.clear();
 
 		for (const auto& line : lines)
