@@ -1,6 +1,7 @@
 #include "targetver.h"
 #include "jamming.h"
 #include "config.h"
+#include <fstream>
 #include <map>
 
 class FlightModelsList
@@ -196,9 +197,36 @@ struct CraftJamming
 
 CraftJamming GetCraftJamming(int modelIndex)
 {
-	const std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	auto lines = GetFileLines(shipPath + "Jamming.txt");
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, shipPath + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		shipPath = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(shipPath + "Jamming.txt");
 
 	if (!lines.size())
 	{
@@ -313,6 +341,8 @@ class ModelIndexJammings
 public:
 	CraftJamming GetJamming(int modelIndex)
 	{
+		this->Update();
+
 		auto it = this->_jammings.find(modelIndex);
 
 		if (it != this->_jammings.end())
@@ -328,6 +358,20 @@ public:
 	}
 
 private:
+	void Update()
+	{
+		static std::string _mission;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+
+		if (_mission != xwaMissionFileName)
+		{
+			_mission = xwaMissionFileName;
+
+			this->_jammings.clear();
+		}
+	}
+
 	std::map<int, CraftJamming> _jammings;
 };
 
