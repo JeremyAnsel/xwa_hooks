@@ -1,6 +1,7 @@
 #include "targetver.h"
 #include "weapon.h"
 #include "config.h"
+#include <fstream>
 #include <map>
 #include <utility>
 
@@ -107,9 +108,36 @@ static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 
 std::vector<std::string> GetShipLines(int modelIndex)
 {
-	const std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	auto lines = GetFileLines("FlightModels\\WeaponRate.txt");
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, ship + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		ship = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines("FlightModels\\WeaponRate.txt");
 
 	if (!lines.size())
 	{
@@ -202,6 +230,8 @@ class ModelIndexWeapon
 public:
 	int GetDechargeRate(int modelIndex)
 	{
+		this->Update();
+
 		auto it = this->_weaponDechargeRate.find(modelIndex);
 
 		if (it != this->_weaponDechargeRate.end())
@@ -218,6 +248,8 @@ public:
 
 	int GetRechargeRate(int modelIndex)
 	{
+		this->Update();
+
 		auto it = this->_weaponRechargeRate.find(modelIndex);
 
 		if (it != this->_weaponRechargeRate.end())
@@ -234,6 +266,8 @@ public:
 
 	int GetCooldownTime(int modelIndex)
 	{
+		this->Update();
+
 		auto it = this->_weaponCooldownTime.find(modelIndex);
 
 		if (it != this->_weaponCooldownTime.end())
@@ -249,6 +283,22 @@ public:
 	}
 
 private:
+	void Update()
+	{
+		static std::string _mission;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+
+		if (_mission != xwaMissionFileName)
+		{
+			_mission = xwaMissionFileName;
+
+			this->_weaponDechargeRate.clear();
+			this->_weaponRechargeRate.clear();
+			this->_weaponCooldownTime.clear();
+		}
+	}
+
 	std::map<int, int> _weaponDechargeRate;
 	std::map<int, int> _weaponRechargeRate;
 	std::map<int, int> _weaponCooldownTime;
