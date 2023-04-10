@@ -312,9 +312,36 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 
 int GetEngineSoundTypeInterior(int modelIndex)
 {
-	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	auto lines = GetFileLines(path + "Sound.txt");
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, path + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		path = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(path + "Sound.txt");
 
 	if (!lines.size())
 	{
@@ -394,9 +421,36 @@ int GetEngineSoundTypeInterior(int modelIndex)
 
 int GetEngineSoundTypeFlyBy(int modelIndex)
 {
-	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	auto lines = GetFileLines(path + "Sound.txt");
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, path + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		path = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(path + "Sound.txt");
 
 	if (!lines.size())
 	{
@@ -487,9 +541,36 @@ int GetEngineSoundTypeFlyBy(int modelIndex)
 
 int GetEngineSoundTypeWash(int modelIndex)
 {
-	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	auto lines = GetFileLines(path + "Sound.txt");
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, path + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		path = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(path + "Sound.txt");
 
 	if (!lines.size())
 	{
@@ -530,9 +611,36 @@ int GetEngineSoundTypeWash(int modelIndex)
 
 int GetEngineSoundTypeTakeOff(int modelIndex)
 {
-	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	auto lines = GetFileLines(path + "Sound.txt");
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, path + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		path = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(path + "Sound.txt");
 
 	if (!lines.size())
 	{
@@ -572,9 +680,36 @@ int GetEngineSoundTypeTakeOff(int modelIndex)
 
 std::string GetWeaponSoundBehavior(int modelIndex)
 {
-	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	auto lines = GetFileLines(path + "Sound.txt");
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, path + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		path = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(path + "Sound.txt");
 
 	if (!lines.size())
 	{
@@ -627,9 +762,36 @@ std::string GetWeaponSoundBehavior(int modelIndex)
 
 std::tuple<int, int> GetWeaponSoundRange(int modelIndex, int weaponIndex)
 {
-	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	auto lines = GetFileLines(path + "Sound.txt");
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, path + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		path = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(path + "Sound.txt");
 
 	if (!lines.size())
 	{
@@ -658,9 +820,36 @@ std::tuple<int, int> GetWeaponSoundRange(int modelIndex, int weaponIndex)
 
 int GetHyperSoundBehavior(int modelIndex)
 {
-	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	auto lines = GetFileLines(path + "Sound.txt");
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, path + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		path = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(path + "Sound.txt");
 
 	if (!lines.size())
 	{
@@ -696,9 +885,36 @@ AmbientSoundSettings GetAmbientSoundSettings(int modelIndex)
 {
 	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 
-	const std::string path = g_flightModelsList.GetLstLine(modelIndex);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
 
-	auto lines = GetFileLines(path + "Sound.txt");
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string path = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, path + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		path = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(path + "Sound.txt");
 
 	if (!lines.size())
 	{
@@ -745,6 +961,8 @@ class ModelIndexSound
 public:
 	int GetEngineTypeInterior(int modelIndex)
 	{
+		this->Update();
+
 		auto it = this->_typeInterior.find(modelIndex);
 
 		if (it != this->_typeInterior.end())
@@ -761,6 +979,8 @@ public:
 
 	int GetEngineTypeFlyBy(int modelIndex)
 	{
+		this->Update();
+
 		auto it = this->_typeFlyBy.find(modelIndex);
 
 		if (it != this->_typeFlyBy.end())
@@ -777,6 +997,8 @@ public:
 
 	int GetEngineTypeWash(int modelIndex)
 	{
+		this->Update();
+
 		auto it = this->_typeWash.find(modelIndex);
 
 		if (it != this->_typeWash.end())
@@ -793,6 +1015,8 @@ public:
 
 	int GetEngineTypeTakeOff(int modelIndex)
 	{
+		this->Update();
+
 		auto it = this->_typeTakeOff.find(modelIndex);
 
 		if (it != this->_typeTakeOff.end())
@@ -809,6 +1033,8 @@ public:
 
 	std::string GetWeaponBehavior(int modelIndex)
 	{
+		this->Update();
+
 		auto it = this->_weaponBehavior.find(modelIndex);
 
 		if (it != this->_weaponBehavior.end())
@@ -825,6 +1051,8 @@ public:
 
 	std::map<int, std::tuple<int, int>>& GetWeaponRange(int modelIndex)
 	{
+		this->Update();
+
 		auto it = this->_weaponRange.find(modelIndex);
 
 		if (it != this->_weaponRange.end())
@@ -841,6 +1069,8 @@ public:
 
 	std::tuple<int, int> GetWeaponRange(int modelIndex, int weaponIndex)
 	{
+		this->Update();
+
 		auto& weaponRange = GetWeaponRange(modelIndex);
 
 		auto it = weaponRange.find(weaponIndex);
@@ -859,6 +1089,8 @@ public:
 
 	int GetHyperBehavior(int modelIndex)
 	{
+		this->Update();
+
 		auto it = this->_hyperBehavior.find(modelIndex);
 
 		if (it != this->_hyperBehavior.end())
@@ -875,6 +1107,8 @@ public:
 
 	AmbientSoundSettings GetAmbientSound(int modelIndex)
 	{
+		this->Update();
+
 		auto it = this->_ambientSounds.find(modelIndex);
 
 		if (it != this->_ambientSounds.end())
@@ -890,6 +1124,27 @@ public:
 	}
 
 private:
+	void Update()
+	{
+		static std::string _mission;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+
+		if (_mission != xwaMissionFileName)
+		{
+			_mission = xwaMissionFileName;
+
+			this->_typeInterior.clear();
+			this->_typeFlyBy.clear();
+			this->_typeWash.clear();
+			this->_typeTakeOff.clear();
+			this->_weaponBehavior.clear();
+			this->_weaponRange.clear();
+			this->_hyperBehavior.clear();
+			this->_ambientSounds.clear();
+		}
+	}
+
 	std::map<int, int> _typeInterior;
 	std::map<int, int> _typeFlyBy;
 	std::map<int, int> _typeWash;
