@@ -68,6 +68,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4F2C2D, L004F22B0_EngineGlowIsDisabledHook },
 	{ 0x42D889, L0042D590_EngineGlowIsDisabledHook },
 	{ 0x42DBA1, L0042DB60_EngineGlowHook },
+	{ 0x4825BE, SelectLodVersionHook },
 };
 
 static const std::string g_hitDataArray0 = int_to_hex(GetHitDataArrayPtr());
@@ -754,6 +755,11 @@ static const HookPatchItem g_craftEngineMeshPatch[] =
 	{ 0x02CF9C, "0F84CD070000", "E87FAF170090" },
 };
 
+static const HookPatchItem g_selectLodVersionPatch[] =
+{
+	{ 0x0819B9, "A1C4277800", "E862651200" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
@@ -777,4 +783,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that zero inits the craft memory", g_craftZeroMemoryPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the craft engines count", g_craftEnginesPatch),
 	MAKE_HOOK_PATCH("To call the hook that gets the craft engine mesh", g_craftEngineMeshPatch),
+	MAKE_HOOK_PATCH("To call the hook that selects the lod version", g_selectLodVersionPatch),
 };

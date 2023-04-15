@@ -112,6 +112,9 @@ See "exe_edit_engines.txt"
 # To call the hook that gets the craft engine mesh
 See "exe_edit_engines.txt"
 
+# To call the hook that selects the lod version
+At offset 0819B9, replace A1C4277800 with E862651200
+
 
 *** Usage ***
 

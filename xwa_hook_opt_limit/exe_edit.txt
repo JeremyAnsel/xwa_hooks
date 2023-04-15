@@ -177,3 +177,10 @@ C3                      ret
 
 C705B4465B0000008042    mov dword ptr [005B46B4], 42800000
 C3                      ret
+
+
+; select lod in TechLibrary and Briefing
+:004825B9 - 0x0819B9
+A1C4277800              mov eax, dword ptr [007827C4]
+
+E862651200              call 005A8B20, 005A8B20 - 004825BE = 00126562

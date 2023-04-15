@@ -1208,3 +1208,20 @@ int L0042DB60_EngineGlowHook(int* params)
 
 	return 0;
 }
+
+int SelectLodVersionHook(int* params)
+{
+	params[Params_EAX] = *(int*)0x007827C4;
+
+	const int currentGameState = *(int*)(0x009F60E0 + 0x25FA9);
+	const int updateCallback = *(int*)(0x009F60E0 + 0x25FB1 + 0x850 * currentGameState + 0x0844);
+	const bool isTechLibraryGameStateUpdate = updateCallback == 0x00574D70;
+	const bool isBriefingGameStateUpdate = updateCallback == 0x00564E90;
+
+	if (isTechLibraryGameStateUpdate || isBriefingGameStateUpdate)
+	{
+		params[Params_ReturnAddress] = 0x00482620;
+	}
+
+	return 0;
+}

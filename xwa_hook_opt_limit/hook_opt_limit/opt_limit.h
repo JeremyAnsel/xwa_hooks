@@ -70,3 +70,5 @@ int L004E0FA0_ComputePercentOfActiveEnginesHook(int* params);
 int L004F22B0_EngineGlowIsDisabledHook(int* params);
 int L0042D590_EngineGlowIsDisabledHook(int* params);
 int L0042DB60_EngineGlowHook(int* params);
+
+int SelectLodVersionHook(int* params);
