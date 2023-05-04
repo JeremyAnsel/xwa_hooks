@@ -98,6 +98,32 @@ CraftConfig g_craftConfig;
 
 #pragma pack(push, 1)
 
+enum ShipCategoryEnum : unsigned char
+{
+	ShipCategory_Starfighter = 0,
+	ShipCategory_Transport = 1,
+	ShipCategory_UtilityVehicle = 2,
+	ShipCategory_Freighter = 3,
+	ShipCategory_Starship = 4,
+	ShipCategory_Platform = 5,
+	ShipCategory_PlayerProjectile = 6,
+	ShipCategory_OtherProjectile = 7,
+	ShipCategory_Mine = 8,
+	ShipCategory_Satellite = 9,
+	ShipCategory_NormalDebris = 10,
+	ShipCategory_SmallDebris = 11,
+	ShipCategory_Backdrop = 12,
+	ShipCategory_Explosion = 13,
+	ShipCategory_Obstacle = 14,
+	ShipCategory_DeathStarII = 15,
+	ShipCategory_People = 16,
+	ShipCategory_Container = 17,
+	ShipCategory_Droid = 18,
+	ShipCategory_Armament = 19,
+	ShipCategory_LargeDebris = 20,
+	ShipCategory_SalvageYard = 21,
+};
+
 enum MeshTypeEnum : unsigned int
 {
 	MeshType_Default = 0,
@@ -266,7 +292,7 @@ struct XwaObject
 {
 	char Unk0000[2];
 	short ModelIndex;
-	unsigned char ShipCategory;
+	ShipCategoryEnum ShipCategory;
 	unsigned char TieFlightGroupIndex;
 	unsigned char Region;
 	int PositionX;
@@ -553,20 +579,28 @@ int WeaponRackHook(int* params)
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 
-	char* m292;
+	ShipCategoryEnum category = XwaObjects[A4].ShipCategory;
 
-	if (g_craftConfig.MeshesCount == 0)
+	if (category == ShipCategory_Freighter
+		|| category == ShipCategory_Starship
+		|| category == ShipCategory_Platform
+		|| category == ShipCategory_Satellite)
 	{
-		m292 = XwaCurrentCraft->XwaCraft_m292;
-	}
-	else
-	{
-		m292 = (char*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_292);
-	}
+		char* m292;
 
-	if (m292[XwaCurrentCraft->WeaponRacks[A8].MeshId] == 0)
-	{
-		return 0xffff;
+		if (g_craftConfig.MeshesCount == 0)
+		{
+			m292 = XwaCurrentCraft->XwaCraft_m292;
+		}
+		else
+		{
+			m292 = (char*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_292);
+		}
+
+		if (m292[XwaCurrentCraft->WeaponRacks[A8].MeshId] == 0)
+		{
+			return 0xffff;
+		}
 	}
 
 	int result = L00491EB0(A4, A8, AC, A10);
