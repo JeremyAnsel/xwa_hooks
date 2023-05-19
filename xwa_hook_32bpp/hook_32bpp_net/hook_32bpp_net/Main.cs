@@ -16,6 +16,15 @@ namespace hook_32bpp_net
 {
     public static class Main
     {
+        private static bool _isD3dRendererHookEnabled = IsD3dRendererHookEnabled();
+
+        private static bool IsD3dRendererHookEnabled()
+        {
+            IList<string> lines = XwaHooksConfig.GetFileLines("ddraw.cfg");
+            bool isD3dRendererHookEnabled = XwaHooksConfig.GetFileKeyValueInt(lines, "D3dRendererHookEnabled", 1) != 0;
+            return isD3dRendererHookEnabled;
+        }
+
         private static IList<string> _getCustomFileLines_lines;
         private static string _getCustomFileLines_name;
         private static string _getCustomFileLines_mission;
@@ -308,30 +317,41 @@ namespace hook_32bpp_net
 
             string optName = Path.GetFileNameWithoutExtension(optFilename);
 
-            if (!Directory.Exists($"FlightModels\\Skins\\{optName}"))
+            var opt = OptFile.FromFile(optFilename);
+
+            if (Directory.Exists($"FlightModels\\Skins\\{optName}"))
             {
-                return 0;
+                IList<string> objectLines = GetCustomFileLines("Skins");
+                IList<string> baseSkins = XwaHooksConfig.Tokennize(XwaHooksConfig.GetFileKeyValue(objectLines, optName));
+                bool hasDefaultSkin = GetSkinDirectoryLocatorPath(optName, "Default") != null || GetFlightgroupsDefaultCount(optName) != 0;
+                int fgCount = GetFlightgroupsCount(objectLines, optName);
+                bool hasSkins = hasDefaultSkin || baseSkins.Count != 0 || fgCount != 0;
+
+                if (hasSkins)
+                {
+                    fgCount = Math.Max(fgCount, opt.MaxTextureVersion);
+                    fgCount = Math.Max(fgCount, GetFlightgroupsDefaultCount(optName));
+                    UpdateOptFile(optName, opt, objectLines, baseSkins, fgCount, hasDefaultSkin);
+                }
             }
 
-            IList<string> objectLines = GetCustomFileLines("Skins");
-            IList<string> baseSkins = XwaHooksConfig.Tokennize(XwaHooksConfig.GetFileKeyValue(objectLines, optName));
-            bool hasDefaultSkin = GetSkinDirectoryLocatorPath(optName, "Default") != null || GetFlightgroupsDefaultCount(optName) != 0;
-            int fgCount = GetFlightgroupsCount(objectLines, optName);
-            bool hasSkins = hasDefaultSkin || baseSkins.Count != 0 || fgCount != 0;
-
-            if (hasSkins)
+            if (_isD3dRendererHookEnabled)
             {
-                var opt = OptFile.FromFile(optFilename);
-                fgCount = Math.Max(fgCount, opt.MaxTextureVersion);
-                fgCount = Math.Max(fgCount, GetFlightgroupsDefaultCount(optName));
-                UpdateOptFile(optName, opt, objectLines, baseSkins, fgCount, hasDefaultSkin);
-                //opt.Save("temp.opt", false);
-
-                _tempOptFile = opt;
-                _tempOptFileSize = opt.GetSaveRequiredFileSize(false);
+                opt.Meshes
+                    .AsParallel()
+                    .ForAll(mesh =>
+                    {
+                        foreach (MeshLod lod in mesh.Lods)
+                        {
+                            GroupFaceGroups(lod);
+                        }
+                    });
             }
 
-            return hasSkins ? _tempOptFileSize : 0;
+            _tempOptFile = opt;
+            _tempOptFileSize = opt.GetSaveRequiredFileSize(false);
+
+            return _tempOptFileSize;
         }
 
         [DllExport(CallingConvention.Cdecl)]
@@ -362,6 +382,64 @@ namespace hook_32bpp_net
 
             _tempOptFile = null;
             _tempOptFileSize = 0;
+        }
+
+        private static void GroupFaceGroups(MeshLod lod)
+        {
+            var groups = new List<FaceGroup>(lod.FaceGroups.Count);
+
+            foreach (var faceGroup in lod.FaceGroups)
+            {
+                FaceGroup index = null;
+
+                foreach (var group in groups)
+                {
+                    if (group.Textures.Count != faceGroup.Textures.Count)
+                    {
+                        continue;
+                    }
+
+                    if (group.Textures.Count == 0)
+                    {
+                        index = group;
+                        break;
+                    }
+
+                    int t = 0;
+                    for (; t < group.Textures.Count; t++)
+                    {
+                        if (group.Textures[t] != faceGroup.Textures[t])
+                        {
+                            break;
+                        }
+                    }
+
+                    if (t == group.Textures.Count)
+                    {
+                        index = group;
+                        break;
+                    }
+                }
+
+                if (index == null)
+                {
+                    groups.Add(faceGroup);
+                }
+                else
+                {
+                    foreach (var face in faceGroup.Faces)
+                    {
+                        index.Faces.Add(face);
+                    }
+                }
+            }
+
+            lod.FaceGroups.Clear();
+
+            foreach (var group in groups)
+            {
+                lod.FaceGroups.Add(group);
+            }
         }
 
         private static void UpdateOptFile(string optName, OptFile opt, IList<string> objectLines, IList<string> baseSkins, int fgCount, bool hasDefaultSkin)
