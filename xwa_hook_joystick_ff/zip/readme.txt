@@ -112,6 +112,9 @@ UsePovControllerAsButtons = value
 The default value is 0, which enable continious movement for the POV buttons.
 When the value is 1, the behavior of POV buttons is like regular buttons.
 
+VirtualCockpitLookSensitivity = value
+The default value is 1200.
+
 
 *** Credits ***
 

@@ -62,6 +62,7 @@ public:
 		this->RudderControllerAxisIndex = GetFileKeyValueInt(lines, "RudderControllerAxisIndex", 3);
 		this->InvertRudder = GetFileKeyValueInt(lines, "InvertRudder", 0) != 0;
 		this->UsePovControllerAsButtons = GetFileKeyValueInt(lines, "UsePovControllerAsButtons", 0) != 0;
+		this->VirtualCockpitLookSensitivity = GetFileKeyValueInt(lines, "VirtualCockpitLookSensitivity", 0x4b0);
 	}
 
 	int JoystickFFDeviceIndex;
@@ -83,6 +84,7 @@ public:
 	int RudderControllerAxisIndex;
 	bool InvertRudder;
 	bool UsePovControllerAsButtons;
+	int VirtualCockpitLookSensitivity;
 };
 
 Config g_config;
@@ -1231,6 +1233,7 @@ int NumPadLookMoveHook(int* params)
 	const auto XwaGetConnectedJoysticksCount = (int(*)())0x00541030;
 
 	int moveDelta = *(int*)0x005AA000;
+	moveDelta = g_config.VirtualCockpitLookSensitivity;
 	KeyEnum joyKey = *(KeyEnum*)0x008053C0;
 
 	moveDelta = moveDelta / 2;

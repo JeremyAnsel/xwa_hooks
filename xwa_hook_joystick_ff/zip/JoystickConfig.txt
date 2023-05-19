@@ -57,6 +57,9 @@ InvertRudder = 0
 ; 1 to enable regular buttons
 UsePovControllerAsButtons = 0
 
+; Virtual cockpit look sensitivity
+VirtualCockpitLookSensitivity = 1200
+
 ; Alt-2 Fire weapon
 joybutton_0_1 = 156
 ; Alt-3 Roll/Target ship in sights

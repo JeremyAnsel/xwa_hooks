@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:XwaJoystickConfig"
         mc:Ignorable="d"
         Title="Xwa Joystick Config"
-        Height="700" Width="850"
+        Height="750" Width="850"
         UseLayoutRounding="True"
         Closed="Window_Closed"
         Loaded="MainWindow_Loaded"
@@ -163,6 +163,13 @@
                         <GroupBox>
                             <StackPanel>
                                 <CheckBox IsChecked="{Binding JoystickSettingUsePovControllerAsButtons}" Content="Use the POV as regular buttons" />
+                            </StackPanel>
+                        </GroupBox>
+                        <TextBlock />
+                        <GroupBox>
+                            <StackPanel>
+                                <TextBlock Text="; Virtual cockpit look sensitivity" />
+                                <TextBox Text="{Binding JoystickSettingVirtualCockpitLookSensitivity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             </StackPanel>
                         </GroupBox>
                     </StackPanel>

@@ -89,6 +89,8 @@ namespace XwaJoystickConfig
 
         public bool JoystickSettingUsePovControllerAsButtons { get; set; }
 
+        public int JoystickSettingVirtualCockpitLookSensitivity { get; set; }
+
         public ObservableCollection<JoystickConfigButton> JoystickConfigButtons { get; } = new ObservableCollection<JoystickConfigButton>();
 
         public ObservableCollection<JoystickConfigAxis> JoystickConfigAxes { get; } = new ObservableCollection<JoystickConfigAxis>();
@@ -305,6 +307,7 @@ namespace XwaJoystickConfig
             this.JoystickSettingRudderControllerAxisIndex = 3;
             this.JoystickSettingInvertRudder = false;
             this.JoystickSettingUsePovControllerAsButtons = false;
+            this.JoystickSettingVirtualCockpitLookSensitivity = 1200;
         }
 
         private void SetDefaultJoystickConfigButtons(int controllerIndex)
@@ -437,6 +440,7 @@ namespace XwaJoystickConfig
             this.JoystickSettingRudderControllerAxisIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "RudderControllerAxisIndex", 3);
             this.JoystickSettingInvertRudder = XwaHooksConfig.GetFileKeyValueInt(lines, "InvertRudder", 0) != 0;
             this.JoystickSettingUsePovControllerAsButtons = XwaHooksConfig.GetFileKeyValueInt(lines, "UsePovControllerAsButtons", 0) != 0;
+            this.JoystickSettingVirtualCockpitLookSensitivity = XwaHooksConfig.GetFileKeyValueInt(lines, "VirtualCockpitLookSensitivity", 1200);
 
             this.JoystickConfigButtons.Clear();
 
@@ -536,6 +540,9 @@ namespace XwaJoystickConfig
                 writer.WriteLine("; 0 to continious movement");
                 writer.WriteLine("; 1 to enable regular buttons");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "UsePovControllerAsButtons = {0}", this.JoystickSettingUsePovControllerAsButtons ? 1 : 0));
+                writer.WriteLine();
+                writer.WriteLine("; Virtual cockpit look sensitivity");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "VirtualCockpitLookSensitivity = {0}", this.JoystickSettingVirtualCockpitLookSensitivity));
                 writer.WriteLine();
 
                 foreach (var item in this.JoystickConfigButtons)
