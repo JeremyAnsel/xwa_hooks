@@ -83,6 +83,8 @@ See "hook_time.cfg"
 Press Ctrl+Q to speed up the time.
 Press Ctrl+A to slow down the time.
 
+The time multiplicator/divisor is written to *(float*)0x0781E60.
+
 
 *** Credits ***
 

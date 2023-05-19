@@ -248,10 +248,16 @@ int RenderHudTimeHook(int* params)
 	if (g_isTimeMultiplicatorEnabled)
 	{
 		str += "+";
+		*(float*)0x0781E60 = 4;
 	}
 	else if (g_isTimeDivisorEnabled)
 	{
 		str += "-";
+		*(float*)0x0781E60 = 1.0f / 8;
+	}
+	else
+	{
+		*(float*)0x0781E60 = 1.0f;
 	}
 
 	RenderText(str.c_str());
@@ -266,6 +272,7 @@ int HangarCheckInputsHook(int* params)
 	*(unsigned short*)0x008053C0 = 0;
 	g_isTimeMultiplicatorEnabled = false;
 	g_isTimeDivisorEnabled = false;
+	*(float*)0x0781E60 = 1.0f;
 
 	return 0;
 }
