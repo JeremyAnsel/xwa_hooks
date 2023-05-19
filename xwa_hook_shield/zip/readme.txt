@@ -58,6 +58,9 @@ ModelIndex, UseGenerator, PerGeneratorRechargeRate, RechargeRate
 
 See *Shield.txt.
 
+You can enable or disable the shield recharge for starships with the IsShieldRechargeForStarshipsEnabled setting.
+See "hook_shield.cfg" or the "hook_shield" section of "Hooks.ini".
+
 
 *** Credits ***
 

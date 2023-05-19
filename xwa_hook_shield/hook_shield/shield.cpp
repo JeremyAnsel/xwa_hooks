@@ -84,6 +84,26 @@ public:
 
 CraftConfig g_craftConfig;
 
+class Config
+{
+public:
+	Config()
+	{
+		auto lines = GetFileLines("hook_shield.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_shield");
+		}
+
+		this->IsShieldRechargeForStarshipsEnabled = GetFileKeyValueInt(lines, "IsShieldRechargeForStarshipsEnabled", 1) != 0;
+	}
+
+	bool IsShieldRechargeForStarshipsEnabled;
+};
+
+Config g_config;
+
 #pragma pack(push, 1)
 
 enum ShipCategoryEnum : unsigned char
@@ -387,9 +407,16 @@ int ShieldRechargeHook(int* params)
 		}
 		else if (shipCategory == ShipCategory_Starship)
 		{
-			if (difficulty >= 0x01)
+			if (g_config.IsShieldRechargeForStarshipsEnabled)
 			{
-				rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
+				if (difficulty >= 0x01)
+				{
+					rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
+				}
+				else
+				{
+					rechargeRate = 0;
+				}
 			}
 			else
 			{
