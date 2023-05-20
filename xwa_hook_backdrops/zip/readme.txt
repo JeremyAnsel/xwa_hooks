@@ -31,6 +31,9 @@ At offset 008D51, replace E8EAE30800 with E8CAF11900.
 At offset 005440, replace 8A0DF40D9100 with E8DB2A1A0090.
 At offset 008D40, replace E89BF30800 with E8DBF11900.
 
+# To call the hook that sets the backdrop scale
+At offset 0165C0, replace D9442418D80DAC935A00E881341800 with E86B19190090909090909090909090
+
 
 *** Usage ***
 
@@ -50,6 +53,13 @@ To define the destination region name for buoys, the format is: "buoy", buoy fg,
 The buoy fg starts from 0.
 
 Defining arrival delay for backdrops is now supported.
+
+To define the scale of the backdrops, edit the "Resdata\BackdropScales.txt" file.
+You can also define the scales on a per-mission basis. Edit "[MissionDir]\[Mission]_BackdropScales.txt" or create a section named "[BackdropScales]" in "[MissionDir]\[Mission].ini".
+If no scale is defined for a backdrop then the global scale value is used.
+The default scale value in vanilla game is 256.
+To use higher sized backdrops use a smaller value.
+
 
 *** Credits ***
 

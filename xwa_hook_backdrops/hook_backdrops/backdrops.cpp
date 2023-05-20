@@ -3,6 +3,8 @@
 #include "config.h"
 #include <iostream>
 #include <fstream>
+#include <map>
+#include <utility>
 
 enum ParamsEnum
 {
@@ -103,6 +105,23 @@ struct XwaObject
 };
 
 static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
+
+struct ExeEnableEntry
+{
+	unsigned char EnableOptions; // flags
+	unsigned char RessourceOptions; // flags
+	unsigned char ObjectCategory;
+	unsigned char ShipCategory;
+	unsigned int ObjectSize;
+	void* pData1;
+	void* pData2;
+	unsigned short GameOptions; // flags
+	unsigned short CraftIndex;
+	short DataIndex1;
+	short DataIndex2;
+};
+
+static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24");
 
 #pragma pack(pop)
 
@@ -730,4 +749,86 @@ int ShowBuoyRegionNameHook(int* params)
 	}
 
 	return 0;
+}
+
+class BackdropsSettings
+{
+public:
+	float GetScale(int backdropIndex)
+	{
+		this->Update();
+
+		auto it = this->_scales.find(backdropIndex);
+
+		if (it != this->_scales.end())
+		{
+			return (float)it->second;
+		}
+		else
+		{
+			return 	*(float*)0x005A93AC;
+		}
+	}
+
+private:
+	void Update()
+	{
+		static std::string _mission;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+
+		if (_mission == xwaMissionFileName)
+		{
+			return;
+		}
+
+		_mission = xwaMissionFileName;
+		this->_scales.clear();
+
+		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+		std::vector<std::string> file = GetFileLines(mission + "_BackdropScales.txt");
+
+		if (!file.size())
+		{
+			file = GetFileLines(mission + ".ini", "BackdropScales");
+		}
+
+		if (!file.size())
+		{
+			file = GetFileLines("Resdata\\BackdropScales.txt");
+		}
+
+		const auto lines = GetFileListValues(file);
+
+		for (const auto& line : lines)
+		{
+			if (line.size() < 2)
+			{
+				continue;
+			}
+
+			int backdropIndex = std::stoi(line[0]);
+			int scale = std::stoi(line[1]);
+
+			this->_scales.insert(std::make_pair(backdropIndex, scale));
+		}
+	}
+
+	std::map<int, int> _scales;
+};
+
+BackdropsSettings g_backdropsSettings;
+
+int SetBackdropScaleHook(int* params)
+{
+	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+
+	unsigned short modelIndex = (unsigned short)params[4];
+	float esp18 = *(float*)(params + 6);
+	float scale = *(float*)0x005A93AC;
+
+	short backdropIndex = ExeEnableTable[modelIndex].DataIndex1;
+	scale = g_backdropsSettings.GetScale(backdropIndex);
+
+	return (int)(esp18 * scale);
 }
