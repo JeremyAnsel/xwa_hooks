@@ -19,3 +19,4 @@ int PlaySFoilSoundHook(int* params);
 int HangarDoorsHook(int* params);
 int ShuttleHatchHook(int* params);
 int PlayerCraftHatchHook(int* params);
+int AIEnterHangarOrderHook(int* params);

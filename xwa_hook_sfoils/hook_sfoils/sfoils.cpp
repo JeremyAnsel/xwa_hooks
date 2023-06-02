@@ -2000,3 +2000,28 @@ int PlayerCraftHatchHook(int* params)
 
 	return *(int*)0x68BC08;
 }
+
+int AIEnterHangarOrderHook(int* params)
+{
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	XwaObject* currentObject = *(XwaObject**)(0x07CA1A0 + 0x04);
+	int currentObjectIndex = currentObject - xwaObjects;
+	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
+
+	currentCraft->SFoilsState = 3;
+
+	for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x07CA3B8; objectIndex++)
+	{
+		if (xwaObjects[objectIndex].ModelIndex == 0)
+			continue;
+
+		XwaCraft* pCraft = xwaObjects[objectIndex].pMobileObject->pCraft;
+
+		if (pCraft->LeaderObjectIndex == currentObjectIndex)
+		{
+			pCraft->SFoilsState = currentCraft->SFoilsState;
+		}
+	}
+
+	return (int)currentCraft;
+}

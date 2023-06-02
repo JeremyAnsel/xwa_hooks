@@ -35,6 +35,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4F69CC, HangarDoorsHook },
 	{ 0x45EC7E, ShuttleHatchHook },
 	{ 0x45B636, PlayerCraftHatchHook },
+	{ 0x4B9225, AIEnterHangarOrderHook },
 };
 
 static const HookPatchItem g_keysSFoilsLandingGearsPatch[] =
@@ -131,6 +132,11 @@ static const HookPatchItem g_hatchesPatch[] =
 	{ 0x05AA31, "A108BC6800", "E8FAD41400" },
 };
 
+static const HookPatchItem g_closeSfoilsPatch[] =
+{
+	{ 0x0B8620, "A1FC0D9100", "E80BF90E00" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("Keys for SFoils and LandingGears", g_keysSFoilsLandingGearsPatch),
@@ -147,4 +153,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that play S-Foil sound", g_playSoundPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines hangar doors", g_hangarDoorsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines the hatches", g_hatchesPatch),
+	MAKE_HOOK_PATCH("To call the hook that set the closed sfoils state", g_closeSfoilsPatch),
 };

@@ -93,6 +93,9 @@ At offset 0F5DC7, replace E8F423F1FF with E854210B00.
 At offset 05E079, replace A1D4948B00 with E8B29E1400.
 At offset 05AA31, replace A108BC6800 with E8FAD41400.
 
+# To call the hook that set the closed sfoils state
+At offset 0B8620, replace A1FC0D9100 with E80BF90E00.
+
 
 *** Usage ***
 
