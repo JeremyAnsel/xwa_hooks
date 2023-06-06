@@ -24,6 +24,23 @@ namespace XwaJoystickConfig
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static float GetFileKeyValueFloat(IList<string> lines, string key, float defaultValue = 0)
+        {
+            string value = XwaHooksConfig.GetFileKeyValue(lines, key);
+
+            if (value.Length == 0)
+            {
+                return defaultValue;
+            }
+
+            if (!float.TryParse(value, out float result))
+            {
+                return defaultValue;
+            }
+
+            return result;
+        }
+
         private static readonly Encoding _encoding = Encoding.GetEncoding("iso-8859-1");
 
         private System.Timers.Timer _timer;
@@ -69,11 +86,15 @@ namespace XwaJoystickConfig
 
         public bool JoystickSettingInvertYaw { get; set; }
 
+        public float JoystickSettingYawMultiplicator { get; set; }
+
         public int JoystickSettingPitchControllerIndex { get; set; }
 
         public int JoystickSettingPitchControllerAxisIndex { get; set; }
 
         public bool JoystickSettingInvertPitch { get; set; }
+
+        public float JoystickSettingPitchMultiplicator { get; set; }
 
         public int JoystickSettingThrottleControllerIndex { get; set; }
 
@@ -81,11 +102,15 @@ namespace XwaJoystickConfig
 
         public bool JoystickSettingInvertThrottle { get; set; }
 
+        public float JoystickSettingThrottleMultiplicator { get; set; }
+
         public int JoystickSettingRudderControllerIndex { get; set; }
 
         public int JoystickSettingRudderControllerAxisIndex { get; set; }
 
         public bool JoystickSettingInvertRudder { get; set; }
+
+        public float JoystickSettingRudderMultiplicator { get; set; }
 
         public bool JoystickSettingUsePovControllerAsButtons { get; set; }
 
@@ -297,15 +322,19 @@ namespace XwaJoystickConfig
             this.JoystickSettingYawControllerIndex = 0;
             this.JoystickSettingYawControllerAxisIndex = 0;
             this.JoystickSettingInvertYaw = false;
+            this.JoystickSettingYawMultiplicator = 1;
             this.JoystickSettingPitchControllerIndex = 0;
             this.JoystickSettingPitchControllerAxisIndex = 1;
             this.JoystickSettingInvertPitch = false;
+            this.JoystickSettingPitchMultiplicator = 1;
             this.JoystickSettingThrottleControllerIndex = 0;
             this.JoystickSettingThrottleControllerAxisIndex = 2;
             this.JoystickSettingInvertThrottle = false;
+            this.JoystickSettingThrottleMultiplicator = 1;
             this.JoystickSettingRudderControllerIndex = 0;
             this.JoystickSettingRudderControllerAxisIndex = 3;
             this.JoystickSettingInvertRudder = false;
+            this.JoystickSettingRudderMultiplicator = 1;
             this.JoystickSettingUsePovControllerAsButtons = false;
             this.JoystickSettingVirtualCockpitLookSensitivity = 1200;
         }
@@ -430,15 +459,19 @@ namespace XwaJoystickConfig
             this.JoystickSettingYawControllerIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "YawControllerIndex", 0);
             this.JoystickSettingYawControllerAxisIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "YawControllerAxisIndex", 0);
             this.JoystickSettingInvertYaw = XwaHooksConfig.GetFileKeyValueInt(lines, "InvertYaw", 0) != 0;
+            this.JoystickSettingYawMultiplicator = GetFileKeyValueFloat(lines, "YawMultiplicator", 1);
             this.JoystickSettingPitchControllerIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "PitchControllerIndex", 0);
             this.JoystickSettingPitchControllerAxisIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "PitchControllerAxisIndex", 1);
             this.JoystickSettingInvertPitch = XwaHooksConfig.GetFileKeyValueInt(lines, "InvertPitch", 0) != 0;
+            this.JoystickSettingPitchMultiplicator = GetFileKeyValueFloat(lines, "PitchMultiplicator", 1);
             this.JoystickSettingThrottleControllerIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "ThrottleControllerIndex", 0);
             this.JoystickSettingThrottleControllerAxisIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "ThrottleControllerAxisIndex", 2);
             this.JoystickSettingInvertThrottle = XwaHooksConfig.GetFileKeyValueInt(lines, "InvertThrottle", 0) != 0;
+            this.JoystickSettingThrottleMultiplicator = GetFileKeyValueFloat(lines, "ThrottleMultiplicator", 1);
             this.JoystickSettingRudderControllerIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "RudderControllerIndex", 0);
             this.JoystickSettingRudderControllerAxisIndex = XwaHooksConfig.GetFileKeyValueInt(lines, "RudderControllerAxisIndex", 3);
             this.JoystickSettingInvertRudder = XwaHooksConfig.GetFileKeyValueInt(lines, "InvertRudder", 0) != 0;
+            this.JoystickSettingRudderMultiplicator = GetFileKeyValueFloat(lines, "RudderMultiplicator", 1);
             this.JoystickSettingUsePovControllerAsButtons = XwaHooksConfig.GetFileKeyValueInt(lines, "UsePovControllerAsButtons", 0) != 0;
             this.JoystickSettingVirtualCockpitLookSensitivity = XwaHooksConfig.GetFileKeyValueInt(lines, "VirtualCockpitLookSensitivity", 1200);
 
@@ -509,6 +542,9 @@ namespace XwaJoystickConfig
                 writer.WriteLine("; Invert yaw axis");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "InvertYaw = {0}", this.JoystickSettingInvertYaw ? 1 : 0));
                 writer.WriteLine();
+                writer.WriteLine("; Multiply yaw axis");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "YawMultiplicator = {0}", this.JoystickSettingYawMultiplicator));
+                writer.WriteLine();
                 writer.WriteLine("; Select the controller used for pitch");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "PitchControllerIndex = {0}", this.JoystickSettingPitchControllerIndex));
                 writer.WriteLine();
@@ -517,6 +553,9 @@ namespace XwaJoystickConfig
                 writer.WriteLine();
                 writer.WriteLine("; Invert pitch axis");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "InvertPitch = {0}", this.JoystickSettingInvertPitch ? 1 : 0));
+                writer.WriteLine();
+                writer.WriteLine("; Multiply pitch axis");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "PitchMultiplicator = {0}", this.JoystickSettingPitchMultiplicator));
                 writer.WriteLine();
                 writer.WriteLine("; Select the controller used for throttle");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "ThrottleControllerIndex = {0}", this.JoystickSettingThrottleControllerIndex));
@@ -527,6 +566,9 @@ namespace XwaJoystickConfig
                 writer.WriteLine("; Invert throttle axis");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "InvertThrottle = {0}", this.JoystickSettingInvertThrottle ? 1 : 0));
                 writer.WriteLine();
+                writer.WriteLine("; Multiply throttle axis");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "ThrottleMultiplicator = {0}", this.JoystickSettingThrottleMultiplicator));
+                writer.WriteLine();
                 writer.WriteLine("; Select the controller used for rudder");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "RudderControllerIndex = {0}", this.JoystickSettingRudderControllerIndex));
                 writer.WriteLine();
@@ -535,6 +577,9 @@ namespace XwaJoystickConfig
                 writer.WriteLine();
                 writer.WriteLine("; Invert rudder axis");
                 writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "InvertRudder = {0}", this.JoystickSettingInvertRudder ? 1 : 0));
+                writer.WriteLine();
+                writer.WriteLine("; Multiply rudder axis");
+                writer.WriteLine(string.Format(CultureInfo.InvariantCulture, "RudderMultiplicator = {0}", this.JoystickSettingRudderMultiplicator));
                 writer.WriteLine();
                 writer.WriteLine("; Use the POV as regular buttons");
                 writer.WriteLine("; 0 to continious movement");

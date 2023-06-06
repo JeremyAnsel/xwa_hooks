@@ -93,7 +93,11 @@
                                     <TextBlock Width="120" Text="Axis index:" />
                                     <TextBox Width="120" Text="{Binding JoystickSettingYawControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
-                                <CheckBox IsChecked="{Binding JoystickSettingInvertYaw}" Content="Invert axis" />
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox Width="120" IsChecked="{Binding JoystickSettingInvertYaw}" Content="Invert axis" />
+                                    <TextBlock Width="120" Text="Axis multiplicator:" />
+                                    <TextBox Width="120" Text="{Binding JoystickSettingYawMultiplicator, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                </StackPanel>
                             </StackPanel>
                         </GroupBox>
                         <GroupBox Header="Pitch axis">
@@ -114,7 +118,11 @@
                                     <TextBlock Width="120" Text="Axis index:" />
                                     <TextBox Width="120" Text="{Binding JoystickSettingPitchControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
-                                <CheckBox IsChecked="{Binding JoystickSettingInvertPitch}" Content="Invert axis" />
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox Width="120" IsChecked="{Binding JoystickSettingInvertPitch}" Content="Invert axis" />
+                                    <TextBlock Width="120" Text="Axis multiplicator:" />
+                                    <TextBox Width="120" Text="{Binding JoystickSettingPitchMultiplicator, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                </StackPanel>
                             </StackPanel>
                         </GroupBox>
                         <GroupBox Header="Throttle axis">
@@ -135,7 +143,11 @@
                                     <TextBlock Width="120" Text="Axis index:" />
                                     <TextBox Width="120" Text="{Binding JoystickSettingThrottleControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
-                                <CheckBox IsChecked="{Binding JoystickSettingInvertThrottle}" Content="Invert axis" />
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox Width="120" IsChecked="{Binding JoystickSettingInvertThrottle}" Content="Invert axis" />
+                                    <TextBlock Width="120" Text="Axis multiplicator:" />
+                                    <TextBox Width="120" Text="{Binding JoystickSettingThrottleMultiplicator, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                </StackPanel>
                             </StackPanel>
                         </GroupBox>
                         <GroupBox Header="Roll axis">
@@ -156,7 +168,11 @@
                                     <TextBlock Width="120" Text="Axis index:" />
                                     <TextBox Width="120" Text="{Binding JoystickSettingRudderControllerAxisIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                 </StackPanel>
-                                <CheckBox IsChecked="{Binding JoystickSettingInvertRudder}" Content="Invert axis" />
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox Width="120" IsChecked="{Binding JoystickSettingInvertRudder}" Content="Invert axis" />
+                                    <TextBlock Width="120" Text="Axis multiplicator:" />
+                                    <TextBox Width="120" Text="{Binding JoystickSettingRudderMultiplicator, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                </StackPanel>
                             </StackPanel>
                         </GroupBox>
                         <TextBlock />

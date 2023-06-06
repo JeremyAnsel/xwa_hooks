@@ -81,6 +81,9 @@ Select the controller axis used for yaw. The default value is 0 (x axis).
 InvertYaw = value
 Invert yaw axis
 
+YawMultiplicator = float value
+Multiply yaw axis
+
 PitchControllerIndex = controller index
 Select the controller used for pitch. The default value is 0.
 
@@ -89,6 +92,9 @@ Select the controller axis used for pitch. The default value is 1 (y axis).
 
 InvertPitch = value
 Invert pitch axis
+
+PitchMultiplicator = float value
+Multiply pitch axis
 
 ThrottleControllerIndex = controller index
 Select the controller used for throttle. The default value is 0.
@@ -99,6 +105,9 @@ Select the controller axis used for throttle. The default value is 2 (z axis).
 InvertThrottle = value
 Invert throttle axis
 
+ThrottleMultiplicator = float value
+Multiply throttle axis
+
 RudderControllerIndex = controller index
 Select the controller used for rudder. The default value is 0.
 
@@ -107,6 +116,9 @@ Select the controller axis used for rudder. The default value is 3 (r axis).
 
 InvertRudder = value
 Invert rudder axis
+
+RudderMultiplicator = float value
+Multiply rudder axis
 
 UsePovControllerAsButtons = value
 The default value is 0, which enable continious movement for the POV buttons.

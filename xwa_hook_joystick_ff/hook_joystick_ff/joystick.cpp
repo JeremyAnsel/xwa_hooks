@@ -16,6 +16,18 @@ const auto& g_joyGetPosEx = *(decltype(joyGetPosEx)**)0x005A92A4;
 
 #include "SharedMem.h"
 
+float GetFileKeyValueFloat(const std::vector<std::string>& lines, const std::string& key, float defaultValue)
+{
+	std::string value = GetFileKeyValue(lines, key);
+
+	if (value.empty())
+	{
+		return defaultValue;
+	}
+
+	return std::stof(value);
+}
+
 enum KeyEnum : unsigned short
 {
 	Key_None = 0,
@@ -52,15 +64,19 @@ public:
 		this->YawControllerIndex = GetFileKeyValueInt(lines, "YawControllerIndex", 0);
 		this->YawControllerAxisIndex = GetFileKeyValueInt(lines, "YawControllerAxisIndex", 0);
 		this->InvertYaw = GetFileKeyValueInt(lines, "InvertYaw", 0) != 0;
+		this->YawMultiplicator = GetFileKeyValueFloat(lines, "YawMultiplicator", 1);
 		this->PitchControllerIndex = GetFileKeyValueInt(lines, "PitchControllerIndex", 0);
 		this->PitchControllerAxisIndex = GetFileKeyValueInt(lines, "PitchControllerAxisIndex", 1);
 		this->InvertPitch = GetFileKeyValueInt(lines, "InvertPitch", 0) != 0;
+		this->PitchMultiplicator = GetFileKeyValueFloat(lines, "PitchMultiplicator", 1);
 		this->ThrottleControllerIndex = GetFileKeyValueInt(lines, "ThrottleControllerIndex", 0);
 		this->ThrottleControllerAxisIndex = GetFileKeyValueInt(lines, "ThrottleControllerAxisIndex", 2);
 		this->InvertThrottle = GetFileKeyValueInt(lines, "InvertThrottle", 0) != 0;
+		this->ThrottleMultiplicator = GetFileKeyValueFloat(lines, "ThrottleMultiplicator", 1);
 		this->RudderControllerIndex = GetFileKeyValueInt(lines, "RudderControllerIndex", 0);
 		this->RudderControllerAxisIndex = GetFileKeyValueInt(lines, "RudderControllerAxisIndex", 3);
 		this->InvertRudder = GetFileKeyValueInt(lines, "InvertRudder", 0) != 0;
+		this->RudderMultiplicator = GetFileKeyValueFloat(lines, "RudderMultiplicator", 1);
 		this->UsePovControllerAsButtons = GetFileKeyValueInt(lines, "UsePovControllerAsButtons", 0) != 0;
 		this->VirtualCockpitLookSensitivity = GetFileKeyValueInt(lines, "VirtualCockpitLookSensitivity", 0x4b0);
 	}
@@ -74,15 +90,19 @@ public:
 	int YawControllerIndex;
 	int YawControllerAxisIndex;
 	bool InvertYaw;
+	float YawMultiplicator;
 	int PitchControllerIndex;
 	int PitchControllerAxisIndex;
 	bool InvertPitch;
+	float PitchMultiplicator;
 	int ThrottleControllerIndex;
 	int ThrottleControllerAxisIndex;
 	bool InvertThrottle;
+	float ThrottleMultiplicator;
 	int RudderControllerIndex;
 	int RudderControllerAxisIndex;
 	bool InvertRudder;
+	float RudderMultiplicator;
 	bool UsePovControllerAsButtons;
 	int VirtualCockpitLookSensitivity;
 };
@@ -765,6 +785,8 @@ int UpdateControllerHook(int* params)
 
 				break;
 			}
+
+			esp10.dwXpos = (DWORD)(esp10.dwXpos * g_config.YawMultiplicator);
 		}
 
 		if (controllerIndex == pitchControllerIndex)
@@ -843,6 +865,8 @@ int UpdateControllerHook(int* params)
 
 				break;
 			}
+
+			esp10.dwYpos = (DWORD)(esp10.dwYpos * g_config.PitchMultiplicator);
 		}
 
 		if (controllerIndex == throttleControllerIndex)
@@ -921,6 +945,8 @@ int UpdateControllerHook(int* params)
 
 				break;
 			}
+
+			esp10.dwZpos = (DWORD)(esp10.dwZpos * g_config.ThrottleMultiplicator);
 		}
 
 		if (controllerIndex == rudderControllerIndex)
@@ -999,6 +1025,8 @@ int UpdateControllerHook(int* params)
 
 				break;
 			}
+
+			esp10.dwRpos = (DWORD)(esp10.dwRpos * g_config.RudderMultiplicator);
 		}
 	}
 
