@@ -883,6 +883,7 @@ struct AmbientSoundSettings
 
 AmbientSoundSettings GetAmbientSoundSettings(int modelIndex)
 {
+	const float ScaleFactor = 0.0244140625f;
 	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
@@ -923,7 +924,7 @@ AmbientSoundSettings GetAmbientSoundSettings(int modelIndex)
 
 	AmbientSoundSettings settings;
 
-	int modelSize = ExeEnableTable[modelIndex].ObjectSize / 2;
+	int modelSize = (int)(ExeEnableTable[modelIndex].ObjectSize * ScaleFactor);
 
 	settings.OffsetX = GetFileKeyValueInt(lines, "AmbientSoundOffsetX", 0);
 	settings.OffsetY = GetFileKeyValueInt(lines, "AmbientSoundOffsetY", 0);
@@ -2322,6 +2323,40 @@ float GetRelativeDistance(const XwaObject* playerObject, const XwaObject* target
 	return d;
 }
 
+std::vector<int> GetCustomSoundIndices()
+{
+	const auto& soundConfig = GetSoundsConfig();
+	const int* xwaSoundEffectsBufferId = GetSoundsConfig().SoundEffectIds;
+
+	const int modelIndexDistanceCount = 223;
+
+	std::vector<int> sounds;
+
+	for (int modelIndex = 0; modelIndex < modelIndexDistanceCount; modelIndex++)
+	{
+		int soundSlot = -1;
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxStarshipAmbientCount)
+		{
+			if (modelIndex < soundConfig.SfxStarshipAmbientCount)
+			{
+				soundSlot = soundConfig.SfxStarshipAmbientIndex + modelIndex;
+			}
+		}
+
+		if (soundSlot == -1 || xwaSoundEffectsBufferId[soundSlot] == -1)
+		{
+			sounds.push_back(-1);
+		}
+		else
+		{
+			sounds.push_back(xwaSoundEffectsBufferId[soundSlot]);
+		}
+	}
+
+	return sounds;
+}
+
 int CustomSoundsHook(int* params)
 {
 	const float ScaleFactor = 0.0244140625f;
@@ -2337,7 +2372,7 @@ int CustomSoundsHook(int* params)
 	const int* xwaSoundEffectsBufferId = GetSoundsConfig().SoundEffectIds;
 
 	const int modelIndexDistanceCount = 223;
-	static float modelIndexDistanceMin[modelIndexDistanceCount];
+	static std::vector<int> modelIndexToBufferId = GetCustomSoundIndices();
 
 	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
@@ -2351,10 +2386,7 @@ int CustomSoundsHook(int* params)
 		return 0;
 	}
 
-	for (int i = 0; i < modelIndexDistanceCount; i++)
-	{
-		modelIndexDistanceMin[i] = FLT_MAX;
-	}
+	std::map<int, float> minDistances;
 
 	for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x08D9628; objectIndex++)
 	{
@@ -2375,39 +2407,33 @@ int CustomSoundsHook(int* params)
 
 		float distance = GetRelativeDistance(currentPlayerObject, pObject);
 
-		if (distance < modelIndexDistanceMin[modelIndex])
+		int bufferId = modelIndexToBufferId[modelIndex];
+		float minDistance = FLT_MAX;
+
+		auto it = minDistances.find(bufferId);
+
+		if (it != minDistances.end())
 		{
-			modelIndexDistanceMin[modelIndex] = distance;
+			minDistance = it->second;
+		}
+
+		if (distance < minDistance)
+		{
+			minDistances[bufferId] = distance;
 		}
 	}
 
-	for (int modelIndex = 0; modelIndex < modelIndexDistanceCount; modelIndex++)
+	for (const auto& buffer : minDistances)
 	{
-		int soundSlot = -1;
-
-		if (soundConfig.SoundsCountHookExists && soundConfig.SfxStarshipAmbientCount)
-		{
-			if (modelIndex < soundConfig.SfxStarshipAmbientCount)
-			{
-				soundSlot = soundConfig.SfxStarshipAmbientIndex + modelIndex;
-			}
-		}
-
-		if (soundSlot == -1 || xwaSoundEffectsBufferId[soundSlot] == -1)
-		{
-			continue;
-		}
-
-		float minDistance = modelIndexDistanceMin[modelIndex];
+		int bufferId = buffer.first;
+		float minDistance = buffer.second;
 
 		if (minDistance == FLT_MAX)
 		{
 			continue;
 		}
 
-		AmbientSoundSettings ambientSound = g_modelIndexSound.GetAmbientSound(modelIndex);
-
-		int soundsCount = XwaGetPlayingSoundsCount(xwaSoundEffectsBufferId[soundSlot]);
+		int soundsCount = XwaGetPlayingSoundsCount(bufferId);
 
 		if (minDistance < 1.0f)
 		{
@@ -2415,19 +2441,19 @@ int CustomSoundsHook(int* params)
 
 			if (soundsCount == 0)
 			{
-				XwaQueueSound(xwaSoundEffectsBufferId[soundSlot], 0x01, 0x01, 0x7F, 0x41, 0x40, -1, 0xFFFF);
-				XwaSetSoundVolume(xwaSoundEffectsBufferId[soundSlot], volume);
+				XwaQueueSound(bufferId, 0x01, 0x01, 0x7F, 0x41, 0x40, -1, 0xFFFF);
+				XwaSetSoundVolume(bufferId, volume);
 			}
 			else
 			{
-				XwaSetSoundVolume(xwaSoundEffectsBufferId[soundSlot], volume);
+				XwaSetSoundVolume(bufferId, volume);
 			}
 		}
 		else
 		{
 			if (soundsCount != 0)
 			{
-				XwaStopSound(xwaSoundEffectsBufferId[soundSlot]);
+				XwaStopSound(bufferId);
 			}
 		}
 	}
