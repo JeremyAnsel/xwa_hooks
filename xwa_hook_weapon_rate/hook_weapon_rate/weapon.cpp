@@ -96,6 +96,26 @@ public:
 
 CraftConfig g_craftConfig;
 
+class Config
+{
+public:
+	Config()
+	{
+		auto lines = GetFileLines("hook_weapon_rate.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_weapon_rate");
+		}
+
+		this->EnableFireMeshFilter = GetFileKeyValueInt(lines, "EnableFireMeshFilter", 1) != 0;
+	}
+
+	bool EnableFireMeshFilter;
+};
+
+Config g_config;
+
 #pragma pack(push, 1)
 
 enum ShipCategoryEnum : unsigned char
@@ -926,6 +946,11 @@ int MirrorHardpointHook(int* params)
 int PlayerFireHook(int* params)
 {
 	params[Params_EBX] = 0xffff;
+
+	if (!g_config.EnableFireMeshFilter)
+	{
+		return 0;
+	}
 
 	const int objectIndex = params[54];
 	const int weaponSlotIndex = params[55];

@@ -65,6 +65,7 @@ The default value for CooldownTimeFactor is 47.
 
 See TieFighterWeaponRate.txt and TieBomberWeaponRate.txt.
 
+To enable or disable the fire mesh filter set the "EnableFireMeshFilter" setting. It is enabled by default.
 
 *** Credits ***
 
