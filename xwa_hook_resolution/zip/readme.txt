@@ -34,6 +34,12 @@ At offset 10A41E, replace E8FD0B0000 with E80DDB0900.
 To enable the auto resolution setting, set the IsAutoResolutionEnabled setting.
 To define the resolution, set the ResolutionWidth and ResolutionHeight settings.
 
+To set the HUD scale, set the HudScale setting.
+When set to 0, the default value is ResolutionHeight / 600.0f, the type is float.
+
+To set the FOV, set the Fov setting.
+When set to 0, the default value is ResolutionHeight * 1.0666f + 0.5f, the type is int.
+
 See the "hook_resolution.cfg" file or the "hook_resolution" section of "hooks.ini".
 
 

@@ -33,6 +33,18 @@ public:
 
 		this->DisplayWidth = mode.dmPelsWidth;
 		this->DisplayHeight = mode.dmPelsHeight;
+
+		std::string hudScaleValue = GetFileKeyValue(lines, "HudScale");
+		if (hudScaleValue.empty())
+		{
+			this->HudScale = 0;
+		}
+		else
+		{
+			this->HudScale = std::stof(hudScaleValue);
+		}
+
+		this->Fov = GetFileKeyValueInt(lines, "Fov", 0);
 	}
 
 	bool IsAutoResolutionEnabled;
@@ -40,6 +52,8 @@ public:
 	int ResolutionHeight;
 	int DisplayWidth;
 	int DisplayHeight;
+	float HudScale;
+	int Fov;
 };
 
 Config g_config;
@@ -135,7 +149,19 @@ int FlightRunLoopHook(int* params)
 		float cy = (float)g_config.ResolutionHeight;
 
 		*(float*)0x06002B8 = cy / 600.0f;
+
+		if (g_config.HudScale != 0.0f)
+		{
+			*(float*)0x06002B8 = g_config.HudScale;
+		}
+
 		*(int*)0x091AB6C = (int)(cy * 1.0666f + 0.5f);
+
+		if (g_config.Fov != 0)
+		{
+			*(int*)0x091AB6C = g_config.Fov;
+		}
+
 		*(int*)0x07B33CC = *(int*)0x091AB6C / 2;
 		*(float*)0x07D4B78 = *(float*)0x06002B8 * 1.25f;
 
