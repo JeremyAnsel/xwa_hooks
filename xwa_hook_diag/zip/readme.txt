@@ -32,6 +32,16 @@ To shows diagnostic messages, set the "ShowDiagMessages" setting in the "hook_di
 
 See "hook_diag.cfg"
 
+Reference for the loading times
+step 0 is start.
+step 1 is mission file loading, global buffers initializing, and hangar sounds loading.
+step 2 is tactical officers and wingmen sounds loading.
+step 3 is 3d initializing, and OPTs loading.
+step 4 is dat images loading
+step 5 is ResData_LightingEffects initializing
+step 6 is nothing
+step 7 is backdrops initializing, and HUD initializing
+step 8 is starships debris initializing
 
 *** Credits ***
 
