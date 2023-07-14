@@ -263,3 +263,25 @@ EB47                    jmp 004321C7, 004321C7 - 00432180 = 47
 E8A4000000              call 004CE4F0
 
 E8D4A60D00              call 005A8B20, 005A8B20 - 004CE44C = 000DA6D4
+
+===============================================================================
+; Bcn texture format
+
+; L004324E0
+:004326E3 - 0x031AE3
+C744243400000000        mov [esp+34], 00000000
+
+E838641700              call 005A8B20, 005A8B20 - 004326E8 = 00176438
+909090                  nop
+
+; L005960BE
+:005968A9 - 0x195CA9
+8B5118                  mov edx, dword ptr [ecx+18]
+
+8B5160                  mov edx, dword ptr [ecx+60]
+
+:005968AC - 0x195CAC
+895588                  mov dword ptr [ebp-78], edx
+
+8955C0                  mov dword ptr [ebp-40], edx
+

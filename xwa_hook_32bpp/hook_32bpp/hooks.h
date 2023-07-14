@@ -11,6 +11,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x441A07, ConvertColorMapHook },
 	{ 0x4CE44C, DatImage32Hook },
 	{ 0x4424CA, ComputeGlobalLightsHook },
+	{ 0x4326E8, DatImageSetPixelFormatHook },
 };
 
 static const HookPatchItem g_setOptNamePatch[] =
@@ -68,6 +69,13 @@ static const HookPatchItem g_dat32bppPatch[] =
 	{ 0x0CD847, "E8A4000000", "E8D4A60D00" },
 };
 
+static const HookPatchItem g_datBcnPatch[] =
+{
+	{ 0x031AE3, "C744243400000000", "E838641700909090" },
+	{ 0x195CA9, "8B5118", "8B5160" },
+	{ 0x195CAC, "895588", "8955C0" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that set the opt name", g_setOptNamePatch),
@@ -76,4 +84,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that creates LightMap", g_createLightMapPatch),
 	MAKE_HOOK_PATCH("To call the hook that set color intensity", g_colorIntensityPatch),
 	MAKE_HOOK_PATCH("To call the hook that set dat bpp to 32", g_dat32bppPatch),
+	MAKE_HOOK_PATCH("To call the hook that set dat bc7", g_datBcnPatch),
 };

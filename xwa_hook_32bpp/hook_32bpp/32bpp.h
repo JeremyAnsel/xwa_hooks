@@ -11,3 +11,5 @@ int ConvertColorMapHook(int* params);
 int ComputeGlobalLightsHook(int* params);
 
 int DatImage32Hook(int* params);
+
+int DatImageSetPixelFormatHook(int* params);

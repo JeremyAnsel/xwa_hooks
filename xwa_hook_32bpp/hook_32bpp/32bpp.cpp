@@ -4,6 +4,18 @@
 #include <string>
 #include <Windows.h>
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 #pragma pack(push, 1)
 
 struct XwaTextureDescription
@@ -541,7 +553,7 @@ int DatImage32Hook(int* params)
 			//int ebp = (A4->Width * A4->Height) >> (A14[esp10].MipmapLevel * 2);
 			int ebp = (A4->Width * A4->Height);
 
-			DatImageDescription* esi = (DatImageDescription*)XwaMemMalloc("RESOURCEITEM", sizeof(DatImageDescription) + ebp * 0x04);
+			DatImageDescription* esi = (DatImageDescription*)XwaMemMalloc("RESOURCEITEM", sizeof(DatImageDescription) + ebp * 4);
 
 			if (esi != 0)
 			{
@@ -574,7 +586,16 @@ int DatImage32Hook(int* params)
 
 				if (imageHeader->ColorsCount == 0)
 				{
-					memcpy(esp24, (void*)AC, ebp * 4);
+					if (A4->DataSize >= ebp * 4)
+					{
+						memcpy(esp24, (void*)AC, ebp * 4);
+					}
+					else
+					{
+						esi->ColorsCount = -1;
+
+						memcpy(esp24, (void*)AC, A4->DataSize);
+					}
 				}
 				else if (imageHeader->ColorsCount == 1)
 				{
@@ -588,6 +609,20 @@ int DatImage32Hook(int* params)
 	else
 	{
 		ConvertDatImage24To32(A4, A8, AC, A10, A14, A18);
+	}
+
+	return 0;
+}
+
+int DatImageSetPixelFormatHook(int* params)
+{
+	params[13] = 0;
+
+	DatImageDescription* ebp = (DatImageDescription*)params[Params_EBP];
+
+	if (ebp->ColorsCount == -1)
+	{
+		params[13 + 24] = ebp->DataSize;
 	}
 
 	return 0;
