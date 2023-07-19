@@ -181,6 +181,8 @@ ProfileName = indices
 indices are a comma separated list.
 See "ModelObjectProfiles.txt"
 
+In Skirmish, the default profile is "Skirmish".
+
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 To define an object profile for a flightgroup, create a file named "[MissionDir]\[Mission]_Objects.txt" or create a section named "[Objects]" in "[MissionDir]\[Mission].ini".
 The format is

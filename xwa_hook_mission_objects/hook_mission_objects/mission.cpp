@@ -1702,6 +1702,13 @@ int TurretIndex2BlockedHook(int* params)
 	return 1;
 }
 
+bool IsInSkirmish()
+{
+	unsigned char MissionType = *(unsigned char*)(0x007B4C00 + 0x0004 + 0x23A6);
+
+	return MissionType == 2 || MissionType == 4;
+}
+
 void ApplyProfile(short objectIndex, unsigned short modelIndex, unsigned short flightgroupIndex, XwaCraft* s_pXwaCurrentCraft)
 {
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
@@ -1721,6 +1728,19 @@ void ApplyProfile(short objectIndex, unsigned short modelIndex, unsigned short f
 	{
 		const std::string shipName = GetFileNameWithoutExtension(g_flightModelsList.GetLstLine(modelIndex));
 		profile = GetFileKeyValue(objectLines, "ObjectProfile_" + shipName);
+	}
+
+	if (IsInSkirmish())
+	{
+		if (profile.empty())
+		{
+			auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, "Skirmish");
+
+			if (!indices.empty())
+			{
+				profile = "Skirmish";
+			}
+		}
 	}
 
 	if (profile.empty())
@@ -1832,6 +1852,19 @@ int RenderOptObjectProfileHook(int* params)
 
 		std::string profileKey = "ObjectProfile_" + shipName + "_" + std::to_string(modelIndex);
 		std::string profile = GetFileKeyValue(objectLines, profileKey);
+
+		if (IsInSkirmish())
+		{
+			if (profile.empty())
+			{
+				auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, "Skirmish");
+
+				if (!indices.empty())
+				{
+					profile = "Skirmish";
+				}
+			}
+		}
 
 		if (profile.empty())
 		{
