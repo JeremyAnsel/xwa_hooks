@@ -40,6 +40,10 @@ HasSlam = 1
 or
 HasSlam = 0
 
+HasSlam_#### = value
+value is 0 or 1
+#### is the ObjectProfile name.
+
 If the file does not exist, default values are used. By default, the Missile Boat has a SLAM system.
 
 See MissileBoatSlam.txt.

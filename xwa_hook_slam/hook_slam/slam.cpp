@@ -6,6 +6,13 @@
 #include <utility>
 #include <fstream>
 
+std::string GetFileNameWithoutExtension(const std::string& str)
+{
+	auto a = str.find_last_of('\\');
+
+	return a == -1 ? str : str.substr(a + 1, -1);
+}
+
 class FlightModelsList
 {
 public:
@@ -147,7 +154,9 @@ struct XwaObject
 {
 	char Unk0000[2];
 	unsigned short ModelIndex;
-	char Unk0004[31];
+	char Unk0004[1];
+	unsigned char TieFlightGroupIndex;
+	char Unk0006[29];
 	XwaMobileObject* pMobileObject;
 };
 
@@ -155,8 +164,11 @@ static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 
 #pragma pack(pop)
 
-int HasShipSlam(int modelIndex)
+int HasShipSlam(int objectIndex)
 {
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	XwaObject* object = &XwaObjects[objectIndex];
+
 	const char* xwaMissionFileName = (const char*)0x06002E8;
 
 	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
@@ -177,7 +189,15 @@ int HasShipSlam(int modelIndex)
 		lines = GetFileLines("FlightModels\\default.ini", "Objects");
 	}
 
-	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+	std::string profile = GetFileKeyValue(lines, "ObjectProfile_fg_" + std::to_string(object->TieFlightGroupIndex));
+
+	if (profile.empty())
+	{
+		const std::string shipName = GetFileNameWithoutExtension(g_flightModelsList.GetLstLine(object->ModelIndex));
+		profile = GetFileKeyValue(lines, "ObjectProfile_" + shipName);
+	}
+
+	std::string shipPath = g_flightModelsList.GetLstLine(object->ModelIndex);
 
 	const std::string objectValue = GetFileKeyValue(lines, shipPath + ".opt");
 
@@ -195,12 +215,14 @@ int HasShipSlam(int modelIndex)
 
 	if (lines.size())
 	{
-		return GetFileKeyValueInt(lines, "HasSlam");
+		int hasSlam = GetFileKeyValueInt(lines, "HasSlam");
+		hasSlam = GetFileKeyValueInt(lines, "HasSlam_" + profile, hasSlam);
+		return hasSlam;
 	}
 	else
 	{
 		// ModelIndex_012_0_11_MissileBoat
-		if (modelIndex == 0x0C)
+		if (object->ModelIndex == 0x0C)
 		{
 			return 1;
 		}
@@ -212,11 +234,14 @@ int HasShipSlam(int modelIndex)
 class ModelIndexSlam
 {
 public:
-	int HasSlam(int modelIndex)
+	int HasSlam(int objectIndex)
 	{
 		this->Update();
 
-		auto it = this->_slam.find(modelIndex);
+		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+		XwaObject* object = &XwaObjects[objectIndex];
+
+		auto it = this->_slam.find(object->TieFlightGroupIndex);
 
 		if (it != this->_slam.end())
 		{
@@ -224,8 +249,8 @@ public:
 		}
 		else
 		{
-			int value = HasShipSlam(modelIndex);
-			this->_slam.insert(std::make_pair(modelIndex, value));
+			int value = HasShipSlam(objectIndex);
+			this->_slam.insert(std::make_pair(object->TieFlightGroupIndex, value));
 			return value;
 		}
 	}
@@ -268,7 +293,7 @@ int SlamHook(int* params)
 	const auto LoadSfxLst = (short(*)(const char*, unsigned short, const char*))0x0043A150;
 
 	const unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
-	int hasSlam = modelIndex == 0 ? 0 : g_modelIndexSlam.HasSlam(modelIndex);
+	int hasSlam = modelIndex == 0 ? 0 : g_modelIndexSlam.HasSlam(objectIndex);
 
 	if (hasSlam)
 	{
