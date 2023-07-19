@@ -24,6 +24,8 @@ The following modifications are applied at runtime to xwingalliance.exe:
 
 
 *** Usage ***
+
+To enable or disable the hook, set the "IsHookEnabled" setting in hook_tourmultiplayer.cfg. By default the hook is disabled.
 ...
 
 

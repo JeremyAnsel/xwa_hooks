@@ -182,7 +182,7 @@ This hook reduces the CPU usage and enables 60 FPS inflight.
 
 See http://www.xwaupgrade.com/phpBB3008/viewtopic.php?f=10&t=11338 and http://www.xwaupgrade.com/phpBB3/viewtopic.php?f=9&t=12016
 
-## WIP xwa_hook_tourmultiplayer
+## xwa_hook_tourmultiplayer
 
 This hook allows you to use the built in campaign/tour mode within XWA to play the story campaign with other players, or fly custom campaigns.
 

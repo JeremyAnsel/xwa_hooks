@@ -3,6 +3,7 @@
 #include "config.h"
 //#include <Windows.h>
 #include "XwaFramework.h"
+#include <fstream>
 
 // Stack contents for function params
 enum ParamsEnum
@@ -26,11 +27,11 @@ class Config
 public:
 	Config()
 	{
-		auto lines = GetFileLines("hooks.ini", "hook_tourmultiplayer");
+		auto lines = GetFileLines("hook_tourmultiplayer.cfg");
 
 		if (lines.empty())
 		{
-			lines = GetFileLines("hook_tourmultiplayer.cfg");
+			lines = GetFileLines("hooks.ini", "hook_tourmultiplayer");
 		}
 
 		this->SimulatorBackground = GetFileKeyValue(lines, "SimulatorBackground");
@@ -39,7 +40,7 @@ public:
 		{
 			//"frontres\\concourse\\create.bmp";
 			//"frontres\\combat\\multiplayer.bmp";
-			this->SimulatorBackground = "frontres\\concourse\\create.bmp";
+			this->SimulatorBackground = "frontres\\combat\\multiplayer.bmp";
 		}
 
 		this->SettingsBar = GetFileKeyValueInt(lines, "SettingsBar", 0) != 0;
@@ -699,6 +700,17 @@ bool shiftMPressed = false;
 
 int PanelButtonsHook(int* params)
 {
+	const auto XwaFrontResGetCurrentImage = (int(*)(const char*))0x005321F0;
+
+	int rightbar2CurrentImage = XwaFrontResGetCurrentImage("rightbar2");
+	RECT rightbar2Area;
+	CreateRectBasedOnResData("rightbar2", &rightbar2Area);
+	RECT rightbar4Area;
+	CreateRectBasedOnResData("rightbar4", &rightbar4Area);
+	CreateImage("rightbar2", 9);
+	DrawDatapadFrontResRLETransparent("rightbar2", 8  + rightbar4Area.right, 480 + rightbar2Area.top - rightbar2Area.bottom);
+	CreateImage("rightbar2", rightbar2CurrentImage);
+
 	int playerIsHost = DP_PlayerIsHost();
 	RECT rectButton[4] = { 0,0,0,0 };
 	// Orginally: 70, 449, 97, 473 
@@ -707,13 +719,13 @@ int PanelButtonsHook(int* params)
 	CopyRectToFrom(rectButton, rectImpLogo);
 
 	// Create Combat Engagements button
-	if (*missionDirectory != MissionDirectory_Combat)
+	if (*missionDirectory != MissionDirectory_Combat && std::ifstream("Combat\\mission.lst"))
 	{
 		if (*thisPlayerType == PlayerType_Singleplayer || playerIsHost)
 		{
 			if (CreateButtonWithHighlightAndSnd(rectButton, "implogo1", "implogo1", GetFrontTxtString(STR_COMBAT), *highlightedTextColor, *normalColor, 12, "jewelsound"))
 			{
-				LoadSkirmishFile("temp\temp6753908", 0);
+				LoadSkirmishFile("temp\\temp6753908", 0);
 				// Fixes background
 				// TODO
 				//params[-12] = 2;
@@ -749,7 +761,7 @@ int PanelButtonsHook(int* params)
 	else
 	{
 		// Create a selected Combat Engagements button that does nothing when clicked
-		CreateSelectedButton(rectButton, "implogo1", GetFrontTxtString(STR_COMBAT), *selectedColor);
+		CreateSelectedButton(rectButton, "implogo1", GetFrontTxtString(STR_COMBAT), *normalColor);
 	}
 
 	// Create Load button
