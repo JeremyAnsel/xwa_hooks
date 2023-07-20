@@ -212,8 +212,12 @@ void InFlightDrawText(short x, short y, const char* text)
 	const auto XwaGetTextWidth = (short(*)(const char*))0x004E6F20;
 	const auto L00434A60 = (void(*)(short, short, short, short))0x00434A60;
 	const auto L004349D0 = (void(*)(short, short))0x004349D0;
+	const auto L00434C70 = (void(*)(unsigned char))0x00434C70;
 
 	*(unsigned int*)0x0091AB68 = 0xffffffff;
+
+	L00434C70(0);
+
 	L00434A60(0, 0, XwaGetTextWidth(text), 15);
 	L004349D0(0, 0);
 
