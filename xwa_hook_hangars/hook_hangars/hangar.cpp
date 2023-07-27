@@ -314,6 +314,8 @@ static_assert(sizeof(S0x09C6780) == 46, "size of S0x09C6780 must be 46");
 
 #pragma pack(pop)
 
+std::vector<unsigned short> g_hangarMapModelIndices;
+
 std::vector<unsigned short> GetDefaultCraftSelectionTransports()
 {
 	std::vector<unsigned short> selection;
@@ -1466,8 +1468,16 @@ int HangarOptLoadHook(int* params)
 
 	const char* argOpt = (char*)params[0];
 	const unsigned short argModelIndex = (unsigned short)params[0x60];
+	unsigned short* OptModelFileMemHandles = (unsigned short*)0x007CA6E0;
 
 	const auto OptLoad = (int(*)(const char*))0x004CC940;
+
+	if (std::find(g_hangarMapModelIndices.begin(), g_hangarMapModelIndices.end(), argModelIndex) != g_hangarMapModelIndices.end())
+	{
+		return OptModelFileMemHandles[argModelIndex];
+	}
+
+	g_hangarMapModelIndices.push_back(argModelIndex);
 
 	std::string opt;
 
@@ -1539,6 +1549,11 @@ int HangarObjectCreateHook(int* params)
 	const unsigned short modelIndex = (unsigned short)params[0];
 
 	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
+
+	if (std::find(g_hangarMapModelIndices.begin(), g_hangarMapModelIndices.end(), modelIndex) != g_hangarMapModelIndices.end())
+	{
+		return 0;
+	}
 
 	unsigned short* OptModelFileMemHandles = (unsigned short*)0x007CA6E0;
 	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
@@ -2695,6 +2710,8 @@ int HangarRoofCraneCameraHook(int* params)
 
 int HangarMapHook(int* params)
 {
+	g_hangarMapModelIndices.clear();
+
 	ReadIsHangarFloorInverted();
 
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
@@ -2847,6 +2864,8 @@ int HangarMapHook(int* params)
 
 int FamHangarMapHook(int* params)
 {
+	g_hangarMapModelIndices.clear();
+
 	ReadIsHangarFloorInverted();
 
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
@@ -4117,6 +4136,8 @@ std::vector<unsigned short> GetHangarObjects()
 int HangarExitHook(int* params)
 {
 	*(int*)0x0068BBB8 = 1;
+
+	g_hangarMapModelIndices.clear();
 
 	const auto HangarOptLoad = (int(*)(unsigned short))0x00456FA0;
 	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
