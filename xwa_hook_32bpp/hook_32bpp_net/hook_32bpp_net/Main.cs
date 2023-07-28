@@ -538,7 +538,7 @@ namespace hook_32bpp_net
         //        .AsParallel()
         //        .ForAll(texture =>
         //    {
-        //        texture.Value.Convert8To32();
+        //        texture.Value.Convert8To32(false);
 
         //        foreach (int i in fgColors)
         //        {
@@ -605,7 +605,7 @@ namespace hook_32bpp_net
                 .AsParallel()
                 .ForAll(texture =>
                 {
-                    texture.Value.Convert8To32();
+                    texture.Value.Convert8To32(false);
 
                     foreach (int i in fgColors)
                     {
@@ -744,7 +744,7 @@ namespace hook_32bpp_net
                 return;
             }
 
-            newTexture.Convert8To32();
+            newTexture.Convert8To32(false);
 
             int size = baseTexture.Width * baseTexture.Height;
             byte[] src = newTexture.ImageData;

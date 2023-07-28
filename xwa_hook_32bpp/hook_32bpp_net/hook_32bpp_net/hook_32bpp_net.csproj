@@ -18,8 +18,8 @@
 
   <ItemGroup>
     <PackageReference Include="DllExport" Version="1.5.2" ExcludeAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="JeremyAnsel.IO.Locator" Version="3.0.37" />
-    <PackageReference Include="JeremyAnsel.Xwa.Opt" Version="3.0.44" />		
+    <PackageReference Include="JeremyAnsel.IO.Locator" Version="3.0.38" />
+    <PackageReference Include="JeremyAnsel.Xwa.Opt" Version="3.0.46" />		
   </ItemGroup>
 
   <ItemGroup>
