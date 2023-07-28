@@ -848,8 +848,8 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 	if (values.ShieldStrength != -1)
 	{
 		unsigned int exeShieldStrength = ExeCraftTable[craftIndex].ShieldStrength;
-		currentCraft->ShieldStrength[0] = currentCraft->ShieldStrength[0] * values.ShieldStrength / exeShieldStrength;
-		currentCraft->ShieldStrength[1] = currentCraft->ShieldStrength[1] * values.ShieldStrength / exeShieldStrength;
+		currentCraft->ShieldStrength[0] = exeShieldStrength == 0 ? 0 : (currentCraft->ShieldStrength[0] * values.ShieldStrength / exeShieldStrength);
+		currentCraft->ShieldStrength[1] = exeShieldStrength == 0 ? 0 : (currentCraft->ShieldStrength[1] * values.ShieldStrength / exeShieldStrength);
 	}
 
 	if (currentObject->PlayerIndex != -1 && valuesPercent.ShieldStrengthPercent != -1)
@@ -922,7 +922,7 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 
 	short oldSpeed = currentObject->pMobileObject->Speed;
 	short exeSpeed = ExeCraftTable[craftIndex].Speed;
-	int speedPercent = exeSpeed == 0 ? 0 : oldSpeed * 0x10000 / exeSpeed;
+	int speedPercent = exeSpeed == 0 ? 0 : (oldSpeed * 0x10000 / exeSpeed);
 	short newSpeed = (currentCraft->Speed * speedPercent + 0x8000) / 0x10000;
 	currentObject->pMobileObject->Speed = newSpeed;
 }
@@ -1381,7 +1381,7 @@ int StatsProfiles_L0041FA00_Speed_Hook(int* params)
 
 	short oldSpeed = currentObject->pMobileObject->Speed;
 	short exeSpeed = ExeCraftTable[craftIndex].Speed;
-	int speedPercent = exeSpeed == 0 ? 0 : oldSpeed * 0x10000 / exeSpeed;
+	int speedPercent = exeSpeed == 0 ? 0 : (oldSpeed * 0x10000 / exeSpeed);
 	short newSpeed = (currentCraft->Speed * speedPercent + 0x8000) / 0x10000;
 	currentObject->pMobileObject->Speed = newSpeed;
 
