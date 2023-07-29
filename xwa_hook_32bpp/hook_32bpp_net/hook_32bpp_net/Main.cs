@@ -538,7 +538,7 @@ namespace hook_32bpp_net
         //        .AsParallel()
         //        .ForAll(texture =>
         //    {
-        //        texture.Value.Convert8To32(false);
+        //        //texture.Value.Convert8To32(false);
 
         //        foreach (int i in fgColors)
         //        {
@@ -605,7 +605,7 @@ namespace hook_32bpp_net
                 .AsParallel()
                 .ForAll(texture =>
                 {
-                    texture.Value.Convert8To32(false);
+                    //texture.Value.Convert8To32(false);
 
                     foreach (int i in fgColors)
                     {
@@ -694,6 +694,8 @@ namespace hook_32bpp_net
                 {
                     return;
                 }
+
+                texture.Value.Convert8To32(false);
 
                 string textureName = texture.Key.Substring(0, position);
                 int fgIndex = int.Parse(texture.Key.Substring(position + 4, texture.Key.IndexOf('_', position + 4) - position - 4), CultureInfo.InvariantCulture);
