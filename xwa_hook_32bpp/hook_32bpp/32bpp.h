@@ -13,3 +13,8 @@ int ComputeGlobalLightsHook(int* params);
 int DatImage32Hook(int* params);
 
 int DatImageSetPixelFormatHook(int* params);
+
+int OptCreateD3DTexturesFromTexturesHook(int* params);
+int OptCreateD3DTexturesFromTexturesLoopHook(int* params);
+int OptTransformTexturesToD3DTexturesHook(int* params);
+int OptTransformTexturesToD3DTexturesLoopHook(int* params);

@@ -12,6 +12,10 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4CE44C, DatImage32Hook },
 	{ 0x4424CA, ComputeGlobalLightsHook },
 	{ 0x4326E8, DatImageSetPixelFormatHook },
+	{ 0x4CD061, OptCreateD3DTexturesFromTexturesHook },
+	{ 0x4CD167, OptCreateD3DTexturesFromTexturesLoopHook },
+	{ 0x4CD093, OptTransformTexturesToD3DTexturesHook },
+	{ 0x4CD263, OptTransformTexturesToD3DTexturesLoopHook },
 };
 
 static const HookPatchItem g_setOptNamePatch[] =
@@ -76,6 +80,16 @@ static const HookPatchItem g_datBcnPatch[] =
 	{ 0x195CAC, "895588", "8955C0" },
 };
 
+static const HookPatchItem g_texturesLoadingPatch[] =
+{
+	{ 0x0CC45C, "33FF85C97E22", "E8BFBA0D0090" },
+	{ 0x0CC47F, "473BF97CDE", "4F85FF7DDE" },
+	{ 0x0CC562, "8B460833FF", "E8B9B90D00" },
+	{ 0x0CC48E, "33FF85C97E26", "E88DBA0D0090" },
+	{ 0x0CC4B5, "473BF97CDA", "4F85FF7DDA" },
+	{ 0x0CC65E, "8B460833FF", "E8BDB80D00" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that set the opt name", g_setOptNamePatch),
@@ -85,4 +99,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that set color intensity", g_colorIntensityPatch),
 	MAKE_HOOK_PATCH("To call the hook that set dat bpp to 32", g_dat32bppPatch),
 	MAKE_HOOK_PATCH("To call the hook that set dat bc7", g_datBcnPatch),
+	MAKE_HOOK_PATCH("To call the hook that improves textures loading", g_texturesLoadingPatch),
 };

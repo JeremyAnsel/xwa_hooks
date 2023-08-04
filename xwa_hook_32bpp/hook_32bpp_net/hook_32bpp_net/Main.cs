@@ -317,7 +317,7 @@ namespace hook_32bpp_net
 
             string optName = Path.GetFileNameWithoutExtension(optFilename);
 
-            var opt = OptFile.FromFile(optFilename);
+            var opt = OptFile.FromFile(optFilename, false);
 
             if (Directory.Exists($"FlightModels\\Skins\\{optName}"))
             {
@@ -337,15 +337,7 @@ namespace hook_32bpp_net
 
             if (_isD3dRendererHookEnabled)
             {
-                opt.Meshes
-                    .AsParallel()
-                    .ForAll(mesh =>
-                    {
-                        foreach (MeshLod lod in mesh.Lods)
-                        {
-                            GroupFaceGroups(lod);
-                        }
-                    });
+                opt.GroupFaceGroups();
             }
 
             _tempOptFile = opt;
@@ -377,69 +369,11 @@ namespace hook_32bpp_net
 
             using (var stream = new UnmanagedMemoryStream((byte*)ptr, _tempOptFileSize, _tempOptFileSize, FileAccess.Write))
             {
-                _tempOptFile.Save(stream, false, false);
+                _tempOptFile.Save(stream, false, false, false);
             }
 
             _tempOptFile = null;
             _tempOptFileSize = 0;
-        }
-
-        private static void GroupFaceGroups(MeshLod lod)
-        {
-            var groups = new List<FaceGroup>(lod.FaceGroups.Count);
-
-            foreach (var faceGroup in lod.FaceGroups)
-            {
-                FaceGroup index = null;
-
-                foreach (var group in groups)
-                {
-                    if (group.Textures.Count != faceGroup.Textures.Count)
-                    {
-                        continue;
-                    }
-
-                    if (group.Textures.Count == 0)
-                    {
-                        index = group;
-                        break;
-                    }
-
-                    int t = 0;
-                    for (; t < group.Textures.Count; t++)
-                    {
-                        if (group.Textures[t] != faceGroup.Textures[t])
-                        {
-                            break;
-                        }
-                    }
-
-                    if (t == group.Textures.Count)
-                    {
-                        index = group;
-                        break;
-                    }
-                }
-
-                if (index == null)
-                {
-                    groups.Add(faceGroup);
-                }
-                else
-                {
-                    foreach (var face in faceGroup.Faces)
-                    {
-                        index.Faces.Add(face);
-                    }
-                }
-            }
-
-            lod.FaceGroups.Clear();
-
-            foreach (var group in groups)
-            {
-                lod.FaceGroups.Add(group);
-            }
         }
 
         private static void UpdateOptFile(string optName, OptFile opt, IList<string> objectLines, IList<string> baseSkins, int fgCount, bool hasDefaultSkin)
@@ -747,6 +681,7 @@ namespace hook_32bpp_net
             }
 
             newTexture.Convert8To32(false);
+            FlipPixels(newTexture.ImageData, newTexture.Width, newTexture.Height, 32);
 
             int size = baseTexture.Width * baseTexture.Height;
             byte[] src = newTexture.ImageData;
@@ -774,6 +709,34 @@ namespace hook_32bpp_net
                     dst[i * 4 + 2] = (byte)(dst[i * 4 + 2] * (255 - a) / 255 + src[i * 4 + 2] * a / 255);
                 }
             });
+        }
+
+        private static void FlipPixels(byte[] pixels, int width, int height, int bpp)
+        {
+            int length = pixels.Length;
+            int offset = 0;
+            int w = width;
+            int h = height;
+
+            while (offset < length)
+            {
+                int stride = w * bpp / 8;
+
+                for (int i = 0; i < h / 2; i++)
+                {
+                    for (int j = 0; j < stride; j++)
+                    {
+                        byte v = pixels[offset + i * stride + j];
+                        pixels[offset + i * stride + j] = pixels[offset + (h - 1 - i) * stride + j];
+                        pixels[offset + (h - 1 - i) * stride + j] = v;
+                    }
+                }
+
+                offset += h * stride;
+
+                w = w > 1 ? w / 2 : 1;
+                h = h > 1 ? h / 2 : 1;
+            }
         }
 
         private static readonly string[] _textureExtensions = new string[] { ".bmp", ".png", ".jpg" };

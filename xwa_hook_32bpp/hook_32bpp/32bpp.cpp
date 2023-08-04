@@ -627,3 +627,84 @@ int DatImageSetPixelFormatHook(int* params)
 
 	return 0;
 }
+
+int OptCreateD3DTexturesFromTexturesHook(int* params)
+{
+	int A4 = params[Params_ESI];
+	int numOfNodes = *(int*)(A4 + 0x06);
+
+	if (numOfNodes == 0)
+	{
+		params[Params_ReturnAddress] = 0x004CD084;
+		return 0;
+	}
+
+	params[Params_EDI] = numOfNodes - 1;
+
+	return 0;
+}
+
+int OptCreateD3DTexturesFromTexturesLoopHook(int* params)
+{
+	params[Params_ReturnAddress] = 0x004CD191;
+
+	const auto XwaOptCreateD3DTexturesFromTextures = (int(*)(int, int, int, int))0x004CD100;
+
+	int A4 = params[Params_ESI];
+	int numOfNodes = *(int*)(A4 + 0x08);
+	int* nodes = *(int**)(A4 + 0x0C);
+
+	int A8 = params[6];
+	int AC = params[7];
+	int A10 = params[8];
+
+	for (int edi = numOfNodes - 1; edi >= 0; edi--)
+	{
+		AC = XwaOptCreateD3DTexturesFromTextures(nodes[edi], A8, AC, A10);
+	}
+
+	params[Params_EAX] = AC;
+
+	return 0;
+}
+
+int OptTransformTexturesToD3DTexturesHook(int* params)
+{
+	int A4 = params[Params_ESI];
+	int numOfNodes = *(int*)(A4 + 0x06);
+
+	if (numOfNodes == 0)
+	{
+		params[Params_ReturnAddress] = 0x004CD0BA;
+		return 0;
+	}
+
+	params[Params_EDI] = numOfNodes - 1;
+
+	return 0;
+}
+
+int OptTransformTexturesToD3DTexturesLoopHook(int* params)
+{
+	params[Params_ReturnAddress] = 0x004CD292;
+
+	const auto XwaOptTransformTexturesToD3DTextures = (int(*)(int, int, int, int, int*))0x004CD1A0;
+
+	int A4 = params[Params_ESI];
+	int numOfNodes = *(int*)(A4 + 0x08);
+	int* nodes = *(int**)(A4 + 0x0C);
+
+	int A8 = params[6];
+	int AC = params[7];
+	int A10 = params[8];
+	int* A14 = (int*)params[9];
+
+	for (int edi = numOfNodes - 1; edi >= 0; edi--)
+	{
+		A10 = XwaOptTransformTexturesToD3DTextures(nodes[edi], A8, AC, A10, A14);
+	}
+
+	params[Params_EAX] = A10;
+
+	return 0;
+}

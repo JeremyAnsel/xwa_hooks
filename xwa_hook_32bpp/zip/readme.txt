@@ -73,6 +73,14 @@ At offset 031AE3, replace C744243400000000 with E838641700909090.
 At offset 195CA9, replace 8B5118 with 8B5160.
 At offset 195CAC, replace 895588 with 8955C0.
 
+# To call the hook that improves textures loading
+At offset 0CC45C, replace 33FF85C97E22 with E8BFBA0D0090.
+At offset 0CC47F, replace 473BF97CDE with 4F85FF7DDE.
+At offset 0CC562, replace 8B460833FF with E8B9B90D00.
+At offset 0CC48E, replace 33FF85C97E26 with E88DBA0D0090.
+At offset 0CC4B5, replace 473BF97CDA with 4F85FF7DDA.
+At offset 0CC65E, replace 8B460833FF with E8BDB80D00.
+
 
 *** Usage ***
 

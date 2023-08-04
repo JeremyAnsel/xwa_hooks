@@ -285,3 +285,55 @@ E838641700              call 005A8B20, 005A8B20 - 004326E8 = 00176438
 
 8955C0                  mov dword ptr [ebp-40], edx
 
+===============================================================================
+
+// L004CD100 - XwaOptCreateD3DTexturesFromTextures
+
+:004CD05C - 0x0CC45C
+33FF                    xor edi, edi
+85C9                    test ecx, ecx
+7E22                    jle 004CD084
+
+E8BFBA0D00              call 005A8B20, 005A8B20 - 004CD061 = 000DBABF
+90                      nop
+
+:004CD07F - 0x0CC47F
+47                      inc edi
+3BF9                    cmp edi, ecx
+7CDE                    jl 004CD062
+
+4F                      dec edi
+85FF                    test edi, edi
+7DDE                    jge 004CD062
+
+:004CD162 - 0x0CC562
+8B4608                  mov eax, dword ptr [esi+08]
+33FF                    xor edi, edi
+
+E8B9B90D00              call 005A8B20, 005A8B20 - 004CD167 = 000DB9B9
+
+// L004CD1A0 - XwaOptTransformTexturesToD3DTextures
+
+:004CD08E - 0x0CC48E
+33FF                    xor edi, edi
+85C9                    test ecx, ecx
+7E26                    jle 004CD0BA
+
+E88DBA0D00              call 005A8B20, 005A8B20 - 004CD093 = 000DBA8D
+90                      nop
+
+:004CD0B5 - 0x0CC4B5
+47                      inc edi
+3BF9                    cmp edi, ecx
+7CDA                    jl 004CD094
+
+4F                      dec edi
+85FF                    test edi, edi
+7DDA                    jge 004CD094
+
+:004CD25E - 0x0CC65E
+8B4608                  mov eax, dword ptr [esi+08]
+33FF                    xor edi, edi
+
+E8BDB80D00              call 005A8B20, 005A8B20 - 004CD263 = 000DB8BD
+
