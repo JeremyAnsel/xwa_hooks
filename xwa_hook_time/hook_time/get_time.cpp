@@ -118,6 +118,13 @@ static bool g_isTimeDivisorEnabled = false;
 
 int GetTimeMultiplicator()
 {
+	int s_XwaNetworkPlayersCount = *(int*)0x00910DEC;
+
+	if (s_XwaNetworkPlayersCount > 1)
+	{
+		return 1;
+	}
+
 	const unsigned short Key_CONTROL_Q = 287;
 
 	static bool isKeyQPressed = false;
@@ -145,6 +152,13 @@ int GetTimeMultiplicator()
 
 int GetTimeDivisor()
 {
+	int s_XwaNetworkPlayersCount = *(int*)0x00910DEC;
+
+	if (s_XwaNetworkPlayersCount > 1)
+	{
+		return 1;
+	}
+
 	const unsigned short Key_CONTROL_A = 271;
 
 	static bool isKeyAPressed = false;
