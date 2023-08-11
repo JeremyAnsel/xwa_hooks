@@ -598,6 +598,13 @@ public:
 
 	std::vector<SFoil> GetHatches(int modelIndex)
 	{
+		int s_XwaNetworkPlayersCount = *(int*)0x00910DEC;
+
+		if (s_XwaNetworkPlayersCount > 1)
+		{
+			return std::vector<SFoil>();
+		}
+
 		this->UpdateIfChanged();
 
 		auto it = this->_hatches.find(modelIndex);
