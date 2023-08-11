@@ -56,6 +56,7 @@ Defining arrival delay for backdrops is now supported.
 
 To define the scale of the backdrops, edit the "Resdata\BackdropScales.txt" file.
 You can also define the scales on a per-mission basis. Edit "[MissionDir]\[Mission]_BackdropScales.txt" or create a section named "[BackdropScales]" in "[MissionDir]\[Mission].ini".
+If the per-mission file contains a setting named "ScalesFileName = value", for example "ScalesFileName = BackdropScalesFile.txt", then the value is the name of a file in the "Resdata" directory. When this setting exists and contains a file name, then the hook will read this file.
 If no scale is defined for a backdrop then the global scale value is used.
 The default scale value in vanilla game is 256.
 To use higher sized backdrops use a smaller value.

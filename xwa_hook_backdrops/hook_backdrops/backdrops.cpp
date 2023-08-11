@@ -793,9 +793,18 @@ private:
 			file = GetFileLines(mission + ".ini", "BackdropScales");
 		}
 
-		if (!file.size())
+		std::string scalesFileName = GetFileKeyValue(file, "ScalesFileName");
+
+		if (scalesFileName.size())
 		{
-			file = GetFileLines("Resdata\\BackdropScales.txt");
+			file = GetFileLines("Resdata\\" + scalesFileName);
+		}
+
+		std::vector<std::string> defaultScales = GetFileLines("Resdata\\BackdropScales.txt");
+
+		if (defaultScales.size())
+		{
+			file.insert(file.end(), defaultScales.begin(), defaultScales.end());
 		}
 
 		const auto lines = GetFileListValues(file);
@@ -809,6 +818,13 @@ private:
 
 			int backdropIndex = std::stoi(line[0]);
 			int scale = std::stoi(line[1]);
+
+			auto it = this->_scales.find(backdropIndex);
+
+			if (it != this->_scales.end())
+			{
+				continue;
+			}
 
 			this->_scales.insert(std::make_pair(backdropIndex, scale));
 		}
