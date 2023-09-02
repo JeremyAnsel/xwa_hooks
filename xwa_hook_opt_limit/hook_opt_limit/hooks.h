@@ -760,6 +760,11 @@ static const HookPatchItem g_selectLodVersionPatch[] =
 	{ 0x0819B9, "A1C4277800", "E862651200" },
 };
 
+static const HookPatchItem g_computeChecksumPatch[] =
+{
+	{ 0x0F5010, "83EC14A178AE910053C1F8045589442410A148099100568B3570AE9100575033DB68BCFA5F006800000200895C241C", "33EDBA100000008D3CAD201277002BD533C0C1E2028BCA8D34ADD80E7700C1E902F3AB8BCA8BFEC1E902F3AB33C0C3" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
@@ -784,4 +789,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the craft engines count", g_craftEnginesPatch),
 	MAKE_HOOK_PATCH("To call the hook that gets the craft engine mesh", g_craftEngineMeshPatch),
 	MAKE_HOOK_PATCH("To call the hook that selects the lod version", g_selectLodVersionPatch),
+	MAKE_HOOK_PATCH("To call the hook that computes the checksum", g_computeChecksumPatch),
 };

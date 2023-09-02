@@ -1,0 +1,41 @@
+
+; L004F5C10
+compute checksum
+
+:004F5C10 - 0x0F5010
+83EC14                  sub esp, 00000014
+A178AE9100              mov eax, dword ptr [0091AE78]
+53                      push ebx
+C1F804                  sar eax, 04
+55                      push ebp
+89442410                mov dword ptr [esp+10], eax
+A148099100              mov eax, dword ptr [00910948]
+56                      push esi
+8B3570AE9100            mov esi, dword ptr [0091AE70]
+57                      push edi
+50                      push eax
+33DB                    xor ebx, ebx
+68BCFA5F00              push 005FFABC
+6800000200              push 00020000
+895C241C                mov dword ptr [esp+1C], ebx
+
+
+33ED                    xor ebp, ebp
+BA10000000              mov edx, 00000010
+8D3CAD20127700          lea edi, dword ptr [4*ebp+00771220]
+2BD5                    sub edx, ebp
+33C0                    xor eax, eax
+C1E202                  shl edx, 02
+8BCA                    mov ecx, edx
+8D34ADD80E7700          lea esi, dword ptr [4*ebp+00770ED8]
+C1E902                  shr ecx, 02
+F3                      repz
+AB                      stosd
+8BCA                    mov ecx, edx
+8BFE                    mov edi, esi
+C1E902                  shr ecx, 02
+F3                      repz
+AB                      stosd
+33C0                    xor eax, eax
+C3                      ret
+
