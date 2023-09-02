@@ -12,6 +12,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x406045, BackdropRenderFilterHook },
 	{ 0x409945, ShowBuoyRegionNameHook },
 	{ 0x4171C5, SetBackdropScaleHook },
+	{ 0x416B19, LoadMissionBackdropsHook },
 };
 
 static const HookPatchItem g_addStarfieldBackdropsPatch[] =
@@ -37,10 +38,16 @@ static const HookPatchItem g_setBackdropScalePatch[] =
 	{ 0x0165C0, "D9442418D80DAC935A00E881341800", "E86B19190090909090909090909090" },
 };
 
+static const HookPatchItem g_loadMissionBackdropsPatch[] =
+{
+	{ 0x015F14, "890DE0AC8000", "E80720190090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that adds starfield backdrops", g_addStarfieldBackdropsPatch),
 	MAKE_HOOK_PATCH("To call the hook that loads mission", g_loadMissionPatch),
 	MAKE_HOOK_PATCH("To call the hook that switches hyper buoy", g_switchHyperBuoyPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the backdrop scale", g_setBackdropScalePatch),
+	MAKE_HOOK_PATCH("To call the hook that loads mission backdrops", g_loadMissionBackdropsPatch),
 };

@@ -6,3 +6,4 @@ int SwitchHyperBuoyHook(int* params);
 int BackdropRenderFilterHook(int* params);
 int ShowBuoyRegionNameHook(int* params);
 int SetBackdropScaleHook(int* params);
+int LoadMissionBackdropsHook(int* params);

@@ -34,6 +34,9 @@ At offset 008D40, replace E89BF30800 with E8DBF11900.
 # To call the hook that sets the backdrop scale
 At offset 0165C0, replace D9442418D80DAC935A00E881341800 with E86B19190090909090909090909090.
 
+# To call the hook that loads mission backdrops
+At offset 015F14, replace 890DE0AC8000 with E80720190090.
+
 
 *** Usage ***
 
@@ -61,6 +64,7 @@ If no scale is defined for a backdrop then the global scale value is used.
 The default scale value in vanilla game is 256.
 To use higher sized backdrops use a smaller value.
 
+To use backdrops between 104 and 255, the dat group id is between 6304 and 6455.
 
 *** Credits ***
 

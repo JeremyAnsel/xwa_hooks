@@ -61,6 +61,14 @@ struct TieFlightGroup
 
 static_assert(sizeof(TieFlightGroup) == 3646, "size of TieFlightGroup must be 3646");
 
+struct TieFlightGroupEx
+{
+	TieFlightGroup FlightGroup;
+	int PlayerIndex;
+};
+
+static_assert(sizeof(TieFlightGroupEx) == 3650, "size of TieFlightGroupEx must be 3650");
+
 struct TieHeader
 {
 	char unk0000[9128];
@@ -868,4 +876,132 @@ int SetBackdropScaleHook(int* params)
 	scale = g_backdropsSettings.GetScale(backdropIndex, imageNumber);
 
 	return (int)(esp18 * scale);
+}
+
+std::vector<std::tuple<unsigned short, unsigned char>> ReadXwaPlanets()
+{
+	std::vector<std::tuple<unsigned short, unsigned char>> planets;
+
+	for (int i = 0; i < 104; i++)
+	{
+		unsigned short modelIndex = *(unsigned short*)(0x005B1140 + i * 3 + 0);
+		unsigned char flags = *(unsigned char*)(0x005B1140 + i * 3 + 2);
+
+		planets.push_back(std::make_tuple(modelIndex, flags));
+	}
+
+	return planets;
+}
+
+void SetXwaPlanet(int index, unsigned short modelIndex, unsigned char flags)
+{
+	*(unsigned short*)(0x005B1140 + index * 3 + 0) = modelIndex;
+	*(unsigned char*)(0x005B1140 + index * 3 + 2) = flags;
+}
+
+std::vector<short> ReadXwaPlanetsObjectEntry()
+{
+	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+
+	std::vector<short> entries;
+
+	for (int i = 0; i < 60; i++)
+	{
+		short dataIndex1 = ExeEnableTable[427 + i].DataIndex1;
+
+		entries.push_back(dataIndex1);
+	}
+
+	return entries;
+}
+
+int LoadMissionBackdropsHook(int* params)
+{
+	*(int*)0x0080ACE0 = 0;
+
+	static std::vector<std::tuple<unsigned short, unsigned char>> s_XwaPlanets = ReadXwaPlanets();
+	static std::vector<short> s_XwaPlanetsEntry = ReadXwaPlanetsObjectEntry();
+
+	unsigned short* s_ExeSpecies = (unsigned short*)0x005B0F70;
+	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+	TieFlightGroupEx* s_XwaTieFlightGroups = (TieFlightGroupEx*)0x0080DC80;
+	int FlightGroupsCount = *(short*)0x007B4C00;
+
+	int planetsCount = 0;
+	int planetsCountPerRegion[5];
+	for (int i = 0; i < 5; i++)
+	{
+		planetsCountPerRegion[i] = 0;
+	}
+
+	for (int i = 0; i < 60; i++)
+	{
+		ExeEnableTable[427 + i].EnableOptions = 0;
+	}
+
+	for (int fg = 0; fg < FlightGroupsCount; fg++)
+	{
+		TieFlightGroup& flightGroup = s_XwaTieFlightGroups[fg].FlightGroup;
+
+		// ModelIndex_263_9001_1100_ResData_Backdrop
+		if (s_ExeSpecies[flightGroup.CraftId] != 263)
+		{
+			continue;
+		}
+
+		if (flightGroup.PlanetId == 0)
+		{
+			continue;
+		}
+
+		bool isDefaultPlanet = flightGroup.PlanetId >= 1 && flightGroup.PlanetId <= 60;
+		bool isExtraPlanet = flightGroup.PlanetId >= 104 && flightGroup.PlanetId <= 255;
+		bool isPlanet = isDefaultPlanet || isExtraPlanet;
+
+		if (!isPlanet)
+		{
+			continue;
+		}
+
+		int region = flightGroup.StartPointRegions[0];
+
+		if (planetsCountPerRegion[region] >= 12)
+		{
+			flightGroup.PlanetId = 0;
+			continue;
+		}
+
+		if (isDefaultPlanet)
+		{
+			unsigned short origModelIndex = std::get<0>(s_XwaPlanets[flightGroup.PlanetId]);
+			unsigned char origFlags = std::get<1>(s_XwaPlanets[flightGroup.PlanetId]);
+
+			SetXwaPlanet(1 + planetsCount, 427 + planetsCount, origFlags);
+
+			ExeEnableTable[427 + planetsCount].EnableOptions = 2;
+			ExeEnableTable[427 + planetsCount].DataIndex1 = s_XwaPlanetsEntry[origModelIndex - 427];
+			ExeEnableTable[427 + planetsCount].DataIndex2 = 0;
+
+			flightGroup.PlanetId = 1 + planetsCount;
+		}
+		else if (isExtraPlanet)
+		{
+			SetXwaPlanet(1 + planetsCount, 427 + planetsCount, 5);
+
+			ExeEnableTable[427 + planetsCount].EnableOptions = 2;
+			ExeEnableTable[427 + planetsCount].DataIndex1 = 6304 + flightGroup.PlanetId - 104;
+			ExeEnableTable[427 + planetsCount].DataIndex2 = 0;
+
+			flightGroup.PlanetId = 1 + planetsCount;
+		}
+		else
+		{
+			flightGroup.PlanetId = 0;
+		}
+
+		planetsCountPerRegion[region]++;
+		planetsCount++;
+	}
+
+	return 0;
 }
