@@ -1,4 +1,5 @@
 ; backdrop id, scale
+; backdrop id, image number, scale
 
 6250, 128
 

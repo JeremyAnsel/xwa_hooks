@@ -754,20 +754,25 @@ int ShowBuoyRegionNameHook(int* params)
 class BackdropsSettings
 {
 public:
-	float GetScale(int backdropIndex)
+	float GetScale(int backdropIndex, int imageNumber)
 	{
 		this->Update();
 
-		auto it = this->_scales.find(backdropIndex);
+		auto it = this->_scales.find(std::make_tuple(backdropIndex, imageNumber));
 
 		if (it != this->_scales.end())
 		{
 			return (float)it->second;
 		}
-		else
+
+		it = this->_scales.find(std::make_tuple(backdropIndex, -1));
+
+		if (it != this->_scales.end())
 		{
-			return 	*(float*)0x005A93AC;
+			return (float)it->second;
 		}
+
+		return 	*(float*)0x005A93AC;
 	}
 
 private:
@@ -816,21 +821,35 @@ private:
 				continue;
 			}
 
-			int backdropIndex = std::stoi(line[0]);
-			int scale = std::stoi(line[1]);
+			int backdropIndex;
+			int imageNumber;
+			int scale;
 
-			auto it = this->_scales.find(backdropIndex);
+			if (line.size() == 2)
+			{
+				backdropIndex = std::stoi(line[0]);
+				imageNumber = -1;
+				scale = std::stoi(line[1]);
+			}
+			else
+			{
+				backdropIndex = std::stoi(line[0]);
+				imageNumber = std::stoi(line[1]);
+				scale = std::stoi(line[2]);
+			}
+
+			auto it = this->_scales.find(std::make_tuple(backdropIndex, imageNumber));
 
 			if (it != this->_scales.end())
 			{
 				continue;
 			}
 
-			this->_scales.insert(std::make_pair(backdropIndex, scale));
+			this->_scales.insert(std::make_pair(std::make_tuple(backdropIndex, imageNumber), scale));
 		}
 	}
 
-	std::map<int, int> _scales;
+	std::map<std::tuple<int, int>, int> _scales;
 };
 
 BackdropsSettings g_backdropsSettings;
@@ -844,7 +863,9 @@ int SetBackdropScaleHook(int* params)
 	float scale = *(float*)0x005A93AC;
 
 	short backdropIndex = ExeEnableTable[modelIndex].DataIndex1;
-	scale = g_backdropsSettings.GetScale(backdropIndex);
+	int imageNumber = *(unsigned char*)(0x00808342 + params[Params_ESI]) - 1;
+
+	scale = g_backdropsSettings.GetScale(backdropIndex, imageNumber);
 
 	return (int)(esp18 * scale);
 }
