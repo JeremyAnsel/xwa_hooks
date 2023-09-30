@@ -2361,7 +2361,7 @@ int CustomSoundsHook(int* params)
 {
 	const float ScaleFactor = 0.0244140625f;
 
-	((void(*)())0x0042BEA0)();
+	((void(*)())0x00402D20)();
 
 	const auto XwaStopSound = (char(*)(int))0x004DC400;
 	const auto XwaGetPlayingSoundsCount = (int(*)(int))0x004DC850;
@@ -2381,8 +2381,30 @@ int CustomSoundsHook(int* params)
 	const XwaObject* currentPlayerObject = &XwaObjects[currentPlayerObjectIndex];
 	unsigned char currentPlayerRegion = XwaPlayers[currentPlayerId].Region;
 
-	if (currentPlayerObjectIndex == 0xffff)
+	bool isPlayerInHangar = *(int*)0x09C6E40 != 0;
+	const int currentGameState = *(int*)(0x009F60E0 + 0x25FA9);
+	const int updateCallback = *(int*)(0x009F60E0 + 0x25FB1 + 0x850 * currentGameState + 0x0844);
+	const bool isConfigMenuGameStateUpdate = updateCallback == 0x0051D100;
+
+	((void(*)(int))0x004154A0)(currentPlayerRegion);
+
+	if (currentPlayerObjectIndex == 0xffff || isPlayerInHangar || isConfigMenuGameStateUpdate)
 	{
+		for (const int& bufferId : modelIndexToBufferId)
+		{
+			if (bufferId == -1)
+			{
+				continue;
+			}
+
+			int soundsCount = XwaGetPlayingSoundsCount(bufferId);
+
+			if (soundsCount != 0)
+			{
+				XwaStopSound(bufferId);
+			}
+		}
+
 		return 0;
 	}
 
@@ -2428,16 +2450,21 @@ int CustomSoundsHook(int* params)
 		int bufferId = buffer.first;
 		float minDistance = buffer.second;
 
+		int soundsCount = XwaGetPlayingSoundsCount(bufferId);
+
 		if (minDistance == FLT_MAX)
 		{
+			if (soundsCount != 0)
+			{
+				XwaStopSound(bufferId);
+			}
+
 			continue;
 		}
 
-		int soundsCount = XwaGetPlayingSoundsCount(bufferId);
-
 		if (minDistance < 1.0f)
 		{
-			int volume = (int)(0x7F * (1.0f - minDistance));
+			int volume = (int)(0x7E * (1.0f - minDistance)) + 0x01;
 
 			if (soundsCount == 0)
 			{
@@ -2455,6 +2482,26 @@ int CustomSoundsHook(int* params)
 			{
 				XwaStopSound(bufferId);
 			}
+		}
+	}
+
+	for (const int& bufferId : modelIndexToBufferId)
+	{
+		if (bufferId == -1)
+		{
+			continue;
+		}
+
+		if (minDistances.count(bufferId) != 0)
+		{
+			continue;
+		}
+
+		int soundsCount = XwaGetPlayingSoundsCount(bufferId);
+
+		if (soundsCount != 0)
+		{
+			XwaStopSound(bufferId);
 		}
 	}
 

@@ -150,7 +150,7 @@ At offset 003375, replace E816800300 with E8A64B1A00.
 At offset 002FC5, replace E8C6830300 with E8564F1A00.
 
 # To call the hook that defines custom sounds
-At offset 0F5DC2, replace E8D954F3FF with E859210B00.
+At offset 0F5E20, replace E8FBC2F0FF with E8FB200B00.
 At offset 092E8F, replace E82CBAFAFF with E88C501100.
 
 

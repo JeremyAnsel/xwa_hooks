@@ -27,7 +27,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x403F7A, HyperZoomSoundHook },
 	{ 0x403BCA, HyperEndSoundHook },
 
-	{ 0x4F69C7, CustomSoundsHook },
+	{ 0x4F6A25, CustomSoundsHook },
 	{ 0x493A94, PlayerCraftTargetedSoundHook },
 };
 
@@ -73,7 +73,7 @@ static const HookPatchItem g_hyperSoundsPatch[] =
 
 static const HookPatchItem g_customSoundsPatch[] =
 {
-	{ 0x0F5DC2, "E8D954F3FF", "E859210B00" },
+	{ 0x0F5E20, "E8FBC2F0FF", "E8FB200B00" },
 	{ 0x092E8F, "E82CBAFAFF", "E88C501100" },
 };
 
