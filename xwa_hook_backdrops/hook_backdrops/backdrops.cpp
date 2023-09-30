@@ -810,7 +810,8 @@ private:
 
 		if (scalesFileName.size())
 		{
-			file = GetFileLines("Resdata\\" + scalesFileName);
+			std::vector<std::string> scales = GetFileLines("Resdata\\" + scalesFileName);
+			file.insert(file.end(), scales.begin(), scales.end());
 		}
 
 		std::vector<std::string> defaultScales = GetFileLines("Resdata\\BackdropScales.txt");
@@ -875,7 +876,7 @@ int SetBackdropScaleHook(int* params)
 
 	scale = g_backdropsSettings.GetScale(backdropIndex, imageNumber);
 
-	return (int)(esp18 * scale);
+	return (int)(esp18 * scale + 0.5f);
 }
 
 std::vector<std::tuple<unsigned short, unsigned char>> ReadXwaPlanets()
@@ -917,7 +918,15 @@ std::vector<short> ReadXwaPlanetsObjectEntry()
 
 int LoadMissionBackdropsHook(int* params)
 {
+	const auto FreeModelIndex = (void(*)(unsigned short))0x00432400;
+	const auto LoadModelIndex = (void(*)(unsigned short))0x00432120;
+
 	*(int*)0x0080ACE0 = 0;
+
+	unsigned char TimeHours = *(unsigned char*)(0x08053E0 + 0x0017);
+	unsigned char TimeMinutes = *(unsigned char*)(0x08053E0 + 0x0018);
+	unsigned char TimeSeconds = *(unsigned char*)(0x08053E0 + 0x0019);
+	unsigned int totalSeconds = TimeHours * 3600 + TimeMinutes * 60 + TimeSeconds;
 
 	static std::vector<std::tuple<unsigned short, unsigned char>> s_XwaPlanets = ReadXwaPlanets();
 	static std::vector<short> s_XwaPlanetsEntry = ReadXwaPlanetsObjectEntry();
@@ -926,6 +935,16 @@ int LoadMissionBackdropsHook(int* params)
 	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 	TieFlightGroupEx* s_XwaTieFlightGroups = (TieFlightGroupEx*)0x0080DC80;
 	int FlightGroupsCount = *(short*)0x007B4C00;
+
+	static int flightGroupsPlanetId[192];
+	if (totalSeconds == 0)
+	{
+		for (int fg = 0; fg < FlightGroupsCount; fg++)
+		{
+			TieFlightGroup& flightGroup = s_XwaTieFlightGroups[fg].FlightGroup;
+			flightGroupsPlanetId[fg] = flightGroup.PlanetId;
+		}
+	}
 
 	int planetsCount = 0;
 	int planetsCountPerRegion[5];
@@ -937,6 +956,8 @@ int LoadMissionBackdropsHook(int* params)
 	for (int i = 0; i < 60; i++)
 	{
 		ExeEnableTable[427 + i].EnableOptions = 0;
+
+		FreeModelIndex(427 + i);
 	}
 
 	for (int fg = 0; fg < FlightGroupsCount; fg++)
@@ -954,8 +975,10 @@ int LoadMissionBackdropsHook(int* params)
 			continue;
 		}
 
-		bool isDefaultPlanet = flightGroup.PlanetId >= 1 && flightGroup.PlanetId <= 60;
-		bool isExtraPlanet = flightGroup.PlanetId >= 104 && flightGroup.PlanetId <= 255;
+		int planetId = flightGroupsPlanetId[fg];
+
+		bool isDefaultPlanet = planetId >= 1 && planetId <= 60;
+		bool isExtraPlanet = planetId >= 104 && planetId <= 255;
 		bool isPlanet = isDefaultPlanet || isExtraPlanet;
 
 		if (!isPlanet)
@@ -965,7 +988,7 @@ int LoadMissionBackdropsHook(int* params)
 
 		int region = flightGroup.StartPointRegions[0];
 
-		if (planetsCountPerRegion[region] >= 12)
+		if (planetsCount >= 60)
 		{
 			flightGroup.PlanetId = 0;
 			continue;
@@ -973,8 +996,8 @@ int LoadMissionBackdropsHook(int* params)
 
 		if (isDefaultPlanet)
 		{
-			unsigned short origModelIndex = std::get<0>(s_XwaPlanets[flightGroup.PlanetId]);
-			unsigned char origFlags = std::get<1>(s_XwaPlanets[flightGroup.PlanetId]);
+			unsigned short origModelIndex = std::get<0>(s_XwaPlanets[planetId]);
+			unsigned char origFlags = std::get<1>(s_XwaPlanets[planetId]);
 
 			SetXwaPlanet(1 + planetsCount, 427 + planetsCount, origFlags);
 
@@ -989,7 +1012,7 @@ int LoadMissionBackdropsHook(int* params)
 			SetXwaPlanet(1 + planetsCount, 427 + planetsCount, 5);
 
 			ExeEnableTable[427 + planetsCount].EnableOptions = 2;
-			ExeEnableTable[427 + planetsCount].DataIndex1 = 6304 + flightGroup.PlanetId - 104;
+			ExeEnableTable[427 + planetsCount].DataIndex1 = 6304 + planetId - 104;
 			ExeEnableTable[427 + planetsCount].DataIndex2 = 0;
 
 			flightGroup.PlanetId = 1 + planetsCount;
@@ -997,6 +1020,17 @@ int LoadMissionBackdropsHook(int* params)
 		else
 		{
 			flightGroup.PlanetId = 0;
+			continue;
+		}
+
+		if (flightGroup.PlanetId != 0)
+		{
+			unsigned short modelIndex = 427 + planetsCount;
+
+			if (ExeEnableTable[modelIndex].pData1 == 0)
+			{
+				LoadModelIndex(modelIndex);
+			}
 		}
 
 		planetsCountPerRegion[region]++;
