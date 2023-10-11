@@ -49,5 +49,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that loads mission", g_loadMissionPatch),
 	MAKE_HOOK_PATCH("To call the hook that switches hyper buoy", g_switchHyperBuoyPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the backdrop scale", g_setBackdropScalePatch),
-	MAKE_HOOK_PATCH("To call the hook that loads mission backdrops", g_loadMissionBackdropsPatch),
+	//MAKE_HOOK_PATCH("To call the hook that loads mission backdrops", g_loadMissionBackdropsPatch),
 };
