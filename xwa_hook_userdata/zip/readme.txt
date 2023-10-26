@@ -35,6 +35,15 @@ At offset 170A0E, replace E87D7AFBFF with E81D750300.
 At offset 12801C, replace E8DF050000 with E80FFF0700.
 At offset 128A41, replace E8BAFBFFFF with E8EAF40700.
 
+# To call the hook that sets the config settings
+At offset 11FA42, replace 7527 with EB27.
+At offset 120248, replace 7527 with EB27.
+At offset 1236CA, replace 753B with EB3B.
+At offset 123B19, replace E812660000 with E812440800.
+At offset 123B82, replace BF80D6AB00 with E899430800.
+At offset 13F9F1, replace E81A67FEFF with 9090909090.
+At offset 170688, replace 775B with EB5B.
+
 
 *** Usage ***
 

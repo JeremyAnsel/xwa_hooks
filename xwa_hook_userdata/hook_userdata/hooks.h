@@ -17,6 +17,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x571613, SavePilotHook },
 	{ 0x528C21, OpenPilotHook },
 	{ 0x529646, OpenPilotHook },
+	{ 0x52471E, OpenConfigHook },
+	{ 0x524787, SplitConfigLineHook },
 };
 
 static const HookPatchItem g_pilotDataPatch[] =
@@ -37,7 +39,19 @@ static const HookPatchItem g_pilotDataPatch[] =
 	{ 0x128A41, "E8BAFBFFFF", "E8EAF40700" },
 };
 
+static const HookPatchItem g_configSettingsPatch[] =
+{
+	{ 0x11FA42, "7527", "EB27" },
+	{ 0x120248, "7527", "EB27" },
+	{ 0x1236CA, "753B", "EB3B" },
+	{ 0x123B19, "E812660000", "E812440800" },
+	{ 0x123B82, "BF80D6AB00", "E899430800" },
+	{ 0x13F9F1, "E81A67FEFF", "9090909090" },
+	{ 0x170688, "775B", "EB5B" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that reads and writes pilot files", g_pilotDataPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the config settings", g_configSettingsPatch),
 };
