@@ -427,3 +427,18 @@ E8B7FE0200              call 005A8B20, 005A8B20 - 00578C69 = 0002FEB7
 E822190200              call 0059A680
 
 E8C2FD0200              call 005A8B20, 005A8B20 - 00578D5E = 0002FDC2
+
+===============================================================================
+
+; XWA.TAB - !%s_A%d_%d!
+
+:0056D199 - 0x16C599
+8D1440                  lea edx, dword ptr [eax+2*eax]
+33DB                    xor ebx, ebx
+C1E209                  shl edx, 09
+
+8BD0                    mov edx, eax
+90                      nop
+33DB                    xor ebx, ebx
+C1E20A                  shl edx, 0A
+

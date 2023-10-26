@@ -149,6 +149,11 @@ static const HookPatchItem g_orderOfBattlePatch[] =
 	{ 0x178159, "E822190200", "E8C2FD0200" },
 };
 
+static const HookPatchItem g_xwatabPatch[] =
+{
+	{ 0x16C599, "8D144033DBC1E209", "8BD09033DBC1E20A" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that override tie mission", g_overrideTiePatch),
@@ -156,4 +161,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the stats profiles", g_statsProfilesPatch),
 	MAKE_HOOK_PATCH("To call the hook that checks mission ids", g_missionIdsCheckPatch),
 	MAKE_HOOK_PATCH("To call the hook that override order of battle strings", g_orderOfBattlePatch),
+	MAKE_HOOK_PATCH("To call the hook that fixes xwa.tab", g_xwatabPatch),
 };

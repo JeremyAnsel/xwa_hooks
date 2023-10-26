@@ -84,6 +84,9 @@ At offset 00E818, replace 0F8C1B010000 with E80397190090.
 At offset 178064, replace E8171A0200 with E8B7FE0200.
 At offset 178159, replace E822190200 with E8C2FD0200.
 
+# To call the hook that fixes xwa.tab
+At offset 16C599, replace 8D144033DBC1E209 with 8BD09033DBC1E20A.
+
 
 *** Usage ***
 
