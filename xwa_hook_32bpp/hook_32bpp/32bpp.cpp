@@ -586,7 +586,7 @@ int DatImage32Hook(int* params)
 
 				if (imageHeader->ColorsCount == 0)
 				{
-					if (A4->DataSize >= ebp * 4)
+					if (A4->DataSize - 0x2C >= ebp * 4)
 					{
 						memcpy(esp24, (void*)AC, ebp * 4);
 					}
@@ -594,7 +594,7 @@ int DatImage32Hook(int* params)
 					{
 						esi->ColorsCount = -1;
 
-						memcpy(esp24, (void*)AC, A4->DataSize);
+						memcpy(esp24, (void*)AC, A4->DataSize - 0x2C);
 					}
 				}
 				else if (imageHeader->ColorsCount == 1)
