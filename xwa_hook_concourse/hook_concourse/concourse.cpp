@@ -453,6 +453,20 @@ public:
 		this->singledoor_posY = GetFileKeyValueInt(lines, "singledoor_posY", 0x139);
 		this->combatbackdoor_posX = GetFileKeyValueInt(lines, "combatbackdoor_posX", 0x12B);
 		this->combatbackdoor_posY = GetFileKeyValueInt(lines, "combatbackdoor_posY", 0x5A);
+
+		this->familyroom_ladyblue_mission = GetFileKeyValueInt(lines, "familyroom_ladyblue_mission", 23);
+
+		if (this->familyroom_ladyblue_mission < 0 || this->familyroom_ladyblue_mission >= 255)
+		{
+			this->familyroom_ladyblue_mission = 0;
+		}
+
+		this->familyroom_cologne_mission = GetFileKeyValueInt(lines, "familyroom_cologne_mission", 9);
+
+		if (this->familyroom_cologne_mission < 0 || this->familyroom_cologne_mission >= 255)
+		{
+			this->familyroom_cologne_mission = 0;
+		}
 	}
 
 	int planet_position_left;
@@ -477,6 +491,9 @@ public:
 	int singledoor_posY;
 	int combatbackdoor_posX;
 	int combatbackdoor_posY;
+
+	int familyroom_ladyblue_mission;
+	int familyroom_cologne_mission;
 };
 
 ConcourseDoors g_concourseDoors;
@@ -1698,4 +1715,72 @@ int CombatBackDoorRectHook(int* params)
 	XwaRectSet(lpRect, left, top, right, bottom);
 
 	return 0;
+}
+
+int FamilyRoomLadyblueMission1Hook(int* params)
+{
+	int mission = g_concourseDoors.familyroom_ladyblue_mission;
+	int value = mission <= 0 ? 1 : *(int*)(0xAED76E + (mission - 1) * 0x30);
+
+	if (value == 0)
+	{
+		params[Params_ReturnAddress] = 0x00563FDA;
+	}
+
+	return 0;
+}
+
+int FamilyRoomLadyblueMission2Hook(int* params)
+{
+	int mission = g_concourseDoors.familyroom_ladyblue_mission;
+	int* value = (int*)params[Params_EDX];
+
+	if (*value == mission)
+	{
+		params[Params_ReturnAddress] = 0x00563FD5;
+	}
+
+	return 0;
+}
+
+int FamilyRoomLadyblueMission3Hook(int* params)
+{
+	int mission = g_concourseDoors.familyroom_ladyblue_mission;
+	int value = mission <= 0 ? 1 : *(int*)(0xAED76E + (mission - 1) * 0x30);
+
+	return value;
+}
+
+int FamilyRoomCologneMission1Hook(int* params)
+{
+	int mission = g_concourseDoors.familyroom_cologne_mission;
+	int value = mission <= 0 ? 1 : *(int*)(0xAED76E + (mission - 1) * 0x30);
+
+	if (value == 0)
+	{
+		params[Params_ReturnAddress] = 0x00564235;
+	}
+
+	return 0;
+}
+
+int FamilyRoomCologneMission2Hook(int* params)
+{
+	int mission = g_concourseDoors.familyroom_cologne_mission;
+	int* value = (int*)params[Params_EDX];
+
+	if (*value == mission)
+	{
+		params[Params_ReturnAddress] = 0x00564104;
+	}
+
+	return 0;
+}
+
+int FamilyRoomCologneMission3Hook(int* params)
+{
+	int mission = g_concourseDoors.familyroom_cologne_mission;
+	int value = mission <= 0 ? 1 : *(int*)(0xAED76E + (mission - 1) * 0x30);
+
+	return value;
 }

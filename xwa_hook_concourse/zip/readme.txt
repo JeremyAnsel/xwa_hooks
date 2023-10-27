@@ -135,6 +135,14 @@ At offset 13AFE3, replace E8A8D00100 with E838CF0600.
 At offset 13ADDC, replace E8AFD20100 with E83FD10600.
 At offset 13B2FB, replace E890CD0100 with E820CC0600.
 
+# To call the hook that defines interactive positions
+At offset 1632B7, replace 0F841D010000 with E8644C040090.
+At offset 1633C3, replace 833A17740D with E8584B0400.
+At offset 163CC8, replace A18EDBAE00 with E863420400
+At offset 1633E0, replace 0F844F020000 with E83B4B040090.
+At offset 1634EF, replace 833A097410 with E82C4A0400.
+At offset 163AD8, replace A1EED8AE00 with E853440400.
+
 
 *** Usage ***
 

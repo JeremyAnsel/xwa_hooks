@@ -38,3 +38,10 @@ int DrawCombatBackDoorHook(int* params);
 int MultiDoorRectHook(int* params);
 int SingleDoorRectHook(int* params);
 int CombatBackDoorRectHook(int* params);
+
+int FamilyRoomLadyblueMission1Hook(int* params);
+int FamilyRoomLadyblueMission2Hook(int* params);
+int FamilyRoomLadyblueMission3Hook(int* params);
+int FamilyRoomCologneMission1Hook(int* params);
+int FamilyRoomCologneMission2Hook(int* params);
+int FamilyRoomCologneMission3Hook(int* params);

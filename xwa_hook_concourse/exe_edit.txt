@@ -554,3 +554,46 @@ E83FD10600              call 005A8B20, 005A8B20 - 0053B9E1 = 0006D13F
 E890CD0100              call 00558C90
 
 E820CC0600              call 005A8B20, 005A8B20 - 0053BF00 = 0006CC20
+
+===============================================================================
+
+; Interactive positions
+; L0055FF30
+; BOOL XwaFamilyRoomGameStateUpdate( int A4 )
+
+; ladyblue
+:00563EB7 - 0x1632B7
+0F841D010000            je 00563FDA
+
+E8644C0400              call 005A8B20, 005A8B20 - 00563EBC = 00044C64
+90                      nop
+
+:00563FC3 - 0x1633C3
+833A17                  cmp dword ptr [edx], 00000017
+740D                    je 00563FD5
+
+E8584B0400              call 005A8B20, 005A8B20 - 00563FC8 = 00044B58
+
+:005648C8 - 0x163CC8
+A18EDBAE00              mov eax, dword ptr [00AEDB8E]
+
+E863420400              call 005A8B30, 005A8B30 - 005648CD = 00044263
+
+; cologne
+:00563FE0 - 0x1633E0
+0F844F020000            je 00564235
+
+E83B4B0400              call 005A8B20, 005A8B20 - 00563FE5 = 00044B3B
+90                      nop
+
+:005640EF - 0x1634EF
+833A09                  cmp dword ptr [edx], 00000009
+7410                    je 00564104
+
+E82C4A0400              call 005A8B20, 005A8B20 - 005640F4 = 00044A2C
+
+:005646D8 - 0x163AD8
+A1EED8AE00              mov eax, dword ptr [00AED8EE]
+
+E853440400              call 005A8B30, 005A8B30 - 005646DD = 00044453
+

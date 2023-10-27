@@ -84,6 +84,13 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x53BBE8, MultiDoorRectHook },
 	{ 0x53B9E1, SingleDoorRectHook },
 	{ 0x53BF00, CombatBackDoorRectHook },
+
+	{ 0x563EBC, FamilyRoomLadyblueMission1Hook },
+	{ 0x563FC8, FamilyRoomLadyblueMission2Hook },
+	{ 0x5648CD, FamilyRoomLadyblueMission3Hook },
+	{ 0x563FE5, FamilyRoomCologneMission1Hook },
+	{ 0x5640F4, FamilyRoomCologneMission2Hook },
+	{ 0x5646DD, FamilyRoomCologneMission3Hook },
 };
 
 static const std::string g_RankPointsArray = int_to_hex(GetRankPointsArrayPtr() + 0x00);
@@ -231,6 +238,16 @@ static const HookPatchItem g_combatDoorsPatch[] =
 	{ 0x13B2FB, "E890CD0100", "E820CC0600" },
 };
 
+static const HookPatchItem g_concourseInteractivePositionsPatch[] =
+{
+	{ 0x1632B7, "0F841D010000", "E8644C040090" },
+	{ 0x1633C3, "833A17740D", "E8584B0400" },
+	{ 0x163CC8, "A18EDBAE00", "E863420400" },
+	{ 0x1633E0, "0F844F020000", "E83B4B040090" },
+	{ 0x1634EF, "833A097410", "E82C4A0400" },
+	{ 0x163AD8, "A1EED8AE00", "E853440400" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that loads medal details", g_medalDetailsPatch),
@@ -245,4 +262,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that generates concourse starfield", g_concourseStarfieldPatch),
 	MAKE_HOOK_PATCH("To call the hook that loads the front planet image", g_concoursePlanetPatch),
 	MAKE_HOOK_PATCH("To call the hook that draws the combat doors", g_combatDoorsPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines interactive positions", g_concourseInteractivePositionsPatch),
 };

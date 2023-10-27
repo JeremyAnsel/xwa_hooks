@@ -30,3 +30,7 @@ singledoor_posY = 313
 
 combatbackdoor_posX = 299
 combatbackdoor_posY = 90
+
+familyroom_ladyblue_mission = 23
+familyroom_cologne_mission = 9
+
