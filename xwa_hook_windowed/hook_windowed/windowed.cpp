@@ -156,35 +156,36 @@ void scaleSurface(char* dest, DWORD destWidth, DWORD destHeight, DWORD destBpp, 
 	{
 		std::unique_ptr<Gdiplus::Graphics> graphics(new Gdiplus::Graphics(bitmap.get()));
 
-		Gdiplus::Rect rc(0, 0, destWidth, destHeight);
-
-		Gdiplus::Rect srcRc;
+		Gdiplus::Rect srcRc(0, 0, srcWidth, srcHeight);
+		Gdiplus::Rect destRc;
 
 		if (aspectRatioPreserved)
 		{
-			if (srcHeight * destWidth <= srcWidth * destHeight)
+			if (destHeight * srcWidth <= destWidth * srcHeight)
 			{
-				srcRc.Width = srcHeight * destWidth / destHeight;
-				srcRc.Height = srcHeight;
+				destRc.Width = destHeight * srcWidth / srcHeight;
+				destRc.Height = destHeight;
 			}
 			else
 			{
-				srcRc.Width = srcWidth;
-				srcRc.Height = srcWidth * destHeight / destWidth;
+				destRc.Width = destWidth;
+				destRc.Height = destWidth * srcHeight / srcWidth;
 			}
 		}
 		else
 		{
-			srcRc.Width = srcWidth;
-			srcRc.Height = srcHeight;
+			destRc.Width = destWidth;
+			destRc.Height = destHeight;
 		}
 
-		srcRc.X = (srcWidth - srcRc.Width) / 2;
-		srcRc.Y = (srcHeight - srcRc.Height) / 2;
+		destRc.X = (destWidth - destRc.Width) / 2;
+		destRc.Y = (destHeight - destRc.Height) / 2;
 
-		if (graphics->DrawImage(bitmapSrc.get(), rc, srcRc.X, srcRc.Y, srcRc.Width, srcRc.Height, Gdiplus::UnitPixel) == 0)
+		if (graphics->DrawImage(bitmapSrc.get(), destRc, srcRc.X, srcRc.Y, srcRc.Width, srcRc.Height, Gdiplus::UnitPixel) == 0)
 		{
 			Gdiplus::BitmapData data;
+
+			Gdiplus::Rect rc(0, 0, destWidth, destHeight);
 
 			if (bitmap->LockBits(&rc, Gdiplus::ImageLockModeRead, bitmap->GetPixelFormat(), &data) == 0)
 			{
@@ -216,11 +217,6 @@ void scaleSurface(char* dest, DWORD destWidth, DWORD destHeight, DWORD destBpp, 
 
 void GdiLoadImage(const WCHAR* filename, char* dest, DWORD destWidth, DWORD destHeight, DWORD destBpp, bool aspectRatioPreserved)
 {
-	if (destBpp != 2)
-	{
-		return;
-	}
-
 	if (g_gdiInitializer.hasError())
 		return;
 
@@ -228,8 +224,8 @@ void GdiLoadImage(const WCHAR* filename, char* dest, DWORD destWidth, DWORD dest
 	Gdiplus::Rect rect{ 0, 0, (INT)bitmap->GetWidth(), (INT)bitmap->GetHeight() };
 
 	Gdiplus::BitmapData bmData;
-	bitmap->LockBits(&rect, Gdiplus::ImageLockModeRead, PixelFormat16bppRGB565, &bmData);
-	scaleSurface(dest, destWidth, destHeight, 2, (char*)bmData.Scan0, bmData.Width, bmData.Height, 2, aspectRatioPreserved);
+	bitmap->LockBits(&rect, Gdiplus::ImageLockModeRead, destBpp == 2 ? PixelFormat16bppRGB565 : PixelFormat32bppARGB, &bmData);
+	scaleSurface(dest, destWidth, destHeight, destBpp, (char*)bmData.Scan0, bmData.Width, bmData.Height, destBpp, aspectRatioPreserved);
 	bitmap->UnlockBits(&bmData);
 }
 
@@ -347,7 +343,7 @@ int RegisterClassHook(int* params)
 {
 	HINSTANCE hInstance = (HINSTANCE)params[Params_ESI];
 
-	HBRUSH brush = (HBRUSH)GetStockObject(g_windowConfig.ShowSplashScreen ? GRAY_BRUSH : BLACK_BRUSH);
+	HBRUSH brush = (HBRUSH)GetStockObject(BLACK_BRUSH);
 
 	return (int)brush;
 }
@@ -443,32 +439,55 @@ int SplashScreenHook(int* params)
 		XwaFrontSurfaceUnlock();
 	}
 
-	s_pXwaCurrentSurfaceData = XwaFrontSurfaceLock();
+	HDC hdcScreen = GetDC(nullptr);
+
+	BITMAPINFO bmi = {};
+	bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bmi.bmiHeader.biWidth = g_windowConfig.Width;
+	bmi.bmiHeader.biHeight = -g_windowConfig.Height;
+	bmi.bmiHeader.biPlanes = 1;
+	bmi.bmiHeader.biBitCount = 32;
+	bmi.bmiHeader.biCompression = BI_RGB;
+	bmi.bmiHeader.biSizeImage = g_windowConfig.Width * g_windowConfig.Height * 4;
+
+	std::vector<char> image;
+	image.reserve(bmi.bmiHeader.biSizeImage);
 
 	if (IsSplashScreenEnabled(params[0]))
 	{
 		if (std::ifstream("Splash.jpg"))
 		{
-			GdiLoadImage(L"Splash.jpg", s_pXwaCurrentSurfaceData, 640, 480, 2, false);
+			GdiLoadImage(L"Splash.jpg", image.data(), g_windowConfig.Width, g_windowConfig.Height, 4, true);
 		}
 		else if (std::ifstream("Alliance.jpg"))
 		{
-			GdiLoadImage(L"Alliance.jpg", s_pXwaCurrentSurfaceData, 640, 480, 2, false);
+			GdiLoadImage(L"Alliance.jpg", image.data(), g_windowConfig.Width, g_windowConfig.Height, 4, true);
 		}
 		else
 		{
-			memset(s_pXwaCurrentSurfaceData, 0xff, 640 * 480 * 2);
+			memset(image.data(), 0, image.capacity());
 		}
 	}
 	else
 	{
-		memset(s_pXwaCurrentSurfaceData, 0, 640 * 480 * 2);
-
+		memset(image.data(), 0, image.capacity());
 	}
 
-	if (!isLocked)
+	SetDIBitsToDevice(
+		hdcScreen,
+		0, 0,
+		g_windowConfig.Width, g_windowConfig.Height,
+		0, 0,
+		0, g_windowConfig.Height,
+		image.data(),
+		&bmi,
+		DIB_RGB_COLORS);
+
+	ReleaseDC(nullptr, hdcScreen);
+
+	if (isLocked)
 	{
-		XwaFrontSurfaceUnlock();
+		XwaFrontSurfaceLock();
 	}
 
 	return 0;
