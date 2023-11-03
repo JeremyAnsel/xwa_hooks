@@ -36,7 +36,7 @@ public:
 
 		this->SimulatorBackground = GetFileKeyValue(lines, "SimulatorBackground");
 
-		if (this->SimulatorBackground.empty() || _stricmp(this->SimulatorBackground.c_str(), "blank"))
+		if (this->SimulatorBackground.empty() || _stricmp(this->SimulatorBackground.c_str(), "blank") == 0)
 		{
 			//"frontres\\concourse\\create.bmp";
 			//"frontres\\combat\\multiplayer.bmp";
