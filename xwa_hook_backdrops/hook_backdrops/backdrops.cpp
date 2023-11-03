@@ -454,7 +454,7 @@ int LoadMissionHook(int* params)
 		lines = GetFileLines(fileNameBase + ".ini", "Resdata");
 	}
 
-	if (lines.size())
+	//if (lines.size())
 	{
 		CopyFileContent("Resdata_Temp.txt", lines, false);
 		CopyFileContent("Resdata_Temp.txt", GetFileLines("Resdata.txt"), true);
@@ -462,11 +462,11 @@ int LoadMissionHook(int* params)
 		FreeResDataItems();
 		ReadResdataDat("Resdata_Temp.txt");
 	}
-	else
-	{
-		FreeResDataItems();
-		ReadResdataDat("Resdata.txt");
-	}
+	//else
+	//{
+	//	FreeResDataItems();
+	//	ReadResdataDat("Resdata.txt");
+	//}
 
 	return LoadMission(fileName);
 }
