@@ -430,6 +430,7 @@ int ConvertColorMapHook(int* params)
 
 		AC->Palettes[2] = hasAlpha ? 0xff : 0;
 		AC->Palettes[4] = hasIllum ? 0xff : 0;
+		AC->TextureSize = size;
 		AC->DataSize = bytesSize * 4;
 
 		A14 = hasIllum ? (int)g_illumMapBuffer.data() : 0;
