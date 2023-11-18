@@ -1508,10 +1508,10 @@ int SetupConcourseStarfieldHook(int* params)
 	{
 		for (int x = 0; x < width; x++)
 		{
-			if (surfaceData[surfacePitch * y + x] != 0)
-			{
-				continue;
-			}
+			//if (surfaceData[surfacePitch * y + x] != 0)
+			//{
+			//	continue;
+			//}
 
 			if (surface.data()[width * y + x] != 0x8080)
 			{
