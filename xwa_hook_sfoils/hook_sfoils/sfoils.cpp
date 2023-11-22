@@ -973,7 +973,10 @@ int SFoilsFilterHook(int* params)
 			}
 			else
 			{
-				object->pMobileObject->pCraft->SFoilsState = 2;
+				if (hasSFoils)
+				{
+					object->pMobileObject->pCraft->SFoilsState = 2;
+				}
 			}
 		}
 	}
@@ -1553,7 +1556,7 @@ int NoFireMessageHook(int* params)
 		ret = 1;
 	}
 
-	return (currentCraft->SFoilsState & 1) | ret;
+	return (hasSFoils && ((currentCraft->SFoilsState & 1) != 0)) | ret;
 }
 
 int AILookForParkOrderHook(int* params)
