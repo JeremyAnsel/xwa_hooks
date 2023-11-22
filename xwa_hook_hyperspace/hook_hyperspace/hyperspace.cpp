@@ -662,7 +662,7 @@ int AIOutOfHyperspaceDistanceCheckHook(int* params)
 
 		int region = GetObjectRegion(object->TieFlightGroupIndex, false, object->Region);
 
-		if (effectType != 0 && region == currentPlayer->Region)
+		if (/*effectType != 0 &&*/ region == currentPlayer->Region)
 		{
 			const int* xwaSoundEffectsBufferId = GetSoundsConfig().SoundEffectIds;
 			const auto& soundConfig = GetSoundsConfig();
@@ -711,7 +711,7 @@ int AIIntoHyperspacePlaySoundHook(int* params)
 
 	int effectType = GetShortHyperspaceEffectType();
 
-	if (effectType != 0 && object->Region == currentPlayer->Region)
+	if (/*effectType != 0 &&*/ object->Region == currentPlayer->Region)
 	{
 		const int* xwaSoundEffectsBufferId = GetSoundsConfig().SoundEffectIds;
 		const auto& soundConfig = GetSoundsConfig();
