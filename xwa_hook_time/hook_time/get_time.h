@@ -14,3 +14,5 @@ int ExplosionAnimationHook(int* params);
 
 int TimeGetTimeHook(int* params);
 int GetTickCountHook(int* params);
+
+int UpdateAiFunctionHook(int* params);

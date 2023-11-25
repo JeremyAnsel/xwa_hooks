@@ -73,6 +73,9 @@ At offset 13E17F, replace FF15F8905A00 with E85CFF010090.
 At offset 13F10D, replace FF15F8905A00 with E8CEEF010090.
 At offset 13F1E3, replace FF15F8905A00 with E8F8EE010090.
 
+# To call the hook that updates ai functions
+At offset 0F5C38, replace E843B5FAFF with E8E3220B00.
+
 
 *** Usage ***
 

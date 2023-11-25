@@ -17,6 +17,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x40253F, ExplosionAnimationHook },
 	{ 0x50DC45, TimeGetTimeHook },
 	{ 0x55ECE5, GetTickCountHook },
+	{ 0x4F683D, UpdateAiFunctionHook },
 };
 
 static const HookPatchItem g_reduceCPUUsagePatch[] =
@@ -82,6 +83,11 @@ static const HookPatchItem g_timeGetTimePatch[] =
 	{ 0x13F1E3, "FF15F8905A00", "E8F8EE010090" },
 };
 
+static const HookPatchItem g_updateAiFunctionsPatch[] =
+{
+	{ 0x0F5C38, "E843B5FAFF", "E8E3220B00" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that reduces CPU usage", g_reduceCPUUsagePatch),
@@ -89,4 +95,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that disables flush texture cache inflight", g_disableFlushTextureCacheInflightPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the animations speed", g_animationsSpeedPatch),
 	MAKE_HOOK_PATCH("To call the hook that returns time", g_timeGetTimePatch),
+	MAKE_HOOK_PATCH("To call the hook that updates ai functions", g_updateAiFunctionsPatch),
 };

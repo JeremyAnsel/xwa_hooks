@@ -410,3 +410,20 @@ int GetTickCountHook(int* params)
 
 	return milli;
 }
+
+ObjectIndexTime g_aiFunctionsObjectIndexTime;
+
+int UpdateAiFunctionHook(int* params)
+{
+	const auto UpdateAiFunctions = (void(*)())0x004A1D80;
+
+	short elapsedTime = *(short*)0x008C1640;
+	int timeSpeed = g_aiFunctionsObjectIndexTime.RetrieveTimeSpeed(30 / 4, 0, elapsedTime);
+
+	if (timeSpeed == 1)
+	{
+		UpdateAiFunctions();
+	}
+
+	return 0;
+}
