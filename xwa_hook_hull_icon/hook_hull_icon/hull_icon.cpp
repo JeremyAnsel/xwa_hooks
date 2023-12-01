@@ -155,13 +155,16 @@ MapIconValues g_mapIconValues;
 unsigned short GetPlayerCraftHullIcon()
 {
 	static std::string _mission;
+	static int _missionIndex = 0;
 	static unsigned short _playerHullIcon;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if (_mission != xwaMissionFileName)
+	if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 	{
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
 		std::vector<std::string> lines = GetFileLines(mission + "_HullIcon.txt");
@@ -180,13 +183,16 @@ unsigned short GetPlayerCraftHullIcon()
 unsigned short GetCraftHullIcon()
 {
 	static std::string _mission;
+	static int _missionIndex = 0;
 	static unsigned short _hullIcon;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if (_mission != xwaMissionFileName)
+	if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 	{
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
 		std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
