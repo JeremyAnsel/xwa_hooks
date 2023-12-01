@@ -433,13 +433,16 @@ std::vector<std::string> GetCustomFileLinesBase(const std::string& name, bool ap
 	static std::vector<std::string> _lines;
 	static std::string _name;
 	static std::string _mission;
+	static int _missionIndex = 0;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if (_name != name || _mission != xwaMissionFileName)
+	if ((_name != name) || (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex)))
 	{
 		_name = name;
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 		_lines.clear();
 
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
@@ -1252,6 +1255,7 @@ private:
 			if (!this->lastIsProvingGround)
 			{
 				this->lastMissionFileName = (const char*)0x06002E8;
+				this->lastMissionFileNameIndex = *(int*)0x06002E4;
 				this->lastCommandShip = GetCommandShipModelIndex();
 				this->lastCommandShipIff = GetCommandShipIff();
 			}
@@ -1273,9 +1277,11 @@ private:
 		}
 
 		const char* xwaMissionFileName = (const char*)0x06002E8;
-		if (this->lastMissionFileName != xwaMissionFileName)
+		const int missionFileNameIndex = *(int*)0x06002E4;
+		if (missionFileNameIndex == 0 ? (this->lastMissionFileName != xwaMissionFileName) : (this->lastMissionFileNameIndex != missionFileNameIndex))
 		{
 			this->lastMissionFileName = xwaMissionFileName;
+			this->lastMissionFileNameIndex = missionFileNameIndex;
 			return true;
 		}
 
@@ -1299,6 +1305,7 @@ private:
 	bool isInit = false;
 	bool lastIsProvingGround = false;
 	std::string lastMissionFileName;
+	int lastMissionFileNameIndex = 0;
 	int lastCommandShip = -1;
 	unsigned char lastCommandShipIff = 0;
 };
