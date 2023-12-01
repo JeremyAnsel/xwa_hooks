@@ -161,12 +161,15 @@ private:
 	void UpdateIfChanged()
 	{
 		static std::string _mission;
+		static int _missionIndex = 0;
 
 		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const int missionFileNameIndex = *(int*)0x06002E4;
 
-		if (_mission != xwaMissionFileName)
+		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 		{
 			_mission = xwaMissionFileName;
+			_missionIndex = missionFileNameIndex;
 
 			const std::string path = GetStringWithoutExtension(_mission);
 
@@ -464,13 +467,16 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 	static std::vector<std::string> _lines;
 	static std::string _name;
 	static std::string _mission;
+	static int _missionIndex = 0;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if (_name != name || _mission != xwaMissionFileName)
+	if ((_name != name) || (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex)))
 	{
 		_name = name;
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
 		_lines = GetFileLines(mission + "_" + name + ".txt");
@@ -732,12 +738,15 @@ private:
 	void UpdateIfChanged()
 	{
 		static std::string _mission;
+		static int _missionIndex = 0;
 
 		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const int missionFileNameIndex = *(int*)0x06002E4;
 
-		if (_mission != xwaMissionFileName)
+		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 		{
 			_mission = xwaMissionFileName;
+			_missionIndex = missionFileNameIndex;
 
 			this->_profiles.clear();
 			this->_playerStatsPercent = GetObjectPlayerStatsPercent();
@@ -1189,6 +1198,9 @@ int TieHook(int* params)
 
 	const auto LoadMission = (int(*)(const char*))0x420300;
 	const char* fileName = (const char*)params[0];
+
+	int& missionFileNameIndex = *(int*)0x06002E4;
+	missionFileNameIndex++;
 
 	if (LoadMission(fileName) == 0)
 	{

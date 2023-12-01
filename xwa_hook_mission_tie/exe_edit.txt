@@ -442,3 +442,8 @@ C1E209                  shl edx, 09
 33DB                    xor ebx, ebx
 C1E20A                  shl edx, 0A
 
+===============================================================================
+
+const char* xwaMissionFileName = (const char*)0x06002E8;
+const int missionFileNameIndex = *(int*)0x06002E4;
+
