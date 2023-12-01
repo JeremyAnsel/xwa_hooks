@@ -247,13 +247,16 @@ std::vector<std::string> GetCustomFileLinesBase(const std::string& name, bool ap
 	static std::vector<std::string> _lines;
 	static std::string _name;
 	static std::string _mission;
+	static int _missionIndex = 0;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if (_name != name || _mission != xwaMissionFileName)
+	if ((_name != name) || (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex)))
 	{
 		_name = name;
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 		_lines.clear();
 
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
@@ -668,12 +671,15 @@ private:
 	void UpdateIfChanged()
 	{
 		static std::string _mission;
+		static int _missionIndex = 0;
 
 		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const int missionFileNameIndex = *(int*)0x06002E4;
 
-		if (_mission != xwaMissionFileName)
+		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 		{
 			_mission = xwaMissionFileName;
+			_missionIndex = missionFileNameIndex;
 
 			this->_meshes.clear();
 			this->_meshesCockpit.clear();
