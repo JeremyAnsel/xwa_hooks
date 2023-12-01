@@ -579,11 +579,14 @@ int BackdropRenderFilterHook(int* params)
 
 	static int _backdropsFromRegion[160];
 	static std::string _mission;
+	static int _missionIndex = 0;
 	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if (_mission != xwaMissionFileName)
+	if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 	{
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 
 		for (int i = 0; i < 160; i++)
 		{
@@ -687,11 +690,14 @@ int ShowBuoyRegionNameHook(int* params)
 {
 	static std::string _buoyRegionNames[192];
 	static std::string _mission;
+	static int _missionIndex = 0;
 	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if (_mission != xwaMissionFileName)
+	if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 	{
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 
 		for (int i = 0; i < 192; i++)
 		{
@@ -787,15 +793,18 @@ private:
 	void Update()
 	{
 		static std::string _mission;
+		static int _missionIndex = 0;
 
 		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const int missionFileNameIndex = *(int*)0x06002E4;
 
-		if (_mission == xwaMissionFileName)
+		if (missionFileNameIndex == 0 ? (_mission == xwaMissionFileName) : (_missionIndex == missionFileNameIndex))
 		{
 			return;
 		}
 
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 		this->_scales.clear();
 
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
