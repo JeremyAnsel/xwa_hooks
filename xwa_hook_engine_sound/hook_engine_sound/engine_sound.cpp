@@ -279,13 +279,16 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 	static std::vector<std::string> _lines;
 	static std::string _name;
 	static std::string _mission;
+	static int _missionIndex = 0;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if (_name != name || _mission != xwaMissionFileName)
+	if ((_name != name) || (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex)))
 	{
 		_name = name;
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
 		_lines = GetFileLines(mission + "_" + name + ".txt");
@@ -1128,10 +1131,12 @@ private:
 	void Update()
 	{
 		static std::string _mission;
+		static int _missionIndex = 0;
 
 		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const int missionFileNameIndex = *(int*)0x06002E4;
 
-		if (_mission != xwaMissionFileName)
+		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 		{
 			_mission = xwaMissionFileName;
 
@@ -1162,6 +1167,7 @@ int ReplaceMissionSoundsHook(int* params)
 {
 	static std::vector<std::string> _lines;
 	static std::string _mission;
+	static int _missionIndex = 0;
 
 	const char* A4 = (const char*)params[1];
 	const char* A8 = (const char*)params[2];
@@ -1169,10 +1175,12 @@ int ReplaceMissionSoundsHook(int* params)
 
 	const auto LoadSfx2 = (int(*)(const char*, const char*, int, int))0x004DAD40;
 	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if (_mission != xwaMissionFileName)
+	if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 	{
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
 		_lines = GetFileLines(mission + "_Sounds.txt");
