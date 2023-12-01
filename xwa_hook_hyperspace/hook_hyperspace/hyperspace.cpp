@@ -114,9 +114,12 @@ private:
 	bool HasChanged()
 	{
 		const char* xwaMissionFileName = (const char*)0x06002E8;
-		if (this->lastMissionFileName != xwaMissionFileName)
+		const int missionFileNameIndex = *(int*)0x06002E4;
+
+		if (missionFileNameIndex == 0 ? (this->lastMissionFileName != xwaMissionFileName) : (this->lastMissionFileNameIndex != missionFileNameIndex))
 		{
 			this->lastMissionFileName = xwaMissionFileName;
+			this->lastMissionFileNameIndex = missionFileNameIndex;
 			return true;
 		}
 
@@ -124,6 +127,7 @@ private:
 	}
 
 	std::string lastMissionFileName;
+	int lastMissionFileNameIndex = 0;
 };
 
 MissionSettings g_missionSettings;
