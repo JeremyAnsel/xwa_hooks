@@ -160,14 +160,17 @@ std::string GetShipPath(int modelIndex)
 {
 	static std::vector<std::string> _lines;
 	static std::string _mission;
+	static int _missionIndex = 0;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
 
 	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
 
-	if (_mission != xwaMissionFileName)
+	if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 	{
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 
 		const std::string name = "Objects";
 
@@ -274,12 +277,15 @@ private:
 	void UpdateIfChanged()
 	{
 		static std::string _mission;
+		static int _missionIndex = 0;
 
 		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const int missionFileNameIndex = *(int*)0x06002E4;
 
-		if (_mission != xwaMissionFileName)
+		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 		{
 			_mission = xwaMissionFileName;
+			_missionIndex = missionFileNameIndex;
 
 			this->_engines.clear();
 		}
