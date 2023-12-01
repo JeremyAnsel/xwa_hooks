@@ -262,13 +262,16 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 	static std::vector<std::string> _lines;
 	static std::string _name;
 	static std::string _mission;
+	static int _missionIndex = 0;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if (_name != name || _mission != xwaMissionFileName)
+	if ((_name != name) || (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex)))
 	{
 		_name = name;
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
 		_lines = GetFileLines(mission + "_" + name + ".txt");
@@ -701,12 +704,15 @@ private:
 	void UpdateIfChanged()
 	{
 		static std::string _mission;
+		static int _missionIndex = 0;
 
 		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const int missionFileNameIndex = *(int*)0x06002E4;
 
-		if (_mission != xwaMissionFileName)
+		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 		{
 			_mission = xwaMissionFileName;
+			_missionIndex = missionFileNameIndex;
 
 			this->_sfoils.clear();
 			this->_landingGears.clear();
@@ -1311,6 +1317,7 @@ int SFoilsAIHyperspaceOrderHook(int* params)
 int InitSFoilsLandingGearsHook(int* params)
 {
 	static std::string _mission;
+	static int _missionIndex = 0;
 	static std::vector<std::vector<std::string>> _lines;
 
 	const int modelIndex = params[0];
@@ -1319,14 +1326,16 @@ int InitSFoilsLandingGearsHook(int* params)
 	const auto XwaOptGetMeshesCount = (int(*)(int))0x00488960;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
 	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 
 	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
 
-	if (_mission != xwaMissionFileName)
+	if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 	{
 		_mission = xwaMissionFileName;
+		_missionIndex = missionFileNameIndex;
 
 		const std::string path = GetStringWithoutExtension(xwaMissionFileName);
 		auto file = GetFileLines(path + ".txt");
