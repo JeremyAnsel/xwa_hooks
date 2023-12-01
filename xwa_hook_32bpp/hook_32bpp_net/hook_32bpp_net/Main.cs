@@ -28,6 +28,7 @@ namespace hook_32bpp_net
         private static IList<string> _getCustomFileLines_lines;
         private static string _getCustomFileLines_name;
         private static string _getCustomFileLines_mission;
+        private static int _getCustomFileLines_missionIndex;
         private static string _getCustomFileLines_hangar;
         private static byte _getCustomFileLines_hangarIff;
 
@@ -37,6 +38,7 @@ namespace hook_32bpp_net
         public static IList<string> GetCustomFileLines(string name)
         {
             string xwaMissionFileName = Marshal.PtrToStringAnsi(new IntPtr(0x06002E8));
+            int xwaMissionFileNameIndex = Marshal.ReadInt32(new IntPtr(0x06002E4));
             int currentGameState = Marshal.ReadInt32(new IntPtr(0x09F60E0 + 0x25FA9));
             int updateCallback = Marshal.ReadInt32(new IntPtr(0x09F60E0 + 0x25FB1 + currentGameState * 0x850 + 0x844));
             bool isTechLibraryGameStateUpdate = updateCallback == 0x00574D70;
@@ -47,6 +49,7 @@ namespace hook_32bpp_net
             {
                 _getCustomFileLines_name = name;
                 _getCustomFileLines_mission = null;
+                _getCustomFileLines_missionIndex = 0;
                 _getCustomFileLines_lines = XwaHooksConfig.GetFileLines("FlightModels\\" + name + ".txt");
                 _getCustomFileLines_hangar = null;
                 _getCustomFileLines_hangarIff = 0;
@@ -60,11 +63,13 @@ namespace hook_32bpp_net
             {
                 if (_getCustomFileLines_name != name
                     || _getCustomFileLines_mission != xwaMissionFileName
+                    || _getCustomFileLines_missionIndex != xwaMissionFileNameIndex
                     || _getCustomFileLines_hangar != hangar
                     || _getCustomFileLines_hangarIff != hangarIff)
                 {
                     _getCustomFileLines_name = name;
                     _getCustomFileLines_mission = xwaMissionFileName;
+                    _getCustomFileLines_missionIndex = xwaMissionFileNameIndex;
                     _getCustomFileLines_hangar = hangar;
                     _getCustomFileLines_hangarIff = hangarIff;
 
