@@ -278,13 +278,15 @@ public:
 	void UpdatePerMissionRechargeRate()
 	{
 		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const int missionFileNameIndex = *(int*)0x06002E4;
 
-		if (this->_currentMissionFileName == xwaMissionFileName)
+		if (missionFileNameIndex == 0 ? (this->_currentMissionFileName == xwaMissionFileName) : (this->_currentMissionFileNameIndex == missionFileNameIndex))
 		{
 			return;
 		}
 
 		this->_currentMissionFileName = xwaMissionFileName;
+		this->_currentMissionFileNameIndex = missionFileNameIndex;
 
 		std::vector<std::string> lines;
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
@@ -376,6 +378,7 @@ private:
 	std::map<int, ModelShieldRate> _shieldRechargeRate;
 	std::map<int, ModelShieldRate> _perMissionShieldRechargeRate;
 	std::string _currentMissionFileName;
+	int _currentMissionFileNameIndex = 0;
 };
 
 ModelIndexShield g_modelIndexShield;
