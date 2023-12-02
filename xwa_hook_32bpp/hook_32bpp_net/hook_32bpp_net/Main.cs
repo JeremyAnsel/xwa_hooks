@@ -283,6 +283,8 @@ namespace hook_32bpp_net
 
         private static string GetSkinDirectoryLocatorPath(string optName, string skinName)
         {
+            string[] skinNameParts = skinName.Split('-');
+            skinName = skinNameParts[0];
             string path = $"FlightModels\\Skins\\{optName}\\{skinName}";
 
             var baseDirectoryInfo = new DirectoryInfo(path);
@@ -662,7 +664,7 @@ namespace hook_32bpp_net
                             continue;
                         }
 
-                        CombineTextures(texture.Value, locator, filename);
+                        CombineTextures(texture.Value, locator, filename, skin);
                     }
                 }
 
@@ -670,8 +672,17 @@ namespace hook_32bpp_net
             });
         }
 
-        private static void CombineTextures(Texture baseTexture, IFileLocator locator, string filename)
+        private static void CombineTextures(Texture baseTexture, IFileLocator locator, string filename, string skin)
         {
+            string[] skinParts = skin.Split('-');
+            skin = skinParts[0];
+            int skinOpacity = 100;
+            if (skinParts.Length > 1 && int.TryParse(skinParts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int opacity))
+            {
+                opacity = Math.Max(0, Math.Min(100, opacity));
+                skinOpacity = opacity;
+            }
+
             Texture newTexture;
 
             using (Stream file = locator.Open(filename))
@@ -708,6 +719,8 @@ namespace hook_32bpp_net
                 for (int i = range.Item1; i < range.Item2; i++)
                 {
                     int a = src[i * 4 + 3];
+
+                    a = (a * skinOpacity + 50) / 100;
 
                     dst[i * 4 + 0] = (byte)(dst[i * 4 + 0] * (255 - a) / 255 + src[i * 4 + 0] * a / 255);
                     dst[i * 4 + 1] = (byte)(dst[i * 4 + 1] * (255 - a) / 255 + src[i * 4 + 1] * a / 255);
@@ -748,6 +761,9 @@ namespace hook_32bpp_net
 
         private static string TextureExists(ICollection<string> files, string baseFilename, string skin)
         {
+            string[] skinParts = skin.Split('-');
+            skin = skinParts[0];
+
             foreach (string ext in _textureExtensions)
             {
                 string filename = baseFilename + "_" + skin + ext;

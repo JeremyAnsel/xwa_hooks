@@ -103,6 +103,7 @@ CraftOptName = SkinNameA, SkinNameB
 CraftOptName_fgc_# = SkinName1, SkinName2, SkinName3
 # in CraftOptName_fgc_# is an integer for the opt color marking index, starting at 0.
 The default SkinName is "Default" or "Default_#" where # is the markings index.
+To define an opacity parameter for a skin, apend -### to the skin name. Replace ### with an integer from 0 to 100. 100 is full opacity. For example, if the skin is SkinName and the opacity value is 50, then the skin name is SkinName-50.
 See "Skins.txt"
 
 
