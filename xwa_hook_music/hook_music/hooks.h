@@ -12,6 +12,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x592D58, MusicUnlockHook },
 	//{ 0x53DFE1, ComInitializeHook },
 	//{ 0x5A8889, ComInitializeHook },
+	{ 0x53951E, SoundsVolumeHook },
 };
 
 static const HookPatchItem g_musicFreezePatch[] =
@@ -40,7 +41,13 @@ static const HookPatchItem g_musicFreezePatch[] =
 	//{ 0x1A7C84, "6A00FF15D8925A00", "E8A7020000909090" },
 };
 
+static const HookPatchItem g_soundsVolumePatch[] =
+{
+	{ 0x138919, "E8C2FAFFFF", "E812F60600" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that fixes the music freeze", g_musicFreezePatch),
+	MAKE_HOOK_PATCH("To call the hook that defines the sounds volume", g_soundsVolumePatch),
 };

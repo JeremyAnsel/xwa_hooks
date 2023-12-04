@@ -6,3 +6,5 @@ int GetMusicPositionHook(int* params);
 int MusicLockHook(int* params);
 int MusicUnlockHook(int* params);
 //int ComInitializeHook(int* params);
+
+int SoundsVolumeHook(int* params);

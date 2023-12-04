@@ -130,3 +130,12 @@ FF15D8925A00            Call dword ptr [005A92D8]
 
 E8A7020000              call 005A8B30, 005A8B30 - 005A8889 = 000002A7
 909090
+
+
+; L00539500
+; sfx_datapad_volume sound volume
+:00539519 - 0x138919
+E8C2FAFFFF              call 00538FE0
+
+E812F60600              call 005A8B30, 005A8B30 - 0053951E = 0006F612
+

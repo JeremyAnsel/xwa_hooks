@@ -251,3 +251,16 @@ int MusicUnlockHook(int* params)
 //{
 //	return CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 //}
+
+int SoundsVolumeHook(int* params)
+{
+	const auto ConvertVolume = (int(*)(int))0x00538FE0;
+
+	int sfx_datapad_volume = *(unsigned char*)(0x0B0C7A0 + 0x00E7);
+
+	int volume = params[0];
+	volume = sfx_datapad_volume * 127 / 10;
+	int volume2 = ConvertVolume(volume);
+
+	return volume2;
+}

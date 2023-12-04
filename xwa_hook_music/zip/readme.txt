@@ -33,6 +33,9 @@ At offset 19212C, replace 8B0DCC0E7B00518B15240F7B0052A1F80E7B00508B0D200F7B0051
 At offset 13D3DC, replace 57FF15D8925A00 with E84FAB06009090.
 At offset 1A7C84, replace 6A00FF15D8925A00 with E8A7020000909090.
 
+# To call the hook that defines the sounds volume
+At offset 138919, replace E8C2FAFFFF with E812F60600.
+
 
 *** Credits ***
 
