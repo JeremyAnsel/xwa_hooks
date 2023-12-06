@@ -5,6 +5,18 @@
 #include <map>
 #include <utility>
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 class FlightModelsList
 {
 public:
@@ -143,6 +155,60 @@ struct XwaObject
 static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 
 #pragma pack(pop)
+
+class ObjectIndexTime
+{
+public:
+	int Get(int objectIndex)
+	{
+		auto it = this->_time.find(objectIndex);
+
+		if (it != this->_time.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = 0;
+			this->_time.insert(std::make_pair(objectIndex, value));
+			return value;
+		}
+	}
+
+	void Set(int objectIndex, int value)
+	{
+		auto it = this->_time.find(objectIndex);
+
+		if (it != this->_time.end())
+		{
+			it->second = value;
+		}
+		else
+		{
+			this->_time.insert(std::make_pair(objectIndex, value));
+		}
+	}
+
+	int RetrieveTimeSpeed(int timeFrame, int objectIndex, int elapsedTime)
+	{
+		int time = this->Get(objectIndex);
+		time += elapsedTime;
+
+		int timeSpeed = 0;
+		if (time >= timeFrame)
+		{
+			timeSpeed = 1;
+			time = time % timeFrame;
+		}
+
+		this->Set(objectIndex, time);
+
+		return timeSpeed;
+	}
+
+private:
+	std::map<int, int> _time;
+};
 
 int GetShieldGeneratorCount(int modelIndex)
 {
@@ -430,6 +496,87 @@ int ShieldRechargeHook(int* params)
 		{
 			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 		}
+	}
+
+	return 0;
+}
+
+int CraftUpdateHook(int* params)
+{
+	params[Params_ECX] = *(int*)0x008BF378;
+
+	unsigned char esp13 = *(unsigned char*)((int)params + 0x13);
+
+	int currentRegion = *(int*)0x008C1CD8;
+	int regionCount = *(int*)0x00807E84;
+
+	if (currentRegion == regionCount - 1)
+	{
+		short& timeDelta = *(short*)0x008C1634;
+
+		if (timeDelta == 236)
+		{
+			timeDelta = 8;
+		}
+	}
+
+	return 0;
+}
+
+ObjectIndexTime g_craftUpdateObjectIndexTime;
+
+int CraftUpdateMulShieldHook(int* params)
+{
+	int esp18 = params[6];
+
+	int objectIndex = params[Params_EBP] / 0x27;
+	short elapsedTime = *(short*)0x008C1640;
+	int timeSpeed = g_craftUpdateObjectIndexTime.RetrieveTimeSpeed(236, objectIndex, elapsedTime);
+
+	if (timeSpeed == 1)
+	{
+		params[Params_EDX] = params[Params_EDX] * esp18;
+	}
+	else
+	{
+		params[Params_EDX] = 0;
+	}
+
+	return 0;
+}
+
+ObjectIndexTime g_craftUpdateTimeObjectIndexTime;
+
+int CraftUpdateTimeHook(int* params)
+{
+	params[Params_EAX] = *(int*)0x007B33C4;
+
+	int objectIndex = params[7];
+	short elapsedTime = *(short*)0x008C1640;
+	int timeSpeed = g_craftUpdateTimeObjectIndexTime.RetrieveTimeSpeed(236, objectIndex, elapsedTime);
+
+	if (timeSpeed == 0)
+	{
+		params[Params_ReturnAddress] = 0x00490A99;
+	}
+
+	return 0;
+}
+
+ObjectIndexTime g_lasersEnergyToShieldsObjectIndexTime;
+
+int LasersEnergyToShieldsHook(int* params)
+{
+	const short esp18 = (short)params[6];
+	const short bp = (short)params[Params_EBP];
+
+	int objectIndex = params[7];
+	short elapsedTime = *(short*)0x008C1640;
+	int timeSpeed = g_lasersEnergyToShieldsObjectIndexTime.RetrieveTimeSpeed(236, objectIndex, elapsedTime);
+
+	if (timeSpeed == 0 || esp18 >= bp)
+	{
+		params[Params_ReturnAddress] = 0x0049060E;
 	}
 
 	return 0;

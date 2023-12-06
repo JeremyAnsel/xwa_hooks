@@ -23,6 +23,10 @@ The following modifications are applied at runtime to xwingalliance.exe:
 At offset 090254, replace 0F8510F8FFFF with 90E910F8FFFF.
 At offset 08F72A, replace C744241814000000 with E8F1871100909090.
 At offset 08FA6A, replace C744241814000000 with E8B1841100909090.
+At offset 08F034, replace 8B0D78F38B00 with E8E78E110090.
+;At offset 08FACF, replace 0FAF542418 with E84C841100.
+At offset 08FA82, replace A1C4337B00 with E899841100.
+At offset 08F99B, replace 66396C2418736C with E8808511009090.
 
 
 *** Usage ***
