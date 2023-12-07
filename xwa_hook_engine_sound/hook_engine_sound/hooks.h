@@ -29,6 +29,9 @@ static const HookFunction g_hookFunctions[] =
 
 	{ 0x4F6A25, CustomSoundsHook },
 	{ 0x493A94, PlayerCraftTargetedSoundHook },
+	{ 0x503ECA, MapEnterSoundHook },
+	{ 0x41F726, MapExitSoundHook },
+	{ 0x42022F, TurretSwitchSoundHook },
 };
 
 static const HookPatchItem g_replaceMissionSoundsPatch[] =
@@ -75,6 +78,9 @@ static const HookPatchItem g_customSoundsPatch[] =
 {
 	{ 0x0F5E20, "E8FBC2F0FF", "E8FB200B00" },
 	{ 0x092E8F, "E82CBAFAFF", "E88C501100" },
+	{ 0x1032C5, "E8C680F3FF", "E8564C0A00" },
+	{ 0x01EB21, "E86AC80100", "E8FA931800" },
+	{ 0x01F62A, "E861BD0100", "E8F1881800" },
 };
 
 static const HookPatch g_patches[] =

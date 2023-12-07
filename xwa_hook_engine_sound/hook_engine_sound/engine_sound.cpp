@@ -164,7 +164,10 @@ SoundsConfig& GetSoundsConfig()
 
 enum SfxSounds
 {
-	SfxSounds_PlayerCraftTargetedSound
+	SfxSounds_PlayerCraftTargetedSound,
+	SfxSounds_MapEnterSound,
+	SfxSounds_MapExitSound,
+	SfxSounds_TurretSwitchSound,
 };
 
 #pragma pack(push, 1)
@@ -2522,19 +2525,96 @@ int PlayerCraftTargetedSoundHook(int* params)
 
 	const auto& soundConfig = GetSoundsConfig();
 
+	// AlarmDanger.wav
+	int sound = 0x3D;
+
 	if (soundConfig.SoundsCountHookExists && soundConfig.SfxSoundsCount)
 	{
 		if (SfxSounds_PlayerCraftTargetedSound < soundConfig.SfxSoundsCount)
 		{
-			int sound = soundConfig.SfxSoundsIndex + SfxSounds_PlayerCraftTargetedSound;
-			L0043F4C0(sound, 0, 0, 0, 0xFFFF, 0xFFFF);
+			sound = soundConfig.SfxSoundsIndex + SfxSounds_PlayerCraftTargetedSound;
 		}
 	}
-	else
+
+	L0043F4C0(sound, 0, 0, 0, 0xFFFF, 0xFFFF);
+
+	return 0;
+}
+
+int MapEnterSoundHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+	const int AC = params[2];
+
+	const auto XwaPlaySoundByIndex = (int(*)(int, int, int))0x0043BF90;
+
+	const auto& soundConfig = GetSoundsConfig();
+
+	// TargetSelect.wav
+	int sound = 0x4B;
+
+	if (soundConfig.SoundsCountHookExists && soundConfig.SfxSoundsCount)
 	{
-		// AlarmDanger.wav
-		L0043F4C0(0x3D, 0, 0, 0, 0xFFFF, 0xFFFF);
+		if (SfxSounds_MapEnterSound < soundConfig.SfxSoundsCount)
+		{
+			sound = soundConfig.SfxSoundsIndex + SfxSounds_MapEnterSound;
+		}
 	}
+
+	XwaPlaySoundByIndex(sound, A8, AC);
+
+	return 0;
+}
+
+int MapExitSoundHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+	const int AC = params[2];
+
+	const auto XwaPlaySoundByIndex = (int(*)(int, int, int))0x0043BF90;
+
+	const auto& soundConfig = GetSoundsConfig();
+
+	// BombFire.wav
+	int sound = 0x11;
+
+	if (soundConfig.SoundsCountHookExists && soundConfig.SfxSoundsCount)
+	{
+		if (SfxSounds_MapExitSound < soundConfig.SfxSoundsCount)
+		{
+			sound = soundConfig.SfxSoundsIndex + SfxSounds_MapExitSound;
+		}
+	}
+
+	XwaPlaySoundByIndex(sound, A8, AC);
+
+	return 0;
+}
+
+int TurretSwitchSoundHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+	const int AC = params[2];
+
+	const auto XwaPlaySoundByIndex = (int(*)(int, int, int))0x0043BF90;
+
+	const auto& soundConfig = GetSoundsConfig();
+
+	// BombFire.wav
+	int sound = 0x11;
+
+	if (soundConfig.SoundsCountHookExists && soundConfig.SfxSoundsCount)
+	{
+		if (SfxSounds_TurretSwitchSound < soundConfig.SfxSoundsCount)
+		{
+			sound = soundConfig.SfxSoundsIndex + SfxSounds_TurretSwitchSound;
+		}
+	}
+
+	XwaPlaySoundByIndex(sound, A8, AC);
 
 	return 0;
 }

@@ -5,3 +5,6 @@ From WAVE\FE_HIGH_RES\
 
 Copy files:
 AlarmDanger.wav
+TargetSelect.wav
+BombFire.wav
+
