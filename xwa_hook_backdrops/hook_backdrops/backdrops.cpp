@@ -925,33 +925,44 @@ std::vector<short> ReadXwaPlanetsObjectEntry()
 	return entries;
 }
 
+static bool s_XwaPlanets_initialized = false;
+static std::vector<std::tuple<unsigned short, unsigned char>> s_XwaPlanets;
+static std::vector<short> s_XwaPlanetsEntry;
+static int s_flightGroupsPlanetId[192];
+
 int LoadMissionBackdropsHook(int* params)
 {
+	if (!s_XwaPlanets_initialized)
+	{
+		s_XwaPlanets_initialized = true;
+		s_XwaPlanets = ReadXwaPlanets();
+		s_XwaPlanetsEntry = ReadXwaPlanetsObjectEntry();
+	}
+
 	const auto FreeModelIndex = (void(*)(unsigned short))0x00432400;
 	const auto LoadModelIndex = (void(*)(unsigned short))0x00432120;
 
-	*(int*)0x0080ACE0 = 0;
+	memset((void*)0x0080ACE0, 0, 20);
 
 	unsigned char TimeHours = *(unsigned char*)(0x08053E0 + 0x0017);
 	unsigned char TimeMinutes = *(unsigned char*)(0x08053E0 + 0x0018);
 	unsigned char TimeSeconds = *(unsigned char*)(0x08053E0 + 0x0019);
 	unsigned int totalSeconds = TimeHours * 3600 + TimeMinutes * 60 + TimeSeconds;
-
-	static std::vector<std::tuple<unsigned short, unsigned char>> s_XwaPlanets = ReadXwaPlanets();
-	static std::vector<short> s_XwaPlanetsEntry = ReadXwaPlanetsObjectEntry();
+	bool missionReload = *(int*)0x0080B604 == 2;
 
 	unsigned short* s_ExeSpecies = (unsigned short*)0x005B0F70;
 	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 	TieFlightGroupEx* s_XwaTieFlightGroups = (TieFlightGroupEx*)0x0080DC80;
 	int FlightGroupsCount = *(short*)0x007B4C00;
 
-	static int flightGroupsPlanetId[192];
-	if (totalSeconds == 0)
+	if (!missionReload)
 	{
+		memset(s_flightGroupsPlanetId, 0, sizeof(s_flightGroupsPlanetId));
+
 		for (int fg = 0; fg < FlightGroupsCount; fg++)
 		{
 			TieFlightGroup& flightGroup = s_XwaTieFlightGroups[fg].FlightGroup;
-			flightGroupsPlanetId[fg] = flightGroup.PlanetId;
+			s_flightGroupsPlanetId[fg] = flightGroup.PlanetId;
 		}
 	}
 
@@ -964,9 +975,12 @@ int LoadMissionBackdropsHook(int* params)
 
 	for (int i = 0; i < 60; i++)
 	{
-		ExeEnableTable[427 + i].EnableOptions = 0;
+		unsigned short modelIndex = 427 + i;
+		ExeEnableTable[modelIndex].EnableOptions = 0;
 
-		FreeModelIndex(427 + i);
+		*(unsigned short*)(0x005B1140 + (1 + i) * 3 + 0) = 0;
+
+		FreeModelIndex(modelIndex);
 	}
 
 	for (int fg = 0; fg < FlightGroupsCount; fg++)
@@ -984,7 +998,36 @@ int LoadMissionBackdropsHook(int* params)
 			continue;
 		}
 
-		int planetId = flightGroupsPlanetId[fg];
+		int planetId = s_flightGroupsPlanetId[fg];
+
+		bool isDuplicate = false;
+		for (int i = 0; i < fg; i++)
+		{
+			TieFlightGroup& flightGroupI = s_XwaTieFlightGroups[i].FlightGroup;
+
+			// ModelIndex_263_9001_1100_ResData_Backdrop
+			if (s_ExeSpecies[flightGroupI.CraftId] != 263)
+			{
+				continue;
+			}
+
+			if (flightGroupI.PlanetId == 0)
+			{
+				continue;
+			}
+
+			if (planetId == s_flightGroupsPlanetId[i])
+			{
+				flightGroup.PlanetId = flightGroupI.PlanetId;
+				isDuplicate = true;
+				break;
+			}
+		}
+
+		if (isDuplicate)
+		{
+			continue;
+		}
 
 		bool isDefaultPlanet = planetId >= 1 && planetId <= 60;
 		bool isExtraPlanet = planetId >= 104 && planetId <= 255;
@@ -1036,10 +1079,7 @@ int LoadMissionBackdropsHook(int* params)
 		{
 			unsigned short modelIndex = 427 + planetsCount;
 
-			if (ExeEnableTable[modelIndex].pData1 == 0)
-			{
-				LoadModelIndex(modelIndex);
-			}
+			LoadModelIndex(modelIndex);
 		}
 
 		planetsCountPerRegion[region]++;
