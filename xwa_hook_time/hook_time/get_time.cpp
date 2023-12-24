@@ -417,12 +417,18 @@ int UpdateAiFunctionHook(int* params)
 {
 	const auto UpdateAiFunctions = (void(*)())0x004A1D80;
 
+	*(unsigned char*)0x008C163F = 1;
 	short elapsedTime = *(short*)0x008C1640;
-	int timeSpeed = g_aiFunctionsObjectIndexTime.RetrieveTimeSpeed(30 / 4, 0, elapsedTime);
+	short& elapsedTime2 = *(short*)0x008C1642;
+	int timeFrame = 30 / 4;
+	int timeSpeed = g_aiFunctionsObjectIndexTime.RetrieveTimeSpeed(timeFrame, 0, elapsedTime);
+
+	elapsedTime2 += elapsedTime;
 
 	if (timeSpeed == 1)
 	{
 		UpdateAiFunctions();
+		elapsedTime2 %= timeFrame;
 	}
 
 	return 0;
