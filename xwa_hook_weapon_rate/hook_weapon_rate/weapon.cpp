@@ -465,7 +465,14 @@ public:
 		}
 		else
 		{
+			bool fpsLimit = *(unsigned char*)0x008C163F != 0;
 			int value = GetWeaponDechargeRate(modelIndex);
+
+			if (fpsLimit)
+			{
+				value *= 2;
+			}
+
 			this->_weaponDechargeRate.insert(std::make_pair(modelIndex, value));
 			return value;
 		}
@@ -483,7 +490,14 @@ public:
 		}
 		else
 		{
+			bool fpsLimit = *(unsigned char*)0x008C163F != 0;
 			int value = GetWeaponRechargeRate(modelIndex);
+
+			if (fpsLimit)
+			{
+				value *= 2;
+			}
+
 			this->_weaponRechargeRate.insert(std::make_pair(modelIndex, value));
 			return value;
 		}
@@ -501,7 +515,14 @@ public:
 		}
 		else
 		{
+			bool fpsLimit = *(unsigned char*)0x008C163F != 0;
 			int value = GetWeaponCooldownTime(modelIndex);
+
+			if (fpsLimit)
+			{
+				value *= 2;
+			}
+
 			this->_weaponCooldownTime.insert(std::make_pair(modelIndex, value));
 			return value;
 		}
