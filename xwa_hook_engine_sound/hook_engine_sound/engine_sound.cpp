@@ -1142,6 +1142,7 @@ private:
 		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 		{
 			_mission = xwaMissionFileName;
+			_missionIndex = missionFileNameIndex;
 
 			this->_typeInterior.clear();
 			this->_typeFlyBy.clear();
