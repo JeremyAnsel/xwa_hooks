@@ -515,14 +515,7 @@ public:
 		}
 		else
 		{
-			bool fpsLimit = *(unsigned char*)0x008C163F != 0;
 			int value = GetWeaponCooldownTime(modelIndex);
-
-			if (fpsLimit)
-			{
-				value *= 2;
-			}
-
 			this->_weaponCooldownTime.insert(std::make_pair(modelIndex, value));
 			return value;
 		}
