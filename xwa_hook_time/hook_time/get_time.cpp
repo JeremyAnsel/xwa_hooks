@@ -33,10 +33,12 @@ public:
 
 		this->ExplosionAnimationTimeFrame = GetFileKeyValueInt(lines, "ExplosionAnimationTimeFrame", 60);
 		this->SmallDebrisAnimationTimeFrame = GetFileKeyValueInt(lines, "SmallDebrisAnimationTimeFrame", 60);
+		this->IsFpsLimitEnabled = GetFileKeyValueInt(lines, "IsFpsLimitEnabled", 1) != 0;
 	}
 
 	int ExplosionAnimationTimeFrame;
 	int SmallDebrisAnimationTimeFrame;
+	bool IsFpsLimitEnabled;
 };
 
 Config g_config;
@@ -417,6 +419,12 @@ int UpdateAiFunctionHook(int* params)
 {
 	const auto UpdateAiFunctions = (void(*)())0x004A1D80;
 
+	if (!g_config.IsFpsLimitEnabled)
+	{
+		UpdateAiFunctions();
+		return 0;
+	}
+
 	*(unsigned char*)0x008C163F = 1;
 	short elapsedTime = *(short*)0x008C1640;
 	short& elapsedTime2 = *(short*)0x008C1642;
@@ -428,7 +436,7 @@ int UpdateAiFunctionHook(int* params)
 	if (timeSpeed == 1)
 	{
 		UpdateAiFunctions();
-		elapsedTime2 %= timeFrame;
+		elapsedTime2 = elapsedTime2 % timeFrame;
 	}
 
 	return 0;
