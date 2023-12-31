@@ -470,7 +470,7 @@ public:
 
 			if (fpsLimit)
 			{
-				value *= 2;
+				//value *= 2;
 			}
 
 			this->_weaponDechargeRate.insert(std::make_pair(modelIndex, value));
@@ -495,7 +495,7 @@ public:
 
 			if (fpsLimit)
 			{
-				value *= 2;
+				//value *= 2;
 			}
 
 			this->_weaponRechargeRate.insert(std::make_pair(modelIndex, value));
