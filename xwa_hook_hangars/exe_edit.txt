@@ -38,6 +38,13 @@ A10C337700              mov eax, dword ptr [0077330C]
 
 E80A0F1500              call 005A8B30, 005A8B30 - 00457C26 = 00150F0A
 
+; from L00462670
+; switch craft
+:00462670 - 0x061A70
+A108BC6800              mov eax, dword ptr [0068BC08]
+
+E8AB641400              call 005A8B20, 005A8B20 - 00462675 = 001464AB
+
 
 ; from L00456FA0
 ; remove opt filter

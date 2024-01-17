@@ -1694,6 +1694,20 @@ int HangarReloadHook(int* params)
 	return *(int*)0x0077330C;
 }
 
+int SwitchCraftHook(int* params)
+{
+	params[Params_EAX] = *(int*)0x0068BC08;
+
+	int& missionFileNameIndex = *(int*)0x06002E4;
+
+	if (missionFileNameIndex != 0)
+	{
+		missionFileNameIndex++;
+	}
+
+	return 0;
+}
+
 int HangarCameraPositionHook(int* params)
 {
 	const short A4 = (short)params[8];

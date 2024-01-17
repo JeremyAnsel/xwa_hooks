@@ -4,6 +4,7 @@ int HangarOptLoadHook(int* params);
 int HangarOptReloadHook(int* params);
 int HangarObjectCreateHook(int* params);
 int HangarReloadHook(int* params);
+int SwitchCraftHook(int* params);
 int HangarCameraPositionHook(int* params);
 int HangarLoadShuttleHook(int* params);
 int HangarShuttleUpdateHook(int* params);
