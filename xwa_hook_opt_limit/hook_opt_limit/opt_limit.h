@@ -72,3 +72,5 @@ int L0042D590_EngineGlowIsDisabledHook(int* params);
 int L0042DB60_EngineGlowHook(int* params);
 
 int SelectLodVersionHook(int* params);
+
+int MeshesCollisionHook(int* params);

@@ -69,6 +69,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x42D889, L0042D590_EngineGlowIsDisabledHook },
 	{ 0x42DBA1, L0042DB60_EngineGlowHook },
 	{ 0x4825BE, SelectLodVersionHook },
+	{ 0x4DF31C, MeshesCollisionHook },
 };
 
 static const std::string g_hitDataArray0 = int_to_hex(GetHitDataArrayPtr());
@@ -765,6 +766,11 @@ static const HookPatchItem g_computeChecksumPatch[] =
 	{ 0x0F5010, "83EC14A178AE910053C1F8045589442410A148099100568B3570AE9100575033DB68BCFA5F006800000200895C241C", "33EDBA100000008D3CAD201277002BD533C0C1E2028BCA8D34ADD80E7700C1E902F3AB8BCA8BFEC1E902F3AB33C0C3" },
 };
 
+static const HookPatchItem g_meshesCollisionPatch[] =
+{
+	{ 0x0DE717, "E83497FAFF", "E814980C00" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
@@ -790,4 +796,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that gets the craft engine mesh", g_craftEngineMeshPatch),
 	MAKE_HOOK_PATCH("To call the hook that selects the lod version", g_selectLodVersionPatch),
 	MAKE_HOOK_PATCH("To call the hook that computes the checksum", g_computeChecksumPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the opt meshes collision", g_meshesCollisionPatch),
 };

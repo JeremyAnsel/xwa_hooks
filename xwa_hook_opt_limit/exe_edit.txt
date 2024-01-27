@@ -184,3 +184,12 @@ C3                      ret
 A1C4277800              mov eax, dword ptr [007827C4]
 
 E862651200              call 005A8B20, 005A8B20 - 004825BE = 00126562
+
+
+; opt mesh collision
+; L004DF130
+:004DF317 - 0x0DE717
+E83497FAFF              call 00488A50
+
+E814980C00              call 005A8B30, 005A8B30 - 004DF31C = 000C9814
+

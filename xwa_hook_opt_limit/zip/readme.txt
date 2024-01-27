@@ -113,10 +113,13 @@ See "exe_edit_engines.txt"
 See "exe_edit_engines.txt"
 
 # To call the hook that selects the lod version
-At offset 0819B9, replace A1C4277800 with E862651200
+At offset 0819B9, replace A1C4277800 with E862651200.
 
 # To call the hook that computes the checksum
 At offset 0F5010, replace 83EC14A178AE910053C1F8045589442410A148099100568B3570AE9100575033DB68BCFA5F006800000200895C241C with 33EDBA100000008D3CAD201277002BD533C0C1E2028BCA8D34ADD80E7700C1E902F3AB8BCA8BFEC1E902F3AB33C0C3.
+
+# To call the hook that sets the opt meshes collision
+At offset 0DE717, replace E83497FAFF with E814980C00.
 
 
 *** Usage ***
@@ -139,6 +142,16 @@ The format is a line per engine:
 engine index, percent, mglt.
 If the percent value is -1 then it is not used.
 If the mglt value is -1 then it is not used.
+
+Suppose that the craft is "FlightModels\[Model].opt".
+To define whether a mesh in an opt handles collisions, create a file named "FlightModels\[Model]MeshesCollisions.txt" or create a section named "[MeshesCollisions]" in "FlightModels\[Model].ini".
+The format is
+MeshCollision = default value
+MeshCollision_XXX = value
+value is 1 or 0.
+XXX is the mesh index.
+The default value for the MeshCollision setting is 1.
+The default value for the MeshCollision_XXX setting is the value of the MeshCollision setting.
 
 
 *** Credits ***

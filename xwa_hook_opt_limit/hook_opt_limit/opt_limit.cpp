@@ -241,7 +241,37 @@ std::vector<EngineGlow> GetEngineGlowList(int modelIndex)
 	return values;
 }
 
-class ModelIndexEngineGlows
+std::vector<std::vector<int>> GetMeshesCollisionList()
+{
+	std::vector<std::vector<int>> meshesValues;
+
+	for (int modelIndex = 0; modelIndex < 1024; modelIndex++)
+	{
+		const std::string ship = GetShipPath(modelIndex);
+
+		auto lines = GetFileLines(ship + "MeshesCollisions.txt");
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(ship + ".ini", "MeshesCollisions");
+		}
+
+		std::vector<int> values;
+		int defaultValue = GetFileKeyValueInt(lines, "MeshCollision", 1);
+
+		for (int meshIndex = 0; meshIndex < 256; meshIndex++)
+		{
+			int value = GetFileKeyValueInt(lines, "MeshCollision_" + std::to_string(meshIndex), defaultValue);
+			values.push_back(value);
+		}
+
+		meshesValues.push_back(values);
+	}
+
+	return meshesValues;
+}
+
+class ModelIndexSettings
 {
 public:
 	EngineGlow GetEngineGlow(int modelIndex, int engineIndex)
@@ -273,6 +303,29 @@ public:
 		}
 	}
 
+	bool GetMeshCollition(int modelIndex, int meshIndex)
+	{
+		if (modelIndex < 0 || modelIndex >= 1024)
+		{
+			return false;
+		}
+
+		if (meshIndex < 0 || meshIndex >= 256)
+		{
+			return false;
+		}
+
+		this->UpdateIfChanged();
+
+		if (this->_meshesCollision.empty())
+		{
+			this->_meshesCollision = GetMeshesCollisionList();
+		}
+
+		int value = this->_meshesCollision[modelIndex][meshIndex];
+		return value != 0;
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -288,13 +341,15 @@ private:
 			_missionIndex = missionFileNameIndex;
 
 			this->_engines.clear();
+			this->_meshesCollision.clear();
 		}
 	}
 
 	std::map<std::tuple<int, int>, EngineGlow> _engines;
+	std::vector<std::vector<int>> _meshesCollision;
 };
 
-ModelIndexEngineGlows g_modelIndexEngineGlows;
+ModelIndexSettings g_modelIndexSettings;
 
 class HitDataArray
 {
@@ -1102,7 +1157,7 @@ bool EvalSkipEngineGlowCondition(int engineCount, int engineIndex, int meshIndex
 
 	int speedPercent = mobileSpeed * 100 / craftSpeed;
 
-	EngineGlow engine = g_modelIndexEngineGlows.GetEngineGlow(modelIndex, engineIndex);
+	EngineGlow engine = g_modelIndexSettings.GetEngineGlow(modelIndex, engineIndex);
 
 	if (engine.engineIndex == -1)
 	{
@@ -1230,4 +1285,26 @@ int SelectLodVersionHook(int* params)
 	}
 
 	return 0;
+}
+
+int MeshesCollisionHook(int* params)
+{
+	const int A4 = params[0];
+	const int A8 = params[1];
+
+	const auto L00488A50 = (int(*)(int, int))0x00488A50;
+
+	bool value = g_modelIndexSettings.GetMeshCollition(A4, A8);
+	int result;
+
+	if (value)
+	{
+		result = L00488A50(A4, A8);
+	}
+	else
+	{
+		result = 0;
+	}
+
+	return result;
 }
