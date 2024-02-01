@@ -6,3 +6,4 @@ int SavePilotHook(int* params);
 int OpenPilotHook(int* params);
 int OpenConfigHook(int* params);
 int SplitConfigLineHook(int* params);
+int ConfigPresetsHook(int* params);

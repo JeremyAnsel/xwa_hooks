@@ -19,6 +19,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x529646, OpenPilotHook },
 	{ 0x52471E, OpenConfigHook },
 	{ 0x524787, SplitConfigLineHook },
+	{ 0x4FC3FA, ConfigPresetsHook },
 };
 
 static const HookPatchItem g_pilotDataPatch[] =
@@ -50,8 +51,14 @@ static const HookPatchItem g_configSettingsPatch[] =
 	{ 0x170688, "775B", "EB5B" },
 };
 
+static const HookPatchItem g_configPresetsPatch[] =
+{
+	{ 0x0FB7F5, "66813DC0538000CD000F95C0", "E826C70A0090909090909090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that reads and writes pilot files", g_pilotDataPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the config settings", g_configSettingsPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the config presets", g_configPresetsPatch),
 };

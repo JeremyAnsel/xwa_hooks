@@ -44,6 +44,9 @@ At offset 123B82, replace BF80D6AB00 with E899430800.
 At offset 13F9F1, replace E81A67FEFF with 9090909090.
 At offset 170688, replace 775B with EB5B.
 
+# To call the hook that sets the config presets
+At offset 0FB7F5, replace 66813DC0538000CD000F95C0 with E826C70A0090909090909090.
+
 
 *** Usage ***
 

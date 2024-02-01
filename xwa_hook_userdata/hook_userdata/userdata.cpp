@@ -189,3 +189,41 @@ int SplitConfigLineHook(int* params)
 	params[Params_ReturnAddress] = 0x005247BD;
 	return 0;
 }
+
+int ConfigPresetsHook(int* params)
+{
+	int presetIndex = *(unsigned short*)0x008053C0 == 205 ? 0 : 1;
+	params[Params_EAX] = presetIndex;
+
+	int currentPlayerId = *(int*)0x008C1CC8;
+	int pCraft = params[Params_EBX];
+	int pPlayer = params[Params_ESI];
+	int playerIndex = pPlayer / 0xBCF;
+
+	if (playerIndex == currentPlayerId)
+	{
+		unsigned short craft_m183 = *(unsigned short*)(pCraft + 0x0183);
+
+		unsigned char preset_throttle = *(unsigned char*)(0x0B0C7A0 + 0x0261 + presetIndex);
+		*(unsigned short*)(pCraft + 0x00F0) = (int)preset_throttle * 65535 / 100;
+
+		unsigned char preset_laser = *(unsigned char*)(0x0B0C7A0 + 0x0263 + presetIndex);
+		*(unsigned char*)(pCraft + 0x01AD) = preset_laser;
+
+		if ((craft_m183 & 0x01) != 0)
+		{
+			unsigned char preset_shield = *(unsigned char*)(0x0B0C7A0 + 0x0265 + presetIndex);
+			*(unsigned char*)(pCraft + 0x01AA) = preset_shield;
+		}
+
+		if ((craft_m183 & 0x100) != 0)
+		{
+			unsigned char preset_beam = *(unsigned char*)(0x0B0C7A0 + 0x0267 + presetIndex);
+			*(unsigned char*)(pCraft + 0x01DF) = preset_beam;
+		}
+
+		params[Params_ReturnAddress] = 0x004FD720;
+	}
+
+	return 0;
+}
