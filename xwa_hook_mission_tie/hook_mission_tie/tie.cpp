@@ -504,6 +504,8 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 
 CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 {
+	const unsigned char difficulty = *(unsigned char*)(0x08053E0 + 0x002A);
+
 	int playerIndex = currentObject->PlayerIndex;
 	unsigned short modelIndex = currentObject->ModelIndex;
 	unsigned char colorIndex = currentObject->pMobileObject->Markings;
@@ -540,9 +542,69 @@ CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 		profile = "Default";
 	}
 
+	std::string playerKey;
+	if (playerIndex != -1)
+	{
+		playerKey = "_Player";
+	}
+
+	std::string difficultyKey;
+	switch (difficulty)
+	{
+	case 0:
+		difficultyKey = "_Easy";
+		break;
+
+	case 1:
+		difficultyKey = "_Medium";
+		break;
+
+	case 2:
+		difficultyKey = "_Hard";
+		break;
+	}
+
 	std::string section = std::string("StatsProfile_") + profile;
 
-	auto lines = GetFileLines(shipPath + section + ".txt");
+	std::vector<std::string> lines;
+
+	if (!playerKey.empty())
+	{
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + section + playerKey + difficultyKey + ".txt");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + ".ini", section + playerKey + difficultyKey);
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + section + playerKey + ".txt");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + ".ini", section + playerKey);
+		}
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + section + difficultyKey + ".txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", section + difficultyKey);
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + section + ".txt");
+	}
 
 	if (!lines.size())
 	{

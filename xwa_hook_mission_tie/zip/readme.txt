@@ -120,6 +120,9 @@ See "mission.txt".
 
 Suppose that the craft is "FlightModels\[Model].opt".
 To create a stats profile named "Profile1", create a file named "FlightModels\[Model]StatsProfile_Profile1.txt" or create a section named "StatsProfile_Profile1" in "FlightModels\[Model].ini".
+To define a profile for the player, append _Player after the profile name. For example: StatsProfile_Profile1_Player.
+To define a profile based on the difficulty, append _Easy, _Medium, or _Hard after the profile name. For example: StatsProfile_Profile1_Easy.
+To define a profile for the player based on the difficulty, append the player key and the difficulty key. For example: StatsProfile_Profile1_Player_Easy.
 The format is
 Speed = integer
 Acceleration = integer
