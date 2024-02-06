@@ -1,0 +1,35 @@
+
+dword _ebp08a = s_ExeWeaponSpeed[si - ModelIndex_280_1_17_LaserRebel] * 182 / 10;
+s_XwaObjects[ebp10].pMobileObject->Duration = s_V0x07D4B60 / _ebp08a * 0xEC;
+s_XwaObjects[ebp10].pMobileObject->Duration += XwaMulWordPercent( XwaGetWordPercentFromWord( s_V0x07D4B60 % _ebp08a, _ebp08a ), 0xEC );
+s_XwaObjects[ebp10].pMobileObject->Duration += 0x3B;
+s_XwaObjects[ebp10].pMobileObject->Duration += XwaRandom() & 0x1F;
+
+s_V0x07D4B60 is a distance in opt unit.
+
+_ebp08a = WeaponSpeed * 182 / 10
+        = WeaponSpeed * 18.2
+        = WeaponSpeed * 40.96 / 2.25
+
+s_V0x07D4B60 / _ebp08a = Distance / _ebp08a
+                       = Distance / (WeaponSpeed * 40.96 / 2.25)
+                       = Distance / 40.96 / (WeaponSpeed / 2.25)
+                       = Distance in m / WeaponSpeed in m/s
+
+0xEC = 236
+     = 1 s
+
+DurationOffset = 0x3B
+               = 59
+               = (59 / 236) s
+               = 0.25 s
+
+XwaRandom() & 0x1F = XwaRandom() % 0x20
+                   = XwaRandom() % 32
+                   = XwaRandom() % (32 / 236) s
+                   = XwaRandom() % 0.14 s
+
+Duration in s = Distance in m / (WeaponSpeed / 2.25)
+              + DurationOffset / 236 s
+              + XwaRandom() % 0.14 s
+

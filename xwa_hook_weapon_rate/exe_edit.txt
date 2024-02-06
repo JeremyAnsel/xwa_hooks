@@ -34,6 +34,409 @@ E8B5721100              call 005A8B20, 005A8B20 - 0049186B = 001172B5
 EB29                    jmp 00491896, 00491896 - 0049186D = 29
 90                      nop
 
+
+// energy transfer
+; L004FBA80
+
+:004FBD00 - 0x0FB100
+66F7D8                  neg ax
+1BC0                    sbb eax, eax
+
+E81BCE0A00              call 005A8B20, 005A8B20 - 004FBD05 = 000ACE1B
+
+:004FCDF9 - 0x0FC1F9
+66F7D8                  neg ax
+1BC0                    sbb eax, eax
+
+E822BD0A00              call 005A8B20, 005A8B20 - 004FCDFE = 000ABD22
+
+:004FD2FF - 0x0FC6FF
+7512                    jne 004FD313
+83E21F                  and edx, 0000001F
+
+E81CB80A00              call 005A8B20, 005A8B20 - 004FD304 = 000AB81C
+
+
+// is impact spinning enabled
+:0040E8B9 - 0x00DCB9
+A015548000              mov al, byte ptr [00805415]
+
+E872A21900              call 005A8B30, 005A8B30 - 0040E8BE = 0019A272
+
+:0040C325 - 0x00B725
+897C2410                mov dword ptr [esp+10], edi
+663D0080                cmp ax, 8000
+7202                    jb 0040C331
+F7D8                    neg eax
+
+E8F6C71900              call 005A8B20, 005A8B20 - 0040C32A = 0019C7F6
+897C2410                mov dword ptr [esp+10], edi
+90                      nop
+EB0F                    jmp 0040C340, 0040C340 - 0040C331 = 0F
+
+==============================================================================
+
+; weapons misc
+
+// weapon duration offset
+:004E2745 - 0x0E1B45
+8BB08D000000            mov esi, dword ptr [eax+0000008D]
+83C63B                  add esi, 0000003B
+89B08D000000            mov dword ptr [eax+0000008D], esi
+
+E8D6630C00              call 005A8B20, 005A8B20 - 004E274A = 000C63D6
+90                      nop
+909090                  nop
+909090909090            nop
+
+// weapon fire ratio
+:004E19C3 - 0x0E0DC3
+668B9C51D0B55B00        mov bx, word ptr [ecx+2*edx+005BB5D0]
+
+E858710C00              call 005A8B20, 005A8B20 - 004E19C8 = 000C7158
+909090                  nop
+
+// weapon range
+:004A8D3D - 0x0A813D
+8B8C91C4B55B00          mov ecx, dword ptr [ecx+4*edx+005BB5C4]
+
+E8DEFD0F00              call 005A8B20, 005A8B20 - 004A8D42 = 000FFDDE
+9090                    nop
+
+:004A8FB1 - 0x0A83B1
+8B8C90C4B55B00          mov ecx, dword ptr [eax+4*edx+005BB5C4]
+
+E86AFB0F00              call 005A8B20, 005A8B20 - 004A8FB6 = 000FFB6A
+9090                    nop
+
+:004A91AD - 0x0A85AD
+8B8488C4B55B00          mov eax, dword ptr [eax+4*ecx+005BB5C4]
+
+E86EF90F00              call 005A8B20, 005A8B20 - 004A91B2 = 000FF96E
+9090                    nop
+
+:004A9B10 - 0x0A8F10
+8B8490C4B55B00          mov eax, dword ptr [eax+4*edx+005BB5C4]
+
+E80BF00F00              call 005A8B20, 005A8B20 - 004A9B15 = 000FF00B
+9090                    nop
+
+:004E2114 - 0x0E1514
+8BB48AC4B55B00          mov esi, dword ptr [edx+4*ecx+005BB5C4]
+
+E8076A0C00              call 005A8B20, 005A8B20 - 004E2119 = 000C6A07
+9090                    nop
+
+// weapon spread
+:004E241A - 0x0E181A
+837C081FFF              cmp dword ptr [eax+ecx+1F], FFFFFFFF
+747C                    je 004E249D
+
+E801670C00              call 005A8B20, 005A8B20 - 004E241F = 000C6701
+9090                    nop
+
+
+// warhead fire rate
+:00491AAA - 0x090EAA
+8B15C4337B00            mov edx, dword ptr [007B33C4]
+
+E871701100              call 005A8B20, 005A8B20 - 00491AAF = 00117071
+90                      nop
+
+; weapons profiles
+
+// V0x005B6560
+Array<unsigned short,28> s_ExeWeaponDurationIntegerPart = 6 ref, XwaGetWeaponDuration
+// V0x005B6598
+Array<unsigned short,28> s_ExeWeaponDurationDecimalPart = 6 ref, XwaGetWeaponDuration
+
+:0040D547 - 0x00C947
+668B8160655B00          mov ax, word ptr [ecx+005B6560]
+
+E8D4B51900              call 005A8B20, 005A8B20 - 0040D54C = 0019B5D4
+9090                    nop
+
+:0040D56B - 0x00C96B
+668B8198655B00          mov ax, word ptr [ecx+005B6598]
+
+E8B0B51900              call 005A8B20, 005A8B20 - 0040D570 = 0019B5B0
+9090                    nop
+
+; L00490EB0 - XwaGetWeaponDuration
+;:00490EBA 668B344530635B00        mov si, word ptr [2*eax+005B6330]
+;:00490EC2 668B044568635B00        mov ax, word ptr [2*eax+005B6368]
+
+:004E4D86 - 0x0E4186
+E825C1FAFF              call 00490EB0
+
+E8953D0C00              call 005A8B20, 005A8B20 - 004E4D8B = 000C3D95
+
+:004922D6 - 0x0916D6
+668B1C4530635B00        mov bx, word ptr [2*eax+005B6330]
+
+E845681100              call 005A8B20, 005A8B20 - 004922DB = 00116845
+909090                  nop
+
+:004922DE - 0x0916DE
+668B044568635B00        mov ax, word ptr [2*eax+005B6368]
+
+E83D681100              call 005A8B20, 005A8B20 - 004922E3 = 0011683D
+909090                  nop
+
+:00493129 - 0x092529
+668B3C4530635B00        mov di, word ptr [2*eax+005B6330]
+
+E8F2591100              call 005A8B20, 005A8B20 - 0049312E = 001159F2
+909090                  nop
+
+:00493131 - 0x092531
+668B044568635B00        mov ax, word ptr [2*eax+005B6368]
+
+E8EA591100              call 005A8B20, 005A8B20 - 00493136 = 001159EA
+909090                  nop
+
+:00493611 - 0x092A11
+668B347530635B00        mov si, word ptr [2*esi+005B6330]
+
+E80A551100              call 005A8B20, 005A8B20 - 00493616 = 0011550A
+909090                  nop
+
+:00493623 - 0x092A23
+668B045568635B00        mov ax, word ptr [2*edx+005B6368]
+
+E8F8541100              call 005A8B20, 005A8B20 - 00493628 = 001154F8
+909090                  nop
+
+; ModelIndex_487_6250_0_ResData_DsFire
+;:0049426F A194655B00              mov eax, dword ptr [005B6594]
+;:0049427A 668B0DCC655B00          mov cx, word ptr [005B65CC]
+
+// V0x005B6628
+Array<short,28> s_ExeWeaponScore = 6 ref
+
+:0049744F - 0x09684F
+668B144DF8635B00        mov dx, word ptr [2*ecx+005B63F8]
+
+E8CC161100              call 005A8B20, 005A8B20 - 00497454 = 001116CC
+909090                  nop
+
+:004D9B11 - 0x0D8F11
+668B1C7DF8635B00        mov bx, word ptr [2*edi+005B63F8]
+
+E80AF00C00              call 005A8B20, 005A8B20 - 004D9B16 = 000CF00A
+909090                  nop
+
+:004D9B49 - 0x0D8F49
+668B0C55F8635B00        mov cx, word ptr [2*edx+005B63F8]
+
+E8D2EF0C00              call 005A8B20, 005A8B20 - 004D9B4E = 000CEFD2
+909090                  nop
+
+; weapons score
+;:004DA3FF 668B1536665B00          mov dx, word ptr [005B6636]
+;:004DA475 668B2C4DF8635B00        mov bp, word ptr [2*ecx+005B63F8]
+;:004DA5EC 668B2C4DF8635B00        mov bp, word ptr [2*ecx+005B63F8]
+
+// V0x005B6528
+Array<short,28> s_ExeWeaponSpeed = 15 ref
+
+:0040D54E - 0x00C94E
+668B9928655B00          mov bx, word ptr [ecx+005B6528]
+
+E8CDB51900              call 005A8B20, 005A8B20 - 0040D553 = 0019B5CD
+9090                    nop
+
+:00492215 - 0x091615
+668B1C45F8625B00        mov bx, word ptr [2*eax+005B62F8]
+
+E806691100              call 005A8B20, 005A8B20 - 0049221A = 00116906
+909090                  nop
+
+:00492230 - 0x091630
+668B1C45F8625B00        mov bx, word ptr [2*eax+005B62F8]
+
+E8EB681100              call 005A8B20, 005A8B20 - 00492235 = 001168EB
+909090                  nop
+
+:00492EE0 - 0x0922E0
+668B1542655B00          mov dx, word ptr [005B6542]
+
+E83B5C1100              call 005A8B20, 005A8B20 - 00492EE5 = 00115C3B
+9090                    nop
+
+:004930EE - 0x0924EE
+668B1445F8625B00        mov dx, word ptr [2*eax+005B62F8]
+
+E82D5A1100              call 005A8B20, 005A8B20 - 004930F3 = 00115A2D
+909090                  nop
+
+:00493595 - 0x092995
+668B1475F8625B00        mov dx, word ptr [2*esi+005B62F8]
+
+E886551100              call 005A8B20, 005A8B20 - 0049359A = 00115586
+909090                  nop
+
+:004935BE - 0x0929BE
+66031475F8625B00        add dx, word ptr [2*esi+005B62F8]
+
+E85D551100              call 005A8B20, 005A8B20 - 004935C3 = 0011555D
+909090                  nop
+
+:00494249 - 0x093649
+66A15C655B00            mov ax, word ptr [005B655C]
+
+E8D2481100              call 005A8B20, 005A8B20 - 0049424E = 001148D2
+90                      nop
+
+:004942CA - 0x0936CA
+668B0D5C655B00          mov cx, word ptr [005B655C]
+
+E851481100              call 005A8B20, 005A8B20 - 004942CF = 00114851
+9090                    nop
+
+:004968FE - 0x095CFE
+668B0D42655B00          mov cx, word ptr [005B6542]
+
+E81D221100              call 005A8B20, 005A8B20 - 00496903 = 0011221D
+9090                    nop
+
+:004B5F71 - 0x0B5371
+668B344DF8625B00        mov si, word ptr [2*ecx+005B62F8]
+
+E8AA2B0F00              call 005A8B20, 005A8B20 - 004B5F76 = 000F2BAA
+909090                  nop
+
+:004E22F2 - 0x0E16F2
+668B044DF8625B00        mov ax, word ptr [2*ecx+005B62F8]
+
+E829680C00              call 005A8B20, 005A8B20 - 004E22F7 = 000C6829
+909090                  nop
+
+:004E2673 - 0x0E1A73
+668B047D28655B00        mov ax, word ptr [2*edi+005B6528]
+
+E8A8640C00              call 005A8B20, 005A8B20 - 004E2678 = 000C64A8
+909090                  nop
+
+:004E269D - 0x0E1A9D
+668B047D28655B00        mov ax, word ptr [2*edi+005B6528]
+
+E87E640C00              call 005A8B20, 005A8B20 - 004E26A2 = 000C647E
+909090                  nop
+
+:004E4D70 - 0x0E4170
+668B047DF8625B00        mov ax, word ptr [2*edi+005B62F8]
+
+E8AB3D0C00              call 005A8B20, 005A8B20 - 004E4D75 = 000C3DAB
+909090                  nop
+
+// V0x005B64B8
+Array<int,28> s_ExeWeaponPower = 17 ref
+
+:0040F50C - 0x00E90C
+8B048558605B00          mov eax, dword ptr [4*eax+005B6058]
+
+E80F961900              call 005A8B20, 005A8B20 - 0040F511 = 0019960F
+9090                    nop
+
+:00492274 - 0x091674
+8B048558605B00          mov eax, dword ptr [4*eax+005B6058]
+
+E8A7681100              call 005A8B20, 005A8B20 - 00492279 = 001168A7
+9090                    nop
+
+:0049229D - 0x09169D
+8B0DC4337B00            mov ecx, dword ptr [007B33C4]
+
+E87E681100              call 005A8B20, 005A8B20 - 004922A2 = 0011687E
+90                      nop
+
+:004922B5 - 0x0916B5
+8B048558605B00          mov eax, dword ptr [4*eax+005B6058]
+
+E866681100              call 005A8B20, 005A8B20 - 004922BA = 00116866
+9090                    nop
+
+:0049311C - 0x09251C
+8B148558605B00          mov edx, dword ptr [4*eax+005B6058]
+
+E8FF591100              call 005A8B20, 005A8B20 - 00493121 = 001159FF
+9090                    nop
+
+:004935DC - 0x0929DC
+8B04B558605B00          mov eax, dword ptr [4*esi+005B6058]
+
+E83F551100              call 005A8B20, 005A8B20 - 004935E1 = 0011553F
+9090                    nop
+
+:004935F9 - 0x0929F9
+8B0CB558605B00          mov ecx, dword ptr [4*esi+005B6058]
+
+E822551100              call 005A8B20, 005A8B20 - 004935FE = 00115522
+9090                    nop
+
+:00494260 - 0x093660
+A120655B00              mov eax, dword ptr [005B6520]
+
+E8BB481100              call 005A8B20, 005A8B20 - 00494265 = 001148BB
+
+:004A797E - 0x0A6D7E
+8B048558605B00          mov eax, dword ptr [4*eax+005B6058]
+
+E89D111000              call 005A8B20, 005A8B20 - 004A7983 = 0010119D
+9090                    nop
+
+:004A7D63 - 0x0A7163
+8B048558605B00          mov eax, dword ptr [4*eax+005B6058]
+
+E8B80D1000              call 005A8B20, 005A8B20 - 004A7D68 = 00100DB8
+9090                    nop
+
+:004A7E41 - 0x0A7241
+8B048558605B00          mov eax, dword ptr [4*eax+005B6058]
+
+E8DA0C1000              call 005A8B20, 005A8B20 - 004A7E46 = 00100CDA
+9090                    nop
+
+// score
+;:004DD2A0 - 0x0DC6A0
+;8B0C8D58605B00          mov ecx, dword ptr [4*ecx+005B6058]
+;
+;E87BB80C00              call 005A8B20, 005A8B20 - 004DD2A5 = 000CB87B
+;9090                    nop
+
+// score
+;:004DD30D - 0x0DC70D
+;8B0C8D58605B00          mov ecx, dword ptr [4*ecx+005B6058]
+;
+;E80EB80C00              call 005A8B20, 005A8B20 - 004DD312 = 000CB80E
+;9090                    nop
+
+:004E268C - 0x0E1A8C
+8B04BDB8645B00          mov eax, dword ptr [4*edi+005B64B8]
+
+E88F640C00              call 005A8B20, 005A8B20 - 004E2691 = 000C648F
+9090                    nop
+
+:004E4DAA - 0x0E41AA
+8B14BD58605B00          mov edx, dword ptr [4*edi+005B6058]
+
+E8713D0C00              call 005A8B20, 005A8B20 - 004E4DAF = 000C3D71
+9090                    nop
+
+// Knockout
+;:004E7E77 - 0x0E7277
+;8B348D58605B00          mov esi, dword ptr [4*ecx+005B6058]
+;
+;E8A40C0C00              call 005A8B20, 005A8B20 - 004E7E7C = 000C0CA4
+;9090                    nop
+
+:00519C31 - 0x119031
+8B150C655B00            mov edx, dword ptr [005B650C]
+
+E8EAEE0800              call 005A8B20, 005A8B20 - 00519C36 = 0008EEEA
+90                      nop
+
 ===============================================================================
 
 ; WeaponRacks
@@ -75,3 +478,108 @@ E81E5B1700              call 005A8B20, 005A8B20 - 00433002 = 00175B1E
 BBFFFF0000              mov ebx, 0000FFFF
 
 E8596C1100              call 005A8B20, 005A8B20 - 00491EC7 = 00116C59
+
+===============================================================================
+
+; warheads capacity profiles
+
+:0041BE41 - 0x01B241
+668B1445C0125B00        mov dx, word ptr [2*eax+005B12C0]
+
+8BD0                    mov edx, eax
+909090909090            nop
+
+:0041BE50 - 0x01B250
+E83B8E0700              call 00494C90
+
+E8DBCC1800              call 005A8B30, 005A8B30 - 0041BE55 = 0018CCDB
+
+:0045CBF8 - 0x05BFF8
+E893800300              call 00494C90
+
+E833BF1400              call 005A8B30, 005A8B30 - 0045CBFD = 0014BF33
+
+:004608FF - 0x05FCFF
+E88C430300              call 00494C90
+
+E82C821400              call 005A8B30, 005A8B30 - 00460904 = 0014822C
+
+:004B1421 - 0x0B0821
+E86A38FEFF              call 00494C90
+
+E80A770F00              call 005A8B30, 005A8B30 - 004B1426 = 000F770A
+
+===============================================================================
+
+; energy profiles
+
+// speed factor
+:0042C6A9 - 0x02BAA9
+6683F907                cmp cx, 0007
+7507                    jne 0042C6B6
+6800100000              push 00001000
+
+E882C41700              call 005A8B30, 005A8B30 - 0042C6AE = 0017C482
+50                      push eax
+9090909090              nop
+
+===============================================================================
+
+; lasers link profiles
+
+// L004A75B0 - ai fighter shoot
+:004A77C1 - 0x0A6BC1
+8B15CCA17C00            mov edx, dword ptr [007CA1CC]
+
+E85A131000              call 005A8B20, 005A8B20 - 004A77C6 = 0010135A
+90                      nop
+
+// L00490EE0 - player fighter shoot
+; L004912C0
+:0049134F - 0x09074F
+8A840DB6010000          mov al, byte ptr [ebp+ecx+000001B6]
+
+E8DC771100              call 005A8B30, 005A8B30 - 00491354 = 001177DC
+9090                    nop
+
+// L004FBA80 - Key_X
+:004FCA72 - 0x0FBE72
+8A45F0                  mov al, byte ptr [ebp-10]
+33C9                    xor ecx, ecx
+
+E8A9C00A00              call 005A8B20, 005A8B20 - 004FCA77 = 000AC0A9
+
+; Prevent AI from using lasers + ion cannons when disabling
+; PreventAILasersIonWhenDisabling
+:004A78F9 - 0x0A6CF9
+0F8234010000            jb 004A7A33
+
+E822121000              call 005A8B20, 005A8B20 - 004A78FE = 00101222
+90                      nop
+
+; Prevent AI from using ion cannons when not explicitly disabling
+; PreventAIIonWhenNotDisabling
+:004A7A03 - 0x0A6E03
+8B1578F38B00            mov edx, dword ptr [008BF378]
+
+E818111000              call 005A8B20, 005A8B20 - 004A7A08 = 00101118
+90                      nop
+
+; Prevent player from using linked lasers + ion cannon systems
+; PreventPlayerLinkedLasersIon
+:004FC9BA - 0x0FBDBA
+660FB68403B6010000      movzx ax, byte ptr [ebx+eax+000001B6]
+
+E861C10A00              call 005A8B20, 005A8B20 - 004FC9BF = 000AC161
+90909090                nop
+
+;:004FC9CB
+;7515                    jne 004FC9E2
+;
+;EB15                    jmp 004FC9E2
+
+;:004FC9EB
+;663D0400                cmp ax, 0004
+;
+;663D0300                cmp ax, 0003
+
