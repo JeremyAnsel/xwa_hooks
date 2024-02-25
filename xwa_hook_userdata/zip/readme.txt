@@ -12,7 +12,7 @@ This dll requires:
 
 *** Setup ***
 
-Place hook_userdata.dll next to xwingalliance.exe
+Place hook_userdata.dll and hook_userdata.cfg next to xwingalliance.exe
 
 
 *** Patch ***
@@ -52,6 +52,9 @@ At offset 0FB7F5, replace 66813DC0538000CD000F95C0 with E826C70A0090909090909090
 
 The pilot files will be saved in a directory named "UserData\<ModName>\Pilot\"
 The <ModName> is read from a text file named "modname.txt" situated at the root of XWA directory, next to xwingalliance.exe.
+
+To start the game from a given mission, set the StartMissionIndex setting. It is the index of the start mission starting from 0.
+For example, to start from the 10th mission, set StartMissionIndex = 9.
 
 
 *** Credits ***

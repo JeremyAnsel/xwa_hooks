@@ -1,5 +1,6 @@
 #include "targetver.h"
 #include "userdata.h"
+#include "config.h"
 #include <string>
 #include <fstream>
 #include <direct.h>
@@ -16,16 +17,34 @@ enum ParamsEnum
 	Params_EDI = -10,
 };
 
-std::string Trim(const std::string& str)
+class Config
 {
-	const char* ws = " \t\n\r\f\v";
-	std::string s = str;
+public:
+	Config()
+	{
+		auto lines = GetFileLines("hook_userdata.cfg");
 
-	s.erase(str.find_last_not_of(ws) + 1);
-	s.erase(0, s.find_first_not_of(ws));
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_userdata");
+		}
 
-	return s;
-}
+		this->StartMissionIndex = GetFileKeyValueInt(lines, "StartMissionIndex", 0);
+
+		if (this->StartMissionIndex < 0)
+		{
+			this->StartMissionIndex = 0;
+		}
+		else if (this->StartMissionIndex > 254)
+		{
+			this->StartMissionIndex = 254;
+		}
+	}
+
+	int StartMissionIndex;
+};
+
+Config g_config;
 
 std::string GetPilotDirectory()
 {
@@ -47,6 +66,31 @@ std::string GetPilotDirectory()
 	}
 
 	return std::string();
+}
+
+void SetCurrentMission()
+{
+	const auto L0053AA90 = (int(*)())0x0053AA90;
+	const auto L00564670 = (int(*)())0x00564670;
+
+	int startMissionIndex = g_config.StartMissionIndex;
+
+	int currentMissionIndex = *(int*)0x00ABC970;
+
+	if (currentMissionIndex >= startMissionIndex)
+	{
+		return;
+	}
+
+	for (int index = 0; index < startMissionIndex; index++)
+	{
+		if (*(int*)(0x00AED75E + index * 0x30) == 0)
+		{
+			*(int*)(0x00AED75E + index * 0x30) = 0x01;
+		}
+
+		*(int*)(0x00AED76E + index * 0x30) = 0x01;
+	}
 }
 
 char g_currentDirectory[260];
@@ -94,6 +138,8 @@ int SavePilotHook(int* params)
 
 	_chdir(g_currentDirectory);
 
+	SetCurrentMission();
+
 	return ret;
 }
 
@@ -110,6 +156,8 @@ int OpenPilotHook(int* params)
 	int ret = XwaOpenPilot(pilot);
 
 	_chdir(g_currentDirectory);
+
+	SetCurrentMission();
 
 	return ret;
 }

@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="config.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="hook_function.h" />
     <ClInclude Include="resource.h" />
@@ -96,6 +97,7 @@
     <ResourceCompile Include="hook_userdata.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="config.cpp" />
     <ClCompile Include="hookmain.cpp" />
     <ClCompile Include="userdata.cpp" />
   </ItemGroup>

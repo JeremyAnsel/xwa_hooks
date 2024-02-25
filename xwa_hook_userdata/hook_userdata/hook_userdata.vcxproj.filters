@@ -30,6 +30,9 @@
     <ClInclude Include="userdata.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="hook_userdata.rc">
@@ -41,6 +44,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="userdata.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
