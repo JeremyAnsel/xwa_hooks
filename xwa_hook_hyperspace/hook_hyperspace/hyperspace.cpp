@@ -16,6 +16,57 @@ enum ParamsEnum
 	Params_EDI = -10,
 };
 
+class FlightModelsList
+{
+public:
+	FlightModelsList()
+	{
+		for (const auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		{
+			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
+		}
+
+		for (const auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		{
+			this->_equipmentList.push_back(GetStringWithoutExtension(line));
+		}
+	}
+
+	std::string GetLstLine(int modelIndex)
+	{
+		const int xwaObjectStats = 0x05FB240;
+		const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
+		const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
+
+		switch (dataIndex1)
+		{
+		case 0:
+			if ((unsigned int)dataIndex2 < this->_spacecraftList.size())
+			{
+				return this->_spacecraftList[dataIndex2];
+			}
+
+			break;
+
+		case 1:
+			if ((unsigned int)dataIndex2 < this->_equipmentList.size())
+			{
+				return this->_equipmentList[dataIndex2];
+			}
+
+			break;
+		}
+
+		return std::string();
+	}
+
+private:
+	std::vector<std::string> _spacecraftList;
+	std::vector<std::string> _equipmentList;
+};
+
+FlightModelsList g_flightModelsList;
+
 class Config
 {
 public:
@@ -318,7 +369,9 @@ struct XwaCraft
 	int LeaderObjectIndex;
 	char unk00A[30];
 	XwaAIData AIData;
-	char unk08E[875];
+	char unk08E[54];
+	short Speed;
+	char unk0C6[819];
 };
 
 static_assert(sizeof(XwaCraft) == 1017, "size of XwaCraft must be 1017");
@@ -395,6 +448,7 @@ struct Point3D
 };
 
 const short g_AIOutOfHyperspaceSpeed = 0x7000;
+const short g_AIIntoHyperspaceSpeed = 0x7000;
 
 int GetShortHyperspaceEffectType()
 {
@@ -407,6 +461,147 @@ int GetShortHyperspaceEffectType()
 
 	return missionSetting;
 }
+
+int GetShipSetting(int modelIndex, const std::string& key)
+{
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, shipPath + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		shipPath = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(shipPath + "Hyperspace.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", "Hyperspace");
+	}
+
+	int value = GetFileKeyValueInt(lines, key, -1);
+	return value;
+}
+
+int GetShipOutOfHyperspaceSpeed(int modelIndex)
+{
+	return GetShipSetting(modelIndex, "OutOfHyperspaceSpeed");
+}
+
+int GetShipOutOfHyperspaceSetPosition(int modelIndex)
+{
+	return GetShipSetting(modelIndex, "OutOfHyperspaceSetPosition");
+}
+
+int GetShipIntoHyperspaceSpeed(int modelIndex)
+{
+	return GetShipSetting(modelIndex, "IntoHyperspaceSpeed");
+}
+
+class ModelIndexHyperspace
+{
+public:
+	int GetOutOfHyperspaceSpeed(int modelIndex)
+	{
+		this->Update();
+
+		auto it = this->_outOfSpeed.find(modelIndex);
+
+		if (it != this->_outOfSpeed.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetShipOutOfHyperspaceSpeed(modelIndex);
+			this->_outOfSpeed.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+	int GetOutOfHyperspaceSetPosition(int modelIndex)
+	{
+		this->Update();
+
+		auto it = this->_outOfSetPosition.find(modelIndex);
+
+		if (it != this->_outOfSetPosition.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetShipOutOfHyperspaceSetPosition(modelIndex);
+			this->_outOfSetPosition.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+	int GetIntoHyperspaceSpeed(int modelIndex)
+	{
+		this->Update();
+
+		auto it = this->_intoSpeed.find(modelIndex);
+
+		if (it != this->_intoSpeed.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetShipIntoHyperspaceSpeed(modelIndex);
+			this->_outOfSpeed.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+private:
+	void Update()
+	{
+		static std::string _mission;
+		static int _missionIndex = 0;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const int missionFileNameIndex = *(int*)0x06002E4;
+
+		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
+		{
+			_mission = xwaMissionFileName;
+			_missionIndex = missionFileNameIndex;
+
+			this->_outOfSpeed.clear();
+			this->_outOfSetPosition.clear();
+			this->_intoSpeed.clear();
+		}
+	}
+
+	std::map<int, int> _outOfSpeed;
+	std::map<int, int> _outOfSetPosition;
+	std::map<int, int> _intoSpeed;
+};
+
+ModelIndexHyperspace g_modelIndexHyperspace;
 
 int GetObjectRegion(int fgIndex, bool set, int region)
 {
@@ -448,10 +643,18 @@ int AIOutOfHyperspaceInitSpeedHook(int* params)
 	int effectType = GetShortHyperspaceEffectType();
 	XwaMobileObject* pMobileObject = (XwaMobileObject*)params[Params_EAX];
 
+	int hyperSpeed = g_AIOutOfHyperspaceSpeed;
+	int speedSetting = g_modelIndexHyperspace.GetOutOfHyperspaceSpeed(object->ModelIndex);
+
+	if (speedSetting != -1)
+	{
+		hyperSpeed = speedSetting;
+	}
+
 	switch (effectType)
 	{
 	case 1:
-		pMobileObject->Speed = g_AIOutOfHyperspaceSpeed;
+		pMobileObject->Speed = hyperSpeed;
 		break;
 
 	default:
@@ -505,6 +708,10 @@ int AIOutOfHyperspaceStepSpeedHook(int* params)
 	int effectType = GetShortHyperspaceEffectType();
 	XwaMobileObject* pMobileObject = (XwaMobileObject*)params[Params_EDX];
 	const short speed = (short)params[Params_EAX];
+
+	int objectIndex = *(int*)0x007CA1A0;
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	unsigned short modelIndex = xwaObjects[objectIndex].ModelIndex;
 
 	switch (effectType)
 	{
@@ -572,6 +779,16 @@ int AIOutOfHyperspaceDistanceCheckHook(int* params)
 	XwaAIData* pAIData = (XwaAIData*)params[Params_EAX];
 	const XwaPloItem* xwaPloItems = (XwaPloItem*)0x007FFDA0;
 
+	bool setPosition = true;
+	int setPositionSetting = g_modelIndexHyperspace.GetOutOfHyperspaceSetPosition(object->ModelIndex);
+
+	if (setPositionSetting != -1)
+	{
+		setPosition = setPositionSetting != 0;
+	}
+
+	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+
 	int distance = *(int*)0x007D4B60;
 
 	float offsetX = (float)pAIData->PositionX - (float)object->PositionX;
@@ -593,14 +810,27 @@ int AIOutOfHyperspaceDistanceCheckHook(int* params)
 		break;
 	}
 
+	int speed = object->pMobileObject->Speed;
+
+	if (distance < speed * 3)
+	{
+		speed = distance / 3;
+	}
+
+	distance -= object->pMobileObject->Speed;
+
 	if (distance >= pAIData->m4B || distance <= checkDistance)
 	{
 		isCheck = true;
+
+		speed = 0;
 	}
 	else
 	{
 		pAIData->m4B = distance;
 	}
+
+	object->pMobileObject->Speed = speed;
 
 	if (effectType == 1)
 	{
@@ -628,20 +858,26 @@ int AIOutOfHyperspaceDistanceCheckHook(int* params)
 				&headingXY,
 				&headingZ);
 
-			object->HeadingXY = headingXY;
-			object->HeadingZ = headingZ;
+			if (setPosition)
+			{
+				object->HeadingXY = headingXY;
+				object->HeadingZ = headingZ;
 
-			object->pMobileObject->RecalculateForwardVector = true;
-			object->pMobileObject->RecalculateTransformMatrix = true;
+				object->pMobileObject->RecalculateForwardVector = true;
+				object->pMobileObject->RecalculateTransformMatrix = true;
+			}
 		}
 
 		if (isCheck)
 		{
 			if (object->pMobileObject->pCraft->LeaderObjectIndex == -1)
 			{
-				object->PositionX = pAIData->PositionX;
-				object->PositionY = pAIData->PositionY;
-				object->PositionZ = pAIData->PositionZ;
+				if (setPosition)
+				{
+					object->PositionX = pAIData->PositionX;
+					object->PositionY = pAIData->PositionY;
+					object->PositionZ = pAIData->PositionZ;
+				}
 			}
 			else
 			{
@@ -772,9 +1008,17 @@ int AIIntoHyperspaceSpeedHook(int* params)
 	int speed = pMobileObject->Speed;
 	speed += speed;
 
-	if (speed > 0x7000)
+	int hyperSpeed = g_AIIntoHyperspaceSpeed;
+	int speedSetting = g_modelIndexHyperspace.GetIntoHyperspaceSpeed(pObject->ModelIndex);
+
+	if (speedSetting != -1)
 	{
-		speed = 0x7000;
+		hyperSpeed = speedSetting;
+	}
+
+	if (speed > hyperSpeed)
+	{
+		speed = hyperSpeed;
 	}
 
 	pMobileObject->Speed = (short)speed;

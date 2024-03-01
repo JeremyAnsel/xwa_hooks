@@ -52,6 +52,22 @@ value can be -1, 0, or 1
 0 means original behavior
 1 means new behavior
 
+Suppose that the craft is "FlightModels\[Model].opt".
+
+To define the hyperspace speed create a file named "FlightModels\[Model]Hyperspace.txt" or create a section named "[Hyperspace]" in "FlightModels\[Model].ini".
+The format is:
+OutOfHyperspaceSpeed = value
+IntoHyperspaceSpeed = value
+OutOfHyperspaceSetPosition = value
+
+If value is -1 then default values are used.
+If the file does not exist, default values are used.
+The default value for the speed from the exe is 3600.
+The default value for setting the position is 1.
+
+See ImperialStarDestroyerHyperspace.txt
+
+
 For EnterHyperspace sounds, sounds defined in "Wave\Sfx_EnterHyperspace.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 For ExitHyperspace sounds, sounds defined in "Wave\Sfx_ExitHyperspace.lst" are used if the lst file exists. The sounds are indexed by the crafts model index.
 

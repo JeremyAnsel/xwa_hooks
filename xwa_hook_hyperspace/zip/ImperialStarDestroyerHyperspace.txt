@@ -1,0 +1,5 @@
+
+OutOfHyperspaceSpeed = 28672
+IntoHyperspaceSpeed = 28672
+OutOfHyperspaceSetPosition = 1
+
