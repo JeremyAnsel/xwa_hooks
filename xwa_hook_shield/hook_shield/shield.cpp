@@ -121,7 +121,27 @@ Config g_config;
 enum ShipCategoryEnum : unsigned char
 {
 	ShipCategory_Starfighter = 0,
+	ShipCategory_Transport = 1,
+	ShipCategory_UtilityVehicle = 2,
+	ShipCategory_Freighter = 3,
 	ShipCategory_Starship = 4,
+	ShipCategory_Platform = 5,
+	ShipCategory_PlayerProjectile = 6,
+	ShipCategory_OtherProjectile = 7,
+	ShipCategory_Mine = 8,
+	ShipCategory_Satellite = 9,
+	ShipCategory_NormalDebris = 10,
+	ShipCategory_SmallDebris = 11,
+	ShipCategory_Backdrop = 12,
+	ShipCategory_Explosion = 13,
+	ShipCategory_Obstacle = 14,
+	ShipCategory_DeathStarII = 15,
+	ShipCategory_People = 16,
+	ShipCategory_Container = 17,
+	ShipCategory_Droid = 18,
+	ShipCategory_Armament = 19,
+	ShipCategory_LargeDebris = 20,
+	ShipCategory_SalvageYard = 21,
 };
 
 struct ExeEnableEntry
@@ -135,7 +155,11 @@ static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24")
 
 struct XwaCraft
 {
-	char Unk0000[658];
+	char Unk0000[418];
+	unsigned int ShieldStrength[2];
+	unsigned char PresetShield;
+	unsigned char ShieldSetting;
+	char Unk01AC[230];
 	unsigned char XwaCraft_m292[50];
 	char Unk02C4[309];
 };
@@ -147,7 +171,8 @@ struct XwaObject
 	char Unk0000[2];
 	unsigned short ModelIndex;
 	ShipCategoryEnum ShipCategory;
-	char Unk0005[26];
+	unsigned char TieFlightGroupIndex;
+	char Unk0006[25];
 	int PlayerIndex;
 	char Unk0023[4];
 };
@@ -338,6 +363,49 @@ ModelShieldRate GetShieldRechargeRate(int modelIndex)
 	return rate;
 }
 
+int GetShieldRechargeRateDelay(int modelIndex)
+{
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, ship + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		ship = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(ship + "Shield.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", "Shield");
+	}
+
+	int delay = GetFileKeyValueInt(lines, "RechargeRateDelay");
+
+	return delay;
+}
+
 class ModelIndexShield
 {
 public:
@@ -365,6 +433,8 @@ public:
 
 		this->_shieldRechargeRate.clear();
 		this->_perMissionShieldRechargeRate.clear();
+		this->_shieldRechargeDelay.clear();
+		this->_shieldRechargeDelayTime.clear();
 
 		for (const auto& line : lines)
 		{
@@ -440,24 +510,107 @@ public:
 		return total;
 	}
 
+	int GetRechargeRateDelay(int objectIndex)
+	{
+		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+		int fg = XwaObjects[objectIndex].TieFlightGroupIndex;
+		int modelIndex = XwaObjects[objectIndex].ModelIndex;
+
+		auto it = this->_shieldRechargeDelay.find(fg);
+
+		if (it != this->_shieldRechargeDelay.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetShieldRechargeRateDelay(modelIndex);
+			this->_shieldRechargeDelayTime.insert(std::make_pair(fg, value));
+			return value;
+		}
+	}
+
+	int GetRechargeRateDelayTime(int objectIndex)
+	{
+		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+		int fg = XwaObjects[objectIndex].TieFlightGroupIndex;
+
+		auto it = this->_shieldRechargeDelayTime.find(fg);
+
+		if (it != this->_shieldRechargeDelayTime.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = 0;
+			this->_shieldRechargeDelayTime.insert(std::make_pair(fg, value));
+			return value;
+		}
+	}
+
+	void SetRechargeRateDelayTime(int objectIndex, int time)
+	{
+		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+		int fg = XwaObjects[objectIndex].TieFlightGroupIndex;
+		this->_shieldRechargeDelayTime[fg] = time;
+	}
+
 private:
 	std::map<int, ModelShieldRate> _shieldRechargeRate;
 	std::map<int, ModelShieldRate> _perMissionShieldRechargeRate;
+	std::map<int, int> _shieldRechargeDelay;
+	std::map<int, int> _shieldRechargeDelayTime;
 	std::string _currentMissionFileName;
 	int _currentMissionFileNameIndex = 0;
 };
 
 ModelIndexShield g_modelIndexShield;
 
+int GetMissionTime()
+{
+	const auto XwaGetTotalSecondsFromSecondsMinutesHours = (int(*)(unsigned char, unsigned char, unsigned char))0x004DA310;
+
+	unsigned char MissionTimeHours = *(unsigned char*)(0x008053E0 + 0x0017);
+	unsigned char MissionTimeMinutes = *(unsigned char*)(0x008053E0 + 0x0018);
+	unsigned char MissionTimeSeconds = *(unsigned char*)(0x008053E0 + 0x0019);
+	int missionTime = XwaGetTotalSecondsFromSecondsMinutesHours(MissionTimeHours, MissionTimeMinutes, MissionTimeSeconds);
+	return missionTime;
+}
+
 int ShieldRechargeHook(int* params)
 {
 	auto& rechargeRate = params[6];
 	int objectIndex = (unsigned short)params[7];
 
+	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	unsigned char difficulty = *(unsigned char*)0x0080540A;
 	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
 	ShipCategoryEnum shipCategory = XwaObjects[objectIndex].ShipCategory;
+
+	int missionTime = GetMissionTime();
+	int rechargeDelay = g_modelIndexShield.GetRechargeRateDelay(objectIndex);
+	int rechargeDelayTime = g_modelIndexShield.GetRechargeRateDelayTime(objectIndex);
+	int shieldStrength = XwaCurrentCraft->ShieldStrength[0] + XwaCurrentCraft->ShieldStrength[1];
+
+	if (rechargeDelayTime > missionTime)
+	{
+		rechargeRate = 0;
+		return 0;
+	}
+	else
+	{
+		if (shieldStrength != 0)
+		{
+			g_modelIndexShield.SetRechargeRateDelayTime(objectIndex, 0);
+		}
+
+		if (shieldStrength == 0 && rechargeDelayTime == 0)
+		{
+			g_modelIndexShield.SetRechargeRateDelayTime(objectIndex, missionTime + rechargeDelay);
+		}
+	}
 
 	if (XwaObjects[objectIndex].PlayerIndex != -1)
 	{
@@ -495,6 +648,11 @@ int ShieldRechargeHook(int* params)
 		else
 		{
 			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
+
+			if (difficulty >= 0x01)
+			{
+				XwaCurrentCraft->PresetShield = 0x03;
+			}
 		}
 	}
 

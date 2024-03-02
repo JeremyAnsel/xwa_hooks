@@ -45,6 +45,7 @@ The format is:
 UseGenerator = 0 to use RechargeRate or 1 to use PerGeneratorRechargeRate
 PerGeneratorRechargeRate = per generator recharge value
 RechargeRate =  recharge value
+RechargeRateDelay =  delay value
 
 If the file does not exist, default values are used.
 
@@ -55,6 +56,8 @@ For other starships, the recharge rate is 5.
 For other crafts, the recharge rate is 0.
 
 For player craft, if the rate is 0 then it is set to 20.
+
+The RechargeRateDelay defines the delay from when the shield is 0 to the time where the shield is recharged.
 
 To define the recharge rate for a craft for a given mission, create a file named "[MissionDir]\[Mission]_Shield.txt" or create a section named "[Shield]" in "[MissionDir]\[Mission].ini".
 The format is a line per craft:
