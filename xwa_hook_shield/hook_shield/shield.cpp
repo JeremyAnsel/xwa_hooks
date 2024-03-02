@@ -553,7 +553,7 @@ int CraftUpdateTimeHook(int* params)
 
 	int objectIndex = params[7];
 	short elapsedTime = *(short*)0x008C1640;
-	int timeSpeed = g_craftUpdateTimeObjectIndexTime.RetrieveTimeSpeed(41, objectIndex, elapsedTime);
+	int timeSpeed = g_craftUpdateTimeObjectIndexTime.RetrieveTimeSpeed(118, objectIndex, elapsedTime);
 
 	if (timeSpeed == 0)
 	{
