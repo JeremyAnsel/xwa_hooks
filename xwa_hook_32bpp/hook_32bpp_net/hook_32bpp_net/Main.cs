@@ -326,6 +326,11 @@ namespace hook_32bpp_net
 
             var opt = OptFile.FromFile(optFilename, false);
 
+            if (opt.Textures.Any(t => t.Value.MipmapsCount == 1))
+            {
+                opt.ConvertTextures8To32();
+            }
+
             if (Directory.Exists($"FlightModels\\Skins\\{optName}"))
             {
                 IList<string> objectLines = GetCustomFileLines("Skins");
