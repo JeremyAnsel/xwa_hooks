@@ -40,15 +40,63 @@ struct XwaCraft
 
 static_assert(sizeof(XwaCraft) == 1017, "size of XwaCraft must be 1017");
 
+struct XwaMobileObject
+{
+	char Unk0000[221];
+	XwaCraft* pCraft;
+	char Unk00E1[4];
+};
+
+static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 229");
+
+struct XwaObject
+{
+	char Unk0000[2];
+	short ModelIndex;
+	unsigned char ShipCategory;
+	unsigned char TieFlightGroupIndex;
+	unsigned char Region;
+	int PositionX;
+	int PositionY;
+	int PositionZ;
+	short HeadingXY;
+	short HeadingZ;
+	short HeadingRoll;
+	short XwaObject_m19;
+	char Unk001B[4];
+	int PlayerIndex;
+	XwaMobileObject* pMobileObject;
+};
+
+static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
+
 struct ExeCraftEntry
 {
-	char Unk0000[346];
+	char Unk0000[342];
+	unsigned short WarheadTypeId[2];
 	unsigned char WarheadStartRack[2];
 	unsigned char WarheadEndRack[2];
 	char Unk015E[637];
 };
 
 static_assert(sizeof(ExeCraftEntry) == 987, "size of ExeCraftEntry must be 987");
+
+struct ExeObjectEntry
+{
+	unsigned char EnableOptions; // flags
+	unsigned char RessourceOptions; // flags
+	unsigned char ObjectCategory;
+	unsigned char ShipCategory;
+	unsigned int ObjectSize;
+	void* pData1;
+	void* pData2;
+	unsigned short GameOptions; // flags
+	unsigned short CraftIndex;
+	short DataIndex1;
+	short DataIndex2;
+};
+
+static_assert(sizeof(ExeObjectEntry) == 24, "size of ExeEnableEntry must be 24");
 
 struct XwaPlayer
 {
@@ -157,7 +205,7 @@ int WeaponSwitchWarheadCountHook(int* params)
 
 	XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
 	XwaPlayer* pPlayer = &XwaPlayers[playerIndex];
-	
+
 	if (pPlayer->XwaPlayer_m033 >= pCraft->WarheadsCount || GetWarheadsCount(pCraft, 1) == 0)
 	{
 		if (pCraft->LasersCount != 0)
@@ -187,6 +235,23 @@ int WeaponSwitchSetIndexHook(int* params)
 		{
 			pPlayer->XwaPlayer_m033 = 1;
 		}
+	}
+
+	return 0;
+}
+
+int SecondaryWeaponsSelectionHook(int* params)
+{
+	ExeObjectEntry* ExeEnableTable = (ExeObjectEntry*)0x005FB240;
+	ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+
+	XwaObject* pObject = (XwaObject*)params[Params_EDX];
+	unsigned short modelIndex = pObject->ModelIndex;
+	unsigned short craftIndex = ExeEnableTable[modelIndex].CraftIndex;
+
+	if (ExeCraftTable[craftIndex].WarheadTypeId[1] == 0)
+	{
+		params[Params_ReturnAddress] = 0x00461386;
 	}
 
 	return 0;

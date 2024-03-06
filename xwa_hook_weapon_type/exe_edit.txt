@@ -76,3 +76,13 @@ C68613958B0000          mov byte ptr [esi+008B9513], 00
 
 E87BC40A00              call 005A8B20, 005A8B20 - 004FC6A5 = 000AC47B
 9090                    nop
+
+; secondary weapons selection
+; L00460CB0
+:00461333 - 0x060733
+66837A020C              cmp word ptr [edx+02], 000C
+754C                    jne 00461386
+
+E8E8771400              call 005A8B20, 005A8B20 - 00461338 = 001477E8
+9090                    nop
+

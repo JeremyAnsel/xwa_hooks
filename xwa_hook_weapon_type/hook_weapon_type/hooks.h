@@ -10,6 +10,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4B13FD, BoardReloadTypeHook },
 	{ 0x4FC68C, WeaponSwitchWarheadCountHook },
 	{ 0x4FC6A5, WeaponSwitchSetIndexHook },
+	{ 0x461338, SecondaryWeaponsSelectionHook },
 };
 
 static const HookPatchItem g_weaponPatch[] =
@@ -27,6 +28,7 @@ static const HookPatchItem g_weaponPatch[] =
 	//{ 0x073B82, "0F8542010000", "0F854C010000" },
 	{ 0x0FBA87, "3A83D10100007218", "E894C40A0090EB18" },
 	{ 0x0FBAA0, "C68613958B0000", "E87BC40A009090" },
+	{ 0x060733, "66837A020C754C", "E8E87714009090" },
 };
 
 static const HookPatch g_patches[] =
