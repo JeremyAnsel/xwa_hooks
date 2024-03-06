@@ -109,9 +109,11 @@ public:
 		}
 
 		this->IsShieldRechargeForStarshipsEnabled = GetFileKeyValueInt(lines, "IsShieldRechargeForStarshipsEnabled", 1) != 0;
+		this->CraftUpdateTime = GetFileKeyValueInt(lines, "CraftUpdateTime", 123);
 	}
 
 	bool IsShieldRechargeForStarshipsEnabled;
+	int CraftUpdateTime;
 };
 
 Config g_config;
@@ -711,7 +713,7 @@ int CraftUpdateTimeHook(int* params)
 
 	int objectIndex = params[7];
 	short elapsedTime = *(short*)0x008C1640;
-	int timeSpeed = g_craftUpdateTimeObjectIndexTime.RetrieveTimeSpeed(118, objectIndex, elapsedTime);
+	int timeSpeed = g_craftUpdateTimeObjectIndexTime.RetrieveTimeSpeed(g_config.CraftUpdateTime, objectIndex, elapsedTime);
 
 	if (timeSpeed == 0)
 	{
