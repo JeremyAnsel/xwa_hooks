@@ -313,7 +313,8 @@ int CreateLightMapHook(int* params)
 
 	for (int i = 0; i < size; i++)
 	{
-		dst[i * 4 + 3] = src_illum[i];
+		//dst[i * 4 + 3] = src_illum[i];
+		dst[i * 4 + 3] = min( src_illum[i], 0x3f);
 	}
 
 	return (int)g_lightMapBuffer.data() + esp2C * 4;
@@ -393,15 +394,16 @@ int ConvertColorMapHook(int* params)
 			{
 				illumBuffer[i] = 0;
 			}
-			else if (hasAlpha && *(unsigned char*)(A14 + i) != 255)
-			{
-				illumBuffer[i] = 0;
-			}
+			//else if (hasAlpha && *(unsigned char*)(A14 + i) != 255)
+			//{
+			//	illumBuffer[i] = 0;
+			//}
 			else if (color == color8)
 			{
 				hasIllum = true;
 				//illumBuffer[i] = 0x3f;
-				illumBuffer[i] = 0x7f;
+				//illumBuffer[i] = 0x7f;
+				illumBuffer[i] = 0x3f;
 			}
 			else
 			{
@@ -419,7 +421,8 @@ int ConvertColorMapHook(int* params)
 			unsigned short color = A1C[256 * paletteIndex + colorIndex];
 			unsigned char illum = illumBuffer[i];
 
-			unsigned int a = (A14 == 0 || illum != 0) ? (unsigned char)255 : *(unsigned char*)(A14 + i);
+			//unsigned int a = (A14 == 0 || illum != 0) ? (unsigned char)255 : *(unsigned char*)(A14 + i);
+			unsigned int a = A14 == 0 ? (unsigned char)255 : *(unsigned char*)(A14 + i);
 			unsigned int color32 = g_colorConvert.color16to32[color];
 
 			*(unsigned int*)(colorBuffer + i * 4) = (a << 24) | color32;
@@ -453,16 +456,18 @@ int ConvertColorMapHook(int* params)
 		{
 			int paletteIndex = 4 + brightnessLevel;
 			unsigned char illum = A14 == 0 ? (unsigned char)0 : *(unsigned char*)(A14 + i);
+			illum = min(illum, 0x3f);
 
-			if (*(unsigned char*)(A10 + i * 4 + 3) != 255)
-			{
-				illum = 0;
-			}
+			//if (*(unsigned char*)(A10 + i * 4 + 3) != 255)
+			//{
+			//	illum = 0;
+			//}
 
 			unsigned int b = *(unsigned char*)(A10 + i * 4 + 0);
 			unsigned int g = *(unsigned char*)(A10 + i * 4 + 1);
 			unsigned int r = *(unsigned char*)(A10 + i * 4 + 2);
-			unsigned int a = illum != 0 ? (unsigned char)255 : *(unsigned char*)(A10 + i * 4 + 3);
+			//unsigned int a = illum != 0 ? (unsigned char)255 : *(unsigned char*)(A10 + i * 4 + 3);
+			unsigned int a = *(unsigned char*)(A10 + i * 4 + 3);
 
 			if (illum == 0)
 			{

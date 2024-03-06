@@ -328,7 +328,14 @@ namespace hook_32bpp_net
 
             if (opt.Textures.Any(t => t.Value.MipmapsCount == 1))
             {
+                int bpp = opt.TexturesBitsPerPixel;
+
                 opt.ConvertTextures8To32();
+
+                if (bpp == 8)
+                {
+                    opt.ConvertTextures32To8();
+                }
             }
 
             if (Directory.Exists($"FlightModels\\Skins\\{optName}"))
