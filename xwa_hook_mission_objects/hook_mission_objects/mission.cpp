@@ -628,6 +628,37 @@ std::vector<int> GetModelObjectProfileIndices(int modelIndex, const std::string&
 	return indices;
 }
 
+std::vector<int> GetModelObjectTargetableMeshes(int modelIndex)
+{
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	const auto objectLines = GetCustomFileLines("Objects");
+	const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		shipPath = GetStringWithoutExtension(objectValue);
+	}
+
+	auto lines = GetFileLines(shipPath + "ObjectProfiles.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", "ObjectProfiles");
+	}
+
+	const auto values = Tokennize(GetFileKeyValue(lines, "TargetableMeshes"));
+	std::vector<int> indices;
+
+	for (const std::string& value : values)
+	{
+		int index = std::stoi(value);
+		indices.push_back(index);
+	}
+
+	return indices;
+}
+
 class ModelIndexProfiles
 {
 public:
@@ -650,6 +681,24 @@ public:
 		}
 	}
 
+	std::vector<int>& GetTargetableMeshes(int modelIndex)
+	{
+		this->UpdateIfChanged();
+
+		auto it = this->_targetableMeshes.find(modelIndex);
+
+		if (it != this->_targetableMeshes.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetModelObjectTargetableMeshes(modelIndex);
+			this->_targetableMeshes.insert(std::make_pair(modelIndex, value));
+			return this->_targetableMeshes.find(modelIndex)->second;
+		}
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -665,10 +714,12 @@ private:
 			_missionIndex = missionFileNameIndex;
 
 			this->_profiles.clear();
+			this->_targetableMeshes.clear();
 		}
 	}
 
 	std::map<std::pair<int, std::string>, std::vector<int>> _profiles;
+	std::map<int, std::vector<int>> _targetableMeshes;
 };
 
 ModelIndexProfiles g_modelIndexProfiles;
@@ -1898,5 +1949,32 @@ int RenderOptObjectProfileHook(int* params)
 	}
 
 	params[Params_EAX] = (int)currentCraft;
+	return 0;
+}
+
+int TargetableComponentHook(int* params)
+{
+	unsigned short modelIndex = params[Params_EBX];
+	int meshIndex = *(int*)(params[Params_EBP] + 0x08);
+	int meshType = params[Params_EAX];
+
+	const auto& indices = g_modelIndexProfiles.GetTargetableMeshes(modelIndex);
+
+	bool skip = false;
+
+	if (!indices.empty() && std::find(indices.begin(), indices.end(), meshIndex) == indices.end())
+	{
+		skip = true;
+	}
+	else if (meshType == 0x12 || meshType == 0x13)
+	{
+		skip = true;
+	}
+
+	if (skip)
+	{
+		params[Params_ReturnAddress] = 0x00500E5D;
+	}
+
 	return 0;
 }

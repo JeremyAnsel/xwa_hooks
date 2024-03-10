@@ -28,3 +28,16 @@ E813A10900              call 005A8B20, 005A8B20 - 0050EA0D = 0009A113
 
 E8B1791200              call 005A8B20, 005A8B20 - 0048116F = 001279B1
 90                      nop
+
+; Key_COMMA - switch target component
+
+:00500DB4 - 0x1001B4
+0F84A3000000            je 00500E5D
+83F813                  cmp eax, 00000013
+0F849A000000            je 00500E5D
+
+E8677D0A00              call 005A8B20, 005A8B20 - 00500DB9 = 000A7D67
+90                      nop
+909090                  nop
+909090909090            nop
+

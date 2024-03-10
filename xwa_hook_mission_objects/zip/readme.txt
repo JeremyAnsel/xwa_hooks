@@ -93,6 +93,7 @@ At offset 01BD27, replace 803D04979E00050F85A7000000 with E8F4C11800909090E9A700
 At offset 056351, replace E85AA7FAFF with E8CA1B1500.
 At offset 10DE08, replace 66891D0F267800 with E813A109009090.
 At offset 08056A, replace 8B80DD000000 with E8B179120090.
+At offset 1001B4, replace 0F84A300000083F8130F849A000000 with E8677D0A0090909090909090909090.
 
 
 *** Usage ***
@@ -202,6 +203,14 @@ Replace #2 with the weapon model index.
 The default ProfileName is "Default" or "Default_#" where # is the markings index.
 For example, if the craft is a BWing and the weapon model index is 281, then the key is ObjectProfile_BWing_281.
 See "Objects.txt"
+
+# object targetable meshes
+Suppose that the craft is "FlightModels\[Model].opt".
+To define the targetable meshes for a craft, create a file named "FlightModels\[Model]ObjectProfiles.txt" or create a section named "[ObjectProfiles]" in "FlightModels\[Model].ini".
+The format is:
+TargetableMeshes = indices
+indices are a comma separated list.
+If the list is empty then all meshes are targetable.
 
 
 *** Credits ***

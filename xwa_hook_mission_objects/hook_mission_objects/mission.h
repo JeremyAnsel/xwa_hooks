@@ -37,3 +37,4 @@ int ObjectProfileHook(int* params);
 int AddObjectProfileHook(int* params);
 int BriefingObjectProfileHook(int* params);
 int RenderOptObjectProfileHook(int* params);
+int TargetableComponentHook(int* params);
