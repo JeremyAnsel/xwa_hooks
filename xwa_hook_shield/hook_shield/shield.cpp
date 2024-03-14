@@ -435,8 +435,8 @@ public:
 
 		this->_shieldRechargeRate.clear();
 		this->_perMissionShieldRechargeRate.clear();
-		this->_shieldRechargeDelay.clear();
-		this->_shieldRechargeDelayTime.clear();
+		memset(this->_shieldRechargeDelay, 0xff, sizeof(this->_shieldRechargeDelay));
+		memset(this->_shieldRechargeDelayTime, 0xff, sizeof(this->_shieldRechargeDelayTime));
 
 		for (const auto& line : lines)
 		{
@@ -515,40 +515,34 @@ public:
 	int GetRechargeRateDelay(int objectIndex)
 	{
 		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-		int fg = XwaObjects[objectIndex].TieFlightGroupIndex;
+		unsigned char fg = XwaObjects[objectIndex].TieFlightGroupIndex;
 		int modelIndex = XwaObjects[objectIndex].ModelIndex;
 
-		auto it = this->_shieldRechargeDelay.find(fg);
+		int value = this->_shieldRechargeDelay[fg];
 
-		if (it != this->_shieldRechargeDelay.end())
+		if (value == -1)
 		{
-			return it->second;
+			value = GetShieldRechargeRateDelay(modelIndex);
+			this->_shieldRechargeDelay[fg] = value;
 		}
-		else
-		{
-			int value = GetShieldRechargeRateDelay(modelIndex);
-			this->_shieldRechargeDelayTime.insert(std::make_pair(fg, value));
-			return value;
-		}
+
+		return value;
 	}
 
 	int GetRechargeRateDelayTime(int objectIndex)
 	{
 		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-		int fg = XwaObjects[objectIndex].TieFlightGroupIndex;
+		unsigned char fg = XwaObjects[objectIndex].TieFlightGroupIndex;
 
-		auto it = this->_shieldRechargeDelayTime.find(fg);
+		int value = this->_shieldRechargeDelayTime[fg];
 
-		if (it != this->_shieldRechargeDelayTime.end())
+		if (value == -1)
 		{
-			return it->second;
+			value = 0;
+			this->_shieldRechargeDelayTime[fg] = value;
 		}
-		else
-		{
-			int value = 0;
-			this->_shieldRechargeDelayTime.insert(std::make_pair(fg, value));
-			return value;
-		}
+
+		return value;
 	}
 
 	void SetRechargeRateDelayTime(int objectIndex, int time)
@@ -561,8 +555,8 @@ public:
 private:
 	std::map<int, ModelShieldRate> _shieldRechargeRate;
 	std::map<int, ModelShieldRate> _perMissionShieldRechargeRate;
-	std::map<int, int> _shieldRechargeDelay;
-	std::map<int, int> _shieldRechargeDelayTime;
+	int _shieldRechargeDelay[256];
+	int _shieldRechargeDelayTime[256];
 	std::string _currentMissionFileName;
 	int _currentMissionFileNameIndex = 0;
 };
