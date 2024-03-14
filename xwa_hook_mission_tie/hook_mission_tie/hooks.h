@@ -122,6 +122,9 @@ static const HookPatchItem g_statsProfilesPatch[] =
 	{ 0x0BD20C, "8A8C408CB45B00", "E81FAD0E008AC8" },
 	// L0041A960 - has shield generator
 	{ 0x01BA3D, "754F", "EB4F" },
+	// fix word percent from dword
+	{ 0x094161, "7606", "76D0" },
+	{ 0x094133, "909090909090909090909090", "33D20FA4C210C1E010F7F1C3" },
 };
 
 static const HookPatchItem g_missionIdsCheckPatch[] =

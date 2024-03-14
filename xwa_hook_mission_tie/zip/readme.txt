@@ -62,6 +62,8 @@ At offset 0B9CAA,, replace 389C408CB45B00 with E881E20E003AC3.
 At offset 0BBE6A, replace 8A94408CB45B00 with E8C1C00E008AD0.
 At offset 0BD20C, replace 8A8C408CB45B00 with E81FAD0E008AC8.
 At offset 01BA3D, replace 754F with EB4F.
+At offset 094161, replace 7606 with 76D0.
+At offset 094133, replace 909090909090909090909090 with 33D20FA4C210C1E010F7F1C3.
 
 # To call the hook that checks mission ids
 At offset 05B6E4, replace 668B01663D8700 with E837C814009090.

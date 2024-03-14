@@ -919,8 +919,8 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 	if (values.ShieldStrength != -1)
 	{
 		unsigned int exeShieldStrength = ExeCraftTable[craftIndex].ShieldStrength;
-		currentCraft->ShieldStrength[0] = exeShieldStrength == 0 ? 0 : (currentCraft->ShieldStrength[0] * values.ShieldStrength / exeShieldStrength);
-		currentCraft->ShieldStrength[1] = exeShieldStrength == 0 ? 0 : (currentCraft->ShieldStrength[1] * values.ShieldStrength / exeShieldStrength);
+		currentCraft->ShieldStrength[0] = exeShieldStrength == 0 ? 0 : (currentCraft->ShieldStrength[0] * (unsigned long long)values.ShieldStrength / exeShieldStrength);
+		currentCraft->ShieldStrength[1] = exeShieldStrength == 0 ? 0 : (currentCraft->ShieldStrength[1] * (unsigned long long)values.ShieldStrength / exeShieldStrength);
 	}
 
 	if (currentObject->PlayerIndex != -1 && valuesPercent.ShieldStrengthPercent != -1)

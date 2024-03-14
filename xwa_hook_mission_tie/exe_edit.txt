@@ -310,6 +310,26 @@ E81FAD0E00              call 005A8B30, 005A8B30 - 004BDE11 = 000EAD1F
 
 EB4F                    jmp 0041C68E
 
+; Fix word percent from dword
+
+:00494D61 - 0x094161
+7606                    jbe 00494D69
+
+76D0                    jbe 00494D33
+
+:00494D33 - 0x094133
+9090                    nop
+90909090                nop
+909090                  nop
+9090                    nop
+90                      nop
+
+33D2                    xor edx, edx
+0FA4C210                shld edx, eax, 10
+C1E010                  shl eax, 10
+F7F1                    div ecx
+C3                      ret
+
 ===============================================================================
 
 ; red allert
