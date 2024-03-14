@@ -81,6 +81,7 @@ At offset 0902FF, replace 0F849C030000 with E81C7C110090.
 At offset 090356, replace 0F8558020000 with E8C57B110090.
 At offset 065405, replace E8E6470000 with E8162B1400.
 At offset 00E818, replace 0F8C1B010000 with E80397190090.
+At offset 00EFD4, replace A00A548000 with E8478F1900.
 
 # To call the hook that override order of battle strings
 At offset 178064, replace E8171A0200 with E8B7FE0200.
@@ -115,8 +116,10 @@ To set the force turret time, set the ForcePlayerInTurretHours, ForcePlayerInTur
 To disable player laser shoot, set "DisablePlayerLaserShoot = 1". The default value is 0.
 To disable player warhead shoot, set "DisablePlayerWarheadShoot = 1". The default value is 0.
 To disable warhead collision damages, set "IsWarheadCollisionDamagesEnabled = 0". The default value is 1.
+To define if the ships can shoot throught the shield on hard difficulty, set "CanShootThroughtShieldOnHardDifficulty = 0". The default value is 0. It is 1 for the mission 50 (Death Star Phase 2).
 
 See "mission.txt".
+
 
 # Stats Profiles
 

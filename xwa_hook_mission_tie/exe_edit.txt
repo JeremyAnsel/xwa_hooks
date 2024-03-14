@@ -434,6 +434,13 @@ E8162B1400              call 005A8B20, 005A8B20 - 0046600A = 00142B16
 E803971900              call 005A8B20, 005A8B20 - 0040F41D = 00199703
 90                      nop
 
+; shoot throught shield on hard difficulty
+; L0040F230
+:0040FBD4 - 0x00EFD4
+A00A548000              mov al, byte ptr [0080540A]
+
+E8478F1900              call 005A8B20, 005A8B20 - 0040FBD9 = 00198F47
+
 ===============================================================================
 
 ; L00578A60 - Order of Battle

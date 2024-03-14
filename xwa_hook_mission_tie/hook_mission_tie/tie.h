@@ -27,5 +27,6 @@ int MissionPlayerShootHook(int* params);
 int MissionPlayerTypeShootHook(int* params);
 int MissionDrawLaserCharge3DHook(int* params);
 int WarheadCollisionDamagesHook(int* params);
+int ShootThroughtShieldOnHardDifficultyHook(int* params);
 
 int OrderOfBattleHook(int* params);

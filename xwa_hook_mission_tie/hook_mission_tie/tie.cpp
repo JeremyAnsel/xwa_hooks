@@ -157,6 +157,12 @@ public:
 		return this->_isWarheadCollisionDamagesEnabled;
 	}
 
+	bool CanShootThroughtShieldOnHardDifficulty()
+	{
+		this->UpdateIfChanged();
+		return this->_canShootThroughtShieldOnHardDifficulty;
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -190,6 +196,7 @@ private:
 			this->_disablePlayerLaserShoot = GetFileKeyValueInt(lines, "DisablePlayerLaserShoot", 0) != 0;
 			this->_disablePlayerWarheadShoot = GetFileKeyValueInt(lines, "DisablePlayerWarheadShoot", 0) != 0;
 			this->_isWarheadCollisionDamagesEnabled = GetFileKeyValueInt(lines, "IsWarheadCollisionDamagesEnabled", 1) != 0;
+			this->_canShootThroughtShieldOnHardDifficulty = GetFileKeyValueInt(lines, "CanShootThroughtShieldOnHardDifficulty", this->GetDefaultCanShootThroughtShieldOnHardDifficulty()) != 0;
 		}
 	}
 
@@ -245,6 +252,19 @@ private:
 		return 0;
 	}
 
+	int GetDefaultCanShootThroughtShieldOnHardDifficulty()
+	{
+		int id = this->GetMissionId();
+
+		// Death Star phase 2
+		if (id == 0x32)
+		{
+			return 1;
+		}
+
+		return 0;
+	}
+
 	bool _isRedAlertEnabled;
 	bool _skipHyperspacedMessages;
 	int _skipObjectsMessagesIff;
@@ -255,6 +275,7 @@ private:
 	bool _disablePlayerLaserShoot;
 	bool _disablePlayerWarheadShoot;
 	bool _isWarheadCollisionDamagesEnabled;
+	bool _canShootThroughtShieldOnHardDifficulty;
 };
 
 MissionConfig g_missionConfig;
@@ -1974,6 +1995,25 @@ int WarheadCollisionDamagesHook(int* params)
 	if (!enable || tieVersion < 0x0E)
 	{
 		params[Params_ReturnAddress] = 0x0040F539;
+	}
+
+	return 0;
+}
+
+int ShootThroughtShieldOnHardDifficultyHook(int* params)
+{
+	params[Params_EAX] = *(unsigned char*)0x0080540A;
+
+	int shield = params[Params_EDX];
+	bool skip = g_missionConfig.CanShootThroughtShieldOnHardDifficulty();
+
+	if (skip)
+	{
+		params[Params_ReturnAddress] = 0x0040FBDF;
+	}
+	else
+	{
+		params[Params_ReturnAddress] = shield == 0 ? 0x0040FBDF : 0x0040FC73;
 	}
 
 	return 0;
