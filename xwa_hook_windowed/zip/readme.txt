@@ -61,6 +61,11 @@ The minimum value for "Height" is 480.
 
 When "Width" or "Height" is 0, default values are used: the window will be fullscreen.
 
+The Titlebar setting will create the window with a Titlebar to allow for drag, minimize, maximize, and restore window functionality. 
+Currently experimental and finicky. If window loses focus you can gain control of the titlebar controls again by right clicking on the titlebar to bring up the system menu.
+If Window is minimized you will have to click twice on the taskbar icon for xwa to restore the window.
+If in fullscreen, this setting has no effect.
+
 To set a splash screen, create an image named "Splash.jpg". If this image doesn't exist then "Alliance.jpg" is used. If this image doesn't exist then a white screen is rendered.
 You can enable or disable the splash screen with the ShowSplashScreen setting. 0 means no and 1 means yes.
 
