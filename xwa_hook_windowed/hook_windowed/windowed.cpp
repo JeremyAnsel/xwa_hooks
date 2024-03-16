@@ -35,6 +35,7 @@ public:
 		int y = GetFileKeyValueInt(lines, "Y");
 		int width = GetFileKeyValueInt(lines, "Width");
 		int height = GetFileKeyValueInt(lines, "Height");
+		bool titlebar = GetFileKeyValueInt(lines, "TitleBar");
 
 		if (x < 0)
 		{
@@ -102,6 +103,7 @@ public:
 		this->Y = y;
 		this->Width = width;
 		this->Height = height;
+		this->Titlebar = titlebar;
 
 		this->ShowSplashScreen = GetFileKeyValueInt(lines, "ShowSplashScreen", 0) != 0;
 	}
@@ -112,6 +114,7 @@ public:
 	int Width;
 	int Height;
 	bool ShowSplashScreen;
+	bool Titlebar;
 };
 
 WindowConfig g_windowConfig;
@@ -353,11 +356,27 @@ int CreateWindowHook(int* params)
 	ATOM atom = (ATOM)params[0];
 	HINSTANCE hInstance = (HINSTANCE)params[1];
 
+	DWORD windowStyle = WS_POPUP | WS_VISIBLE;
+
+	if (!g_windowConfig.IsFullscreen)
+	{
+		windowStyle |= WS_BORDER;
+		
+		if (g_windowConfig.Titlebar)
+		{
+			windowStyle |= WS_CAPTION;
+			windowStyle |= WS_SYSMENU;
+			windowStyle |= WS_MINIMIZEBOX;
+			windowStyle |= WS_MAXIMIZEBOX;
+			g_windowConfig.Height += 25;  // Add titlebar height to window height to maintain size.
+		}
+	}
+
 	HWND hwnd = CreateWindowExA(
 		0,
 		(LPCSTR)atom,
 		"X-Wing Alliance",
-		WS_POPUP | WS_VISIBLE,
+		windowStyle,
 		g_windowConfig.X, g_windowConfig.Y,
 		g_windowConfig.Width, g_windowConfig.Height,
 		nullptr,
