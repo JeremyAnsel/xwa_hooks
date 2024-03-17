@@ -2434,10 +2434,10 @@ int CustomSoundsHook(int* params)
 
 		unsigned char category = XwaObjects[objectIndex].ShipCategory;
 
-		if (category != ShipCategory_Starship && category != ShipCategory_Freighter && category != ShipCategory_Platform)
-		{
-			continue;
-		}
+		//if (category != ShipCategory_Starship && category != ShipCategory_Freighter && category != ShipCategory_Platform)
+		//{
+		//	continue;
+		//}
 
 		float distance = GetRelativeDistance(currentPlayerObject, pObject);
 
