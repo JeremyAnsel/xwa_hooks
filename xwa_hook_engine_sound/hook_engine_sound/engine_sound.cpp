@@ -928,14 +928,22 @@ AmbientSoundSettings GetAmbientSoundSettings(int modelIndex)
 		lines = GetFileLines(path + ".ini", "Sound");
 	}
 
+	std::vector<std::string> defaultLines = GetFileLines("FlightModels\\Sound.txt");
+
+	if (!lines.size())
+	{
+		defaultLines = GetFileLines("FlightModels\\default.ini", "Sound");
+	}
+
 	AmbientSoundSettings settings;
 
 	int modelSize = (int)(ExeEnableTable[modelIndex].ObjectSize * ScaleFactor);
+	int defaultDistance = GetFileKeyValueInt(defaultLines, "AmbientSoundDistance", modelSize);
 
 	settings.OffsetX = GetFileKeyValueInt(lines, "AmbientSoundOffsetX", 0);
 	settings.OffsetY = GetFileKeyValueInt(lines, "AmbientSoundOffsetY", 0);
 	settings.OffsetZ = GetFileKeyValueInt(lines, "AmbientSoundOffsetZ", 0);
-	settings.Distance = GetFileKeyValueInt(lines, "AmbientSoundDistance", modelSize);
+	settings.Distance = GetFileKeyValueInt(lines, "AmbientSoundDistance", defaultDistance);
 	settings.DistanceX = GetFileKeyValueInt(lines, "AmbientSoundDistanceX", settings.Distance);
 	settings.DistanceY = GetFileKeyValueInt(lines, "AmbientSoundDistanceY", settings.Distance);
 	settings.DistanceZ = GetFileKeyValueInt(lines, "AmbientSoundDistanceZ", settings.Distance);
@@ -947,17 +955,17 @@ AmbientSoundSettings GetAmbientSoundSettings(int modelIndex)
 
 	if (settings.DistanceX == 0)
 	{
-		settings.DistanceX = 1;
+		settings.DistanceX = settings.Distance;
 	}
 
 	if (settings.DistanceY == 0)
 	{
-		settings.DistanceY = 1;
+		settings.DistanceY = settings.Distance;
 	}
 
 	if (settings.DistanceZ == 0)
 	{
-		settings.DistanceZ = 1;
+		settings.DistanceZ = settings.Distance;
 	}
 
 	return settings;

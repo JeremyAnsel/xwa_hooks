@@ -401,6 +401,11 @@ AmbientSoundDistanceX = distance in meters
 AmbientSoundDistanceY = distance in meters
 AmbientSoundDistanceZ = distance in meters
 
+To define a global ambient sound distance, create a file named "FlightModels\Sound.txt" or create a section named "[Sound]" in "FlightModels\default.ini".
+The format is:
+AmbientSoundDistance = distance
+
+
 Others custom sounds can be replaced in "Wave\Sfx_Sounds.lst":
 - line 0 is player craft targeted sounds
 - line 1 is map enter
