@@ -26,6 +26,11 @@ At offset 090C66, replace A1FC0D910083FBFF with E8B5721100EB2990.
 At offset 0FB100, replace 66F7D81BC0 with E81BCE0A00.
 At offset 0FC1F9, replace 66F7D81BC0 with E822BD0A00.
 At offset 0FC6FF, replace 751283E21F with E81CB80A00.
+At offset 0FC20F, replace 7F038B45FC with E80CBD0A00.
+At offset 0FC2BB, replace 66837DF464734B with E860BC0A009090.
+At offset 0FC6C0, replace 7E07C745F820030000 with E85BB80A0090909090.
+At offset 0FC73B, replace 66837DF4640F83ED000000 with E8E0B70A00909090909090.
+At offset 0A6F23, replace C744243810000000 with E8F80F1000909090.
 At offset 00DCB9, replace A015548000 with E872A21900.
 At offset 00B725, replace 897C2410663D00807202F7D8 with E8F6C71900897C241090EB0F.
 
@@ -81,6 +86,7 @@ At offset 0A7241, replace 8B048558605B00 with E8DA0C10009090.
 At offset 0E1A8C, replace 8B04BDB8645B00 with E88F640C009090.
 At offset 0E41AA, replace 8B14BD58605B00 with E8713D0C009090.
 At offset 119031, replace 8B150C655B00 with E8EAEE080090.
+At offset 0E168D, replace 25FFFF0000 with E88E680C00.
 
 # To call the hook that filters weapon racks
 At offset 01B241, replace 668B1445C0125B00 with 8BD0909090909090.
@@ -110,6 +116,32 @@ At offset 0A6CF9, replace 0F8234010000 with E82212100090.
 At offset 0A6E03, replace 8B1578F38B00 with E81811100090.
 At offset 0FBDBA, replace 660FB68403B6010000 with E861C10A0090909090.
 
+# To call the hook that sets the warhead lock distance
+At offset 08F213, replace BBAD8D0100722C with E8088D11009090.
+
+# To call the hook that sets the projectile turret threat
+At offset 0A80C9, replace E8D29AFFFF with E852FE0F00.
+
+# To call the hook that draws the energy bar
+At offset 06A08A, replace BE01000000 with E891DE1300.
+At offset 0692A3, replace A1C81C8C00 with E878EC1300.
+
+# To call the hook that sets the weapons count
+At offset 0912D6, replace 8D0440C745D8060000008D34818A82F0645B0084C08D7E0C with E8456C1100C745D8060000008A82F0645B0084C090909090.
+At offset 014C5A, replace 8D047FC1E002 with E8C132190090.
+At offset 01B25C, replace B001 with 9090.
+At offset 01B288, replace B001 with 9090.
+At offset 01B2A6, replace B009 with 9090.
+At offset 05C004, replace B001 with 9090.
+At offset 05C034, replace B001 with 9090.
+At offset 05C042, replace B009 with 9090.
+At offset 05FD15, replace C744243801000000 with 9090909090909090.
+At offset 05FD7B, replace C744243801000000 with 9090909090909090.
+At offset 05FD95, replace C744243809000000 with 9090909090909090.
+
+# To call the hook that filters ship type for weapons
+At offset 00E825, replace 3C0474083C050F8508010000 with 909090909090909090909090.
+
 
 *** Usage ***
 
@@ -125,6 +157,11 @@ DechargeRate = decharge value
 RechargeRate = recharge value
 CooldownTimeFactor = cooldown time value
 EnergyTransferRate = energy transfer value
+EnergyTransferRatePenalty = energy transfer penalty value
+EnergyTransferWeaponLimit = energy transfer limit for weapons
+EnergyTransferShieldLimit = energy transfer limit for shields
+MaxTorpedoCountPerPass = value
+MaxTorpedoCountPerTarget = value
 IsImpactSpinningEnabled = enabled value
 ImpactSpinningSpeedFactorPercent = percent value
 ImpactSpinningAngleFactorPercent = percent value
@@ -137,6 +174,11 @@ The format is
 DechargeRate_fg_# = decharge value
 RechargeRate_fg_# = recharge value
 EnergyTransferRate_fg_# = energy transfer value
+EnergyTransferRatePenalty_fg_# = energy transfer penalty value
+EnergyTransferWeaponLimit_fg_# = energy transfer limit for weapons
+EnergyTransferShieldLimit_fg_# = energy transfer limit for shields
+MaxTorpedoCountPerPass_fg_# = value
+MaxTorpedoCountPerTarget_fg_# = value
 IsImpactSpinningEnabled_fg_# = enabled value
 ImpactSpinningSpeedFactorPercent_fg_# = percent value
 ImpactSpinningAngleFactorPercent_fg_# = percent value
@@ -161,6 +203,16 @@ The default value for CooldownTimeFactor is 47.
 By default, the energy transfer rate is controlled as this:
 if the craft is MissileBoat, the recharge rate is 32,
 else the energy transfer rate is 4.
+
+By default, the energy transfer rate penalty is 0.
+
+By default, the energy transfer limit for weapons is 100.
+By default, the energy transfer limit for shields is 800.
+
+By default, the value for MaxTorpedoCountPerPass is 6.
+If the value is -1, then the global value is used.
+By default, the value for MaxTorpedoCountPerTarget is 16.
+If the value is -1, then the global value is used.
 
 By default, the "is impact spinning enabled" setting is the global value (1).
 The ImpactSpinningSpeedFactorPercent is a percent applied to the craft speed on computing the spinning. The default value is 100.
@@ -188,6 +240,11 @@ WeaponXXX_FireRatio = value
 WeaponXXX_Range = value
 WeaponXXX_IsPrecise = value
 WeaponXXX_DegreeOfSpreadMask = value
+WeaponXXX_DechargeRate = value
+WeaponXXX_RechargeRate = value
+WeaponXXX_EnergyLowHighSeparation = value
+WeaponXXX_Side = value
+WeaponXXX_SideModel = value
 
 The format of a profile is:
 ProfileName_WeaponXXX_DurationIntegerPart = value
@@ -202,6 +259,11 @@ ProfileName_WeaponXXX_FireRatio = value
 ProfileName_WeaponXXX_Range = value
 ProfileName_WeaponXXX_IsPrecise = value
 ProfileName_WeaponXXX_DegreeOfSpreadMask = value
+ProfileName_WeaponXXX_DechargeRate = value
+ProfileName_WeaponXXX_RechargeRate = value
+ProfileName_WeaponXXX_EnergyLowHighSeparation = value
+ProfileName_WeaponXXX_Side = value
+ProfileName_WeaponXXX_SideModel = value
 
 ProfileName is the name of the profile.
 XXX is the weapon index, between 280 and 307.
@@ -213,6 +275,9 @@ For the FireRatio setting, the default value is -1. This means that the value is
 For the Range setting, the default value is -1. This means that the value is taken from the exe craft struct. You can view it with XwaWorskpaceViewer.
 For the IsPrecise setting, the default value is 1. 1 means that the weapon is precise. 0 means that there is a degree a spread like player turret.
 For the DegreeOfSpreadMask setting, the default value is 255 (0xff). This setting is a binary mask which control the degree of spread.
+For the DechargeRate setting, the default value is -1. This means that value is taken from the model DechargeRate and DechargeRate_fg_# values.
+For the RechargeRate setting, the default value is -1. This means that value is taken from the model RechargeRate and RechargeRate_fg_# values.
+For the EnergyLowHighSeparation setting, the default value is -1. This means that the value is 64. The value is between 0 and 127. This setting define where there is the separation between low and high power weapon. The low power weapon is used to read this setting.
 To define a profile for the player, append _Player after WeaponXXX. For example: WeaponXXX_Player_DurationIntegerPart or ProfileName_WeaponXXX_Player_DurationIntegerPart.
 To define a profile based on the difficulty, append _Easy, _Medium, or _Hard after WeaponXXX. For examples: WeaponXXX_Easy_DurationIntegerPart or ProfileName_WeaponXXX_Easy_DurationIntegerPart.
 To define a profile for the player based on the difficulty, append the player key and the difficulty key. For example: WeaponXXX_Player_Easy_DurationIntegerPart or ProfileName_WeaponXXX_Player_Easy_DurationIntegerPart.

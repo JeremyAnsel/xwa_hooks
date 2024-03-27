@@ -56,6 +56,45 @@ E822BD0A00              call 005A8B20, 005A8B20 - 004FCDFE = 000ABD22
 
 E81CB80A00              call 005A8B20, 005A8B20 - 004FD304 = 000AB81C
 
+; transfer limits
+
+:004FCE0F - 0x0FC20F
+7F03                    jg 004FCE14
+8B45FC                  mov eax, dword ptr [ebp-04]
+
+E80CBD0A00              call 005A8B20, 005A8B20 - 004FCE14 = 000ABD0C
+
+:004FCEBB - 0x0FC2BB
+66837DF464              cmp word ptr [ebp-0C], 0064
+734B                    jnb 004FCF0D
+
+E860BC0A00              call 005A8B20, 005A8B20 - 004FCEC0 = 000ABC60
+9090                    nop
+
+:004FD2C0 - 0x0FC6C0
+7E07                    jle 004FD2C9
+C745F820030000          mov [ebp-08], 00000320
+
+E85BB80A00              call 005A8B20, 005A8B20 - 004FD2C5 = 000AB85B
+90909090                nop
+
+:004FD33B - 0x0FC73B
+66837DF464              cmp word ptr [ebp-0C], 0064
+0F83ED000000            jnb 004FD433
+
+E8E0B70A00              call 005A8B20, 005A8B20 - 004FD340 = 000AB7E0
+909090909090            nop
+
+
+// AI Max Torpedo Count Per Pass
+// AI Max Torpedo Count Per Target
+
+:004A7B23 - 0x0A6F23
+C744243810000000        mov [esp+38], 00000010
+
+E8F80F1000              call 005A8B20, 005A8B20 - 004A7B28 = 00100FF8
+909090                  nop
+
 
 // is impact spinning enabled
 :0040E8B9 - 0x00DCB9
@@ -437,6 +476,13 @@ E8713D0C00              call 005A8B20, 005A8B20 - 004E4DAF = 000C3D71
 E8EAEE0800              call 005A8B20, 005A8B20 - 00519C36 = 0008EEEA
 90                      nop
 
+// weapon side model
+// s_ExeWeaponSide and s_ExeWeaponSideModel
+:004E228D - 0x0E168D
+25FFFF0000              and eax, 0000FFFF
+
+E88E680C00              call 005A8B20, 005A8B20 - 004E2292 = 000C688E
+
 ===============================================================================
 
 ; WeaponRacks
@@ -582,4 +628,132 @@ E861C10A00              call 005A8B20, 005A8B20 - 004FC9BF = 000AC161
 ;663D0400                cmp ax, 0004
 ;
 ;663D0300                cmp ax, 0003
+
+===============================================================================
+
+// XWA Warhead Lock Distance
+
+:0048FE13 - 0x08F213
+BBAD8D0100              mov ebx, 00018DAD
+722C                    jb 0048FE46
+
+E8088D1100              call 005A8B20, 005A8B20 - 0048FE18 = 00118D08
+9090                    nop
+
+===============================================================================
+
+// XWA Projectile Turret Threat
+
+:004A8CC9 - 0x0A80C9
+E8D29AFFFF              call 004A27A0
+
+E852FE0F00              call 005A8B20, 005A8B20 - 004A8CCE = 000FFE52
+
+===============================================================================
+
+// L0046AA20
+void DrawEnergyBar3D( int type, int count )
+:0046AC8A - 0x06A08A
+BE01000000              mov esi, 00000001
+
+E891DE1300              call 005A8B20, 005A8B20 - 0046AC8F = 0013DE91
+
+// L00469EA0
+void SetupLaserChargePositions3D(  )
+:00469EA3 - 0x0692A3
+A1C81C8C00              mov eax, dword ptr [008C1CC8]
+
+E878EC1300              call 005A8B20, 005A8B20 - 00469EA8 = 0013EC78
+
+==============================================================================
+
+// Weapons count
+
+:00491ED6 - 0x0912D6
+8D0440                  lea eax, dword ptr [eax+2*eax]
+C745D806000000          mov [ebp-28], 00000006
+8D3481                  lea esi, dword ptr [ecx+4*eax]
+8A82F0645B00            mov al, byte ptr [edx+005B64F0]
+84C0                    test al, al
+8D7E0C                  lea edi, dword ptr [esi+0C]
+
+E8456C1100              call 005A8B20, 005A8B20 - 00491EDB = 00116C45
+C745D806000000          mov [ebp-28], 00000006
+8A82F0645B00            mov al, byte ptr [edx+005B64F0]
+84C0                    test al, al
+90909090                nop
+
+:0041585A - 0x014C5A
+8D047F                  lea eax, dword ptr [edi+2*edi]
+C1E002                  shl eax, 02
+
+E8C1321900              call 005A8B20, 005A8B20 - 0041585F = 001932C1
+90                      nop
+
+// L0041A960
+
+:0041BE5C - 0x01B25C
+B001                    mov al, 01
+
+9090                    nop
+
+:0041BE88 - 0x01B288
+B001                    mov al, 01
+
+9090                    nop
+
+:0041BEA6 - 0x01B2A6
+B009                    mov al, 09
+
+9090                    nop
+
+// L0045C680
+
+:0045CC04 - 0x05C004
+B001                    mov al, 01
+
+9090                    nop
+
+:0045CC34 - 0x05C034
+B001                    mov al, 01
+
+9090                    nop
+
+:0045CC42 - 0x05C042
+B009                    mov al, 09
+
+9090                    nop
+
+// L00460650
+
+:00460915 - 0x05FD15
+C744243801000000        mov [esp+38], 00000001
+
+9090909090909090        nop
+
+:0046097B - 0x05FD7B
+C744243801000000        mov [esp+38], 00000001
+
+9090909090909090        nop
+
+:00460995 - 0x05FD95
+C744243809000000        mov [esp+38], 00000009
+
+9090909090909090        nop
+
+===============================================================================
+
+// L0040F230
+; weapon power ship type filter
+
+:0040F425 - 0x00E825
+3C04                    cmp al, 04
+7408                    je 0040F431
+3C05                    cmp al, 05
+0F8508010000            jne 0040F539
+
+9090
+9090
+9090
+909090909090
 

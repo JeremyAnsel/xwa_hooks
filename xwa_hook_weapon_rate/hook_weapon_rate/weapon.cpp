@@ -115,6 +115,11 @@ public:
 		this->PreventAILasersIonWhenDisabling = GetFileKeyValueInt(lines, "PreventAILasersIonWhenDisabling", 0) != 0;
 		this->PreventAIIonWhenNotDisabling = GetFileKeyValueInt(lines, "PreventAIIonWhenNotDisabling", 0) != 0;
 		this->PreventPlayerLinkedLasersIon = GetFileKeyValueInt(lines, "PreventPlayerLinkedLasersIon", 0) != 0;
+		this->MaxTorpedoCountPerPass = GetFileKeyValueInt(lines, "MaxTorpedoCountPerPass", 6);
+		this->MaxTorpedoCountPerTarget = GetFileKeyValueInt(lines, "MaxTorpedoCountPerTarget", 16);
+		this->WeaponsCount = GetFileKeyValueInt(lines, "WeaponsCount", 12);
+		this->DechargeRatePercent = GetFileKeyValueInt(lines, "DechargeRatePercent", 100);
+		this->RechargeRatePercent = GetFileKeyValueInt(lines, "RechargeRatePercent", 77);
 	}
 
 	bool EnableFireMeshFilter;
@@ -123,6 +128,11 @@ public:
 	bool PreventAILasersIonWhenDisabling;
 	bool PreventAIIonWhenNotDisabling;
 	bool PreventPlayerLinkedLasersIon;
+	int MaxTorpedoCountPerPass;
+	int MaxTorpedoCountPerTarget;
+	int WeaponsCount;
+	int DechargeRatePercent;
+	int RechargeRatePercent;
 };
 
 Config g_config;
@@ -265,7 +275,7 @@ static_assert(sizeof(XwaFloatHardPt) == 13, "size of XwaFloatHardPt must be 13")
 
 struct XwaCraftWeaponRack
 {
-	char Unk0000[2];
+	unsigned short ModelIndex;
 	char Sequence;
 	char Unk0003[1];
 	char Charge;
@@ -308,7 +318,8 @@ struct XwaMobileObject
 	char Unk0091[2];
 	short ObjectIndex;
 	unsigned short ModelIndex;
-	char Unk0097[40];
+	unsigned char Iff;
+	char Unk0098[39];
 	bool RecalculateForwardVector;
 	short ForwardX;
 	short ForwardY;
@@ -626,6 +637,121 @@ int GetModelEnergyTransferRate(int objectIndex)
 	return rate;
 }
 
+int GetModelEnergyTransferRatePenalty(int objectIndex)
+{
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+
+	auto lines = GetShipLines(modelIndex);
+
+	int penalty = GetMissionWeaponRate(fgIndex, "EnergyTransferRatePenalty");
+
+	if (penalty == -1)
+	{
+		penalty = GetFileKeyValueInt(lines, "EnergyTransferRatePenalty", -1);
+	}
+
+	if (penalty == -1)
+	{
+		penalty = 0;
+	}
+
+	return penalty;
+}
+
+int GetModelEnergyTransferWeaponLimit(int objectIndex)
+{
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+
+	auto lines = GetShipLines(modelIndex);
+
+	int limit = GetMissionWeaponRate(fgIndex, "EnergyTransferWeaponLimit");
+
+	if (limit == -1)
+	{
+		limit = GetFileKeyValueInt(lines, "EnergyTransferWeaponLimit", -1);
+	}
+
+	if (limit == -1)
+	{
+		limit = 100;
+	}
+
+	return limit;
+}
+
+int GetModelEnergyTransferShieldLimit(int objectIndex)
+{
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+
+	auto lines = GetShipLines(modelIndex);
+
+	int limit = GetMissionWeaponRate(fgIndex, "EnergyTransferShieldLimit");
+
+	if (limit == -1)
+	{
+		limit = GetFileKeyValueInt(lines, "EnergyTransferShieldLimit", -1);
+	}
+
+	if (limit == -1)
+	{
+		limit = 800;
+	}
+
+	return limit;
+}
+
+int GetModelAIMaxTorpedoCountPerPass(int objectIndex)
+{
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+
+	auto lines = GetShipLines(modelIndex);
+
+	int count = GetMissionWeaponRate(fgIndex, "MaxTorpedoCountPerPass");
+
+	if (count == -1)
+	{
+		count = GetFileKeyValueInt(lines, "MaxTorpedoCountPerPass", -1);
+	}
+
+	if (count == -1)
+	{
+		count = g_config.MaxTorpedoCountPerPass;
+	}
+
+	return count;
+}
+
+int GetModelAIMaxTorpedoCountPerTarget(int objectIndex)
+{
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+
+	auto lines = GetShipLines(modelIndex);
+
+	int count = GetMissionWeaponRate(fgIndex, "MaxTorpedoCountPerTarget");
+
+	if (count == -1)
+	{
+		count = GetFileKeyValueInt(lines, "MaxTorpedoCountPerTarget", -1);
+	}
+
+	if (count == -1)
+	{
+		count = g_config.MaxTorpedoCountPerTarget;
+	}
+
+	return count;
+}
+
 bool GetModelIsImpactSpinningEnabled(int objectIndex)
 {
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
@@ -709,6 +835,11 @@ struct WeaponStats
 	int Range;
 	bool IsPrecise;
 	unsigned int DegreeOfSpreadMask;
+	int DechargeRate;
+	int RechargeRate;
+	int EnergyLowHighSeparation;
+	unsigned char Side;
+	unsigned short SideModel;
 };
 
 int GetWeaponKeyValue(const std::vector<std::string>& lines, const std::string& key, const std::string& weaponKey, const std::string& playerKey, const std::string& difficultyKey)
@@ -749,6 +880,8 @@ WeaponStats GetWeaponStats(const std::vector<std::string>& lines, int playerInde
 	const short* s_ExeWeaponSpeed = (short*)0x005B6528;
 	const int* s_ExeWeaponPower = (int*)0x005B64B8;
 	const unsigned char* s_ExeWeaponBehavior = (unsigned char*)0x005B6608;
+	const unsigned char* s_ExeWeaponSide = (unsigned char*)0x005B6660;
+	const unsigned short* s_ExeWeaponSideModel = (unsigned short*)0x005B6680;
 	const unsigned char difficulty = *(unsigned char*)(0x08053E0 + 0x002A);
 
 	//auto lines = GetModelLines(sourceModelIndex, "WeaponStats");
@@ -928,6 +1061,65 @@ WeaponStats GetWeaponStats(const std::vector<std::string>& lines, int playerInde
 		stats.DegreeOfSpreadMask = (unsigned int)degreeOfSpreadMask;
 	}
 
+	int dechargeRate = GetWeaponKeyValue(lines, "_DechargeRate", weaponKey, playerKey, difficultyKey);
+
+	if (dechargeRate == -1 || !g_config.EnableWeaponStatsProfiles)
+	{
+		stats.DechargeRate = GetWeaponDechargeRate(sourceModelIndex);
+	}
+	else
+	{
+		stats.DechargeRate = dechargeRate;
+	}
+
+	stats.DechargeRate = stats.DechargeRate * g_config.DechargeRatePercent / 100;
+
+	int rechargeRate = GetWeaponKeyValue(lines, "_RechargeRate", weaponKey, playerKey, difficultyKey);
+
+	if (rechargeRate == -1 || !g_config.EnableWeaponStatsProfiles)
+	{
+		stats.RechargeRate = GetWeaponRechargeRate(sourceModelIndex);
+	}
+	else
+	{
+		stats.RechargeRate = rechargeRate;
+	}
+
+	stats.RechargeRate = stats.RechargeRate * g_config.RechargeRatePercent / 100;
+
+	int energyLowHighSeparation = GetWeaponKeyValue(lines, "_EnergyLowHighSeparation", weaponKey, playerKey, difficultyKey);
+
+	if (energyLowHighSeparation == -1 || !g_config.EnableWeaponStatsProfiles)
+	{
+		stats.EnergyLowHighSeparation = 0x40;
+	}
+	else
+	{
+		stats.EnergyLowHighSeparation = energyLowHighSeparation;
+	}
+
+	int side = GetWeaponKeyValue(lines, "_Side", weaponKey, playerKey, difficultyKey);
+
+	if (side == -1 || !g_config.EnableWeaponStatsProfiles)
+	{
+		stats.Side = s_ExeWeaponSide[weaponIndex];
+	}
+	else
+	{
+		stats.Side = (unsigned char)side;
+	}
+
+	int sideModel = GetWeaponKeyValue(lines, "_SideModel", weaponKey, playerKey, difficultyKey);
+
+	if (sideModel == -1 || !g_config.EnableWeaponStatsProfiles)
+	{
+		stats.SideModel = s_ExeWeaponSideModel[weaponIndex];
+	}
+	else
+	{
+		stats.SideModel = (unsigned short)sideModel;
+	}
+
 	return stats;
 }
 
@@ -1040,6 +1232,116 @@ public:
 			int value = GetModelEnergyTransferRate(objectIndex);
 
 			this->_modelEnergyTransferRate.insert(std::make_pair(fgIndex, value));
+			return value;
+		}
+	}
+
+	int GetEnergyTransferRatePenalty(int objectIndex)
+	{
+		this->Update();
+
+		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+		int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+
+		auto it = this->_modelEnergyTransferRatePenalty.find(fgIndex);
+
+		if (it != this->_modelEnergyTransferRatePenalty.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetModelEnergyTransferRatePenalty(objectIndex);
+
+			this->_modelEnergyTransferRatePenalty.insert(std::make_pair(fgIndex, value));
+			return value;
+		}
+	}
+
+	int GetEnergyTransferWeaponLimit(int objectIndex)
+	{
+		this->Update();
+
+		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+		int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+
+		auto it = this->_modelEnergyTransferWeaponLimit.find(fgIndex);
+
+		if (it != this->_modelEnergyTransferWeaponLimit.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetModelEnergyTransferWeaponLimit(objectIndex);
+
+			this->_modelEnergyTransferWeaponLimit.insert(std::make_pair(fgIndex, value));
+			return value;
+		}
+	}
+
+	int GetEnergyTransferShieldLimit(int objectIndex)
+	{
+		this->Update();
+
+		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+		int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+
+		auto it = this->_modelEnergyTransferShieldLimit.find(fgIndex);
+
+		if (it != this->_modelEnergyTransferShieldLimit.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetModelEnergyTransferShieldLimit(objectIndex);
+
+			this->_modelEnergyTransferShieldLimit.insert(std::make_pair(fgIndex, value));
+			return value;
+		}
+	}
+
+	int GetAIMaxTorpedoCountPerPass(int objectIndex)
+	{
+		this->Update();
+
+		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+		int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+
+		auto it = this->_modelAIMaxTorpedoCountPerPass.find(fgIndex);
+
+		if (it != this->_modelAIMaxTorpedoCountPerPass.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetModelAIMaxTorpedoCountPerPass(objectIndex);
+
+			this->_modelAIMaxTorpedoCountPerPass.insert(std::make_pair(fgIndex, value));
+			return value;
+		}
+	}
+
+	int GetAIMaxTorpedoCountPerTarget(int objectIndex)
+	{
+		this->Update();
+
+		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+		int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+
+		auto it = this->_modelAIMaxTorpedoCountPerTarget.find(fgIndex);
+
+		if (it != this->_modelAIMaxTorpedoCountPerTarget.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			int value = GetModelAIMaxTorpedoCountPerTarget(objectIndex);
+
+			this->_modelAIMaxTorpedoCountPerTarget.insert(std::make_pair(fgIndex, value));
 			return value;
 		}
 	}
@@ -1163,6 +1465,11 @@ public:
 					+ " Range=" + std::to_string(stats.Range)
 					+ " IsPrecise=" + std::to_string(stats.IsPrecise)
 					+ " DegreeOfSpreadMask=" + std::to_string(stats.DegreeOfSpreadMask)
+					+ " DechargeRate=" + std::to_string(stats.DechargeRate)
+					+ " RechargeRate=" + std::to_string(stats.RechargeRate)
+					+ " EnergyLowHighSeparation=" + std::to_string(stats.EnergyLowHighSeparation)
+					+ " Side=" + std::to_string(stats.Side)
+					+ " SideModel=" + std::to_string(stats.SideModel)
 					).c_str());
 			}
 		}
@@ -1188,6 +1495,11 @@ private:
 			this->_weaponRechargeRate.clear();
 			this->_weaponCooldownTime.clear();
 			this->_modelEnergyTransferRate.clear();
+			this->_modelEnergyTransferRatePenalty.clear();
+			this->_modelEnergyTransferWeaponLimit.clear();
+			this->_modelEnergyTransferShieldLimit.clear();
+			this->_modelAIMaxTorpedoCountPerPass.clear();
+			this->_modelAIMaxTorpedoCountPerTarget.clear();
 			this->_modelIsImpactSpinningEnabled.clear();
 			this->_modelImpactSpinningSpeedFactorPercent.clear();
 			this->_modelImpactSpinningAngleFactorPercent.clear();
@@ -1200,6 +1512,11 @@ private:
 	std::map<int, int> _weaponRechargeRate;
 	std::map<int, int> _weaponCooldownTime;
 	std::map<int, int> _modelEnergyTransferRate;
+	std::map<int, int> _modelEnergyTransferRatePenalty;
+	std::map<int, int> _modelEnergyTransferWeaponLimit;
+	std::map<int, int> _modelEnergyTransferShieldLimit;
+	std::map<int, int> _modelAIMaxTorpedoCountPerPass;
+	std::map<int, int> _modelAIMaxTorpedoCountPerTarget;
 	std::map<int, bool> _modelIsImpactSpinningEnabled;
 	std::map<int, int> _modelImpactSpinningSpeedFactorPercent;
 	std::map<int, int> _modelImpactSpinningAngleFactorPercent;
@@ -1219,8 +1536,18 @@ int WeaponDechargeHook(int* params)
 
 	if (XwaCurrentCraft->WeaponRacks[weaponRackIndex].Sequence < 4)
 	{
-		unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
-		int dechargeRate = g_modelIndexWeapon.GetDechargeRate(objectIndex);
+		//unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
+		//int dechargeRate = g_modelIndexWeapon.GetDechargeRate(objectIndex);
+
+		unsigned short weaponRackModelIndex = XwaCurrentCraft->WeaponRacks[weaponRackIndex].ModelIndex;
+		int energyLowHighSeparation = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).EnergyLowHighSeparation;
+
+		if (XwaCurrentCraft->WeaponRacks[weaponRackIndex].Charge >= energyLowHighSeparation)
+		{
+			weaponRackModelIndex++;
+		}
+
+		int dechargeRate = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).DechargeRate;
 
 		XwaCurrentCraft->WeaponRacks[weaponRackIndex].Charge -= dechargeRate;
 	}
@@ -1232,8 +1559,23 @@ int WeaponRechargeHook(int* params)
 {
 	unsigned short modelIndex = (unsigned short)params[0];
 	int objectIndex = params[Params_EBP] / 0x27;
+	const int weaponRackIndex = (unsigned short)params[Params_EDI];
 
-	int rechargeRate = g_modelIndexWeapon.GetRechargeRate(objectIndex);
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+
+	//int rechargeRate = g_modelIndexWeapon.GetRechargeRate(objectIndex);
+
+	unsigned short weaponRackModelIndex = XwaCurrentCraft->WeaponRacks[weaponRackIndex].ModelIndex;
+	int energyLowHighSeparation = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).EnergyLowHighSeparation;
+
+	if (XwaCurrentCraft->WeaponRacks[weaponRackIndex].Charge >= energyLowHighSeparation)
+	{
+		weaponRackModelIndex++;
+	}
+
+	int rechargeRate = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).RechargeRate;
+
 	params[0] = rechargeRate;
 
 	return 0;
@@ -1311,11 +1653,98 @@ int ModelEnergyTransfer3Hook(int* params)
 	int objectIndex = XwaPlayers[playerIndex].ObjectIndex;
 
 	int rate = g_modelIndexWeapon.GetEnergyTransferRate(objectIndex);
+	int penalty = g_modelIndexWeapon.GetEnergyTransferRatePenalty(objectIndex);
+
+	rate -= penalty;
 
 	params[Params_EDI] = rate;
 	params[Params_EAX] = params[Params_EAX] / rate;
 
 	params[Params_ReturnAddress] = 0x004FD320;
+	return 0;
+}
+
+int ModelEnergyTransferShieldToLaser1Hook(int* params)
+{
+	int playerIndex = *(int*)(params[Params_EBP] + 0x08);
+	XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	int objectIndex = XwaPlayers[playerIndex].ObjectIndex;
+
+	int limit = g_modelIndexWeapon.GetEnergyTransferWeaponLimit(objectIndex);
+	int energy = *(short*)(params[Params_EBP] - 0x04);
+
+	if (limit > energy)
+	{
+		limit = energy;
+	}
+
+	params[Params_EAX] = limit;
+	return 0;
+}
+
+int ModelEnergyTransferShieldToLaser2Hook(int* params)
+{
+	int playerIndex = *(int*)(params[Params_EBP] + 0x08);
+	XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	int objectIndex = XwaPlayers[playerIndex].ObjectIndex;
+
+	int limit = g_modelIndexWeapon.GetEnergyTransferWeaponLimit(objectIndex);
+	int energy = *(short*)(params[Params_EBP] - 0x0C);
+
+	if (energy >= limit)
+	{
+		params[Params_ReturnAddress] = 0x004FCF0D;
+	}
+
+	return 0;
+}
+
+int ModelEnergyTransferLaserToShield1Hook(int* params)
+{
+	int playerIndex = *(int*)(params[Params_EBP] + 0x08);
+	XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	int objectIndex = XwaPlayers[playerIndex].ObjectIndex;
+
+	int limit = g_modelIndexWeapon.GetEnergyTransferShieldLimit(objectIndex);
+	int energy = *(int*)(params[Params_EBP] - 0x08);
+
+	if (energy > limit)
+	{
+		energy = limit;
+	}
+
+	*(int*)(params[Params_EBP] - 0x08) = energy;
+
+	return 0;
+}
+
+int ModelEnergyTransferLaserToShield2Hook(int* params)
+{
+	int playerIndex = *(int*)(params[Params_EBP] + 0x08);
+	XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	int objectIndex = XwaPlayers[playerIndex].ObjectIndex;
+
+	int limit = g_modelIndexWeapon.GetEnergyTransferWeaponLimit(objectIndex);
+	int energy = *(short*)(params[Params_EBP] - 0x0C);
+
+	if (energy >= limit)
+	{
+		params[Params_ReturnAddress] = 0x004FD433;
+	}
+
+	return 0;
+}
+
+int ModelAIMaxTorpedoCountHook(int* params)
+{
+	const int objectIndex = *(int*)(0x07CA1A0 + 0x0000);
+
+	int perPass = g_modelIndexWeapon.GetAIMaxTorpedoCountPerPass(objectIndex);
+	int perTarget = g_modelIndexWeapon.GetAIMaxTorpedoCountPerTarget(objectIndex);
+
+	params[13] = perPass;
+	params[14] = perTarget;
+
 	return 0;
 }
 
@@ -1540,6 +1969,8 @@ int GetWeaponDurationHook(int* params)
 
 int WeaponDuration_0040D54C_Hook(int* params)
 {
+	EnergyLowHighSeparationFunction1(params);
+
 	const int weaponIndex = params[Params_ECX] / 2;
 	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
 	const XwaObject* sourceObject = (XwaObject*)params[Params_ESI];
@@ -2001,6 +2432,7 @@ int WeaponPower_004A7983_Hook(int* params)
 
 int WeaponPower_004A7D68_Hook(int* params)
 {
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
 	const int weaponIndex = params[Params_EAX] - 0x118;
 	const int sourceObjectIndex = *(int*)((int)params + 0x44) / 0x27;
 
@@ -2062,8 +2494,39 @@ int WeaponPower_00519C36_Hook(int* params)
 	return 0;
 }
 
+int WeaponSideHook(int* params)
+{
+	const unsigned char* s_V0x05FE758 = (unsigned char*)0x05FE758;
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+	const XwaObject* object = (XwaObject*)params[Params_EDI];
+	const int objectIndex = object - xwaObjects;
+
+	unsigned short weaponRackModelIndex = (unsigned short)params[Params_ESI];
+
+	unsigned char valueSide = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).Side;
+	unsigned short valueSideModel = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).SideModel;
+
+	if (valueSide != 0xff)
+	{
+		unsigned char iff = object->pMobileObject->Iff;
+
+		if (s_V0x05FE758[iff] != valueSide)
+		{
+			weaponRackModelIndex = valueSideModel;
+			params[Params_ESI] = weaponRackModelIndex;
+		}
+	}
+
+	return 0;
+}
+
 int WeaponRackHook(int* params)
 {
+	if (!EnergyLowHighSeparationFunction2(params))
+	{
+		return 0xffff;
+	}
+
 	const auto L00491EB0 = (int(*)(int, int, int, int))0x00491EB0;
 
 	const int A4 = params[0];
@@ -2566,6 +3029,7 @@ ModelIndexWarhead g_modelIndexWarhead;
 
 int WarheadCapacity_0041BE55_Hook(int* params)
 {
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
 	const unsigned short* s_XwaTieWarheadTypeCapacityPercent = (unsigned short*)0x005B12C0;
 	int capacity = (unsigned short)params[0];
 	int warheadType = params[Params_EDX];
@@ -2586,6 +3050,7 @@ int WarheadCapacity_0041BE55_Hook(int* params)
 
 int WarheadCapacity_0045CBFD_Hook(int* params)
 {
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
 	const unsigned short* s_XwaTieWarheadTypeCapacityPercent = (unsigned short*)0x005B12C0;
 	int capacity = (unsigned short)params[0];
 	int warheadType = params[Params_EDI];
@@ -2608,6 +3073,7 @@ int WarheadCapacity_0045CBFD_Hook(int* params)
 
 int WarheadCapacity_00460904_Hook(int* params)
 {
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
 	const unsigned short* s_XwaTieWarheadTypeCapacityPercent = (unsigned short*)0x005B12C0;
 	int capacity = (unsigned short)params[0];
 	int warheadType = params[Params_EAX];
@@ -2629,6 +3095,7 @@ int WarheadCapacity_00460904_Hook(int* params)
 
 int WarheadCapacity_004B1426_Hook(int* params)
 {
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
 	const unsigned short* s_XwaTieWarheadTypeCapacityPercent = (unsigned short*)0x005B12C0;
 	int capacity = (unsigned short)params[0];
 	int warheadType = params[Params_EAX];
@@ -2781,6 +3248,7 @@ ModelIndexEnergy g_modelIndexEnergy;
 
 int EnergySpeedFactorHook(int* params)
 {
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	int objectIndex = params[Params_ESI] / 0x27;
 
 	int factor = g_modelIndexEnergy.GetStats(objectIndex).SpeedFactor;
@@ -2931,7 +3399,8 @@ ModelIndexLinking g_modelIndexLinking;
 
 int LasersLinkAIFighterHook(int* params)
 {
-	int objectIndex = *(int*)(0x07CA1A0 + 0x0000);
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	int objectIndex = *(int*)0x07CA1A0;
 	int laserLink = g_modelIndexLinking.GetStats(objectIndex).LaserLink;
 
 	if (laserLink != -1)
@@ -2945,6 +3414,7 @@ int LasersLinkAIFighterHook(int* params)
 
 int LasersLinkPlayerFighterHook(int* params)
 {
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	int objectIndex = params[12];
 	int laserLink = g_modelIndexLinking.GetStats(objectIndex).LaserLink;
 
@@ -2958,6 +3428,7 @@ int LasersLinkPlayerFighterHook(int* params)
 
 int LasersLinkPlayerKeyXHook(int* params)
 {
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	int objectIndex = *(int*)(params[Params_EBP] - 0x08) / 0x27;
 	int laserLink = g_modelIndexLinking.GetStats(objectIndex).LaserLink;
 
@@ -2974,7 +3445,8 @@ int LasersLinkPlayerKeyXHook(int* params)
 
 int PreventAILasersIonWhenDisablingHook(int* params)
 {
-	int objectIndex = *(int*)(0x07CA1A0 + 0x0000);
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	int objectIndex = *(int*)0x07CA1A0;
 	bool value = g_modelIndexLinking.GetStats(objectIndex).PreventAILasersIonWhenDisabling;
 
 	if (value)
@@ -2997,7 +3469,8 @@ int PreventAILasersIonWhenDisablingHook(int* params)
 
 int PreventAIIonWhenNotDisablingHook(int* params)
 {
-	int objectIndex = *(int*)(0x07CA1A0 + 0x0000);
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	int objectIndex = *(int*)0x07CA1A0;
 	bool value = g_modelIndexLinking.GetStats(objectIndex).PreventAIIonWhenNotDisabling;
 
 	if (value)
@@ -3016,7 +3489,8 @@ int PreventPlayerLinkedLasersIonHook(int* params)
 {
 	params[Params_EAX] = *(unsigned char*)(params[Params_EBX] + params[Params_EAX] + 0x01B6);
 
-	int objectIndex = *(int*)(0x07CA1A0 + 0x0000);
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	int objectIndex = *(int*)(params[Params_EBP] - 0x08) / 0x27;
 	bool value = g_modelIndexLinking.GetStats(objectIndex).PreventPlayerLinkedLasersIon;
 
 	if (value)
@@ -3029,6 +3503,264 @@ int PreventPlayerLinkedLasersIonHook(int* params)
 		*(unsigned short*)0x004FC9CB = 0x1575;
 		*(unsigned int*)0x004FC9EB = 0x00043D66;
 	}
+
+	return 0;
+}
+
+int WarheadLockDistanceHook(int* params)
+{
+	//int method = 0;
+
+	//if (method == 0)
+	//{
+	//	params[Params_EBX] = 0x18DAD;
+
+	//	if (params[Params_ESI] < params[Params_EAX])
+	//	{
+	//		params[Params_ReturnAddress] = 0x0048FE46;
+	//	}
+
+	//	return 0;
+	//}
+
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	int index = params[Params_ESI];
+	ShipCategoryEnum category = XwaObjects[index].ShipCategory;
+	unsigned short modelIndex = XwaObjects[index].ModelIndex;
+
+	int distance = 101805;
+
+	if (category == ShipCategory_Starship
+		|| category == ShipCategory_Platform
+		|| category == ShipCategory_Container
+		|| category == ShipCategory_Freighter)
+	{
+		distance = 244332;
+	}
+	else if (category == ShipCategory_Transport)
+	{
+		const unsigned short ModelIndex_057_0_44_MuurianTransport = 57;
+		const unsigned short ModelIndex_058_0_45_CorellianTransport2 = 58;
+		const unsigned short ModelIndex_059_0_46_MilleniumFalcon2 = 59;
+		const unsigned short ModelIndex_060_0_47_Outrider = 60;
+		const unsigned short ModelIndex_065_0_52_FamilyTransport = 65;
+
+		if (modelIndex == ModelIndex_057_0_44_MuurianTransport
+			|| modelIndex == ModelIndex_058_0_45_CorellianTransport2
+			|| modelIndex == ModelIndex_059_0_46_MilleniumFalcon2
+			|| modelIndex == ModelIndex_060_0_47_Outrider
+			|| modelIndex == ModelIndex_065_0_52_FamilyTransport)
+		{
+			distance = 244332;
+		}
+	}
+	else if (category == ShipCategory_Armament)
+	{
+		const unsigned short ModelIndex_194_0_133_AsteroidLaserBattery = 194;
+		const unsigned short ModelIndex_195_0_134_AsteroidWarheadLauncher = 195;
+
+		if (modelIndex == ModelIndex_194_0_133_AsteroidLaserBattery
+			|| modelIndex == ModelIndex_195_0_134_AsteroidWarheadLauncher)
+		{
+			distance = 244332;
+		}
+	}
+
+	params[Params_EBX] = distance;
+	params[Params_ReturnAddress] = 0x0048FE46;
+
+	return 0;
+}
+
+int ProjectileTurretThreatHook(int* params)
+{
+	const auto L004A27A0 = (int(*)(int))0x004A27A0;
+
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	//int method = 0;
+
+	//if (method == 0)
+	//{
+	//	params[Params_EAX] = L004A27A0(params[0]);
+	//	return 0;
+	//}
+
+	int index = params[0];
+
+	if (index != 0xFFFF)
+	{
+		ShipCategoryEnum category = XwaObjects[index].ShipCategory;
+
+		if (category == ShipCategory_PlayerProjectile
+			|| category == ShipCategory_OtherProjectile)
+		{
+			params[Params_EAX] = 0;
+			return 0;
+		}
+	}
+
+	int result = L004A27A0(index);
+	params[Params_EAX] = result;
+	return 0;
+}
+
+void EnergyLowHighSeparationFunction1(int* params)
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+	const XwaObject* sourceObject = (XwaObject*)params[Params_ESI];
+	const int sourceObjectIndex = sourceObject - xwaObjects;
+
+	const XwaCraft* pCraft = (XwaCraft*)params[Params_EDX];
+	const int rackIndex = params[Params_EDI];
+
+	int weaponIndex = params[Params_ECX] / 2;
+
+	if (pCraft->WeaponRacks[rackIndex].Charge >= 0x40)
+	{
+		weaponIndex--;
+	}
+
+	int energyLowHighSeparation = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).EnergyLowHighSeparation;
+
+	if (pCraft->WeaponRacks[rackIndex].Charge >= energyLowHighSeparation)
+	{
+		weaponIndex++;
+	}
+
+	params[Params_ECX] = weaponIndex * 2;
+}
+
+bool EnergyLowHighSeparationFunction2(int* params)
+{
+	if (params[Params_ReturnAddress] != 0x004915F6)
+	{
+		return true;
+	}
+
+	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+
+	const int objectIndex = params[0];
+	const int rackIndex = params[1];
+
+	unsigned short modelIndex = XwaCurrentCraft->WeaponRacks[rackIndex].ModelIndex;
+
+	if (modelIndex == 280 || modelIndex == 282 || modelIndex == 284)
+	{
+		int energyLowHighSeparation = g_modelIndexWeapon.GetStats(objectIndex, modelIndex - 0x118).EnergyLowHighSeparation;
+
+		if (XwaCurrentCraft->WeaponRacks[rackIndex].Charge >= energyLowHighSeparation)
+		{
+			modelIndex++;
+		}
+
+		params[2] = modelIndex;
+		params[Params_ECX] = modelIndex;
+		params[Params_EBP] = modelIndex;
+
+		int charge = XwaCurrentCraft->WeaponRacks[rackIndex].Charge;
+		int dechargeRate = g_modelIndexWeapon.GetStats(objectIndex, modelIndex - 0x118).DechargeRate;
+
+		if (charge < dechargeRate)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+int DrawEnergyBarHook(int* params)
+{
+	XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	int playerId = *(int*)0x008C1CC8;
+	int objectIndex = XwaPlayers[playerId].ObjectIndex;
+
+	XwaCraft* pCraft = (XwaCraft*)params[4];
+	int rackIndex = (params[7] - params[4] - 0x02E3) / 0x0E;
+	unsigned short modelIndex = pCraft->WeaponRacks[rackIndex].ModelIndex;
+
+	int charge = (unsigned short)params[Params_ECX];
+	int energyLowHighSeparation = g_modelIndexWeapon.GetStats(objectIndex, modelIndex - 0x118).EnergyLowHighSeparation;
+
+	int ebp;
+	int eax;
+
+	if (charge <= energyLowHighSeparation)
+	{
+		ebp = params[6];
+		eax = charge;
+	}
+	else
+	{
+		ebp = params[9];
+		eax = charge - energyLowHighSeparation;
+	}
+
+	int edi = eax / 10;
+
+	if (edi == 0)
+	{
+		if (charge < 10 || charge > energyLowHighSeparation)
+		{
+			edi = 1;
+		}
+	}
+
+	if (edi > 6)
+	{
+		edi = 6;
+	}
+
+	int ebx = 0;
+
+	if (charge > energyLowHighSeparation)
+	{
+		ebx = 6 - edi;
+	}
+
+	params[Params_EBP] = ebp;
+	params[Params_EAX] = eax;
+	params[Params_EDI] = edi;
+	params[Params_EBX] = ebx;
+
+	params[Params_ESI] = 0x01;
+	return 0;
+}
+
+int SetupLaserChargePositionsHook(int* params)
+{
+	// 5 weapons => 6 weapons
+	*(unsigned char*)0x0046A25F = 0x90;
+	*(unsigned char*)0x0046A260 = 0xE9;
+
+	// 6 weapons
+	int width = *(short*)0x068C7D4 + *(short*)0x068C7D0;
+	*(int*)0x068C7FC = *(short*)0x068C7D0 + width / 2;
+	*(int*)0x068C804 = *(short*)0x068C7D4 - width / 2;
+	*(int*)0x068C800 = *(int*)0x068C804 + width;
+
+	*(int*)0x068C808 = *(short*)0x068C7D8;
+	*(int*)0x068C80C = *(short*)0x068C7DC;
+
+	params[Params_EAX] = *(int*)0x008C1CC8;
+	return 0;
+}
+
+int SetWeaponsCount1Hook(int* params)
+{
+	int count = params[Params_EAX] * g_config.WeaponsCount;
+	params[Params_ESI] = params[Params_ECX] + count;
+	params[Params_EDI] = params[Params_ESI] + g_config.WeaponsCount;
+
+	return 0;
+}
+
+int SetWeaponsCount2Hook(int* params)
+{
+	int count = params[Params_EDI] * g_config.WeaponsCount;
+	params[Params_EAX] = count;
 
 	return 0;
 }

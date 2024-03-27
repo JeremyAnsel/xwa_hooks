@@ -6,6 +6,11 @@ int WeaponCooldownTimeHook(int* params);
 int ModelEnergyTransfer1Hook(int* params);
 int ModelEnergyTransfer2Hook(int* params);
 int ModelEnergyTransfer3Hook(int* params);
+int ModelEnergyTransferShieldToLaser1Hook(int* params);
+int ModelEnergyTransferShieldToLaser2Hook(int* params);
+int ModelEnergyTransferLaserToShield1Hook(int* params);
+int ModelEnergyTransferLaserToShield2Hook(int* params);
+int ModelAIMaxTorpedoCountHook(int* params);
 int ModelIsImpactSpinningEnabledHook(int* params);
 int ModelImpactSpinningFactorHook(int* params);
 
@@ -60,6 +65,7 @@ int WeaponPower_004A7E46_Hook(int* params);
 int WeaponPower_004E2691_Hook(int* params);
 int WeaponPower_004E4DAF_Hook(int* params);
 int WeaponPower_00519C36_Hook(int* params);
+int WeaponSideHook(int* params);
 
 int WeaponRackHook(int* params);
 int WeaponHardpointHook(int* params);
@@ -81,3 +87,16 @@ int LasersLinkPlayerKeyXHook(int* params);
 int PreventAILasersIonWhenDisablingHook(int* params);
 int PreventAIIonWhenNotDisablingHook(int* params);
 int PreventPlayerLinkedLasersIonHook(int* params);
+
+int WarheadLockDistanceHook(int* params);
+
+int ProjectileTurretThreatHook(int* params);
+
+void EnergyLowHighSeparationFunction1(int* params);
+bool EnergyLowHighSeparationFunction2(int* params);
+
+int DrawEnergyBarHook(int* params);
+int SetupLaserChargePositionsHook(int* params);
+
+int SetWeaponsCount1Hook(int* params);
+int SetWeaponsCount2Hook(int* params);

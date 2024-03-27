@@ -3,6 +3,30 @@
 
 #include "weapon.h"
 
+#include "config.h"
+
+class HooksConfig
+{
+public:
+	HooksConfig()
+	{
+		auto lines = GetFileLines("hook_weapon_rate.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_weapon_rate");
+		}
+
+		this->IsWarheadLockHookEnabled = GetFileKeyValueInt(lines, "IsWarheadLockHookEnabled", 0) != 0;
+		this->IsProjectileThreatHookEnabled = GetFileKeyValueInt(lines, "IsProjectileThreatHookEnabled", 0) != 0;
+	}
+
+	bool IsWarheadLockHookEnabled;
+	bool IsProjectileThreatHookEnabled;
+};
+
+static HooksConfig g_hooksConfig;
+
 static const HookFunction g_hookFunctions[] =
 {
 	{ 0x491656, WeaponDechargeHook },
@@ -11,6 +35,11 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4FBD05, ModelEnergyTransfer1Hook },
 	{ 0x4FCDFE, ModelEnergyTransfer2Hook },
 	{ 0x4FD304, ModelEnergyTransfer3Hook },
+	{ 0x4FCE14, ModelEnergyTransferShieldToLaser1Hook },
+	{ 0x4FCEC0, ModelEnergyTransferShieldToLaser2Hook },
+	{ 0x4FD2C5, ModelEnergyTransferLaserToShield1Hook },
+	{ 0x4FD340, ModelEnergyTransferLaserToShield2Hook },
+	{ 0x4A7B28, ModelAIMaxTorpedoCountHook },
 	{ 0x40E8BE, ModelIsImpactSpinningEnabledHook },
 	{ 0x40C32A, ModelImpactSpinningFactorHook },
 
@@ -65,6 +94,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4E2691, WeaponPower_004E2691_Hook },
 	{ 0x4E4DAF, WeaponPower_004E4DAF_Hook },
 	{ 0x519C36, WeaponPower_00519C36_Hook },
+	{ 0x4E2292, WeaponSideHook },
+
 	{ 0x4915F6, WeaponRackHook },
 	{ 0x491C03, WeaponRackHook },
 	{ 0x4E1C49, WeaponHardpointHook },
@@ -83,6 +114,15 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4A78FE, PreventAILasersIonWhenDisablingHook },
 	{ 0x4A7A08, PreventAIIonWhenNotDisablingHook },
 	{ 0x4FC9BF, PreventPlayerLinkedLasersIonHook },
+
+	{ g_hooksConfig.IsWarheadLockHookEnabled ? 0x48FE18 : 0, WarheadLockDistanceHook },
+
+	{ g_hooksConfig.IsProjectileThreatHookEnabled ? 0x4A8CCE : 0, ProjectileTurretThreatHook },
+
+	{ 0x46AC8F, DrawEnergyBarHook },
+	{ 0x469EA8, SetupLaserChargePositionsHook },
+	{ 0x491EDB, SetWeaponsCount1Hook },
+	{ 0x41585F, SetWeaponsCount2Hook },
 };
 
 static const HookPatchItem g_weaponRatePatch[] =
@@ -93,6 +133,11 @@ static const HookPatchItem g_weaponRatePatch[] =
 	{ 0x0FB100, "66F7D81BC0", "E81BCE0A00" },
 	{ 0x0FC1F9, "66F7D81BC0", "E822BD0A00" },
 	{ 0x0FC6FF, "751283E21F", "E81CB80A00" },
+	{ 0x0FC20F, "7F038B45FC", "E80CBD0A00" },
+	{ 0x0FC2BB, "66837DF464734B", "E860BC0A009090" },
+	{ 0x0FC6C0, "7E07C745F820030000", "E85BB80A0090909090" },
+	{ 0x0FC73B, "66837DF4640F83ED000000", "E8E0B70A00909090909090" },
+	{ 0x0A6F23, "C744243810000000", "E8F80F1000909090" },
 	{ 0x00DCB9, "A015548000", "E872A21900" },
 	{ 0x00B725, "897C2410663D00807202F7D8", "E8F6C71900897C241090EB0F" },
 };
@@ -156,6 +201,8 @@ static const HookPatchItem g_weaponProfilesPatch[] =
 	{ 0x0E1A8C, "8B04BDB8645B00", "E88F640C009090" },
 	{ 0x0E41AA, "8B14BD58605B00", "E8713D0C009090" },
 	{ 0x119031, "8B150C655B00", "E8EAEE080090" },
+	// s_ExeWeaponSide and s_ExeWeaponSideModel
+	{ 0x0E168D, "25FFFF0000", "E88E680C00" },
 };
 
 static const HookPatchItem g_weaponRacksPatch[] =
@@ -196,6 +243,46 @@ static const HookPatchItem g_weaponLinkingProfilesPatch[] =
 	{ 0x0FBDBA, "660FB68403B6010000", "E861C10A0090909090" },
 };
 
+#define WarheadLockPatchItem(offset, from, to) { (offset), g_hooksConfig.IsWarheadLockHookEnabled ? (from) : "", g_hooksConfig.IsWarheadLockHookEnabled ? (to) : "" }
+
+static const HookPatchItem g_warheadLockDistancePatch[] =
+{
+	WarheadLockPatchItem(0x08F213, "BBAD8D0100722C", "E8088D11009090"),
+};
+
+#define ProjectileThreatPatchItem(offset, from, to) { (offset), g_hooksConfig.IsProjectileThreatHookEnabled ? (from) : "", g_hooksConfig.IsProjectileThreatHookEnabled ? (to) : "" }
+
+static const HookPatchItem g_projectileTurretThreatPatch[] =
+{
+	ProjectileThreatPatchItem(0x0A80C9, "E8D29AFFFF", "E852FE0F00"),
+};
+
+static const HookPatchItem g_drawEnergyBarPatch[] =
+{
+	{ 0x06A08A, "BE01000000", "E891DE1300" },
+	{ 0x0692A3, "A1C81C8C00", "E878EC1300" },
+};
+
+static const HookPatchItem g_weaponsCountPatch[] =
+{
+	{ 0x0912D6, "8D0440C745D8060000008D34818A82F0645B0084C08D7E0C", "E8456C1100C745D8060000008A82F0645B0084C090909090" },
+	{ 0x014C5A, "8D047FC1E002", "E8C132190090" },
+	{ 0x01B25C, "B001", "9090" },
+	{ 0x01B288, "B001", "9090" },
+	{ 0x01B2A6, "B009", "9090" },
+	{ 0x05C004, "B001", "9090" },
+	{ 0x05C034, "B001", "9090" },
+	{ 0x05C042, "B009", "9090" },
+	{ 0x05FD15, "C744243801000000", "9090909090909090" },
+	{ 0x05FD7B, "C744243801000000", "9090909090909090" },
+	{ 0x05FD95, "C744243809000000", "9090909090909090" },
+};
+
+static const HookPatchItem g_weaponsShipTypeFilterPatch[] =
+{
+	{ 0x00E825, "3C0474083C050F8508010000", "909090909090909090909090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that defines weapon decharge and recharge rates", g_weaponRatePatch),
@@ -205,4 +292,9 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the warheads profiles", g_warheadProfilesPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the energy profiles", g_energyProfilesPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the weapon linking profiles", g_weaponLinkingProfilesPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the warhead lock distance", g_warheadLockDistancePatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the projectile turret threat", g_projectileTurretThreatPatch),
+	MAKE_HOOK_PATCH("To call the hook that draws the energy bar", g_drawEnergyBarPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the weapons count", g_weaponsCountPatch),
+	MAKE_HOOK_PATCH("To call the hook that filters ship type for weapons", g_weaponsShipTypeFilterPatch),
 };
