@@ -109,11 +109,13 @@ public:
 		}
 
 		this->IsShieldRechargeForStarshipsEnabled = GetFileKeyValueInt(lines, "IsShieldRechargeForStarshipsEnabled", 1) != 0;
-		this->CraftUpdateTime = GetFileKeyValueInt(lines, "CraftUpdateTime", 123);
+		this->CraftUpdateTime = GetFileKeyValueInt(lines, "CraftUpdateTime", 41);
+		this->RechargeRatePercent = GetFileKeyValueInt(lines, "RechargeRatePercent", 50);
 	}
 
 	bool IsShieldRechargeForStarshipsEnabled;
 	int CraftUpdateTime;
+	int RechargeRatePercent;
 };
 
 Config g_config;
@@ -651,6 +653,8 @@ int ShieldRechargeHook(int* params)
 			}
 		}
 	}
+
+	rechargeRate = rechargeRate * g_config.RechargeRatePercent / 100;
 
 	return 0;
 }

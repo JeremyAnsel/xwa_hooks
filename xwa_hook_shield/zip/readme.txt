@@ -66,7 +66,9 @@ ModelIndex, UseGenerator, PerGeneratorRechargeRate, RechargeRate
 See *Shield.txt.
 
 You can enable or disable the shield recharge for starships with the IsShieldRechargeForStarshipsEnabled setting.
-To set the time between the updates, set the CraftUpdateTime setting.
+To set the time between the updates, set the CraftUpdateTime setting. The default value is 41.
+To control the recharge rate speed, set the RechargeRatePercent setting. The default value is 50.
+
 See "hook_shield.cfg" or the "hook_shield" section of "Hooks.ini".
 
 
