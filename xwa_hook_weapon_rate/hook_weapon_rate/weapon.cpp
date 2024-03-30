@@ -1100,7 +1100,7 @@ WeaponStats GetWeaponStats(const std::vector<std::string>& lines, int playerInde
 
 	int side = GetWeaponKeyValue(lines, "_Side", weaponKey, playerKey, difficultyKey);
 
-	if (side == -1 || !g_config.EnableWeaponStatsProfiles)
+	if (side == -1)
 	{
 		stats.Side = s_ExeWeaponSide[weaponIndex];
 	}
@@ -1111,7 +1111,7 @@ WeaponStats GetWeaponStats(const std::vector<std::string>& lines, int playerInde
 
 	int sideModel = GetWeaponKeyValue(lines, "_SideModel", weaponKey, playerKey, difficultyKey);
 
-	if (sideModel == -1 || !g_config.EnableWeaponStatsProfiles)
+	if (sideModel == -1)
 	{
 		stats.SideModel = s_ExeWeaponSideModel[weaponIndex];
 	}
@@ -2491,32 +2491,6 @@ int WeaponPower_00519C36_Hook(int* params)
 	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).Power;
 
 	params[Params_EDX] = value;
-	return 0;
-}
-
-int WeaponSideHook(int* params)
-{
-	const unsigned char* s_V0x05FE758 = (unsigned char*)0x05FE758;
-	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
-	const XwaObject* object = (XwaObject*)params[Params_EDI];
-	const int objectIndex = object - xwaObjects;
-
-	unsigned short weaponRackModelIndex = (unsigned short)params[Params_ESI];
-
-	unsigned char valueSide = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).Side;
-	unsigned short valueSideModel = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).SideModel;
-
-	if (valueSide != 0xff)
-	{
-		unsigned char iff = object->pMobileObject->Iff;
-
-		if (s_V0x05FE758[iff] != valueSide)
-		{
-			weaponRackModelIndex = valueSideModel;
-			params[Params_ESI] = weaponRackModelIndex;
-		}
-	}
-
 	return 0;
 }
 

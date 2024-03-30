@@ -94,7 +94,6 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4E2691, WeaponPower_004E2691_Hook },
 	{ 0x4E4DAF, WeaponPower_004E4DAF_Hook },
 	{ 0x519C36, WeaponPower_00519C36_Hook },
-	{ 0x4E2292, WeaponSideHook },
 
 	{ 0x4915F6, WeaponRackHook },
 	{ 0x491C03, WeaponRackHook },
@@ -201,8 +200,6 @@ static const HookPatchItem g_weaponProfilesPatch[] =
 	{ 0x0E1A8C, "8B04BDB8645B00", "E88F640C009090" },
 	{ 0x0E41AA, "8B14BD58605B00", "E8713D0C009090" },
 	{ 0x119031, "8B150C655B00", "E8EAEE080090" },
-	// s_ExeWeaponSide and s_ExeWeaponSideModel
-	{ 0x0E168D, "25FFFF0000", "E88E680C00" },
 };
 
 static const HookPatchItem g_weaponRacksPatch[] =

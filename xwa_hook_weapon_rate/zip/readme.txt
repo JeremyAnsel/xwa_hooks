@@ -86,7 +86,6 @@ At offset 0A7241, replace 8B048558605B00 with E8DA0C10009090.
 At offset 0E1A8C, replace 8B04BDB8645B00 with E88F640C009090.
 At offset 0E41AA, replace 8B14BD58605B00 with E8713D0C009090.
 At offset 119031, replace 8B150C655B00 with E8EAEE080090.
-At offset 0E168D, replace 25FFFF0000 with E88E680C00.
 
 # To call the hook that filters weapon racks
 At offset 01B241, replace 668B1445C0125B00 with 8BD0909090909090.

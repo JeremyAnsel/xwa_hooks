@@ -476,13 +476,6 @@ E8713D0C00              call 005A8B20, 005A8B20 - 004E4DAF = 000C3D71
 E8EAEE0800              call 005A8B20, 005A8B20 - 00519C36 = 0008EEEA
 90                      nop
 
-// weapon side model
-// s_ExeWeaponSide and s_ExeWeaponSideModel
-:004E228D - 0x0E168D
-25FFFF0000              and eax, 0000FFFF
-
-E88E680C00              call 005A8B20, 005A8B20 - 004E2292 = 000C688E
-
 ===============================================================================
 
 ; WeaponRacks

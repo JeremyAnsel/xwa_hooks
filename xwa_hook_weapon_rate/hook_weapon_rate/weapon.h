@@ -65,7 +65,6 @@ int WeaponPower_004A7E46_Hook(int* params);
 int WeaponPower_004E2691_Hook(int* params);
 int WeaponPower_004E4DAF_Hook(int* params);
 int WeaponPower_00519C36_Hook(int* params);
-int WeaponSideHook(int* params);
 
 int WeaponRackHook(int* params);
 int WeaponHardpointHook(int* params);
