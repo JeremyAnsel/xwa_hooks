@@ -129,9 +129,12 @@ struct XwaObject
 {
 	char Unk0000[2];
 	unsigned short ModelIndex;
-	char Unk0004[23];
+	unsigned char ShipCategory;
+	unsigned char TieFlightGroupIndex;
+	char Unk0006[21];
 	short m1B;
-	char Unk001D[6];
+	char Unk001D[2];
+	int PlayerIndex;
 	XwaMobileObject* pMobileObject;
 };
 
@@ -238,6 +241,57 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 	}
 
 	return _lines;
+}
+
+std::vector<std::string> GetModelLines(int modelIndex, const std::string& name)
+{
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, ship + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		ship = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(ship + name + ".txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", name);
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\" + name + ".txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", name);
+	}
+
+	return lines;
 }
 
 std::vector<std::string> GetWeaponColorLines(const std::string& shipPath)
@@ -592,6 +646,119 @@ std::array<unsigned int, 28> GetWeaponLightColor(int modelIndex, int markings)
 	return color;
 }
 
+struct WeaponStats
+{
+	unsigned char Side;
+	unsigned short SideModel;
+};
+
+int GetWeaponKeyValue(const std::vector<std::string>& lines, const std::string& key, const std::string& weaponKey, const std::string& playerKey, const std::string& difficultyKey)
+{
+	int value = -1;
+
+	if (!playerKey.empty())
+	{
+		if (value == -1)
+		{
+			value = GetFileKeyValueInt(lines, weaponKey + playerKey + difficultyKey + key, -1);
+		}
+
+		if (value == -1)
+		{
+			value = GetFileKeyValueInt(lines, weaponKey + playerKey + key, -1);
+		}
+	}
+
+	if (value == -1)
+	{
+		value = GetFileKeyValueInt(lines, weaponKey + difficultyKey + key, -1);
+	}
+
+	if (value == -1)
+	{
+		value = GetFileKeyValueInt(lines, weaponKey + key, -1);
+	}
+
+	return value;
+}
+
+WeaponStats GetWeaponStats(int playerIndex, int sourceModelIndex, const std::string& profileName, int weaponIndex)
+{
+	const unsigned char* s_ExeWeaponSide = (unsigned char*)0x005B6660;
+	const unsigned short* s_ExeWeaponSideModel = (unsigned short*)0x005B6680;
+	const unsigned char difficulty = *(unsigned char*)(0x08053E0 + 0x002A);
+
+	auto lines = GetModelLines(sourceModelIndex, "WeaponStats");
+
+	std::string playerKey;
+	if (playerIndex != -1)
+	{
+		playerKey = "_Player";
+	}
+
+	std::string difficultyKey;
+	switch (difficulty)
+	{
+	case 0:
+		difficultyKey = "_Easy";
+		break;
+
+	case 1:
+		difficultyKey = "_Medium";
+		break;
+
+	case 2:
+		difficultyKey = "_Hard";
+		break;
+	}
+
+	WeaponStats stats{};
+	std::string weaponKey = "Weapon" + std::to_string(280 + weaponIndex);
+
+	if (!profileName.empty())
+	{
+		weaponKey = profileName + "_" + weaponKey;
+	}
+
+	int side = GetWeaponKeyValue(lines, "_Side", weaponKey, playerKey, difficultyKey);
+
+	if (side == -1)
+	{
+		stats.Side = s_ExeWeaponSide[weaponIndex];
+	}
+	else
+	{
+		stats.Side = (unsigned char)side;
+	}
+
+	int sideModel = GetWeaponKeyValue(lines, "_SideModel", weaponKey, playerKey, difficultyKey);
+
+	if (sideModel == -1)
+	{
+		stats.SideModel = s_ExeWeaponSideModel[weaponIndex];
+	}
+	else
+	{
+		stats.SideModel = (unsigned short)sideModel;
+	}
+
+	return stats;
+}
+
+std::string GetWeaponProfileName(int fgIndex)
+{
+	auto lines = GetCustomFileLines("WeaponProfiles");
+
+	std::string name = GetFileKeyValue(lines, "WeaponProfile_fg_" + std::to_string(fgIndex));
+
+	if (_stricmp(name.c_str(), "Default") == 0)
+	{
+		name = std::string();
+	}
+
+	return name;
+}
+
 class ModelIndexWeapon
 {
 public:
@@ -700,6 +867,30 @@ public:
 		}
 	}
 
+	const WeaponStats& GetStats(int sourceObjectIndex, int weaponIndex)
+	{
+		this->UpdateIfChanged();
+
+		const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+		const XwaObject* sourceObject = &xwaObjects[sourceObjectIndex];
+
+		unsigned short sourceModelIndex = sourceObject->ModelIndex;
+		int sourceFgIndex = sourceObject->TieFlightGroupIndex;
+		int playerIndex = sourceObject->PlayerIndex;
+
+		auto it = this->_weaponStats.find(std::make_tuple(sourceFgIndex, weaponIndex));
+
+		if (it == this->_weaponStats.end())
+		{
+			std::string profileName = GetWeaponProfileName(sourceFgIndex);
+			WeaponStats stats = GetWeaponStats(playerIndex, sourceModelIndex, profileName, weaponIndex);
+			this->_weaponStats.insert(std::make_pair(std::make_tuple(sourceFgIndex, weaponIndex), stats));
+			it = this->_weaponStats.find(std::make_tuple(sourceFgIndex, weaponIndex));
+		}
+
+		return it->second;
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -719,6 +910,7 @@ private:
 			this->_weaponImpactColor.clear();
 			this->_weaponEnergyBarColor.clear();
 			this->_weaponLightColor.clear();
+			this->_weaponStats.clear();
 		}
 	}
 
@@ -727,6 +919,7 @@ private:
 	std::map<std::pair<int, int>, std::array<unsigned int, 28>> _weaponImpactColor;
 	std::map<std::pair<int, int>, WeaponEnergyBarColor> _weaponEnergyBarColor;
 	std::map<std::pair<int, int>, std::array<unsigned int, 28>> _weaponLightColor;
+	std::map<std::tuple<int, int>, WeaponStats> _weaponStats;
 };
 
 ModelIndexWeapon g_modelIndexWeapon;
@@ -743,6 +936,28 @@ bool GetConfigWeaponSwitchBasedOnIff(int modelIndex)
 	return value != 0;
 }
 
+unsigned short GetWeaponRackModelIndex(int objectIndex, unsigned short weaponRackModelIndex)
+{
+	const unsigned char* s_V0x05FE758 = (unsigned char*)0x05FE758;
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+	const XwaObject* object = &xwaObjects[objectIndex];
+
+	unsigned char valueSide = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).Side;
+	unsigned short valueSideModel = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).SideModel;
+
+	if (valueSide != 0xff)
+	{
+		unsigned char iff = object->pMobileObject->Iff;
+
+		if (s_V0x05FE758[iff] != valueSide)
+		{
+			weaponRackModelIndex = valueSideModel;
+		}
+	}
+
+	return weaponRackModelIndex;
+}
+
 int WeaponColorHook(int* params)
 {
 	const int objectIndex = params[54];
@@ -750,24 +965,12 @@ int WeaponColorHook(int* params)
 	const int weaponObjectIndex = params[28];
 
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-	unsigned char* ExeWeaponSide = (unsigned char*)0x005B6660;
-	unsigned short* ExeWeaponSideModel = (unsigned short*)0x005B6680;
-	unsigned char* s_V0x05FE758 = (unsigned char*)0x005FE758;
 	unsigned short objectModelIndex = XwaObjects[objectIndex].ModelIndex;
 	unsigned char objectMarkings = XwaObjects[objectIndex].pMobileObject->Markings;
 
 	if (GetConfigWeaponSwitchBasedOnIff(objectModelIndex))
 	{
-		unsigned char iff = XwaObjects[objectIndex].pMobileObject->Iff;
-		unsigned char side = ExeWeaponSide[weaponModelIndex - 280];
-
-		if (side != 0xff)
-		{
-			if (s_V0x05FE758[iff] != side)
-			{
-				weaponModelIndex = ExeWeaponSideModel[weaponModelIndex - 280];
-			}
-		}
+		weaponModelIndex = GetWeaponRackModelIndex(objectIndex, weaponModelIndex);
 	}
 
 	int color = g_modelIndexWeapon.GetColor(objectModelIndex, weaponModelIndex, objectMarkings);
@@ -799,23 +1002,12 @@ int WeaponAIColorHook(int* params)
 {
 	unsigned short& weaponModelIndex = (unsigned short&)params[0];
 	const XwaObject* object = (XwaObject*)params[1];
-
-	unsigned char* ExeWeaponSide = (unsigned char*)0x005B6660;
-	unsigned short* ExeWeaponSideModel = (unsigned short*)0x005B6680;
-	unsigned char* s_V0x05FE758 = (unsigned char*)0x005FE758;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const int objectIndex = object - XwaObjects;
 
 	if (GetConfigWeaponSwitchBasedOnIff(object->ModelIndex))
 	{
-		unsigned char iff = object->pMobileObject->Iff;
-		unsigned char side = ExeWeaponSide[weaponModelIndex - 280];
-
-		if (side != 0xff)
-		{
-			if (s_V0x05FE758[iff] != side)
-			{
-				weaponModelIndex = ExeWeaponSideModel[weaponModelIndex - 280];
-			}
-		}
+		weaponModelIndex = GetWeaponRackModelIndex(objectIndex, weaponModelIndex);
 	}
 
 	return 0;
