@@ -143,6 +143,7 @@ SystemStrength = integer
 ShieldStrength = integer
 HasShieldGenerator = integer
 HasHyperdrive = integer
+IsWarheadCollisionDamagesEnabled = integer
 
 See "XWing.ini".
 

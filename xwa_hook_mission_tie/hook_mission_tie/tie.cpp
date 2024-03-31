@@ -460,6 +460,7 @@ struct CraftStats
 	int ShieldStrength;
 	int HasShieldGenerator;
 	int HasHyperdrive;
+	bool IsWarheadCollisionDamagesEnabled;
 };
 
 struct CraftStatsPercent
@@ -648,6 +649,7 @@ CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 	stats.ShieldStrength = GetFileKeyValueInt(lines, "ShieldStrength", -1);
 	stats.HasShieldGenerator = GetFileKeyValueInt(lines, "HasShieldGenerator", -1);
 	stats.HasHyperdrive = GetFileKeyValueInt(lines, "HasHyperdrive", -1);
+	stats.IsWarheadCollisionDamagesEnabled = GetFileKeyValueInt(lines, "IsWarheadCollisionDamagesEnabled", 1) != 0;
 
 	if (stats.Speed != -1)
 	{
@@ -1989,10 +1991,14 @@ int MissionDrawLaserCharge3DHook(int* params)
 int WarheadCollisionDamagesHook(int* params)
 {
 	const int tieVersion = params[Params_EAX];
+	const int objectIndex = params[Params_EDI];
 
-	bool enable = g_config.IsWarheadCollisionDamagesEnabled && g_missionConfig.IsWarheadCollisionDamagesEnabled();
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 
-	if (!enable || tieVersion < 0x0E)
+	bool enabled = g_config.IsWarheadCollisionDamagesEnabled && g_missionConfig.IsWarheadCollisionDamagesEnabled();
+	bool objectEnabled = g_modelIndexProfiles.GetProfileStats(&xwaObjects[objectIndex]).IsWarheadCollisionDamagesEnabled;
+
+	if (!enabled || !objectEnabled || tieVersion < 0x0E)
 	{
 		params[Params_ReturnAddress] = 0x0040F539;
 	}
