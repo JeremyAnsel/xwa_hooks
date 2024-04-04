@@ -122,6 +122,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x469EA8, SetupLaserChargePositionsHook },
 	{ 0x491EDB, SetWeaponsCount1Hook },
 	{ 0x41585F, SetWeaponsCount2Hook },
+	{ 0x4609B2, HangarWarheadReloadHook },
+	{ 0x461490, HangarWarheadCountHook },
 };
 
 static const HookPatchItem g_weaponRatePatch[] =
@@ -273,11 +275,19 @@ static const HookPatchItem g_weaponsCountPatch[] =
 	{ 0x05FD15, "C744243801000000", "9090909090909090" },
 	{ 0x05FD7B, "C744243801000000", "9090909090909090" },
 	{ 0x05FD95, "C744243809000000", "9090909090909090" },
+	{ 0x0B0835, "896C2414", "90909090" },
+	{ 0x0B0877, "896C2414", "90909090" },
 };
 
 static const HookPatchItem g_weaponsShipTypeFilterPatch[] =
 {
 	{ 0x00E825, "3C0474083C050F8508010000", "909090909090909090909090" },
+};
+
+static const HookPatchItem g_hangarWarheadReloadPatch[] =
+{
+	{ 0x05FDAD, "663BCA7369", "E86E811400" },
+	{ 0x06088B, "89156C6D6800", "E89076140090" },
 };
 
 static const HookPatch g_patches[] =
@@ -294,4 +304,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that draws the energy bar", g_drawEnergyBarPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the weapons count", g_weaponsCountPatch),
 	MAKE_HOOK_PATCH("To call the hook that filters ship type for weapons", g_weaponsShipTypeFilterPatch),
+	MAKE_HOOK_PATCH("To call the hook that reloads warheads in hangar", g_hangarWarheadReloadPatch),
 };

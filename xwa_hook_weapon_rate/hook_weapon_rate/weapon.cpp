@@ -370,6 +370,8 @@ static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 #pragma pack(pop)
 
+int GetHangarWarheadMaxCount(int fgIndex, int warheadType, int capacity);
+
 std::vector<std::string> GetShipLines(int modelIndex)
 {
 	const char* xwaMissionFileName = (const char*)0x06002E8;
@@ -3019,6 +3021,13 @@ int WarheadCapacity_0041BE55_Hook(int* params)
 	}
 
 	capacity = (capacity * percent + 50) / 100;
+
+	int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity);
+	if (maxCapacity != -1)
+	{
+		capacity = min(capacity, maxCapacity);
+	}
+
 	return capacity;
 }
 
@@ -3042,6 +3051,13 @@ int WarheadCapacity_0045CBFD_Hook(int* params)
 	}
 
 	capacity = (capacity * percent + 50) / 100;
+
+	int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity);
+	if (maxCapacity != -1)
+	{
+		capacity = min(capacity, maxCapacity);
+	}
+
 	return capacity;
 }
 
@@ -3064,6 +3080,13 @@ int WarheadCapacity_00460904_Hook(int* params)
 	}
 
 	capacity = (capacity * percent + 50) / 100;
+
+	int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity);
+	if (maxCapacity != -1)
+	{
+		capacity = min(capacity, maxCapacity);
+	}
+
 	return capacity;
 }
 
@@ -3085,6 +3108,13 @@ int WarheadCapacity_004B1426_Hook(int* params)
 	}
 
 	capacity = (capacity * percent + 50) / 100;
+
+	int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity);
+	if (maxCapacity != -1)
+	{
+		capacity = min(capacity, maxCapacity);
+	}
+
 	return capacity;
 }
 
@@ -3735,6 +3765,220 @@ int SetWeaponsCount2Hook(int* params)
 {
 	int count = params[Params_EDI] * g_config.WeaponsCount;
 	params[Params_EAX] = count;
+
+	return 0;
+}
+
+struct WarheadTypeCount
+{
+	int SpaceBombs;
+	int HeavyRockets;
+	int Missiles;
+	int ProtonTorpedos;
+	int AdvancedMissiles;
+	int AdvancedTorpedos;
+	int MagPulse;
+	int IonPulse;
+	int AdvancedMagPulse;
+	int ClusterBombs;
+};
+
+WarheadTypeCount GetMissionWarheadTypeCount(int fgIndex)
+{
+	auto lines = GetMissionLines("WarheadTypeCount");
+
+	WarheadTypeCount missionCount{};
+	std::string key = "WarheadTypeCount_fg_" + std::to_string(fgIndex);
+
+	missionCount.SpaceBombs = GetFileKeyValueInt(lines, key + "_SpaceBombs", -1);
+	missionCount.HeavyRockets = GetFileKeyValueInt(lines, key + "_HeavyRockets", -1);
+	missionCount.Missiles = GetFileKeyValueInt(lines, key + "_Missiles", -1);
+	missionCount.ProtonTorpedos = GetFileKeyValueInt(lines, key + "_ProtonTorpedos", -1);
+	missionCount.AdvancedMissiles = GetFileKeyValueInt(lines, key + "_AdvancedMissiles", -1);
+	missionCount.AdvancedTorpedos = GetFileKeyValueInt(lines, key + "_AdvancedTorpedos", -1);
+	missionCount.MagPulse = GetFileKeyValueInt(lines, key + "_MagPulse", -1);
+	missionCount.IonPulse = GetFileKeyValueInt(lines, key + "_IonPulse", -1);
+	missionCount.AdvancedMagPulse = GetFileKeyValueInt(lines, key + "_AdvancedMagPulse", -1);
+	missionCount.ClusterBombs = GetFileKeyValueInt(lines, key + "_ClusterBombs", -1);
+
+	return missionCount;
+}
+
+class MissionWarheadType
+{
+public:
+	WarheadTypeCount& GetWarheadTypeCount(int fgIndex)
+	{
+		this->Update();
+
+		auto it = this->_warheadRemaining.find(fgIndex);
+
+		if (it == this->_warheadRemaining.end())
+		{
+			auto warheadCount = GetMissionWarheadTypeCount(fgIndex);
+			this->_warheadRemaining.insert(std::make_pair(fgIndex, warheadCount));
+			it = this->_warheadRemaining.find(fgIndex);
+		}
+
+		return it->second;
+	}
+
+private:
+	void Update()
+	{
+		static std::string _mission;
+		static int _missionIndex = 0;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const int missionFileNameIndex = *(int*)0x06002E4;
+
+		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
+		{
+			_mission = xwaMissionFileName;
+			_missionIndex = missionFileNameIndex;
+
+			this->_warheadRemaining.clear();
+		}
+	}
+
+	std::map<int, WarheadTypeCount> _warheadRemaining;
+};
+
+MissionWarheadType g_missionWarheadType;
+
+int& GetHangarWarheadTypeCount(WarheadTypeCount& missionCount, int warheadType)
+{
+	static int _default;
+
+	switch (warheadType)
+	{
+	case 1:
+		return missionCount.SpaceBombs;
+	case 2:
+		return missionCount.HeavyRockets;
+	case 3:
+		return missionCount.Missiles;
+	case 4:
+		return missionCount.ProtonTorpedos;
+	case 5:
+		return missionCount.AdvancedMissiles;
+	case 6:
+		return missionCount.AdvancedTorpedos;
+	case 7:
+		return missionCount.MagPulse;
+	case 8:
+		return missionCount.IonPulse;
+	case 9:
+		return missionCount.AdvancedMagPulse;
+	case 10:
+		return missionCount.ClusterBombs;
+	}
+
+	return _default;
+}
+
+int GetHangarWarheadMaxCount(int fgIndex, int warheadType, int capacity)
+{
+	WarheadTypeCount& missionCount = g_missionWarheadType.GetWarheadTypeCount(fgIndex);
+	int count = -1;
+
+	if (warheadType >= 1 && warheadType <= 10)
+	{
+		count = GetHangarWarheadTypeCount(missionCount, warheadType);
+
+		if (count != -1)
+		{
+			if (capacity < count)
+			{
+				GetHangarWarheadTypeCount(missionCount, warheadType) -= capacity;
+			}
+			else
+			{
+				GetHangarWarheadTypeCount(missionCount, warheadType) = 0;
+
+			}
+		}
+	}
+
+	return count;
+}
+
+int HangarWarheadReloadHook(int* params)
+{
+	XwaObject* object = (XwaObject*)params[Params_ESI];
+	unsigned char fgIndex = object->TieFlightGroupIndex;
+	int warheadType = (short)params[Params_EDI];
+	int requestedCount = (short)params[Params_EDX];
+	unsigned char rackCount = (unsigned char)params[Params_EAX];
+
+	WarheadTypeCount& missionCount = g_missionWarheadType.GetWarheadTypeCount(fgIndex);
+
+	int load = -1;
+
+	if (warheadType >= 1 && warheadType <= 10)
+	{
+		load = GetHangarWarheadTypeCount(missionCount, warheadType);
+	}
+
+	if (load != -1)
+	{
+		requestedCount = min(requestedCount, rackCount + load);
+		params[Params_EDX] = requestedCount;
+
+		if (rackCount < requestedCount)
+		{
+			if (warheadType >= 1 && warheadType <= 10)
+			{
+				GetHangarWarheadTypeCount(missionCount, warheadType)--;
+			}
+		}
+	}
+
+	if (rackCount >= requestedCount)
+	{
+		params[Params_ReturnAddress] = 0x00460A1B;
+	}
+
+	return 0;
+}
+
+int HangarWarheadCountHook(int* params)
+{
+	*(int*)0x00686D6C = params[Params_EDX];
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+	const XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	const int playerId = *(int*)0x008C1CC8;
+	const int objectIndex = XwaPlayers[playerId].ObjectIndex;
+	const XwaObject* object = &xwaObjects[objectIndex];
+	const unsigned char fgIndex = object->TieFlightGroupIndex;
+
+	int warheadType = *(short*)params[Params_EBX];
+	unsigned short weaponModelIndex = (unsigned short)params[Params_EBP];
+	int itemIndex = params[Params_EDX] - 1;
+
+	if (weaponModelIndex == 0)
+	{
+		return 0;
+	}
+
+	WarheadTypeCount& missionCount = g_missionWarheadType.GetWarheadTypeCount(fgIndex);
+
+	int load = -1;
+
+	if (warheadType >= 1 && warheadType <= 10)
+	{
+		load = GetHangarWarheadTypeCount(missionCount, warheadType);
+	}
+
+	char* name = (char*)(0x00689488 + itemIndex * 0x32);
+
+	if (load != -1)
+	{
+		strcat_s(name, 50, " (");
+		strcat_s(name, 50, std::to_string(load).c_str());
+		strcat_s(name, 50, ")");
+	}
 
 	return 0;
 }

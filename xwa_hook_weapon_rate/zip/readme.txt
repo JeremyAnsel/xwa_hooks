@@ -137,9 +137,15 @@ At offset 05C042, replace B009 with 9090.
 At offset 05FD15, replace C744243801000000 with 9090909090909090.
 At offset 05FD7B, replace C744243801000000 with 9090909090909090.
 At offset 05FD95, replace C744243809000000 with 9090909090909090.
+At offset 0B0835, replace 896C2414 with 90909090.
+At offset 0B0877, replace 896C2414 with 90909090.
 
 # To call the hook that filters ship type for weapons
 At offset 00E825, replace 3C0474083C050F8508010000 with 909090909090909090909090.
+
+# To call the hook that reloads warheads in hangar
+At offset 05FDAD, replace 663BCA7369 with E86E811400.
+At offset 06088B, replace 89156C6D6800 with E89076140090.
 
 
 *** Usage ***
@@ -384,6 +390,27 @@ The default ProfileName is "Default".
 # mesh filter
 
 To enable or disable the fire mesh filter set the "EnableFireMeshFilter" setting. It is enabled by default.
+
+# warheads reload in hangar
+
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+To limit the warheads reloading for a flightgroup, create a file named "[MissionDir]\[Mission]_WarheadTypeCount.txt" or create a section named "[WarheadTypeCount]" in "[MissionDir]\[Mission].ini".
+The format is
+WarheadTypeCount_fg_#_## = value
+The value is the warheads count. To not limit the reloading, set the value to -1. For example if the value is 10 then the ship can reload up to 10 warheads.
+Replace # with the flightgroup index.
+Replace ## with the warhead type.
+The warhead type is one of these values:
+- SpaceBombs
+- HeavyRockets
+- Missiles
+- ProtonTorpedos
+- AdvancedMissiles
+- AdvancedTorpedos
+- MagPulse
+- IonPulse
+- AdvancedMagPulse
+- ClusterBombs
 
 
 *** Credits ***
