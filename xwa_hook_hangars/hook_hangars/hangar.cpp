@@ -461,8 +461,9 @@ int GetCommandShipModelIndex()
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const TieFlightGroupEx* xwaTieFlightGroups = (TieFlightGroupEx*)0x080DC80;
 	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
-	//const int playerObjectIndex = *(int*)0x068BC08;
-	const int playerObjectIndex = *(int*)0x068BB98;
+	//const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	//const int playerObjectIndex = *(int*)0x068BB98;
+	const int playerObjectIndex = *(int*)0x068BC08;
 	const int currentPlayerId = *(int*)0x08C1CC8;
 
 	if (playerObjectIndex == 0xffff)
@@ -508,8 +509,9 @@ std::string GetCommandShipLstLine()
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const TieFlightGroupEx* xwaTieFlightGroups = (TieFlightGroupEx*)0x080DC80;
 	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
-	//const int playerObjectIndex = *(int*)0x068BC08;
-	const int playerObjectIndex = *(int*)0x068BB98;
+	//const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	//const int playerObjectIndex = *(int*)0x068BB98;
+	const int playerObjectIndex = *(int*)0x068BC08;
 	const int currentPlayerId = *(int*)0x08C1CC8;
 
 	if (playerObjectIndex == 0xffff)
@@ -575,8 +577,9 @@ unsigned char GetCommandShipIff()
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const TieFlightGroupEx* xwaTieFlightGroups = (TieFlightGroupEx*)0x080DC80;
 	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
-	//const int playerObjectIndex = *(int*)0x068BC08;
-	const int playerObjectIndex = *(int*)0x068BB98;
+	//const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	//const int playerObjectIndex = *(int*)0x068BB98;
+	const int playerObjectIndex = *(int*)0x068BC08;
 	const int currentPlayerId = *(int*)0x08C1CC8;
 
 	if (playerObjectIndex == 0xffff)
