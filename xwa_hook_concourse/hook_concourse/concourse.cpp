@@ -387,9 +387,18 @@ int CustomMoviesOnPointsPlayHook(int* params)
 
 	L00558100(s_V0x0ABD1E4);
 
+	std::vector<std::string> movies;
+
 	for (; !g_movieNames.empty(); g_movieNames.pop())
 	{
 		const std::string& name = g_movieNames.front();
+
+		if (std::find(movies.begin(), movies.end(), name) != movies.end())
+		{
+			continue;
+		}
+
+		movies.push_back(name);
 		XwaPlayMovie(name.c_str(), 0);
 	}
 
