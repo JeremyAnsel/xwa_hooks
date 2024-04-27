@@ -1594,10 +1594,17 @@ int WeaponCooldownTimeHook(int* params)
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 
-	//unsigned short modelIndex = XwaObjects[A4].ModelIndex;
-	//int rate = g_modelIndexWeapon.GetCooldownTime(modelIndex);
+	int rate;
 
-	int rate = g_modelIndexWeapon.GetStats(A4, weaponModelIndex - 0x118).FireRate;
+	if (weaponModelIndex >= 280 && weaponModelIndex < 280 + 28)
+	{
+		rate = g_modelIndexWeapon.GetStats(A4, weaponModelIndex - 0x118).FireRate;
+	}
+	else
+	{
+		unsigned short modelIndex = XwaObjects[A4].ModelIndex;
+		rate = g_modelIndexWeapon.GetCooldownTime(modelIndex);
+	}
 
 	if (AC != -1)
 	{
