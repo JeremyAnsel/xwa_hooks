@@ -313,8 +313,8 @@ int CreateLightMapHook(int* params)
 
 	for (int i = 0; i < size; i++)
 	{
-		//dst[i * 4 + 3] = src_illum[i];
-		dst[i * 4 + 3] = min( src_illum[i], 0x3f);
+		dst[i * 4 + 3] = src_illum[i];
+		//dst[i * 4 + 3] = min( src_illum[i], 0x3f);
 	}
 
 	return (int)g_lightMapBuffer.data() + esp2C * 4;
@@ -401,9 +401,8 @@ int ConvertColorMapHook(int* params)
 			else if (color == color8)
 			{
 				hasIllum = true;
+				illumBuffer[i] = 0x7f;
 				//illumBuffer[i] = 0x3f;
-				//illumBuffer[i] = 0x7f;
-				illumBuffer[i] = 0x3f;
 			}
 			else
 			{
@@ -456,7 +455,8 @@ int ConvertColorMapHook(int* params)
 		{
 			int paletteIndex = 4 + brightnessLevel;
 			unsigned char illum = A14 == 0 ? (unsigned char)0 : *(unsigned char*)(A14 + i);
-			illum = min(illum, 0x3f);
+
+			//illum = min(illum, 0x3f);
 
 			//if (*(unsigned char*)(A10 + i * 4 + 3) != 255)
 			//{
