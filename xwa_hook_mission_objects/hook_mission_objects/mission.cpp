@@ -1978,3 +1978,168 @@ int TargetableComponentHook(int* params)
 
 	return 0;
 }
+
+int TargetableComponentBackHook(int* params)
+{
+	unsigned short modelIndex = params[Params_EBX];
+	int meshIndex = *(int*)(params[Params_EBP] + 0x08);
+	int meshType = params[Params_EAX];
+
+	const auto& indices = g_modelIndexProfiles.GetTargetableMeshes(modelIndex);
+
+	bool skip = false;
+
+	if (!indices.empty() && std::find(indices.begin(), indices.end(), meshIndex) == indices.end())
+	{
+		skip = true;
+	}
+	else if (meshType == 0x12 || meshType == 0x13)
+	{
+		skip = true;
+	}
+
+	if (skip)
+	{
+		params[Params_ReturnAddress] = 0x00500FF5;
+	}
+
+	return 0;
+}
+
+int TargetComponent1Hook(int* params)
+{
+	unsigned short modelIndex = params[Params_EDX];
+	int meshIndex = params[Params_ESI];
+	int meshType = params[Params_EAX];
+	XwaObject* object = (XwaObject*)(*(int*)0x007B33C4 + params[Params_ECX]);
+
+	const auto& indices = g_modelIndexProfiles.GetTargetableMeshes(modelIndex);
+
+	char* m292;
+	char* m22E;
+
+	if (g_craftConfig.MeshesCount == 0)
+	{
+		m292 = object->pMobileObject->pCraft->XwaCraft_m292;
+		m22E = object->pMobileObject->pCraft->XwaCraft_m22E;
+	}
+	else
+	{
+		m292 = (char*)((int)object->pMobileObject->pCraft + g_craftConfig.Craft_Offset_292);
+		m22E = (char*)((int)object->pMobileObject->pCraft + g_craftConfig.Craft_Offset_22E);
+	}
+
+	bool skip = false;
+
+	if (m22E[meshIndex] != 0)
+	{
+		skip = true;
+	}
+	else if (!indices.empty() && std::find(indices.begin(), indices.end(), meshIndex) == indices.end())
+	{
+		skip = true;
+	}
+	else if (meshType != 0x01 && meshType != 0x03)
+	{
+		skip = true;
+	}
+
+	if (!skip)
+	{
+		params[Params_ReturnAddress] = 0x00503F81;
+	}
+
+	return 0;
+}
+
+int TargetComponent2Hook(int* params)
+{
+	unsigned short modelIndex = params[Params_EDX];
+	int meshIndex = params[Params_ESI];
+	int meshType = params[Params_EAX];
+	XwaObject* object = (XwaObject*)(*(int*)0x007B33C4 + params[Params_EBP]);
+
+	const auto& indices = g_modelIndexProfiles.GetTargetableMeshes(modelIndex);
+
+	char* m292;
+	char* m22E;
+
+	if (g_craftConfig.MeshesCount == 0)
+	{
+		m292 = object->pMobileObject->pCraft->XwaCraft_m292;
+		m22E = object->pMobileObject->pCraft->XwaCraft_m22E;
+	}
+	else
+	{
+		m292 = (char*)((int)object->pMobileObject->pCraft + g_craftConfig.Craft_Offset_292);
+		m22E = (char*)((int)object->pMobileObject->pCraft + g_craftConfig.Craft_Offset_22E);
+	}
+
+	bool skip = false;
+
+	if (m22E[meshIndex] != 0)
+	{
+		skip = true;
+	}
+	else if (!indices.empty() && std::find(indices.begin(), indices.end(), meshIndex) == indices.end())
+	{
+		skip = true;
+	}
+	else if (meshType != 0x01 && meshType != 0x03)
+	{
+		skip = true;
+	}
+
+	if (!skip)
+	{
+		params[Params_ReturnAddress] = 0x00504078;
+	}
+
+	return 0;
+}
+
+int TargetComponent3Hook(int* params)
+{
+	unsigned short modelIndex = params[Params_EDX];
+	int meshIndex = params[Params_ESI];
+	int meshType = params[Params_EAX];
+	XwaObject* object = (XwaObject*)(*(int*)0x007B33C4 + params[Params_EBP]);
+
+	const auto& indices = g_modelIndexProfiles.GetTargetableMeshes(modelIndex);
+
+	char* m292;
+	char* m22E;
+
+	if (g_craftConfig.MeshesCount == 0)
+	{
+		m292 = object->pMobileObject->pCraft->XwaCraft_m292;
+		m22E = object->pMobileObject->pCraft->XwaCraft_m22E;
+	}
+	else
+	{
+		m292 = (char*)((int)object->pMobileObject->pCraft + g_craftConfig.Craft_Offset_292);
+		m22E = (char*)((int)object->pMobileObject->pCraft + g_craftConfig.Craft_Offset_22E);
+	}
+
+	bool skip = false;
+
+	if (m22E[meshIndex] != 0)
+	{
+		skip = true;
+	}
+	else if (!indices.empty() && std::find(indices.begin(), indices.end(), meshIndex) == indices.end())
+	{
+		skip = true;
+	}
+	else if (meshType != 0x01 && meshType != 0x03)
+	{
+		skip = true;
+	}
+
+	if (skip)
+	{
+		params[Params_ReturnAddress] = 0x0050405F;
+	}
+
+	return 0;
+}
