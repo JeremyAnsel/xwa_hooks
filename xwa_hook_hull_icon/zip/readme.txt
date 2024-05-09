@@ -32,6 +32,11 @@ At offset 06A841, replace 663D4700771925FFFF0000668B0C4508965A00 with 25FFFF0000
 At offset 09FA2B, replace 6681FEDE00771A with 90909090909090.
 At offset 09FA38, replace 668B0C75D89A5A00 with 56E8E28410005990.
 
+# To call the hook that renders in-flight icons
+At offset 09FAB7, replace E8C4B6F8FF with E864841000.
+At offset 06A501, replace E87A0CFCFF with E81ADA1300.
+At offset 06A8D2, replace E8A908FCFF with E849D61300.
+
 
 *** Usage ***
 
@@ -53,6 +58,12 @@ To replace the craft hull icon for a given mission, create a file named "[Missio
 The format is a line per object: "FlightModels\ObjectA_HullIcon = value"
 If the value is 0, then no icon is replaced.
 See "Objects.txt".
+
+To define the scale of the in-flight map and hull icons, set the MapIconScale and HullIconScale settings.
+The default value for the MapIconScale setting is 256.
+The default value for the HullIconScale setting is 256.
+
+See the "hook_hull_icon.cfg" file or the "hook_hull_icon" section of "hooks.ini".
 
 
 *** Credits ***

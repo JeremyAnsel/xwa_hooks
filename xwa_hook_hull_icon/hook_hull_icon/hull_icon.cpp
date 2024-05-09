@@ -61,6 +61,28 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class Config
+{
+public:
+	Config()
+	{
+		auto lines = GetFileLines("hook_hull_icon.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_hull_icon");
+		}
+
+		this->MapIconScale = GetFileKeyValueInt(lines, "MapIconScale", 256);
+		this->HullIconScale = GetFileKeyValueInt(lines, "HullIconScale", 256);
+	}
+
+	int MapIconScale;
+	int HullIconScale;
+};
+
+Config g_config;
+
 #pragma pack(push, 1)
 
 struct XwaObject
@@ -79,6 +101,17 @@ struct XwaPlayer
 };
 
 static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
+
+struct S0x042BD80
+{
+	int S0x042BD80_m00;
+	int S0x042BD80_m04;
+	int S0x042BD80_m08;
+	short S0x042BD80_m0C;
+	short S0x042BD80_m0E;
+};
+
+static_assert(sizeof(S0x042BD80) == 16, "size of S0x042BD80 must be 16");
 
 #pragma pack(pop)
 
@@ -271,6 +304,38 @@ int MapIconHook(int* params)
 	{
 		icon = 0;
 	}
+
+	return 0;
+}
+
+int RenderMapIconHook(int* params)
+{
+	const int A4 = params[0];
+	const S0x042BD80* A8 = (S0x042BD80*)params[1];
+	const unsigned int AC = (unsigned int)params[2];
+
+	const auto L0042BD80 = (void(*)(int, const S0x042BD80*, unsigned int))0x0042BD80;
+
+	S0x042BD80 settings = *A8;
+	settings.S0x042BD80_m0E = g_config.MapIconScale;
+
+	L0042BD80(A4, &settings, AC);
+
+	return 0;
+}
+
+int RenderHullIconHook(int* params)
+{
+	const int A4 = params[0];
+	const S0x042BD80* A8 = (S0x042BD80*)params[1];
+	const unsigned int AC = (unsigned int)params[2];
+
+	const auto L0042BD80 = (void(*)(int, const S0x042BD80*, unsigned int))0x0042BD80;
+
+	S0x042BD80 settings = *A8;
+	settings.S0x042BD80_m0E = g_config.HullIconScale;
+
+	L0042BD80(A4, &settings, AC);
 
 	return 0;
 }
