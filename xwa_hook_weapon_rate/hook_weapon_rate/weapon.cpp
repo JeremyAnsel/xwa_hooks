@@ -520,12 +520,8 @@ int GetMissionWeaponRate(int fgIndex, const std::string& name)
 	return rate;
 }
 
-int GetWeaponDechargeRate(int objectIndex)
+int GetWeaponDechargeRate(unsigned short modelIndex, int fgIndex)
 {
-	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
-	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
-
 	auto lines = GetShipLines(modelIndex);
 
 	int rate = GetMissionWeaponRate(fgIndex, "DechargeRate");
@@ -564,12 +560,8 @@ int GetWeaponDechargeRate(int objectIndex)
 	return rate;
 }
 
-int GetWeaponRechargeRate(int objectIndex)
+int GetWeaponRechargeRate(unsigned short modelIndex, int fgIndex)
 {
-	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
-	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
-
 	auto lines = GetShipLines(modelIndex);
 
 	int rate = GetMissionWeaponRate(fgIndex, "RechargeRate");
@@ -874,7 +866,7 @@ int GetWeaponKeyValue(const std::vector<std::string>& lines, const std::string& 
 	return value;
 }
 
-WeaponStats GetWeaponStats(const std::vector<std::string>& lines, int playerIndex, int sourceModelIndex, const std::string& profileName, int weaponIndex)
+WeaponStats GetWeaponStats(const std::vector<std::string>& lines, int playerIndex, int sourceModelIndex, int sourceFgIndex, const std::string& profileName, int weaponIndex)
 {
 	const unsigned short* s_ExeWeaponDurationIntegerPart = (unsigned short*)0x005B6560;
 	const unsigned short* s_ExeWeaponDurationDecimalPart = (unsigned short*)0x005B6598;
@@ -1067,7 +1059,7 @@ WeaponStats GetWeaponStats(const std::vector<std::string>& lines, int playerInde
 
 	if (dechargeRate == -1 || !g_config.EnableWeaponStatsProfiles)
 	{
-		stats.DechargeRate = GetWeaponDechargeRate(sourceModelIndex);
+		stats.DechargeRate = GetWeaponDechargeRate(sourceModelIndex, sourceFgIndex);
 	}
 	else
 	{
@@ -1080,7 +1072,7 @@ WeaponStats GetWeaponStats(const std::vector<std::string>& lines, int playerInde
 
 	if (rechargeRate == -1 || !g_config.EnableWeaponStatsProfiles)
 	{
-		stats.RechargeRate = GetWeaponRechargeRate(sourceModelIndex);
+		stats.RechargeRate = GetWeaponRechargeRate(sourceModelIndex, sourceFgIndex);
 	}
 	else
 	{
@@ -1147,6 +1139,7 @@ public:
 		this->Update();
 
 		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+		unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
 		int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
 
 		auto it = this->_weaponDechargeRate.find(fgIndex);
@@ -1158,7 +1151,7 @@ public:
 		else
 		{
 			bool fpsLimit = *(unsigned char*)0x008C163F != 0;
-			int value = GetWeaponDechargeRate(objectIndex);
+			int value = GetWeaponDechargeRate(modelIndex, fgIndex);
 
 			if (fpsLimit)
 			{
@@ -1175,6 +1168,7 @@ public:
 		this->Update();
 
 		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+		unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
 		int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
 
 		auto it = this->_weaponRechargeRate.find(fgIndex);
@@ -1186,7 +1180,7 @@ public:
 		else
 		{
 			bool fpsLimit = *(unsigned char*)0x008C163F != 0;
-			int value = GetWeaponRechargeRate(objectIndex);
+			int value = GetWeaponRechargeRate(modelIndex, fgIndex);
 
 			if (fpsLimit)
 			{
@@ -1446,7 +1440,7 @@ public:
 		{
 			std::string profileName = GetWeaponProfileName(sourceFgIndex);
 			auto& lines = GetWeaponStatsLines(sourceModelIndex);
-			WeaponStats stats = GetWeaponStats(lines, playerIndex, sourceModelIndex, profileName, weaponIndex);
+			WeaponStats stats = GetWeaponStats(lines, playerIndex, sourceModelIndex, sourceFgIndex, profileName, weaponIndex);
 			this->_weaponStats.insert(std::make_pair(std::make_tuple(sourceFgIndex, weaponIndex), stats));
 			it = this->_weaponStats.find(std::make_tuple(sourceFgIndex, weaponIndex));
 
@@ -2215,9 +2209,13 @@ int WeaponSpeed_0049424E_Hook(int* params)
 	const int weaponIndex = 26;
 	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
-	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
+	//const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
+	const unsigned short sourceModelIndex = 487; // ModelIndex_487_6250_0_ResData_DsFire
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).Speed;
+	auto& lines = g_modelIndexWeapon.GetWeaponStatsLines(sourceModelIndex);
+	WeaponStats stats = GetWeaponStats(lines, -1, sourceModelIndex, -1, std::string(), weaponIndex);
+
+	short value = stats.Speed;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -2228,9 +2226,13 @@ int WeaponSpeed_004942CF_Hook(int* params)
 	const int weaponIndex = 26;
 	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
-	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
+	//const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
+	const unsigned short sourceModelIndex = 487; // ModelIndex_487_6250_0_ResData_DsFire
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).Speed;
+	auto& lines = g_modelIndexWeapon.GetWeaponStatsLines(sourceModelIndex);
+	WeaponStats stats = GetWeaponStats(lines, -1, sourceModelIndex, -1, std::string(), weaponIndex);
+
+	short value = stats.Speed;
 
 	params[Params_ECX] = value;
 	return 0;
@@ -2418,9 +2420,13 @@ int WeaponPower_00494265_Hook(int* params)
 	const int weaponIndex = 26;
 	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
-	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
+	//const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
+	const unsigned short sourceModelIndex = 487; // ModelIndex_487_6250_0_ResData_DsFire
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).Power;
+	auto& lines = g_modelIndexWeapon.GetWeaponStatsLines(sourceModelIndex);
+	WeaponStats stats = GetWeaponStats(lines, -1, sourceModelIndex, -1, std::string(), weaponIndex);
+
+	int value = stats.Power;
 
 	params[Params_EAX] = value;
 	return 0;
