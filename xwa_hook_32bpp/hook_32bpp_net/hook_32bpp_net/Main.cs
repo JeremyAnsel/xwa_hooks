@@ -3,13 +3,10 @@ using JeremyAnsel.Xwa.Opt;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace hook_32bpp_net
@@ -35,9 +32,47 @@ namespace hook_32bpp_net
         private static SevenZip.Compression.LZMA.Decoder _decoder;
         private static byte[] _decoderProperties;
 
+        public static string GetMissionFileName()
+        {
+            int currentGameState = Marshal.ReadInt32(new IntPtr(0x09F60E0 + 0x25FA9));
+            int updateCallback = Marshal.ReadInt32(new IntPtr(0x09F60E0 + 0x25FB1 + currentGameState * 0x850 + 0x844));
+            bool isTechLibraryGameStateUpdate = updateCallback == 0x00574D70;
+
+            if (isTechLibraryGameStateUpdate)
+            {
+                return string.Empty;
+            }
+
+            int missionDirectoryId = Marshal.ReadInt32(new IntPtr(0x00AE2A60 + 0x002A));
+            string missionDirectory = Marshal.PtrToStringAnsi(new IntPtr(Marshal.ReadInt32(new IntPtr(0x00603168 + missionDirectoryId * 4))));
+            int s_V0x09F5E74 = Marshal.ReadInt32(new IntPtr(0x009F5E74));
+            int s_XwaMissionDescriptions = Marshal.ReadInt32(new IntPtr(0x009F4B98));
+
+            string missionFilename;
+
+            if (s_XwaMissionDescriptions != 0)
+            {
+                missionFilename = missionDirectory + "\\" + Marshal.PtrToStringAnsi(new IntPtr(s_XwaMissionDescriptions + s_V0x09F5E74 * 0x148 + 0x0000));
+            }
+            else
+            {
+                string xwaMissionFileName = Marshal.PtrToStringAnsi(new IntPtr(0x06002E8));
+                missionFilename = xwaMissionFileName;
+            }
+
+            return missionFilename;
+        }
+
+        [DllExport(CallingConvention.Cdecl)]
+        public static int RetrieveMissionFileName()
+        {
+            string filename = GetMissionFileName();
+            return Marshal.StringToHGlobalAnsi(filename).ToInt32();
+        }
+
         public static IList<string> GetCustomFileLines(string name)
         {
-            string xwaMissionFileName = Marshal.PtrToStringAnsi(new IntPtr(0x06002E8));
+            string xwaMissionFileName = GetMissionFileName();
             int xwaMissionFileNameIndex = Marshal.ReadInt32(new IntPtr(0x06002E4));
             int currentGameState = Marshal.ReadInt32(new IntPtr(0x09F60E0 + 0x25FA9));
             int updateCallback = Marshal.ReadInt32(new IntPtr(0x09F60E0 + 0x25FB1 + currentGameState * 0x850 + 0x844));

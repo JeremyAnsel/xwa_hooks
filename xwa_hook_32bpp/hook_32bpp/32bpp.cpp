@@ -131,6 +131,7 @@ std::vector<unsigned char> g_illumMapBuffer;
 class NetFunctions
 {
 public:
+	typedef int(_cdecl* retrieveMissionFileName)();
 	typedef int(_cdecl* readOptFunction)(const char*);
 	typedef int(_cdecl* getOptVersionFunction)();
 	typedef void(_cdecl* writeOptFunction)(void*);
@@ -146,6 +147,7 @@ public:
 			return;
 		}
 
+		_retrieveMissionFileName = (retrieveMissionFileName)GetProcAddress(_module, "RetrieveMissionFileName");
 		_readOptFunction = (readOptFunction)GetProcAddress(_module, "ReadOptFunction");
 		_getOptVersionFunction = (getOptVersionFunction)GetProcAddress(_module, "GetOptVersionFunction");
 		_writeOptFunction = (writeOptFunction)GetProcAddress(_module, "WriteOptFunction");
@@ -158,6 +160,7 @@ public:
 	}
 
 	HMODULE _module;
+	retrieveMissionFileName _retrieveMissionFileName = nullptr;
 	readOptFunction _readOptFunction = nullptr;
 	getOptVersionFunction _getOptVersionFunction = nullptr;
 	writeOptFunction _writeOptFunction = nullptr;
