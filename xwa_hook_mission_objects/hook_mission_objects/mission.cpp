@@ -309,6 +309,17 @@ struct XwaPlayer
 
 static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
+struct XwaMissionDescription
+{
+	char MissionFileName[64];
+	char MissionDesciption[128];
+	char BattleDescription[128];
+	int Id;
+	int m144;
+};
+
+static_assert(sizeof(XwaMissionDescription) == 328, "size of XwaMissionDescription must be 328");
+
 #pragma pack(pop)
 
 struct TurretData
@@ -339,6 +350,55 @@ std::string GetPathFileName(const std::string& str)
 	return a == -1 ? str : str.substr(a + 1, -1);
 }
 
+bool IsGameStateUpdate(int address)
+{
+	int currentGameState = *(int*)(0x09F60E0 + 0x25FA9);
+	int updateCallback = *(int*)(0x09F60E0 + 0x25FB1 + currentGameState * 0x850 + 0x844);
+	return updateCallback == address;
+}
+
+std::string GetMissionFileName()
+{
+	bool isTechLibraryGameStateUpdate = IsGameStateUpdate(0x00574D70);
+
+	if (isTechLibraryGameStateUpdate)
+	{
+		return std::string();
+	}
+
+	const int missionDirectoryId = *(int*)(0x00AE2A60 + 0x002A);
+	const char* missionDirectory = ((const char**)0x00603168)[missionDirectoryId];
+	const int s_V0x09F5E74 = *(int*)0x009F5E74;
+	const XwaMissionDescription* s_XwaMissionDescriptions = *(XwaMissionDescription**)0x009F4B98;
+
+	std::string missionFilename;
+
+	if (s_XwaMissionDescriptions)
+	{
+		missionFilename = std::string(missionDirectory) + std::string("\\") + std::string(s_XwaMissionDescriptions[s_V0x09F5E74].MissionFileName);
+	}
+	else
+	{
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+		missionFilename = xwaMissionFileName;
+	}
+
+	return missionFilename;
+}
+
+bool IsInSkirmish()
+{
+	int xwaMission = *(int*)0x009EB8E0;
+
+	if (!xwaMission)
+	{
+		return false;
+	}
+
+	unsigned char missionType = *(unsigned char*)(xwaMission + 0xAF7DC + 0x23A6);
+	return missionType == 2 || missionType == 4;
+}
+
 std::vector<std::string> GetCustomFileLines(const std::string& name)
 {
 	static std::vector<std::string> _lines;
@@ -346,7 +406,7 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 	static std::string _mission;
 	static int _missionIndex = 0;
 
-	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const std::string xwaMissionFileName = GetMissionFileName();
 	const int missionFileNameIndex = *(int*)0x06002E4;
 
 	if ((_name != name) || (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex)))
@@ -578,7 +638,7 @@ private:
 		static std::string _mission;
 		static int _missionIndex = 0;
 
-		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const std::string xwaMissionFileName = GetMissionFileName();
 		const int missionFileNameIndex = *(int*)0x06002E4;
 
 		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
@@ -705,7 +765,7 @@ private:
 		static std::string _mission;
 		static int _missionIndex = 0;
 
-		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const std::string xwaMissionFileName = GetMissionFileName();
 		const int missionFileNameIndex = *(int*)0x06002E4;
 
 		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
@@ -1762,13 +1822,6 @@ int TurretIndex2BlockedHook(int* params)
 	return 1;
 }
 
-bool IsInSkirmish()
-{
-	unsigned char MissionType = *(unsigned char*)(0x007B4C00 + 0x0004 + 0x23A6);
-
-	return MissionType == 2 || MissionType == 4;
-}
-
 void ApplyProfile(short objectIndex, unsigned short modelIndex, unsigned short flightgroupIndex, XwaCraft* s_pXwaCurrentCraft)
 {
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
@@ -1880,6 +1933,9 @@ int AddObjectProfileHook(int* params)
 int BriefingObjectProfileHook(int* params)
 {
 	*(short*)0x0078260F = 0;
+
+	int& missionFileNameIndex = *(int*)0x06002E4;
+	missionFileNameIndex++;
 
 	bool s_XwaBriefingIsPlaying = *(short*)0x009EB826 != 0;
 	unsigned short modelIndex = *(unsigned short*)0x007827A8;
