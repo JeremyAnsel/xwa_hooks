@@ -123,6 +123,11 @@ int ResolutionHook(int* params)
 		width = g_config.ResolutionWidth;
 		height = g_config.ResolutionHeight;
 		hudScale = g_config.ResolutionHeight / 600.0f;
+
+		if (g_config.HudScale != 0.0f)
+		{
+			hudScale = g_config.HudScale;
+		}
 	}
 
 	std::stringstream stream;
