@@ -3133,7 +3133,7 @@ int WarheadCapacity_004B1426_Hook(int* params)
 
 struct EnergyStats
 {
-	int SpeedFactor;
+	float SpeedFactor;
 };
 
 EnergyStats GetEnergyStats(const std::vector<std::string>& lines, int sourceModelIndex, const std::string& profileName)
@@ -3148,32 +3148,39 @@ EnergyStats GetEnergyStats(const std::vector<std::string>& lines, int sourceMode
 		energyKey = profileName + "_";
 	}
 
-	int speedFactor = GetFileKeyValueInt(lines, energyKey + "SpeedFactor", -1);
+	std::string speedFactorString = GetFileKeyValue(lines, energyKey + "SpeedFactor");
+	bool isDefaultValue = speedFactorString.empty() || std::stoi(speedFactorString, 0, 0) == -1;
 
-	if (speedFactor < -1)
-	{
-		speedFactor = 0;
-	}
-	else if (speedFactor > 100)
-	{
-		speedFactor = 100;
-	}
+	float speedFactor;
 
-	if (speedFactor == -1)
+	if (isDefaultValue)
 	{
 		// ModelIndex_007_0_6_TieBomber
 		if (sourceModelIndex == 7)
 		{
-			speedFactor = 0x1000 * 100 / 0x10000;
+			speedFactor = (float)0x1000 / (float)0x10000;
 		}
 		// ModelIndex_005_0_4_TieFighter
 		else if (sourceModelIndex == 5)
 		{
-			speedFactor = 0x3000 * 100 / 0x10000;
+			speedFactor = (float)0x3000 / (float)0x10000;
 		}
 		else
 		{
-			speedFactor = 0x2000 * 100 / 0x10000;
+			speedFactor = (float)0x2000 / (float)0x10000;
+		}
+	}
+	else
+	{
+		speedFactor = std::stof(speedFactorString) * 0.01f;
+
+		if (speedFactor < 0.0f)
+		{
+			speedFactor = 0.0f;
+		}
+		else if (speedFactor > 1.0f)
+		{
+			speedFactor = 1.0f;
 		}
 	}
 
@@ -3268,11 +3275,11 @@ int EnergySpeedFactorHook(int* params)
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	int objectIndex = params[Params_ESI] / 0x27;
 
-	int factor = g_modelIndexEnergy.GetStats(objectIndex).SpeedFactor;
+	float factor = g_modelIndexEnergy.GetStats(objectIndex).SpeedFactor;
 
-	factor = factor * 0x10000 / 100;
+	factor = factor * 0x10000;
 
-	return factor;
+	return (int)factor;
 }
 
 struct LinkingStats
