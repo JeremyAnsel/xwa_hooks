@@ -1971,6 +1971,12 @@ int PlayerCraftHatchHook(int* params)
 	case 3:
 	case 4:
 	{
+		if (step >= 2)
+		{
+			auto landingGears = g_modelIndexSFoils.GetLandingGears(modelIndex);
+			hatches.insert(hatches.end(), landingGears.begin(), landingGears.end());
+		}
+
 		for (unsigned int i = 0; i < hatches.size(); i++)
 		{
 			SFoil hatch = hatches[i];
