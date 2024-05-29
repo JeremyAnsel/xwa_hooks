@@ -193,7 +193,9 @@ Config g_config;
 struct XwaPlayer
 {
 	int ObjectIndex;
-	char m004[79];
+	char m004[10];
+	short FgIndex;
+	char m010[67];
 	short m053;
 	char m055[2803];
 	int CameraPositionX;
@@ -480,7 +482,8 @@ int GetCommandShipModelIndex()
 
 	if (mothershipObjectIndex == 0)
 	{
-		const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
+		//const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
+		const int playerFlightGroupIndex = xwaPlayers[currentPlayerId].FgIndex;
 
 		int commandShipModelIndex = -1;
 
@@ -530,7 +533,8 @@ std::string GetCommandShipLstLine()
 
 	if (mothershipObjectIndex == 0)
 	{
-		const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
+		//const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
+		const int playerFlightGroupIndex = xwaPlayers[currentPlayerId].FgIndex;
 
 		int commandShipModelIndex = -1;
 
@@ -596,7 +600,8 @@ unsigned char GetCommandShipIff()
 
 	if (mothershipObjectIndex == 0)
 	{
-		const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
+		//const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
+		const int playerFlightGroupIndex = xwaPlayers[currentPlayerId].FgIndex;
 
 		if (xwaTieFlightGroups[playerFlightGroupIndex].m0C3)
 		{
