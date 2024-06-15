@@ -16,6 +16,18 @@ enum ParamsEnum
 	Params_EDI = -10,
 };
 
+float GetFileKeyValueFloat(const std::vector<std::string>& lines, const std::string& key, float defaultValue)
+{
+	std::string value = GetFileKeyValue(lines, key);
+
+	if (value.empty())
+	{
+		return defaultValue;
+	}
+
+	return std::stof(value);
+}
+
 class FlightModelsList
 {
 public:
@@ -414,7 +426,8 @@ struct TieFlightGroupEx
 {
 	char unk000[112];
 	unsigned char Iff;
-	char unk071[2];
+	char unk071[1];
+	unsigned char Rank;
 	char Markings;
 	char unk074[3465];
 	char PilotVoice[20];
@@ -444,6 +457,8 @@ static_assert(sizeof(XwaMissionDescription) == 328, "size of XwaMissionDescripti
 
 #pragma pack(pop)
 
+TieFlightGroupEx* s_XwaTieFlightGroups = (TieFlightGroupEx*)0x80DC80;
+
 struct CraftStats
 {
 	int Speed;
@@ -461,6 +476,22 @@ struct CraftStats
 	int HasShieldGenerator;
 	int HasHyperdrive;
 	bool IsWarheadCollisionDamagesEnabled;
+};
+
+struct CraftStatsModifiers
+{
+	float Speed;
+	float Acceleration;
+	float SpeedIncrement;
+	float Deceleration;
+	float SpeedDecrement;
+	float Pitch;
+	float Roll;
+	float Yaw;
+	float ExplosionStrength;
+	float HullStrength;
+	float SystemStrength;
+	float ShieldStrength;
 };
 
 struct CraftStatsPercent
@@ -524,6 +555,116 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 	return _lines;
 }
 
+std::string GetRankKey(unsigned char rank)
+{
+	switch (rank)
+	{
+	case 0:
+		return "_Novice";
+	case 1:
+		return "_Officer";
+	case 2:
+		return "_Veteran";
+	case 3:
+		return "_Ace";
+	case 4:
+		return "_TopAce";
+	case 5:
+		return "_SuperAce";
+	}
+
+	return std::string();
+}
+
+CraftStatsModifiers GetModelObjectProfileStatsModifiers(const XwaObject* currentObject)
+{
+	int playerIndex = currentObject->PlayerIndex;
+	unsigned short modelIndex = currentObject->ModelIndex;
+	unsigned char rank = currentObject->TieFlightGroupIndex == 0xff ? 0xff : s_XwaTieFlightGroups[currentObject->TieFlightGroupIndex].Rank;
+
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	const auto objectLines = GetCustomFileLines("Objects");
+	const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		shipPath = GetStringWithoutExtension(objectValue);
+	}
+
+	std::string playerKey = playerIndex == -1 ? "" : "_Player";
+	std::string rankKey = GetRankKey(rank);
+	std::string section = "StatsModifiers";
+
+	std::vector<std::string> lines;
+
+	if (!playerKey.empty() && !rankKey.empty())
+	{
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + section + playerKey + rankKey + ".txt");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + ".ini", section + playerKey + rankKey);
+		}
+	}
+
+	if (!playerKey.empty())
+	{
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + section + playerKey + ".txt");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + ".ini", section + playerKey);
+		}
+	}
+
+	if (!rankKey.empty())
+	{
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + section + rankKey + ".txt");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + ".ini", section + rankKey);
+		}
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + section + ".txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", section);
+	}
+
+	CraftStatsModifiers modifiers{};
+
+	modifiers.Speed = GetFileKeyValueFloat(lines, "Speed", 1.0f);
+	modifiers.Acceleration = GetFileKeyValueFloat(lines, "Acceleration", 1.0f);
+	modifiers.SpeedIncrement = GetFileKeyValueFloat(lines, "SpeedIncrement", 1.0f);
+	modifiers.Deceleration = GetFileKeyValueFloat(lines, "Deceleration", 1.0f);
+	modifiers.SpeedDecrement = GetFileKeyValueFloat(lines, "SpeedDecrement", 1.0f);
+	modifiers.Pitch = GetFileKeyValueFloat(lines, "Pitch", 1.0f);
+	modifiers.Roll = GetFileKeyValueFloat(lines, "Roll", 1.0f);
+	modifiers.Yaw = GetFileKeyValueFloat(lines, "Yaw", 1.0f);
+	modifiers.ExplosionStrength = GetFileKeyValueFloat(lines, "ExplosionStrength", 1.0f);
+	modifiers.HullStrength = GetFileKeyValueFloat(lines, "HullStrength", 1.0f);
+	modifiers.SystemStrength = GetFileKeyValueFloat(lines, "SystemStrength", 1.0f);
+	modifiers.ShieldStrength = GetFileKeyValueFloat(lines, "ShieldStrength", 1.0f);
+
+	return modifiers;
+}
+
 CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 {
 	const unsigned char difficulty = *(unsigned char*)(0x08053E0 + 0x002A);
@@ -531,6 +672,7 @@ CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 	int playerIndex = currentObject->PlayerIndex;
 	unsigned short modelIndex = currentObject->ModelIndex;
 	unsigned char colorIndex = currentObject->pMobileObject->Markings;
+	unsigned char rank = currentObject->TieFlightGroupIndex == 0xff ? 0xff : s_XwaTieFlightGroups[currentObject->TieFlightGroupIndex].Rank;
 
 	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 	ShipCategoryEnum shipCategory = ExeEnableTable[modelIndex].ShipCategory;
@@ -731,6 +873,68 @@ CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 		}
 	}
 
+	CraftStatsModifiers modifiers = GetModelObjectProfileStatsModifiers(currentObject);
+
+	if (stats.Speed != -1)
+	{
+		stats.Speed = (int)(stats.Speed * modifiers.Speed);
+	}
+
+	if (stats.Acceleration != -1)
+	{
+		stats.Acceleration = (int)(stats.Acceleration * modifiers.Acceleration);
+	}
+
+	if (stats.SpeedIncrement != -1)
+	{
+		stats.SpeedIncrement = (int)(stats.SpeedIncrement * modifiers.SpeedIncrement);
+	}
+
+	if (stats.Deceleration != -1)
+	{
+		stats.Deceleration = (int)(stats.Deceleration * modifiers.Deceleration);
+	}
+
+	if (stats.SpeedDecrement != -1)
+	{
+		stats.SpeedDecrement = (int)(stats.SpeedDecrement * modifiers.SpeedDecrement);
+	}
+
+	if (stats.Pitch != -1)
+	{
+		stats.Pitch = (int)(stats.Pitch * modifiers.Pitch);
+	}
+
+	if (stats.Roll != -1)
+	{
+		stats.Roll = (int)(stats.Roll * modifiers.Roll);
+	}
+
+	if (stats.Yaw != -1)
+	{
+		stats.Yaw = (int)(stats.Yaw * modifiers.Yaw);
+	}
+
+	if (stats.ExplosionStrength != -1)
+	{
+		stats.ExplosionStrength = (int)(stats.ExplosionStrength * modifiers.ExplosionStrength);
+	}
+
+	if (stats.HullStrength != -1)
+	{
+		stats.HullStrength = (int)(stats.HullStrength * modifiers.HullStrength);
+	}
+
+	if (stats.SystemStrength != -1)
+	{
+		stats.SystemStrength = (int)(stats.SystemStrength * modifiers.SystemStrength);
+	}
+
+	if (stats.ShieldStrength != -1)
+	{
+		stats.ShieldStrength = (int)(stats.ShieldStrength * modifiers.ShieldStrength);
+	}
+
 	return stats;
 }
 
@@ -784,10 +988,18 @@ public:
 		int playerIndex = currentObject->PlayerIndex;
 		unsigned short modelIndex = currentObject->ModelIndex;
 		int colorIndex = currentObject->pMobileObject->Markings;
+		unsigned char rank = currentObject->TieFlightGroupIndex == 0xff ? 0xff : s_XwaTieFlightGroups[currentObject->TieFlightGroupIndex].Rank;
 
 		if (playerIndex != -1)
 		{
 			colorIndex = -1 - playerIndex;
+		}
+
+		colorIndex *= 16;
+
+		if (rank != 0xff)
+		{
+			colorIndex += rank;
 		}
 
 		auto it = this->_profiles.find(std::make_pair(modelIndex, colorIndex));
@@ -1197,8 +1409,6 @@ SpecTable& GetSpecTable()
 
 	return _specTable;
 }
-
-TieFlightGroupEx* s_XwaTieFlightGroups = (TieFlightGroupEx*)0x80DC80;
 
 std::vector<std::vector<std::string>> g_tieLines;
 

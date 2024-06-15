@@ -205,6 +205,38 @@ if( ShipCategory == ShipCategory_Freighter || ShipCategory == ShipCategory_Conta
     ExplosionStrength /= 4
 }
 
+# Stats modifiers
+
+With stats modifiers you can define a factor to modify the stats based on the craft rank.
+
+The key for players is "_Player".
+The keys for rank are:
+- "_Novice"
+- "_Officer"
+- "_Veteran"
+- "_Ace"
+- "_TopAce"
+- "_SuperAce"
+The ini section base name is "StatsModifiers".
+
+The hook checks StatsModifiers_PlayerKey_RankKey, then StatsModifiers_PlayerKey, then StatsModifiers_RankKey, then StatsModifiers.
+
+You can modify these settings:
+- Speed
+- Acceleration
+- SpeedIncrement
+- Deceleration
+- SpeedDecrement
+- Pitch
+- Roll
+- Yaw
+- ExplosionStrength
+- HullStrength
+- SystemStrength
+- ShieldStrength
+
+The default value for each setting is 1.0.
+
 
 *** Credits ***
 
