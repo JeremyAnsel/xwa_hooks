@@ -131,7 +131,7 @@ public:
 		this->MaxTorpedoCountPerTarget = GetFileKeyValueInt(lines, "MaxTorpedoCountPerTarget", 16);
 		this->WeaponsCount = GetFileKeyValueInt(lines, "WeaponsCount", 12);
 		this->DechargeRatePercent = GetFileKeyValueInt(lines, "DechargeRatePercent", 100);
-		this->RechargeRatePercent = GetFileKeyValueInt(lines, "RechargeRatePercent", 77);
+		this->RechargeRatePercent = GetFileKeyValueInt(lines, "RechargeRatePercent", 100);
 	}
 
 	bool EnableFireMeshFilter;
