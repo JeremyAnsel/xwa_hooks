@@ -17,7 +17,7 @@ public:
 			lines = GetFileLines("hooks.ini", "hook_d3d");
 		}
 
-		this->IsHookD3DEnabled = GetFileKeyValueInt(lines, "IsHookD3DEnabled", 1) != 0;
+		this->IsHookD3DEnabled = GetFileKeyValueInt(lines, "IsHookD3DEnabled", 0) != 0;
 	}
 
 	bool IsHookD3DEnabled;
