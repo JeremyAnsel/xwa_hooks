@@ -109,8 +109,8 @@ public:
 		}
 
 		this->IsShieldRechargeForStarshipsEnabled = GetFileKeyValueInt(lines, "IsShieldRechargeForStarshipsEnabled", 1) != 0;
-		this->CraftUpdateTime = GetFileKeyValueInt(lines, "CraftUpdateTime", 41);
-		this->RechargeRatePercent = GetFileKeyValueInt(lines, "RechargeRatePercent", 50);
+		this->CraftUpdateTime = GetFileKeyValueInt(lines, "CraftUpdateTime", 123);
+		this->RechargeRatePercent = GetFileKeyValueInt(lines, "RechargeRatePercent", 100);
 	}
 
 	bool IsShieldRechargeForStarshipsEnabled;
@@ -238,6 +238,28 @@ public:
 private:
 	std::map<int, int> _time;
 };
+
+int GetDefaultShieldGeneratorCount(int modelIndex)
+{
+	const auto XwaOptGetMeshesCount = (int(*)(int))0x00488960;
+	const auto XwaModelGetMeshType = (int(*)(int, int))0x00488A00;
+
+	int count = 0;
+
+	int meshesCount = XwaOptGetMeshesCount(modelIndex);
+
+	for (int meshIndex = 0; meshIndex < meshesCount; meshIndex++)
+	{
+		int meshType = XwaModelGetMeshType(modelIndex, meshIndex);
+
+		if (meshType == 0x08) // MeshType_ShieldGen
+		{
+			count++;
+		}
+	}
+
+	return count;
+}
 
 int GetShieldGeneratorCount(int modelIndex)
 {
@@ -578,6 +600,9 @@ int GetMissionTime()
 
 int ShieldRechargeHook(int* params)
 {
+	const bool isPart1 = params[Params_ReturnAddress] == 0x49032F;
+	const bool isPart2 = params[Params_ReturnAddress] == 0x49066F;
+
 	auto& rechargeRate = params[6];
 	int objectIndex = (unsigned short)params[7];
 
@@ -629,9 +654,19 @@ int ShieldRechargeHook(int* params)
 		{
 			if (g_config.IsShieldRechargeForStarshipsEnabled)
 			{
-				if (difficulty >= 0x01)
+				// todo
+				if (shieldStrength == 0)
+				{
+					rechargeRate = 0;
+				}
+				else if (difficulty >= 0x01)
 				{
 					rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
+
+					if (isPart2)
+					{
+						XwaCurrentCraft->PresetShield = 0x03;
+					}
 				}
 				else
 				{
@@ -647,7 +682,7 @@ int ShieldRechargeHook(int* params)
 		{
 			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-			if (difficulty >= 0x01)
+			if (isPart2 && difficulty >= 0x01)
 			{
 				XwaCurrentCraft->PresetShield = 0x03;
 			}

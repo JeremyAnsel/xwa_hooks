@@ -23,9 +23,9 @@ The following modifications are applied at runtime to xwingalliance.exe:
 At offset 090254, replace 0F8510F8FFFF with 90E910F8FFFF.
 At offset 08F72A, replace C744241814000000 with E8F1871100909090.
 At offset 08FA6A, replace C744241814000000 with E8B1841100909090.
-At offset 08F034, replace 8B0D78F38B00 with E8E78E110090.
+;At offset 08F034, replace 8B0D78F38B00 with E8E78E110090.
 ;At offset 08FACF, replace 0FAF542418 with E84C841100.
-At offset 08FA82, replace A1C4337B00 with E899841100.
+;At offset 08FA82, replace A1C4337B00 with E899841100.
 At offset 08F99B, replace 66396C2418736C with E8808511009090.
 
 
@@ -66,8 +66,8 @@ ModelIndex, UseGenerator, PerGeneratorRechargeRate, RechargeRate
 See *Shield.txt.
 
 You can enable or disable the shield recharge for starships with the IsShieldRechargeForStarshipsEnabled setting.
-To set the time between the updates, set the CraftUpdateTime setting. The default value is 41.
-To control the recharge rate speed, set the RechargeRatePercent setting. The default value is 50.
+;To set the time between the updates, set the CraftUpdateTime setting. The default value is 123.
+To control the recharge rate speed, set the RechargeRatePercent setting. The default value is 100.
 
 See "hook_shield.cfg" or the "hook_shield" section of "Hooks.ini".
 
