@@ -18,6 +18,18 @@ enum ParamsEnum
 	Params_EDI = -10,
 };
 
+float GetFileKeyValueFloat(const std::vector<std::string>& lines, const std::string& key, float defaultValue)
+{
+	std::string value = GetFileKeyValue(lines, key);
+
+	if (value.empty())
+	{
+		return defaultValue;
+	}
+
+	return std::stof(value);
+}
+
 class FlightModelsList
 {
 public:
@@ -360,6 +372,18 @@ struct XwaObject
 
 static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 
+struct TieFlightGroupEx
+{
+	char unk000[112];
+	unsigned char Iff;
+	char unk071[1];
+	unsigned char Rank;
+	char Markings;
+	char unk074[3534];
+};
+
+static_assert(sizeof(TieFlightGroupEx) == 3650, "size of TieFlightGroupEx must be 3650");
+
 struct XwaPlayer
 {
 	int ObjectIndex;
@@ -369,6 +393,8 @@ struct XwaPlayer
 static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 #pragma pack(pop)
+
+TieFlightGroupEx* s_XwaTieFlightGroups = (TieFlightGroupEx*)0x80DC80;
 
 int GetHangarWarheadMaxCount(int fgIndex, int warheadType, int capacity);
 
@@ -836,6 +862,126 @@ struct WeaponStats
 	unsigned short SideModel;
 };
 
+struct WeaponStatsModifiers
+{
+	float Score;
+	float Speed;
+	float Power;
+	float PowerSpeedPercent;
+	float FireRate;
+	float FireRatio;
+	float Range;
+	float DechargeRate;
+	float RechargeRate;
+};
+
+std::string GetRankKey(unsigned char rank)
+{
+	switch (rank)
+	{
+	case 0:
+		return "_Novice";
+	case 1:
+		return "_Officer";
+	case 2:
+		return "_Veteran";
+	case 3:
+		return "_Ace";
+	case 4:
+		return "_TopAce";
+	case 5:
+		return "_SuperAce";
+	}
+
+	return std::string();
+}
+
+WeaponStatsModifiers GetWeaponStatsModifiers(const XwaObject* currentObject)
+{
+	int playerIndex = currentObject->PlayerIndex;
+	unsigned short modelIndex = currentObject->ModelIndex;
+	unsigned char rank = currentObject->TieFlightGroupIndex == 0xff ? 0xff : s_XwaTieFlightGroups[currentObject->TieFlightGroupIndex].Rank;
+
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	const auto objectLines = GetMissionLines("Objects");
+	const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		shipPath = GetStringWithoutExtension(objectValue);
+	}
+
+	std::string playerKey = playerIndex == -1 ? "" : "_Player";
+	std::string rankKey = GetRankKey(rank);
+	std::string section = "WeaponStatsModifiers";
+
+	std::vector<std::string> lines;
+
+	if (!playerKey.empty() && !rankKey.empty())
+	{
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + section + playerKey + rankKey + ".txt");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + ".ini", section + playerKey + rankKey);
+		}
+	}
+
+	if (!playerKey.empty())
+	{
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + section + playerKey + ".txt");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + ".ini", section + playerKey);
+		}
+	}
+
+	if (!rankKey.empty())
+	{
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + section + rankKey + ".txt");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + ".ini", section + rankKey);
+		}
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + section + ".txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", section);
+	}
+
+	WeaponStatsModifiers modifiers{};
+
+	modifiers.Score = GetFileKeyValueFloat(lines, "Score", 1.0f);
+	modifiers.Speed = GetFileKeyValueFloat(lines, "Speed", 1.0f);
+	modifiers.Power = GetFileKeyValueFloat(lines, "Power", 1.0f);
+	modifiers.PowerSpeedPercent = GetFileKeyValueFloat(lines, "PowerSpeedPercent", 1.0f);
+	modifiers.FireRate = GetFileKeyValueFloat(lines, "FireRate", 1.0f);
+	modifiers.FireRatio = GetFileKeyValueFloat(lines, "FireRatio", 1.0f);
+	modifiers.Range = GetFileKeyValueFloat(lines, "Range", 1.0f);
+	modifiers.DechargeRate = GetFileKeyValueFloat(lines, "DechargeRate", 1.0f);
+	modifiers.RechargeRate = GetFileKeyValueFloat(lines, "RechargeRate", 1.0f);
+
+	return modifiers;
+}
+
 int GetWeaponKeyValue(const std::vector<std::string>& lines, const std::string& key, const std::string& weaponKey, const std::string& playerKey, const std::string& difficultyKey)
 {
 	int value = -1;
@@ -866,7 +1012,7 @@ int GetWeaponKeyValue(const std::vector<std::string>& lines, const std::string& 
 	return value;
 }
 
-WeaponStats GetWeaponStats(const std::vector<std::string>& lines, int playerIndex, int sourceModelIndex, int sourceFgIndex, const std::string& profileName, int weaponIndex)
+WeaponStats GetWeaponStats(const XwaObject* sourceObject, const std::vector<std::string>& lines, int playerIndex, int sourceModelIndex, int sourceFgIndex, const std::string& profileName, int weaponIndex)
 {
 	const unsigned short* s_ExeWeaponDurationIntegerPart = (unsigned short*)0x005B6560;
 	const unsigned short* s_ExeWeaponDurationDecimalPart = (unsigned short*)0x005B6598;
@@ -1114,6 +1260,21 @@ WeaponStats GetWeaponStats(const std::vector<std::string>& lines, int playerInde
 		stats.SideModel = (unsigned short)sideModel;
 	}
 
+	if (sourceObject != nullptr)
+	{
+		WeaponStatsModifiers modifiers = GetWeaponStatsModifiers(sourceObject);
+
+		stats.Score = (short)(stats.Score * modifiers.Score);
+		stats.Speed = (short)(stats.Speed * modifiers.Speed);
+		stats.Power = (int)(stats.Power * modifiers.Power);
+		stats.PowerSpeedPercent = (int)(stats.PowerSpeedPercent * modifiers.PowerSpeedPercent);
+		stats.FireRate = (int)(stats.FireRate * modifiers.FireRate);
+		stats.FireRatio = (int)(stats.FireRatio * modifiers.FireRatio);
+		stats.Range = (int)(stats.Range * modifiers.Range);
+		stats.DechargeRate = (int)(stats.DechargeRate * modifiers.DechargeRate);
+		stats.RechargeRate = (int)(stats.RechargeRate * modifiers.RechargeRate);
+	}
+
 	return stats;
 }
 
@@ -1150,13 +1311,13 @@ public:
 		}
 		else
 		{
-			bool fpsLimit = *(unsigned char*)0x008C163F != 0;
+			//bool fpsLimit = *(unsigned char*)0x008C163F != 0;
 			int value = GetWeaponDechargeRate(modelIndex, fgIndex);
 
-			if (fpsLimit)
-			{
-				//value *= 2;
-			}
+			//if (fpsLimit)
+			//{
+			//	//value *= 2;
+			//}
 
 			this->_weaponDechargeRate.insert(std::make_pair(fgIndex, value));
 			return value;
@@ -1440,7 +1601,7 @@ public:
 		{
 			std::string profileName = GetWeaponProfileName(sourceFgIndex);
 			auto& lines = GetWeaponStatsLines(sourceModelIndex);
-			WeaponStats stats = GetWeaponStats(lines, playerIndex, sourceModelIndex, sourceFgIndex, profileName, weaponIndex);
+			WeaponStats stats = GetWeaponStats(sourceObject, lines, playerIndex, sourceModelIndex, sourceFgIndex, profileName, weaponIndex);
 			this->_weaponStats.insert(std::make_pair(std::make_tuple(sourceFgIndex, weaponIndex), stats));
 			it = this->_weaponStats.find(std::make_tuple(sourceFgIndex, weaponIndex));
 
@@ -2213,7 +2374,7 @@ int WeaponSpeed_0049424E_Hook(int* params)
 	const unsigned short sourceModelIndex = 487; // ModelIndex_487_6250_0_ResData_DsFire
 
 	auto& lines = g_modelIndexWeapon.GetWeaponStatsLines(sourceModelIndex);
-	WeaponStats stats = GetWeaponStats(lines, -1, sourceModelIndex, -1, std::string(), weaponIndex);
+	WeaponStats stats = GetWeaponStats(nullptr, lines, -1, sourceModelIndex, -1, std::string(), weaponIndex);
 
 	short value = stats.Speed;
 
@@ -2230,7 +2391,7 @@ int WeaponSpeed_004942CF_Hook(int* params)
 	const unsigned short sourceModelIndex = 487; // ModelIndex_487_6250_0_ResData_DsFire
 
 	auto& lines = g_modelIndexWeapon.GetWeaponStatsLines(sourceModelIndex);
-	WeaponStats stats = GetWeaponStats(lines, -1, sourceModelIndex, -1, std::string(), weaponIndex);
+	WeaponStats stats = GetWeaponStats(nullptr, lines, -1, sourceModelIndex, -1, std::string(), weaponIndex);
 
 	short value = stats.Speed;
 
@@ -2424,7 +2585,7 @@ int WeaponPower_00494265_Hook(int* params)
 	const unsigned short sourceModelIndex = 487; // ModelIndex_487_6250_0_ResData_DsFire
 
 	auto& lines = g_modelIndexWeapon.GetWeaponStatsLines(sourceModelIndex);
-	WeaponStats stats = GetWeaponStats(lines, -1, sourceModelIndex, -1, std::string(), weaponIndex);
+	WeaponStats stats = GetWeaponStats(nullptr, lines, -1, sourceModelIndex, -1, std::string(), weaponIndex);
 
 	int value = stats.Power;
 
@@ -3915,7 +4076,6 @@ int GetHangarWarheadMaxCount(int fgIndex, int warheadType, int capacity)
 			else
 			{
 				GetHangarWarheadTypeCount(missionCount, warheadType) = 0;
-
 			}
 		}
 	}

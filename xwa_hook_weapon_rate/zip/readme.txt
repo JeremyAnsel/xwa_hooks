@@ -294,6 +294,35 @@ WeaponProfile_fg_# = ProfileName
 Replace # with the flightgroup index.
 The default ProfileName is "Default".
 
+# Weapons stats modifiers
+
+With weapons stats modifiers you can define a factor to modify the weapons stats based on the craft rank.
+
+The key for players is "_Player".
+The keys for rank are:
+- "_Novice"
+- "_Officer"
+- "_Veteran"
+- "_Ace"
+- "_TopAce"
+- "_SuperAce"
+The ini section base name is "WeaponStatsModifiers".
+
+The hook checks WeaponStatsModifiers_PlayerKey_RankKey, then WeaponStatsModifiers_PlayerKey, then WeaponStatsModifiers_RankKey, then WeaponStatsModifiers.
+
+You can modify these settings:
+- Score
+- Speed
+- Power
+- PowerSpeedPercent
+- FireRate
+- FireRatio
+- Range
+- DechargeRate
+- RechargeRate
+
+The default value for each setting is 1.0.
+
 # warhead profiles
 
 Suppose that the craft is "FlightModels\[Model].opt".
