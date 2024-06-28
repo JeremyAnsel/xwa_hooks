@@ -217,7 +217,10 @@ static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24")
 
 struct XwaMobileObject
 {
-	char Unk0000[191];
+	char Unk0000[147];
+	short ObjectIndex;
+	unsigned short ModelIndex;
+	char Unk0097[40];
 	bool RecalculateForwardVector;
 	short ForwardX;
 	short ForwardY;
@@ -1828,11 +1831,23 @@ int WeaponSoundHook(int* params)
 {
 	const int A4 = params[0];
 	const int A8 = params[1];
-	const int modelIndex = params[2];
+	int modelIndex = params[2];
 	const int weaponIndex = params[3];
 
 	const auto playSound = (int(*)(int, int, int))0x0043BF90;
 	const auto XwaRandom = (unsigned short(*)())0x00494E10;
+
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	if (XwaObjects[A4].pMobileObject != nullptr && XwaObjects[A4].pMobileObject->ModelIndex == 0)
+	{
+		short objectIndex = XwaObjects[A4].pMobileObject->ObjectIndex;
+
+		if (objectIndex != 0)
+		{
+			modelIndex = XwaObjects[objectIndex].ModelIndex;
+		}
+	}
 
 	if (g_modelIndexSound.GetWeaponBehavior(modelIndex).empty())
 	{
