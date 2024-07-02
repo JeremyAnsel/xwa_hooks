@@ -111,6 +111,8 @@ public:
 		this->Craft_Offset_22E = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_22E", 0);
 		this->Craft_Offset_260 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_260", 0);
 		this->Craft_Offset_292 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_292", 0);
+		this->Craft_Offset_2CF = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_2CF", 0);
+		this->Craft_Offset_2DF = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_2DF", 0x2DF - 0x3F9);
 	}
 
 	int MeshesCount;
@@ -118,6 +120,8 @@ public:
 	int Craft_Offset_22E;
 	int Craft_Offset_260;
 	int Craft_Offset_292;
+	int Craft_Offset_2CF;
+	int Craft_Offset_2DF;
 };
 
 CraftConfig g_craftConfig;
@@ -1118,11 +1122,13 @@ int CraftTurretHook(int* params)
 				L00497D40(520, arg4);
 			}
 
+			XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)playerCraft + g_craftConfig.Craft_Offset_2DF);
+
 			for (int index = 0; index < playerCraft->WeaponRacksCount; index++)
 			{
-				if (playerCraft->WeaponRacks[index].Sequence >= 4)
+				if (weaponRacks[index].Sequence >= 4)
 				{
-					playerCraft->WeaponRacks[index].ObjectIndex = -1;
+					weaponRacks[index].ObjectIndex = -1;
 				}
 			}
 		}
