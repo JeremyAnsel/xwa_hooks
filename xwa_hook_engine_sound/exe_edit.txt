@@ -253,6 +253,11 @@ E8C680F3FF              call 0043BF90
 
 E8564C0A00              call 005A8B20, 005A8B20 - 00503ECA = 000A4C56
 
+:00503EB3 - 0x1032B3
+0F84FE020000            je 005041B7
+
+909090909090            nop
+
 ; Map exit sound
 :0041F721 - 0x01EB21
 E86AC80100              call 0043BF90

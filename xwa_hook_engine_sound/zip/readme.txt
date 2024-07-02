@@ -153,6 +153,7 @@ At offset 002FC5, replace E8C6830300 with E8564F1A00.
 At offset 0F5E20, replace E8FBC2F0FF with E8FB200B00.
 At offset 092E8F, replace E82CBAFAFF with E88C501100.
 At offset 1032C5, replace E8C680F3FF with E8564C0A00.
+At offset 1032B3, replace 0F84FE020000 with 909090909090.
 At offset 01EB21, replace E86AC80100 with E8FA931800.
 At offset 01F62A, replace E861BD0100 with E8F1881800.
 
