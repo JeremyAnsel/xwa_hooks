@@ -4,6 +4,7 @@ This hook removes the opt limit of 512 vertices per mesh.
 It also generates the "spec.rci" file.
 The meshes count per opt is now 254.
 The engines count per opt is now 255.
+The weapon racks count per opt is now 120.
 
 
 *** Requirements ***
@@ -120,6 +121,9 @@ At offset 0F5010, replace 83EC14A178AE910053C1F8045589442410A148099100568B3570AE
 
 # To call the hook that sets the opt meshes collision
 At offset 0DE717, replace E83497FAFF with E814980C00.
+
+# To call the hook that sets the weapon racks offsets
+See "exe_edit_weaponracks.txt"
 
 
 *** Usage ***

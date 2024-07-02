@@ -1,0 +1,203 @@
+
+:0041AC75 - 0x01A075
+B938000000              mov ecx, 00000038
+
+B9C0010000              mov ecx, 000001C0
+
+:0041BB71 - 0x01AF71
+6683FD10                cmp bp, 0010
+
+6683FD80                cmp bp, 0080
+
+// L004328B0
+
+:004330D2 - 0x0324D2
+80F910                  cmp cl, 10
+
+80F978                  cmp cl, 78
+
+:00433223 - 0x032623
+3C10                    cmp al, 10
+
+3C78                    cmp al, 78
+
+:00433269 - 0x032669
+807C242010              cmp byte ptr [esp+20], 10
+
+807C242078              cmp byte ptr [esp+20], 78
+
+:004332F2 - 0x0326F2
+80FB10                  cmp bl, 10
+
+80FB78                  cmp bl, 78
+
+:004333D8 - 0x0327D8
+80FB10                  cmp bl, 10
+
+80FB78                  cmp bl, 78
+
+:00433421 - 0x032821
+80FB10                  cmp bl, 10
+
+80FB78                  cmp bl, 78
+
+{ 0x001BA9E2, "0000000000000000", "FF7FFF7FFF7FFFFF" },
+{ 0x001BA9EA, "00000000", g_weaponSlots_Offset1.c_str() },
+{ 0x001BA9EE, "00000000", g_weaponSlots_Offset2.c_str() },
+
+===============================================================================
+
+// :0040D5B2 668B94F9E2B55B00        mov dx, word ptr [ecx+8*edi+005BB5E2]
+// :0040D5BA 668B84F9E4B55B00        mov ax, word ptr [ecx+8*edi+005BB5E4]
+// :0040D5C2 668B8CF9E6B55B00        mov cx, word ptr [ecx+8*edi+005BB5E6]
+0040D5B2 66 90
+0040D5BA 66 90
+0040D5C2 66 90
+0040D5CA 66 90
+0040D5CE 66 90
+
+// :0040D68B 668B91E2B55B00          mov dx, word ptr [ecx+005BB5E2]
+// :0040D692 668B81E4B55B00          mov ax, word ptr [ecx+005BB5E4]
+// :0040D699 668B89E6B55B00          mov cx, word ptr [ecx+005BB5E6]
+0040D68B 66 90
+0040D692 66 90
+0040D699 66 90
+0040D6A3 66 90
+0040D6C4 0FBFD2 909090
+0040D6FA 0FBFC0 909090
+0040D6D0 0FBF 908B
+
+// :004331DC 668988E2B55B00          mov word ptr [eax+005BB5E2], cx
+// :004331E8 668990E6B55B00          mov word ptr [eax+005BB5E6], dx
+// :004331F3 668988E4B55B00          mov word ptr [eax+005BB5E4], cx
+004331C4 66 90
+004331DC 66 90
+004331D7 66 90
+004331E8 66 90
+004331E3 66 90
+004331F3 66 90
+
+// :004333E7 668988E2B55B00          mov word ptr [eax+005BB5E2], cx
+// :004333F3 668990E6B55B00          mov word ptr [eax+005BB5E6], dx
+// :004333FE 668988E4B55B00          mov word ptr [eax+005BB5E4], cx
+004333CB 66 90
+004333E7 66 90
+004333E2 66 90
+004333F3 66 90
+004333EE 66 90
+004333FE 66 90
+
+// :00465464 0FBF88E6B55B00          movsx ecx, word ptr [eax+005BB5E6]
+// :00465474 0FBF90E4B55B00          movsx edx, word ptr [eax+005BB5E4]
+// :00465481 0FBF80E2B55B00          movsx eax, word ptr [eax+005BB5E2]
+00465464 0FBF 908B
+00465474 0FBF 908B
+00465481 0FBF 908B
+
+// :00491462 6683BCD0E4B55B00C0      cmp word ptr [eax+8*edx+005BB5E4], FFC0
+00491462 66 90
+
+// :00492340 668B90E2B55B00          mov dx, word ptr [eax+005BB5E2]
+// :00492347 668B88E4B55B00          mov cx, word ptr [eax+005BB5E4]
+// :00492352 668B90E6B55B00          mov dx, word ptr [eax+005BB5E6]
+00492340 66 90
+0049234E 66 90
+00492347 66 90
+00492359 66 90
+00492352 66 90
+0049235D 66 90
+
+// :00492478 668B90E2B55B00          mov dx, word ptr [eax+005BB5E2]
+// :0049247F 668B88E4B55B00          mov cx, word ptr [eax+005BB5E4]
+// :0049248A 668B90E6B55B00          mov dx, word ptr [eax+005BB5E6]
+00492478 66 90
+00492486 66 90
+0049247F 66 90
+00492491 66 90
+0049248A 66 90
+00492495 66 90
+004924C5 0FBF 908B
+004924D2 0FBF 908B
+004924D9 0FBF 908B
+
+// :004A867B 668B88E6B55B00          mov cx, word ptr [eax+005BB5E6]
+// :004A8682 668B90E4B55B00          mov dx, word ptr [eax+005BB5E4]
+// :004A8689 668B80E2B55B00          mov ax, word ptr [eax+005BB5E2]
+004A867B 66 90
+004A8682 66 90
+004A8689 66 90
+
+// :004A8BF7 668B90E6B55B00          mov dx, word ptr [eax+005BB5E6]
+// :004A8BFE 668B88E4B55B00          mov cx, word ptr [eax+005BB5E4]
+// :004A8C06 668B90E2B55B00          mov dx, word ptr [eax+005BB5E2]
+004A8BF7 66 90
+004A8BFE 66 90
+004A8C06 66 90
+
+// :004A9C6E 668B88E6B55B00          mov cx, word ptr [eax+005BB5E6]
+// :004A9C75 668B90E4B55B00          mov dx, word ptr [eax+005BB5E4]
+// :004A9C7C 668B80E2B55B00          mov ax, word ptr [eax+005BB5E2]
+004A9C6E 66 90
+004A9C75 66 90
+004A9C7C 66 90
+
+// :004E196C 6683BCD1E4B55B00C0      cmp word ptr [ecx+8*edx+005BB5E4], FFC0
+004E196C 66 90
+
+// :004E1F75 668B94C8E4B55B00        mov dx, word ptr [eax+8*ecx+005BB5E4]
+// :004E1F7D 668B9CC8E2B55B00        mov bx, word ptr [eax+8*ecx+005BB5E2]
+// :004E1F85 668BB4C8E6B55B00        mov si, word ptr [eax+8*ecx+005BB5E6]
+004E1F75 66 90
+004E1F7D 66 90
+004E1F85 66 90
+004E1F8D 66 90
+004E1FB5 0FBF 908B
+004E1FB9 0FBFC3 908BC3
+004E1FBC 0FBFCE 908BCE
+
+// :00519818 0FBF88E4B55B00          movsx ecx, word ptr [eax+005BB5E4]
+// :0051981F 0FBF90E6B55B00          movsx edx, word ptr [eax+005BB5E6]
+// :00519826 0FBF80E2B55B00          movsx eax, word ptr [eax+005BB5E2]
+00519818 0FBF 908B
+0051981F 0FBF 908B
+00519826 0FBF 908B
+
+// :00417FD1 668B8888B75B00          mov cx, word ptr [eax+005BB788]
+// :00417FD8 668B9084B75B00          mov dx, word ptr [eax+005BB784]
+// :00417FDF 668B8080B75B00          mov ax, word ptr [eax+005BB780]
+00417FD1 66 90
+00417FD8 66 90
+00417FDF 66 90
+
+// :0041802B 668B9094B75B00          mov dx, word ptr [eax+005BB794]
+// :00418032 668B8890B75B00          mov cx, word ptr [eax+005BB790]
+// :0041803A 668B908CB75B00          mov dx, word ptr [eax+005BB78C]
+0041802B 66 90
+00418032 66 90
+0041803A 66 90
+
+// L004A2DD0
+
+// :004A2E0F 0FBF4D0C                movsx ecx, word ptr [ebp+0C]
+// :004A2E32 0FBF7D10                movsx edi, word ptr [ebp+10]
+// :004A2E64 0FBF5D14                movsx ebx, word ptr [ebp+14]
+004A2E0F 0FBF 908B
+004A2E32 0FBF 908B
+004A2E64 0FBF 908B
+
+returnAddresses:
+0x40D858
+0x417FEF
+0x418049
+0x4926FE
+0x4A86AD
+0x4A8C24
+0x4A9CA1
+0x4E2066
+
+:004A2DDC - 0x0A21DC
+8A88C6000000            mov cl, byte ptr [eax+000000C6]
+
+E83F5D1000              call 005A8B20, 005A8B20 - 004A2DE1 = 00105D3F
+90                      nop
+

@@ -122,12 +122,13 @@ public:
 
 		this->MeshesCount = GetFileKeyValueInt(lines, "MeshesCount", 255);
 		this->EnginesCount = 255;
-		// 22E (MeshesCount) + 260 (MeshesCount) + 292 (MeshesCount) + 2CF (EnginesCount)
-		this->Craft_Size = 0x3F9 + GetFileKeyValueInt(lines, "Craft_ExtraSize", this->MeshesCount * 3 + this->EnginesCount);
+		// 22E (MeshesCount) + 260 (MeshesCount) + 292 (MeshesCount) + 2CF (EnginesCount) + 2DF (128 * 14) (WeaponRacks)
+		this->Craft_Size = 0x3F9 + GetFileKeyValueInt(lines, "Craft_ExtraSize", this->MeshesCount * 3 + this->EnginesCount + (128 * 14));
 		this->Craft_Offset_22E = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_22E", 0);
 		this->Craft_Offset_260 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_260", this->MeshesCount * 1);
 		this->Craft_Offset_292 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_292", this->MeshesCount * 2);
 		this->Craft_Offset_2CF = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_2CF", this->MeshesCount * 3);
+		this->Craft_Offset_2DF = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_2DF", this->MeshesCount * 3 + this->EnginesCount);
 
 		if (this->MeshesCount == 0)
 		{
@@ -138,6 +139,7 @@ public:
 			this->Craft_Offset_260 = 0x260;
 			this->Craft_Offset_292 = 0x292;
 			this->Craft_Offset_2CF = 0x2CF;
+			this->Craft_Offset_2DF = 0x2DF;
 		}
 	}
 
@@ -148,6 +150,7 @@ public:
 	int Craft_Offset_260;
 	int Craft_Offset_292;
 	int Craft_Offset_2CF;
+	int Craft_Offset_2DF;
 };
 
 const Config& GetConfig()
@@ -394,6 +397,34 @@ int GetHitDataArrayPtr()
 	return (int)g_XwaHitDataArray.Data();
 }
 
+int GetWeaponSlotsOffset1()
+{
+	static bool _init = false;
+	static std::vector<char> _data;
+
+	if (!_init)
+	{
+		_init = true;
+		_data.reserve(987 * 265);
+	}
+
+	return (int)_data.data();
+}
+
+int GetWeaponSlotsOffset2()
+{
+	static bool _init = false;
+	static std::vector<char> _data;
+
+	if (!_init)
+	{
+		_init = true;
+		_data.reserve(987 * 265);
+	}
+
+	return (int)_data.data();
+}
+
 int GetCraftSize()
 {
 	return GetConfig().Craft_Size;
@@ -427,6 +458,11 @@ int GetCraftOffset_292()
 int GetCraftOffset_2CF()
 {
 	return GetConfig().Craft_Offset_2CF;
+}
+
+int GetCraftOffset_2DF()
+{
+	return GetConfig().Craft_Offset_2DF;
 }
 
 int GetOptModelMeshesInfoSize()
@@ -1307,4 +1343,46 @@ int MeshesCollisionHook(int* params)
 	}
 
 	return result;
+}
+
+static const unsigned int g_L004A2DD0_ReturnAddresses[] =
+{
+	0x40D858,
+	0x417FEF,
+	0x418049,
+	0x4926FE,
+	0x4A86AD,
+	0x4A8C24,
+	0x4A9CA1,
+	0x4E2066,
+};
+
+int L004A2DD0Hook(int* params)
+{
+	const int ebp = params[Params_EBP];
+
+	unsigned int address = *(unsigned int*)(ebp + 0x04);
+	bool offset32 = false;
+
+	for (int i = 0; i < sizeof(g_L004A2DD0_ReturnAddresses) / sizeof(unsigned int); i++)
+	{
+		unsigned int returnAddress = g_L004A2DD0_ReturnAddresses[i];
+
+		if (address == returnAddress)
+		{
+			offset32 = true;
+			break;
+		}
+	}
+
+	if (!offset32)
+	{
+		*(int*)(ebp + 0x0C) = *(short*)(ebp + 0x0C);
+		*(int*)(ebp + 0x10) = *(short*)(ebp + 0x10);
+		*(int*)(ebp + 0x14) = *(short*)(ebp + 0x14);
+	}
+
+	params[Params_ECX] = *(unsigned char*)(params[Params_EAX] + 0x000000C6);
+
+	return 0;
 }

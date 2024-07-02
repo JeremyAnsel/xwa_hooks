@@ -70,6 +70,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x42DBA1, L0042DB60_EngineGlowHook },
 	{ 0x4825BE, SelectLodVersionHook },
 	{ 0x4DF31C, MeshesCollisionHook },
+	{ 0x4A2DE1, L004A2DD0Hook },
 };
 
 static const std::string g_hitDataArray0 = int_to_hex(GetHitDataArrayPtr());
@@ -111,6 +112,34 @@ static const std::string g_cockpitEngineMeshIdsArray_0 = int_to_hex(GetCockpitEn
 static const std::string g_exteriorEnginesArray_0 = int_to_hex(GetExteriorEnginesArrayPtr());
 static const std::string g_exteriorEngineMeshIdsArray__1 = int_to_hex(GetExteriorEngineMeshIdsArrayPtr() - 1);
 static const std::string g_exteriorEngineMeshIdsArray_0 = int_to_hex(GetExteriorEngineMeshIdsArrayPtr());
+
+static const std::string g_weaponRack_000002E4 = int_to_hex(GetCraftOffset_2DF() + 0x000002E4 - 0x2DF);
+static const std::string g_weaponRack_000002E1 = int_to_hex(GetCraftOffset_2DF() + 0x000002E1 - 0x2DF);
+static const std::string g_weaponRack_000002E9 = int_to_hex(GetCraftOffset_2DF() + 0x000002E9 - 0x2DF);
+static const std::string g_weaponRack_000002E5 = int_to_hex(GetCraftOffset_2DF() + 0x000002E5 - 0x2DF);
+static const std::string g_weaponRack_000002E2 = int_to_hex(GetCraftOffset_2DF() + 0x000002E2 - 0x2DF);
+static const std::string g_weaponRack_000002E8 = int_to_hex(GetCraftOffset_2DF() + 0x000002E8 - 0x2DF);
+static const std::string g_weaponRack_000002DF = int_to_hex(GetCraftOffset_2DF() + 0x000002DF - 0x2DF);
+static const std::string g_weaponRack_000002E7 = int_to_hex(GetCraftOffset_2DF() + 0x000002E7 - 0x2DF);
+static const std::string g_weaponRack_000002E3 = int_to_hex(GetCraftOffset_2DF() + 0x000002E3 - 0x2DF);
+static const std::string g_weaponRack_000002F2 = int_to_hex(GetCraftOffset_2DF() + 0x000002F2 - 0x2DF);
+static const std::string g_weaponRack_000002EB = int_to_hex(GetCraftOffset_2DF() + 0x000002EB - 0x2DF);
+static const std::string g_weaponRack_000002D5 = int_to_hex(GetCraftOffset_2DF() + 0x000002D5 - 0x2DF);
+static const std::string g_weaponRack_000002D6 = int_to_hex(GetCraftOffset_2DF() + 0x000002D6 - 0x2DF);
+static const std::string g_weaponRack_000002D9 = int_to_hex(GetCraftOffset_2DF() + 0x000002D9 - 0x2DF);
+static const std::string g_weaponRack_000002DA = int_to_hex(GetCraftOffset_2DF() + 0x000002DA - 0x2DF);
+static const std::string g_weaponRack_000002D4 = int_to_hex(GetCraftOffset_2DF() + 0x000002D4 - 0x2DF);
+static const std::string g_weaponRack_000002DB = int_to_hex(GetCraftOffset_2DF() + 0x000002DB - 0x2DF);
+static const std::string g_weaponRack_000002D1 = int_to_hex(GetCraftOffset_2DF() + 0x000002D1 - 0x2DF);
+static const std::string g_weaponRack_000002D3 = int_to_hex(GetCraftOffset_2DF() + 0x000002D3 - 0x2DF);
+
+static const std::string g_weaponSlots_Offset1 = int_to_hex(GetWeaponSlotsOffset1());
+static const std::string g_weaponSlots_Offset2 = int_to_hex(GetWeaponSlotsOffset2());
+static const std::string g_weaponSlots_005BB5E2 = int_to_hex(GetWeaponSlotsOffset1() + 0);
+static const std::string g_weaponSlots_005BB5E4 = int_to_hex(GetWeaponSlotsOffset1() + 4);
+static const std::string g_weaponSlots_005BB5E6 = int_to_hex(GetWeaponSlotsOffset2() + 0);
+static const std::string g_weaponSlots_005BB5E8 = int_to_hex(GetWeaponSlotsOffset2() + 4);
+static const std::string g_weaponSlots_005BB5E9 = int_to_hex(GetWeaponSlotsOffset2() + 5);
 
 static const HookPatchItem g_trianglingPatch[] =
 {
@@ -771,6 +800,973 @@ static const HookPatchItem g_meshesCollisionPatch[] =
 	{ 0x0DE717, "E83497FAFF", "E814980C00" },
 };
 
+static const HookPatchItem g_weaponRacksOffsetsPatch[] =
+{
+	// :004DA5C0
+	// :004DA5C0 8A8C5EE4020000          mov cl, byte ptr [esi+2*ebx+000002E4]
+	{ 0x000D99C3, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004DA5DB
+	// :004DA5DB 8A8C6EE4020000          mov cl, byte ptr [esi+2*ebp+000002E4]
+	{ 0x000D99DE, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00401DF0
+	// :00401DF0 80BC19E102000004        cmp byte ptr [ecx+ebx+000002E1], 04
+	{ 0x000011F3, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :00401E50
+	// :00401E50 6681BC19E9020000FFFF    cmp word ptr [ecx+ebx+000002E9], FFFF
+	{ 0x00001254, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :00401E7F
+	// :00401E7F 668B8419E9020000        mov ax, word ptr [ecx+ebx+000002E9]
+	{ 0x00001283, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004E17B4
+	// :004E17B4 66C78450E9020000FFFF    mov word ptr [eax+2*edx+000002E9], FFFF
+	{ 0x000E0BB8, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004E1880
+	// :004E1880 66019448E5020000        add word ptr [eax+2*ecx+000002E5], dx
+	{ 0x000E0C84, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004E1888
+	// :004E1888 8D8448E5020000          lea eax, dword ptr [eax+2*ecx+000002E5]
+	{ 0x000E0C8B, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004E18A5
+	// :004E18A5 66FF8470E5020000        inc word ptr [eax+2*esi+000002E5]
+	{ 0x000E0CA9, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004E18AD
+	// :004E18AD 8D8470E5020000          lea eax, dword ptr [eax+2*esi+000002E5]
+	{ 0x000E0CB0, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004E18DB
+	// :004E18DB 66019448E5020000        add word ptr [eax+2*ecx+000002E5], dx
+	{ 0x000E0CDF, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004E18E3
+	// :004E18E3 8D8448E5020000          lea eax, dword ptr [eax+2*ecx+000002E5]
+	{ 0x000E0CE6, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004E1900
+	// :004E1900 66838470E502000002      add word ptr [eax+2*esi+000002E5], 0002
+	{ 0x000E0D04, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004E1909
+	// :004E1909 8D8470E5020000          lea eax, dword ptr [eax+2*esi+000002E5]
+	{ 0x000E0D0C, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004E192C
+	// :004E192C 6683BC30E502000000      cmp word ptr [eax+esi+000002E5], 0000
+	{ 0x000E0D30, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004E19B6
+	// :004E19B6 8A9430E2020000          mov dl, byte ptr [eax+esi+000002E2]
+	{ 0x000E0DB9, "E2020000", g_weaponRack_000002E2.c_str() },
+	// :004E19D0
+	// :004E19D0 8A9C30E1020000          mov bl, byte ptr [eax+esi+000002E1]
+	{ 0x000E0DD3, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004E1A16
+	// :004E1A16 66899C30E5020000        mov word ptr [eax+esi+000002E5], bx
+	{ 0x000E0E1A, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004E1BD9
+	// :004E1BD9 8D8AE8020000            lea ecx, dword ptr [edx+000002E8]
+	{ 0x000E0FDB, "E8020000", g_weaponRack_000002E8.c_str() },
+	// :004E1CCB
+	// :004E1CCB 81C1E8020000            add ecx, 000002E8
+	{ 0x000E10CD, "E8020000", g_weaponRack_000002E8.c_str() },
+	// :004E2107
+	// :004E2107 8A8C10E2020000          mov cl, byte ptr [eax+edx+000002E2]
+	{ 0x000E150A, "E2020000", g_weaponRack_000002E2.c_str() },
+	// :004E2122
+	// :004E2122 8A9408E1020000          mov dl, byte ptr [eax+ecx+000002E1]
+	{ 0x000E1525, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004E2168
+	// :004E2168 80BC31E102000005        cmp byte ptr [ecx+esi+000002E1], 05
+	{ 0x000E156B, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004E2218
+	// :004E2218 8A9430E4020000          mov dl, byte ptr [eax+esi+000002E4]
+	{ 0x000E161B, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004E2283
+	// :004E2283 668BB410DF020000        mov si, word ptr [eax+edx+000002DF]
+	{ 0x000E1687, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :004E28BE
+	// :004E28BE 888C02E7020000          mov byte ptr [edx+eax+000002E7], cl
+	{ 0x000E1CC1, "E7020000", g_weaponRack_000002E7.c_str() },
+	// :004E28CE
+	// :004E28CE 888C02E8020000          mov byte ptr [edx+eax+000002E8], cl
+	{ 0x000E1CD1, "E8020000", g_weaponRack_000002E8.c_str() },
+	// :004A1E68
+	// :004A1E68 8D85E9020000            lea eax, dword ptr [ebp+000002E9]
+	{ 0x000A126A, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :0050630F
+	// :0050630F 8D8FE9020000            lea ecx, dword ptr [edi+000002E9]
+	{ 0x00105711, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004FBD27
+	// :004FBD27 8D83E3020000            lea eax, dword ptr [ebx+000002E3]
+	{ 0x000FB129, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004FBD6B
+	// :004FBD6B 8A8453E3020000          mov al, byte ptr [ebx+2*edx+000002E3]
+	{ 0x000FB16E, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004FBD7D
+	// :004FBD7D 80B9E102000004          cmp byte ptr [ecx+000002E1], 04
+	{ 0x000FB17F, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004FBD8C
+	// :004FBD8C 8881E3020000            mov byte ptr [ecx+000002E3], al
+	{ 0x000FB18E, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004FC5DB
+	// :004FC5DB 8A90E4020000            mov dl, byte ptr [eax+000002E4]
+	{ 0x000FB9DD, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004FC5E1
+	// :004FC5E1 8D88F2020000            lea ecx, dword ptr [eax+000002F2]
+	{ 0x000FB9E3, "F2020000", g_weaponRack_000002F2.c_str() },
+	// :004FC5E7
+	// :004FC5E7 05E4020000              add eax, 000002E4
+	{ 0x000FB9E8, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004FC614
+	// :004FC614 8A90E4020000            mov dl, byte ptr [eax+000002E4]
+	{ 0x000FBA16, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004FC61A
+	// :004FC61A 8D88F2020000            lea ecx, dword ptr [eax+000002F2]
+	{ 0x000FBA1C, "F2020000", g_weaponRack_000002F2.c_str() },
+	// :004FC620
+	// :004FC620 05E4020000              add eax, 000002E4
+	{ 0x000FBA21, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004FCBB7
+	// :004FCBB7 8A9453E1020000          mov dl, byte ptr [ebx+2*edx+000002E1]
+	{ 0x000FBFBA, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004FCBC3
+	// :004FCBC3 66C780E9020000FFFF      mov word ptr [ebx+000002E9], FFFF
+	{ 0x000FBFC6, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004FCD8F
+	// :004FCD8F 8D8BE3020000            lea ecx, dword ptr [ebx+000002E3]
+	{ 0x000FC191, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004FCEC9
+	// :004FCEC9 8A8C43E3020000          mov cl, byte ptr [ebx+2*eax+000002E3]
+	{ 0x000FC2CC, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004FCED8
+	// :004FCED8 80B8E102000004          cmp byte ptr [eax+000002E1], 04
+	{ 0x000FC2DA, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004FCEE3
+	// :004FCEE3 8888E3020000            mov byte ptr [eax+000002E3], cl
+	{ 0x000FC2E5, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004FD350
+	// :004FD350 8A844BE3020000          mov al, byte ptr [ebx+2*ecx+000002E3]
+	{ 0x000FC753, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004FD362
+	// :004FD362 80B9E102000004          cmp byte ptr [ecx+000002E1], 04
+	{ 0x000FC764, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004FD371
+	// :004FD371 8881E3020000            mov byte ptr [ecx+000002E3], al
+	{ 0x000FC773, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004FF771
+	// :004FF771 8D87E9020000            lea eax, dword ptr [edi+000002E9]
+	{ 0x000FEB73, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :005000C3
+	// :005000C3 80BC08E102000004        cmp byte ptr [eax+ecx+000002E1], 04
+	{ 0x000FF4C6, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :005000CD
+	// :005000CD 66899408E9020000        mov word ptr [eax+ecx+000002E9], dx
+	{ 0x000FF4D1, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004D7CC1
+	// :004D7CC1 660FB69C5EE4020000      movzx bx, byte ptr [esi+2*ebx+000002E4]
+	{ 0x000D70C6, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004D7CD5
+	// :004D7CD5 660FB68C6EE4020000      movzx cx, byte ptr [esi+2*ebp+000002E4]
+	{ 0x000D70DA, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004BAFC4
+	// :004BAFC4 8A845AE4020000          mov al, byte ptr [edx+2*ebx+000002E4]
+	{ 0x000BA3C7, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004F695F
+	// :004F695F 668B9408EB020000        mov dx, word ptr [eax+ecx+000002EB]
+	{ 0x000F5D63, "EB020000", g_weaponRack_000002EB.c_str() },
+	// :004F6973
+	// :004F6973 66899408EB020000        mov word ptr [eax+ecx+000002EB], dx
+	{ 0x000F5D77, "EB020000", g_weaponRack_000002EB.c_str() },
+	// :004F6980
+	// :004F6980 668B9408E5020000        mov dx, word ptr [eax+ecx+000002E5]
+	{ 0x000F5D84, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004F6994
+	// :004F6994 66899408E5020000        mov word ptr [eax+ecx+000002E5], dx
+	{ 0x000F5D98, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :0043E196
+	// :0043E196 80BC5EE402000000        cmp byte ptr [esi+2*ebx+000002E4], 00
+	{ 0x0003D599, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :0043E329
+	// :0043E329 80BC56E402000000        cmp byte ptr [esi+2*edx+000002E4], 00
+	{ 0x0003D72C, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :0046D49F
+	// :0046D49F 8DAFE3020000            lea ebp, dword ptr [edi+000002E3]
+	{ 0x0006C8A1, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :0046A8BE
+	// :0046A8BE 8A847EE1020000          mov al, byte ptr [esi+2*edi+000002E1]
+	{ 0x00069CC1, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :00507C96
+	// :00507C96 81C6E9020000            add esi, 000002E9
+	{ 0x00107098, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :0040F4A8
+	// :0040F4A8 8A844FE4020000          mov al, byte ptr [edi+2*ecx+000002E4]
+	{ 0x0000E8AB, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :0040F4BF
+	// :0040F4BF 8A845FE4020000          mov al, byte ptr [edi+2*ebx+000002E4]
+	{ 0x0000E8C2, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00410950
+	// :00410950 8D83E9020000            lea eax, dword ptr [ebx+000002E9]
+	{ 0x0000FD52, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :00501F94
+	// :00501F94 8A9C5DE1020000          mov bl, byte ptr [ebp+2*ebx+000002E1]
+	{ 0x00101397, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :00501F9F
+	// :00501F9F 66C780E9020000FFFF      mov word ptr [ebx+000002E9], FFFF
+	{ 0x001013A2, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :00491998
+	// :00491998 8A8C50E4020000          mov cl, byte ptr [eax+2*edx+000002E4]
+	{ 0x00090D9B, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004919F0
+	// :004919F0 8A8C50E4020000          mov cl, byte ptr [eax+2*edx+000002E4]
+	{ 0x00090DF3, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00491A4A
+	// :00491A4A 8A9448E4020000          mov dl, byte ptr [eax+2*ecx+000002E4]
+	{ 0x00090E4D, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00491A97
+	// :00491A97 8A9448E4020000          mov dl, byte ptr [eax+2*ecx+000002E4]
+	{ 0x00090E9A, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :0041AC92
+	// :0041AC92 81C7DF020000            add edi, 000002DF
+	{ 0x0001A094, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :0041B949
+	// :0041B949 66898C07DF020000        mov word ptr [edi+eax+000002DF], cx
+	{ 0x0001AD4D, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :0041B957
+	// :0041B957 C68401E102000004        mov byte ptr [ecx+eax+000002E1], 04
+	{ 0x0001AD5A, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :0041B965
+	// :0041B965 66898C07DF020000        mov word ptr [edi+eax+000002DF], cx
+	{ 0x0001AD69, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :0041B976
+	// :0041B976 888C07E1020000          mov byte ptr [edi+eax+000002E1], cl
+	{ 0x0001AD79, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :0041B986
+	// :0041B986 C68401D50200007F        mov byte ptr [ecx+eax+000002D5], 7F
+	{ 0x0001AD89, "D5020000", g_weaponRack_000002D5.c_str() },
+	// :0041B994
+	// :0041B994 889C01D6020000          mov byte ptr [ecx+eax+000002D6], bl
+	{ 0x0001AD97, "D6020000", g_weaponRack_000002D6.c_str() },
+	// :0041B9A1
+	// :0041B9A1 C68401D9020000FF        mov byte ptr [ecx+eax+000002D9], FF
+	{ 0x0001ADA4, "D9020000", g_weaponRack_000002D9.c_str() },
+	// :0041B9AF
+	// :0041B9AF C68401DA020000FF        mov byte ptr [ecx+eax+000002DA], FF
+	{ 0x0001ADB2, "DA020000", g_weaponRack_000002DA.c_str() },
+	// :0041B9BD
+	// :0041B9BD 889401D4020000          mov byte ptr [ecx+eax+000002D4], dl
+	{ 0x0001ADC0, "D4020000", g_weaponRack_000002D4.c_str() },
+	// :0041B9CA
+	// :0041B9CA 66C78401DB020000FFFF    mov word ptr [ecx+eax+000002DB], FFFF
+	{ 0x0001ADCE, "DB020000", g_weaponRack_000002DB.c_str() },
+	// :0041BAC5
+	// :0041BAC5 389C06E1020000          cmp byte ptr [esi+eax+000002E1], bl
+	{ 0x0001AEC8, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :0041BADE
+	// :0041BADE 66898C06DF020000        mov word ptr [esi+eax+000002DF], cx
+	{ 0x0001AEE2, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :0041BAE8
+	// :0041BAE8 66C78406DF0200001901    mov word ptr [esi+eax+000002DF], 0119
+	{ 0x0001AEEC, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :0041BAFA
+	// :0041BAFA 888C06E1020000          mov byte ptr [esi+eax+000002E1], cl
+	{ 0x0001AEFD, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :0041BB07
+	// :0041BB07 C68401E30200007F        mov byte ptr [ecx+eax+000002E3], 7F
+	{ 0x0001AF0A, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :0041BB15
+	// :0041BB15 889C01E4020000          mov byte ptr [ecx+eax+000002E4], bl
+	{ 0x0001AF18, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :0041BB22
+	// :0041BB22 C68401E7020000FF        mov byte ptr [ecx+eax+000002E7], FF
+	{ 0x0001AF25, "E7020000", g_weaponRack_000002E7.c_str() },
+	// :0041BB30
+	// :0041BB30 C68401E8020000FF        mov byte ptr [ecx+eax+000002E8], FF
+	{ 0x0001AF33, "E8020000", g_weaponRack_000002E8.c_str() },
+	// :0041BB3E
+	// :0041BB3E 889401E2020000          mov byte ptr [ecx+eax+000002E2], dl
+	{ 0x0001AF41, "E2020000", g_weaponRack_000002E2.c_str() },
+	// :0041BB4B
+	// :0041BB4B 66C78401E9020000FFFF    mov word ptr [ecx+eax+000002E9], FFFF
+	{ 0x0001AF4F, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :0041BD1E
+	// :0041BD1E 66899C02D1020000        mov word ptr [edx+eax+000002D1], bx
+	{ 0x0001B122, "D1020000", g_weaponRack_000002D1.c_str() },
+	// :0041BD2C
+	// :0041BD2C C68402D302000003        mov byte ptr [edx+eax+000002D3], 03
+	{ 0x0001B12F, "D3020000", g_weaponRack_000002D3.c_str() },
+	// :0041BD3A
+	// :0041BD3A 889C02D5020000          mov byte ptr [edx+eax+000002D5], bl
+	{ 0x0001B13D, "D5020000", g_weaponRack_000002D5.c_str() },
+	// :0041BD47
+	// :0041BD47 6689B402DB020000        mov word ptr [edx+eax+000002DB], si
+	{ 0x0001B14B, "DB020000", g_weaponRack_000002DB.c_str() },
+	// :0041BD55
+	// :0041BD55 889C02D6020000          mov byte ptr [edx+eax+000002D6], bl
+	{ 0x0001B158, "D6020000", g_weaponRack_000002D6.c_str() },
+	// :0041BDD2
+	// :0041BDD2 66899430DF020000        mov word ptr [eax+esi+000002DF], dx
+	{ 0x0001B1D6, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :0041BDDF
+	// :0041BDDF C68430E102000003        mov byte ptr [eax+esi+000002E1], 03
+	{ 0x0001B1E2, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :0041BDED
+	// :0041BDED C68431E30200007F        mov byte ptr [ecx+esi+000002E3], 7F
+	{ 0x0001B1F0, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :0041BDFB
+	// :0041BDFB 66C78432E9020000FFFF    mov word ptr [edx+esi+000002E9], FFFF
+	{ 0x0001B1FF, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :0041BEB1
+	// :0041BEB1 888431D6020000          mov byte ptr [ecx+esi+000002D6], al
+	{ 0x0001B2B4, "D6020000", g_weaponRack_000002D6.c_str() },
+	// :004A9A92
+	// :004A9A92 80BC05E102000004        cmp byte ptr [ebp+eax+000002E1], 04
+	{ 0x000A8E95, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004A9AA0
+	// :004A9AA0 6681BC05E9020000FFFF    cmp word ptr [ebp+eax+000002E9], FFFF
+	{ 0x000A8EA4, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A9AB2
+	// :004A9AB2 8D840DEB020000          lea eax, dword ptr [ebp+ecx+000002EB]
+	{ 0x000A8EB5, "EB020000", g_weaponRack_000002EB.c_str() },
+	// :004A9AB9
+	// :004A9AB9 668B8C0DEB020000        mov cx, word ptr [ebp+ecx+000002EB]
+	{ 0x000A8EBD, "EB020000", g_weaponRack_000002EB.c_str() },
+	// :004A9ADD
+	// :004A9ADD 80BC31E102000004        cmp byte ptr [ecx+esi+000002E1], 04
+	{ 0x000A8EE0, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004A9B06
+	// :004A9B06 8A9431E2020000          mov dl, byte ptr [ecx+esi+000002E2]
+	{ 0x000A8F09, "E2020000", g_weaponRack_000002E2.c_str() },
+	// :004A9D4D
+	// :004A9D4D C68411E402000000        mov byte ptr [ecx+edx+000002E4], 00
+	{ 0x000A9150, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004A9E68
+	// :004A9E68 6689840AE9020000        mov word ptr [edx+ecx+000002E9], ax
+	{ 0x000A926C, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A9E75
+	// :004A9E75 66818408EB020000D801    add word ptr [eax+ecx+000002EB], 01D8
+	{ 0x000A9279, "EB020000", g_weaponRack_000002EB.c_str() },
+	// :004A9E85
+	// :004A9E85 6683BC0DE502000000      cmp word ptr [ebp+ecx+000002E5], 0000
+	{ 0x000A9289, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004A9E99
+	// :004A9E99 6689940DE5020000        mov word ptr [ebp+ecx+000002E5], dx
+	{ 0x000A929D, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004A9FBD
+	// :004A9FBD 6689840AE9020000        mov word ptr [edx+ecx+000002E9], ax
+	{ 0x000A93C1, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A9FCA
+	// :004A9FCA 66818408EB020000D801    add word ptr [eax+ecx+000002EB], 01D8
+	{ 0x000A93CE, "EB020000", g_weaponRack_000002EB.c_str() },
+	// :004A9FDA
+	// :004A9FDA 6683BC0DE502000000      cmp word ptr [ebp+ecx+000002E5], 0000
+	{ 0x000A93DE, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004A9FEE
+	// :004A9FEE 6689940DE5020000        mov word ptr [ebp+ecx+000002E5], dx
+	{ 0x000A93F2, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004AA088
+	// :004AA088 C68405E402000001        mov byte ptr [ebp+eax+000002E4], 01
+	{ 0x000A948B, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004AA0BD
+	// :004AA0BD 6689840AE9020000        mov word ptr [edx+ecx+000002E9], ax
+	{ 0x000A94C1, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004AA0CA
+	// :004AA0CA 66818408EB020000D801    add word ptr [eax+ecx+000002EB], 01D8
+	{ 0x000A94CE, "EB020000", g_weaponRack_000002EB.c_str() },
+	// :004AA0DA
+	// :004AA0DA 6683BC0DE502000000      cmp word ptr [ebp+ecx+000002E5], 0000
+	{ 0x000A94DE, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004AA0EE
+	// :004AA0EE 6689940DE5020000        mov word ptr [ebp+ecx+000002E5], dx
+	{ 0x000A94F2, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004AA236
+	// :004AA236 8DB0E9020000            lea esi, dword ptr [eax+000002E9]
+	{ 0x000A9638, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004AA415
+	// :004AA415 8D8FE9020000            lea ecx, dword ptr [edi+000002E9]
+	{ 0x000A9817, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :00491BD9
+	// :00491BD9 80BC31E102000003        cmp byte ptr [ecx+esi+000002E1], 03
+	{ 0x00090FDC, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :00491BE7
+	// :00491BE7 8A9431E4020000          mov dl, byte ptr [ecx+esi+000002E4]
+	{ 0x00090FEA, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00491C81
+	// :00491C81 FE8C30E4020000          dec byte ptr [eax+esi+000002E4]
+	{ 0x00091084, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00491E68
+	// :00491E68 8A9C51F2020000          mov bl, byte ptr [ecx+2*edx+000002F2]
+	{ 0x0009126B, "F2020000", g_weaponRack_000002F2.c_str() },
+	// :00491E72
+	// :00491E72 8A9451E4020000          mov dl, byte ptr [ecx+2*edx+000002E4]
+	{ 0x00091275, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004F4704
+	// :004F4704 8DAEE9020000            lea ebp, dword ptr [esi+000002E9]
+	{ 0x000F3B06, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004653DE
+	// :004653DE 8DB2E1020000            lea esi, dword ptr [edx+000002E1]
+	{ 0x000647E0, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :00469F8F
+	// :00469F8F 8D8AE1020000            lea ecx, dword ptr [edx+000002E1]
+	{ 0x00069391, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :0042822E
+	// :0042822E C68451E402000001        mov byte ptr [ecx+2*edx+000002E4], 01
+	{ 0x00027631, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00428253
+	// :00428253 C68451E402000001        mov byte ptr [ecx+2*edx+000002E4], 01
+	{ 0x00027656, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004D60C3
+	// :004D60C3 660FB6B471E4020000      movzx si, byte ptr [ecx+2*esi+000002E4]
+	{ 0x000D54C8, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004D60D3
+	// :004D60D3 660FB69459E4020000      movzx dx, byte ptr [ecx+2*ebx+000002E4]
+	{ 0x000D54D8, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :0045CB81
+	// :0045CB81 66898C30DF020000        mov word ptr [eax+esi+000002DF], cx
+	{ 0x0005BF85, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :0045CB8F
+	// :0045CB8F C68432E102000003        mov byte ptr [edx+esi+000002E1], 03
+	{ 0x0005BF92, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :0045CBA0
+	// :0045CBA0 C68430E30200007F        mov byte ptr [eax+esi+000002E3], 7F
+	{ 0x0005BFA3, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :0045CBAE
+	// :0045CBAE 66C78431E9020000FFFF    mov word ptr [ecx+esi+000002E9], FFFF
+	{ 0x0005BFB2, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :0045CC4D
+	// :0045CC4D 888431D6020000          mov byte ptr [ecx+esi+000002D6], al
+	{ 0x0005C050, "D6020000", g_weaponRack_000002D6.c_str() },
+	// :00459DAC
+	// :00459DAC 8D9457E4020000          lea edx, dword ptr [edi+2*edx+000002E4]
+	{ 0x000591AF, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00459EC0
+	// :00459EC0 8D8C4FE4020000          lea ecx, dword ptr [edi+2*ecx+000002E4]
+	{ 0x000592C3, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :0046ABF0
+	// :0046ABF0 8D9455E3020000          lea edx, dword ptr [ebp+2*edx+000002E3]
+	{ 0x00069FF3, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004A6357
+	// :004A6357 81C1E9020000            add ecx, 000002E9
+	{ 0x000A5759, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004BA004
+	// :004BA004 8D9456E4020000          lea edx, dword ptr [esi+2*edx+000002E4]
+	{ 0x000B9407, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004A85FF
+	// :004A85FF 668B8419DF020000        mov ax, word ptr [ecx+ebx+000002DF]
+	{ 0x000A7A03, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :004A8617
+	// :004A8617 8A8419E4020000          mov al, byte ptr [ecx+ebx+000002E4]
+	{ 0x000A7A1A, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004A8626
+	// :004A8626 6683BC19E502000000      cmp word ptr [ecx+ebx+000002E5], 0000
+	{ 0x000A7A2A, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004A8635
+	// :004A8635 66C78419E9020000FFFF    mov word ptr [ecx+ebx+000002E9], FFFF
+	{ 0x000A7A39, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A897D
+	// :004A897D 6689841AE9020000        mov word ptr [edx+ebx+000002E9], ax
+	{ 0x000A7D81, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A898B
+	// :004A898B 668B8419E9020000        mov ax, word ptr [ecx+ebx+000002E9]
+	{ 0x000A7D8F, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A89D3
+	// :004A89D3 668B8419DF020000        mov ax, word ptr [ecx+ebx+000002DF]
+	{ 0x000A7DD7, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :004A8A23
+	// :004A8A23 66C78418E50200007012    mov word ptr [eax+ebx+000002E5], 1270
+	{ 0x000A7E27, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :00491238
+	// :00491238 8A9C51F2020000          mov bl, byte ptr [ecx+2*edx+000002F2]
+	{ 0x0009063B, "F2020000", g_weaponRack_000002F2.c_str() },
+	// :00491244
+	// :00491244 8A90E4020000            mov dl, byte ptr [eax+000002E4]
+	{ 0x00090646, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :0046DFB6
+	// :0046DFB6 8D8AE1020000            lea ecx, dword ptr [edx+000002E1]
+	{ 0x0006D3B8, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :0040D52E
+	// :0040D52E 80BC4AE302000040        cmp byte ptr [edx+2*ecx+000002E3], 40
+	{ 0x0000C931, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00476DF4
+	// :00476DF4 660FB6AC72E4020000      movzx bp, byte ptr [edx+2*esi+000002E4]
+	{ 0x000761F9, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :0047484F
+	// :0047484F 660FB6944BE4020000      movzx dx, byte ptr [ebx+2*ecx+000002E4]
+	{ 0x00073C54, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004748BB
+	// :004748BB 660FB6944BE4020000      movzx dx, byte ptr [ebx+2*ecx+000002E4]
+	{ 0x00073CC0, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00474995
+	// :00474995 660FB6944BE4020000      movzx dx, byte ptr [ebx+2*ecx+000002E4]
+	{ 0x00073D9A, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00474A07
+	// :00474A07 660FB6944BE4020000      movzx dx, byte ptr [ebx+2*ecx+000002E4]
+	{ 0x00073E0C, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00474A67
+	// :00474A67 660FB6944BE4020000      movzx dx, byte ptr [ebx+2*ecx+000002E4]
+	{ 0x00073E6C, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00474AD7
+	// :00474AD7 660FB6944BE4020000      movzx dx, byte ptr [ebx+2*ecx+000002E4]
+	{ 0x00073EDC, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004B13D0
+	// :004B13D0 8DBC56E4020000          lea edi, dword ptr [esi+2*edx+000002E4]
+	{ 0x000B07D3, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00508D99
+	// :00508D99 389C7AE1020000          cmp byte ptr [edx+2*edi+000002E1], bl
+	{ 0x0010819C, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :00508DA5
+	// :00508DA5 66C780E9020000FFFF      mov word ptr [ebx+000002E9], FFFF
+	{ 0x001081A8, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A8B1F
+	// :004A8B1F 8A8405E1020000          mov al, byte ptr [ebp+eax+000002E1]
+	{ 0x000A7F22, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004A8B36
+	// :004A8B36 6683BC15EB02000000      cmp word ptr [ebp+edx+000002EB], 0000
+	{ 0x000A7F3A, "EB020000", g_weaponRack_000002EB.c_str() },
+	// :004A8B4C
+	// :004A8B4C 6689B41DE9020000        mov word ptr [ebp+ebx+000002E9], si
+	{ 0x000A7F50, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A8B59
+	// :004A8B59 C68418E402000000        mov byte ptr [eax+ebx+000002E4], 00
+	{ 0x000A7F5C, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004A8B67
+	// :004A8B67 C68419E7020000FF        mov byte ptr [ecx+ebx+000002E7], FF
+	{ 0x000A7F6A, "E7020000", g_weaponRack_000002E7.c_str() },
+	// :004A8B75
+	// :004A8B75 C6841AE8020000FF        mov byte ptr [edx+ebx+000002E8], FF
+	{ 0x000A7F78, "E8020000", g_weaponRack_000002E8.c_str() },
+	// :004A8D22
+	// :004A8D22 8A8C1DE2020000          mov cl, byte ptr [ebp+ebx+000002E2]
+	{ 0x000A8125, "E2020000", g_weaponRack_000002E2.c_str() },
+	// :004A8DCB
+	// :004A8DCB 8D95E9020000            lea edx, dword ptr [ebp+000002E9]
+	{ 0x000A81CD, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A8F3B
+	// :004A8F3B 6689940DE9020000        mov word ptr [ebp+ecx+000002E9], dx
+	{ 0x000A833F, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A8F48
+	// :004A8F48 66818408EB020000D801    add word ptr [eax+ecx+000002EB], 01D8
+	{ 0x000A834C, "EB020000", g_weaponRack_000002EB.c_str() },
+	// :004A8F58
+	// :004A8F58 6683BC0DE502000000      cmp word ptr [ebp+ecx+000002E5], 0000
+	{ 0x000A835C, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004A8F98
+	// :004A8F98 8A9405E2020000          mov dl, byte ptr [ebp+eax+000002E2]
+	{ 0x000A839B, "E2020000", g_weaponRack_000002E2.c_str() },
+	// :004A90C0
+	// :004A90C0 8D8DE9020000            lea ecx, dword ptr [ebp+000002E9]
+	{ 0x000A84C2, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A9178
+	// :004A9178 6689940DE9020000        mov word ptr [ebp+ecx+000002E9], dx
+	{ 0x000A857C, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A9190
+	// :004A9190 8A8C05E2020000          mov cl, byte ptr [ebp+eax+000002E2]
+	{ 0x000A8593, "E2020000", g_weaponRack_000002E2.c_str() },
+	// :004A92EE
+	// :004A92EE 8D85E1020000            lea eax, dword ptr [ebp+000002E1]
+	{ 0x000A86F0, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004A93A9
+	// :004A93A9 8DB5E9020000            lea esi, dword ptr [ebp+000002E9]
+	{ 0x000A87AB, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A95EF
+	// :004A95EF 6689BC0DE9020000        mov word ptr [ebp+ecx+000002E9], di
+	{ 0x000A89F3, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A95FC
+	// :004A95FC 66818408EB020000D801    add word ptr [eax+ecx+000002EB], 01D8
+	{ 0x000A8A00, "EB020000", g_weaponRack_000002EB.c_str() },
+	// :004A960C
+	// :004A960C 6683BC0DE502000000      cmp word ptr [ebp+ecx+000002E5], 0000
+	{ 0x000A8A10, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004A9628
+	// :004A9628 66899405E5020000        mov word ptr [ebp+eax+000002E5], dx
+	{ 0x000A8A2C, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004A963D
+	// :004A963D 6689BC0DE9020000        mov word ptr [ebp+ecx+000002E9], di
+	{ 0x000A8A41, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :004A964A
+	// :004A964A 66818408EB020000D801    add word ptr [eax+ecx+000002EB], 01D8
+	{ 0x000A8A4E, "EB020000", g_weaponRack_000002EB.c_str() },
+	// :004A965A
+	// :004A965A 6683BC0DE502000000      cmp word ptr [ebp+ecx+000002E5], 0000
+	{ 0x000A8A5E, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004A9672
+	// :004A9672 6689840DE5020000        mov word ptr [ebp+ecx+000002E5], ax
+	{ 0x000A8A76, "E5020000", g_weaponRack_000002E5.c_str() },
+	// :004915A1
+	// :004915A1 80BC31E102000000        cmp byte ptr [ecx+esi+000002E1], 00
+	{ 0x000909A4, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004915AF
+	// :004915AF 8A9431E3020000          mov dl, byte ptr [ecx+esi+000002E3]
+	{ 0x000909B2, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004915BE
+	// :004915BE 668BAC31DF020000        mov bp, word ptr [ecx+esi+000002DF]
+	{ 0x000909C2, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :00491663
+	// :00491663 80BC30E102000004        cmp byte ptr [eax+esi+000002E1], 04
+	{ 0x00090A66, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :0049166D
+	// :0049166D 8A8C30E3020000          mov cl, byte ptr [eax+esi+000002E3]
+	{ 0x00090A70, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00491674
+	// :00491674 8D8430E3020000          lea eax, dword ptr [eax+esi+000002E3]
+	{ 0x00090A77, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004916A9
+	// :004916A9 8A8C30E3020000          mov cl, byte ptr [eax+esi+000002E3]
+	{ 0x00090AAC, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004916BA
+	// :004916BA 8A8C30E3020000          mov cl, byte ptr [eax+esi+000002E3]
+	{ 0x00090ABD, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004916CB
+	// :004916CB 8A8C30E3020000          mov cl, byte ptr [eax+esi+000002E3]
+	{ 0x00090ACE, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004916D4
+	// :004916D4 888C30E3020000          mov byte ptr [eax+esi+000002E3], cl
+	{ 0x00090AD7, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00491713
+	// :00491713 8A8C30E3020000          mov cl, byte ptr [eax+esi+000002E3]
+	{ 0x00090B16, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :0049171E
+	// :0049171E C68430E302000000        mov byte ptr [eax+esi+000002E3], 00
+	{ 0x00090B21, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00477237
+	// :00477237 8DBDE9020000            lea edi, dword ptr [ebp+000002E9]
+	{ 0x00076639, "E9020000", g_weaponRack_000002E9.c_str() },
+	// :00519D1C
+	// :00519D1C 8888E7020000            mov byte ptr [eax+000002E7], cl
+	{ 0x0011911E, "E7020000", g_weaponRack_000002E7.c_str() },
+	// :00519D28
+	// :00519D28 8888E8020000            mov byte ptr [eax+000002E8], cl
+	{ 0x0011912A, "E8020000", g_weaponRack_000002E8.c_str() },
+	// :00470222
+	// :00470222 660FBE8C4AE3020000      movsx cx, byte ptr [edx+2*ecx+000002E3]
+	{ 0x0006F627, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :0046C02E
+	// :0046C02E 8D85E3020000            lea eax, dword ptr [ebp+000002E3]
+	{ 0x0006B430, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00514EC1
+	// :00514EC1 66898C06DF020000        mov word ptr [esi+eax+000002DF], cx
+	{ 0x001142C5, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :00514ECF
+	// :00514ECF C68401E102000004        mov byte ptr [ecx+eax+000002E1], 04
+	{ 0x001142D2, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :00514EDD
+	// :00514EDD 66898C06DF020000        mov word ptr [esi+eax+000002DF], cx
+	{ 0x001142E1, "DF020000", g_weaponRack_000002DF.c_str() },
+	// :00514EEE
+	// :00514EEE 888C06E1020000          mov byte ptr [esi+eax+000002E1], cl
+	{ 0x001142F1, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :00514EFF
+	// :00514EFF C68401D50200007F        mov byte ptr [ecx+eax+000002D5], 7F
+	{ 0x00114302, "D5020000", g_weaponRack_000002D5.c_str() },
+	// :00514F0D
+	// :00514F0D 889C01D6020000          mov byte ptr [ecx+eax+000002D6], bl
+	{ 0x00114310, "D6020000", g_weaponRack_000002D6.c_str() },
+	// :00514F1A
+	// :00514F1A C68401D9020000FF        mov byte ptr [ecx+eax+000002D9], FF
+	{ 0x0011431D, "D9020000", g_weaponRack_000002D9.c_str() },
+	// :00514F28
+	// :00514F28 C68401DA020000FF        mov byte ptr [ecx+eax+000002DA], FF
+	{ 0x0011432B, "DA020000", g_weaponRack_000002DA.c_str() },
+	// :00514F3A
+	// :00514F3A 888C06D4020000          mov byte ptr [esi+eax+000002D4], cl
+	{ 0x0011433D, "D4020000", g_weaponRack_000002D4.c_str() },
+	// :00514F47
+	// :00514F47 66C78401DB020000FFFF    mov word ptr [ecx+eax+000002DB], FFFF
+	{ 0x0011434B, "DB020000", g_weaponRack_000002DB.c_str() },
+	// :004A7C71
+	// :004A7C71 80BC58E402000000        cmp byte ptr [eax+2*ebx+000002E4], 00
+	{ 0x000A7074, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004A825E
+	// :004A825E 8A9451E4020000          mov dl, byte ptr [ecx+2*edx+000002E4]
+	{ 0x000A7661, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :004A8265
+	// :004A8265 3A90F2020000            cmp dl, byte ptr [eax+000002F2]
+	{ 0x000A7667, "F2020000", g_weaponRack_000002F2.c_str() },
+	// :0040EA00
+	// :0040EA00 C68473E302000000        mov byte ptr [ebx+2*esi+000002E3], 00
+	{ 0x0000DE03, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00470B11
+	// :00470B11 05E3020000              add eax, 000002E3
+	{ 0x0006FF12, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :0048FD81
+	// :0048FD81 660FB688F2020000        movzx cx, byte ptr [eax+000002F2]
+	{ 0x0008F185, "F2020000", g_weaponRack_000002F2.c_str() },
+	// :0048FD89
+	// :0048FD89 660FB680E4020000        movzx ax, byte ptr [eax+000002E4]
+	{ 0x0008F18D, "E4020000", g_weaponRack_000002E4.c_str() },
+	// :00490556
+	// :00490556 8D96E3020000            lea edx, dword ptr [esi+000002E3]
+	{ 0x0008F958, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004905B1
+	// :004905B1 8A8C56E3020000          mov cl, byte ptr [esi+2*edx+000002E3]
+	{ 0x0008F9B4, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004905BA
+	// :004905BA 8D9456E3020000          lea edx, dword ptr [esi+2*edx+000002E3]
+	{ 0x0008F9BD, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00490628
+	// :00490628 8D8EE3020000            lea ecx, dword ptr [esi+000002E3]
+	{ 0x0008FA2A, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00490894
+	// :00490894 8A9401E1020000          mov dl, byte ptr [ecx+eax+000002E1]
+	{ 0x0008FC97, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :004908E0
+	// :004908E0 009401E3020000          add byte ptr [ecx+eax+000002E3], dl
+	{ 0x0008FCE3, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004908E7
+	// :004908E7 8D8C01E3020000          lea ecx, dword ptr [ecx+eax+000002E3]
+	{ 0x0008FCEA, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :004908F9
+	// :004908F9 80BC01E302000000        cmp byte ptr [ecx+eax+000002E3], 00
+	{ 0x0008FCFC, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00490903
+	// :00490903 C68401E302000000        mov byte ptr [ecx+eax+000002E3], 00
+	{ 0x0008FD06, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00490916
+	// :00490916 8A9401E3020000          mov dl, byte ptr [ecx+eax+000002E3]
+	{ 0x0008FD19, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00490921
+	// :00490921 C68401E30200007F        mov byte ptr [ecx+eax+000002E3], 7F
+	{ 0x0008FD24, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00490959
+	// :00490959 8D91E3020000            lea edx, dword ptr [ecx+000002E3]
+	{ 0x0008FD5B, "E3020000", g_weaponRack_000002E3.c_str() },
+	// :00490C76
+	// :00490C76 8A9450E1020000          mov dl, byte ptr [eax+2*edx+000002E1]
+	{ 0x00090079, "E1020000", g_weaponRack_000002E1.c_str() },
+	// :00490C82
+	// :00490C82 668B89E9020000          mov cx, word ptr [ecx+000002E9]
+	{ 0x00090085, "E9020000", g_weaponRack_000002E9.c_str() },
+
+	{ 0x01A075, "B938000000", "B9C0010000" },
+	{ 0x01AF71, "6683FD10", "6683FD80" },
+
+	// :00401E13
+	// :00401E13 660FB6B4D0E9B55B00      movzx si, byte ptr [eax+8*edx+005BB5E9]
+	{ 0x00001218, "E9B55B00", g_weaponSlots_005BB5E9.c_str() },
+	// :0040D5B2
+	// :0040D5B2 668B94F9E2B55B00        mov dx, word ptr [ecx+8*edi+005BB5E2]
+	{ 0x0000C9B6, "E2B55B00", g_weaponSlots_005BB5E2.c_str() },
+	// :0040D5BA
+	// :0040D5BA 668B84F9E4B55B00        mov ax, word ptr [ecx+8*edi+005BB5E4]
+	{ 0x0000C9BE, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :0040D5C2
+	// :0040D5C2 668B8CF9E6B55B00        mov cx, word ptr [ecx+8*edi+005BB5E6]
+	{ 0x0000C9C6, "E6B55B00", g_weaponSlots_005BB5E6.c_str() },
+	// :0040D68B
+	// :0040D68B 668B91E2B55B00          mov dx, word ptr [ecx+005BB5E2]
+	{ 0x0000CA8E, "E2B55B00", g_weaponSlots_005BB5E2.c_str() },
+	// :0040D692
+	// :0040D692 668B81E4B55B00          mov ax, word ptr [ecx+005BB5E4]
+	{ 0x0000CA95, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :0040D699
+	// :0040D699 668B89E6B55B00          mov cx, word ptr [ecx+005BB5E6]
+	{ 0x0000CA9C, "E6B55B00", g_weaponSlots_005BB5E6.c_str() },
+	// :004331DC
+	// :004331DC 668988E2B55B00          mov word ptr [eax+005BB5E2], cx
+	{ 0x000325DF, "E2B55B00", g_weaponSlots_005BB5E2.c_str() },
+	// :004331E8
+	// :004331E8 668990E6B55B00          mov word ptr [eax+005BB5E6], dx
+	{ 0x000325EB, "E6B55B00", g_weaponSlots_005BB5E6.c_str() },
+	// :004331F3
+	// :004331F3 668988E4B55B00          mov word ptr [eax+005BB5E4], cx
+	{ 0x000325F6, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :004331FA
+	// :004331FA 8890E9B55B00            mov byte ptr [eax+005BB5E9], dl
+	{ 0x000325FC, "E9B55B00", g_weaponSlots_005BB5E9.c_str() },
+	// :00433200
+	// :00433200 C680E8B55B00FF          mov byte ptr [eax+005BB5E8], FF
+	{ 0x00032602, "E8B55B00", g_weaponSlots_005BB5E8.c_str() },
+	// :00433242
+	// :00433242 8884DEE8B55B00          mov byte ptr [esi+8*ebx+005BB5E8], al
+	{ 0x00032645, "E8B55B00", g_weaponSlots_005BB5E8.c_str() },
+	// :004333E7
+	// :004333E7 668988E2B55B00          mov word ptr [eax+005BB5E2], cx
+	{ 0x000327EA, "E2B55B00", g_weaponSlots_005BB5E2.c_str() },
+	// :004333F3
+	// :004333F3 668990E6B55B00          mov word ptr [eax+005BB5E6], dx
+	{ 0x000327F6, "E6B55B00", g_weaponSlots_005BB5E6.c_str() },
+	// :004333FE
+	// :004333FE 668988E4B55B00          mov word ptr [eax+005BB5E4], cx
+	{ 0x00032801, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :00433405
+	// :00433405 8890E9B55B00            mov byte ptr [eax+005BB5E9], dl
+	{ 0x00032807, "E9B55B00", g_weaponSlots_005BB5E9.c_str() },
+	// :00465464
+	// :00465464 0FBF88E6B55B00          movsx ecx, word ptr [eax+005BB5E6]
+	{ 0x00064867, "E6B55B00", g_weaponSlots_005BB5E6.c_str() },
+	// :00465474
+	// :00465474 0FBF90E4B55B00          movsx edx, word ptr [eax+005BB5E4]
+	{ 0x00064877, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :00465481
+	// :00465481 0FBF80E2B55B00          movsx eax, word ptr [eax+005BB5E2]
+	{ 0x00064884, "E2B55B00", g_weaponSlots_005BB5E2.c_str() },
+	// :0047730E
+	// :0047730E 8A94F0E9B55B00          mov dl, byte ptr [eax+8*esi+005BB5E9]
+	{ 0x00076711, "E9B55B00", g_weaponSlots_005BB5E9.c_str() },
+	// :00491462
+	// :00491462 6683BCD0E4B55B00C0      cmp word ptr [eax+8*edx+005BB5E4], FFC0
+	{ 0x00090866, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :00492340
+	// :00492340 668B90E2B55B00          mov dx, word ptr [eax+005BB5E2]
+	{ 0x00091743, "E2B55B00", g_weaponSlots_005BB5E2.c_str() },
+	// :00492347
+	// :00492347 668B88E4B55B00          mov cx, word ptr [eax+005BB5E4]
+	{ 0x0009174A, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :00492352
+	// :00492352 668B90E6B55B00          mov dx, word ptr [eax+005BB5E6]
+	{ 0x00091755, "E6B55B00", g_weaponSlots_005BB5E6.c_str() },
+	// :00492478
+	// :00492478 668B90E2B55B00          mov dx, word ptr [eax+005BB5E2]
+	{ 0x0009187B, "E2B55B00", g_weaponSlots_005BB5E2.c_str() },
+	// :0049247F
+	// :0049247F 668B88E4B55B00          mov cx, word ptr [eax+005BB5E4]
+	{ 0x00091882, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :0049248A
+	// :0049248A 668B90E6B55B00          mov dx, word ptr [eax+005BB5E6]
+	{ 0x0009188D, "E6B55B00", g_weaponSlots_005BB5E6.c_str() },
+	// :004A85DA
+	// :004A85DA 8A9406E9B55B00          mov dl, byte ptr [esi+eax+005BB5E9]
+	{ 0x000A79DD, "E9B55B00", g_weaponSlots_005BB5E9.c_str() },
+	// :004A867B
+	// :004A867B 668B88E6B55B00          mov cx, word ptr [eax+005BB5E6]
+	{ 0x000A7A7E, "E6B55B00", g_weaponSlots_005BB5E6.c_str() },
+	// :004A8682
+	// :004A8682 668B90E4B55B00          mov dx, word ptr [eax+005BB5E4]
+	{ 0x000A7A85, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :004A8689
+	// :004A8689 668B80E2B55B00          mov ax, word ptr [eax+005BB5E2]
+	{ 0x000A7A8C, "E2B55B00", g_weaponSlots_005BB5E2.c_str() },
+	// :004A8BF7
+	// :004A8BF7 668B90E6B55B00          mov dx, word ptr [eax+005BB5E6]
+	{ 0x000A7FFA, "E6B55B00", g_weaponSlots_005BB5E6.c_str() },
+	// :004A8BFE
+	// :004A8BFE 668B88E4B55B00          mov cx, word ptr [eax+005BB5E4]
+	{ 0x000A8001, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :004A8C06
+	// :004A8C06 668B90E2B55B00          mov dx, word ptr [eax+005BB5E2]
+	{ 0x000A8009, "E2B55B00", g_weaponSlots_005BB5E2.c_str() },
+	// :004A9C6E
+	// :004A9C6E 668B88E6B55B00          mov cx, word ptr [eax+005BB5E6]
+	{ 0x000A9071, "E6B55B00", g_weaponSlots_005BB5E6.c_str() },
+	// :004A9C75
+	// :004A9C75 668B90E4B55B00          mov dx, word ptr [eax+005BB5E4]
+	{ 0x000A9078, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :004A9C7C
+	// :004A9C7C 668B80E2B55B00          mov ax, word ptr [eax+005BB5E2]
+	{ 0x000A907F, "E2B55B00", g_weaponSlots_005BB5E2.c_str() },
+	// :004E181B
+	// :004E181B 660FB68EE9B55B00        movzx cx, byte ptr [esi+005BB5E9]
+	{ 0x000E0C1F, "E9B55B00", g_weaponSlots_005BB5E9.c_str() },
+	// :004E1827
+	// :004E1827 8A8EE8B55B00            mov cl, byte ptr [esi+005BB5E8]
+	{ 0x000E0C29, "E8B55B00", g_weaponSlots_005BB5E8.c_str() },
+	// :004E196C
+	// :004E196C 6683BCD1E4B55B00C0      cmp word ptr [ecx+8*edx+005BB5E4], FFC0
+	{ 0x000E0D70, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :004E1F75
+	// :004E1F75 668B94C8E4B55B00        mov dx, word ptr [eax+8*ecx+005BB5E4]
+	{ 0x000E1379, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :004E1F7D
+	// :004E1F7D 668B9CC8E2B55B00        mov bx, word ptr [eax+8*ecx+005BB5E2]
+	{ 0x000E1381, "E2B55B00", g_weaponSlots_005BB5E2.c_str() },
+	// :004E1F85
+	// :004E1F85 668BB4C8E6B55B00        mov si, word ptr [eax+8*ecx+005BB5E6]
+	{ 0x000E1389, "E6B55B00", g_weaponSlots_005BB5E6.c_str() },
+	// :004F4732
+	// :004F4732 8A8CF8E9B55B00          mov cl, byte ptr [eax+8*edi+005BB5E9]
+	{ 0x000F3B35, "E9B55B00", g_weaponSlots_005BB5E9.c_str() },
+	// :00519818
+	// :00519818 0FBF88E4B55B00          movsx ecx, word ptr [eax+005BB5E4]
+	{ 0x00118C1B, "E4B55B00", g_weaponSlots_005BB5E4.c_str() },
+	// :0051981F
+	// :0051981F 0FBF90E6B55B00          movsx edx, word ptr [eax+005BB5E6]
+	{ 0x00118C22, "E6B55B00", g_weaponSlots_005BB5E6.c_str() },
+	// :00519826
+	// :00519826 0FBF80E2B55B00          movsx eax, word ptr [eax+005BB5E2]
+	{ 0x00118C29, "E2B55B00", g_weaponSlots_005BB5E2.c_str() },
+	// :00519D22
+	// :00519D22 8A8AE8B55B00            mov cl, byte ptr [edx+005BB5E8]
+	{ 0x00119124, "E8B55B00", g_weaponSlots_005BB5E8.c_str() },
+
+	{ 0x0324D2, "80F910", "80F978" },
+	{ 0x032623, "3C10", "3C78" },
+	{ 0x032669, "807C242010", "807C242078" },
+	{ 0x0326F2, "80FB10", "80FB78" },
+	{ 0x0327D8, "80FB10", "80FB78" },
+	{ 0x032821, "80FB10", "80FB78" },
+
+	{ 0x0000C9B2, "66", "90" },
+	{ 0x0000C9BA, "66", "90" },
+	{ 0x0000C9C2, "66", "90" },
+	{ 0x0000C9CA, "66", "90" },
+	{ 0x0000C9CE, "66", "90" },
+	{ 0x0000CA8B, "66", "90" },
+	{ 0x0000CA92, "66", "90" },
+	{ 0x0000CA99, "66", "90" },
+	{ 0x0000CAA3, "66", "90" },
+	{ 0x0000CAC4, "0FBFD2", "909090" },
+	{ 0x0000CAFA, "0FBFC0", "909090" },
+	{ 0x0000CAD0, "0FBF", "908B" },
+	{ 0x000325C4, "66", "90" },
+	{ 0x000325DC, "66", "90" },
+	{ 0x000325D7, "66", "90" },
+	{ 0x000325E8, "66", "90" },
+	{ 0x000325E3, "66", "90" },
+	{ 0x000325F3, "66", "90" },
+	{ 0x000327CB, "66", "90" },
+	{ 0x000327E7, "66", "90" },
+	{ 0x000327E2, "66", "90" },
+	{ 0x000327F3, "66", "90" },
+	{ 0x000327EE, "66", "90" },
+	{ 0x000327FE, "66", "90" },
+	{ 0x00064864, "0FBF", "908B" },
+	{ 0x00064874, "0FBF", "908B" },
+	{ 0x00064881, "0FBF", "908B" },
+	{ 0x00090862, "66", "90" },
+	{ 0x00091740, "66", "90" },
+	{ 0x0009174E, "66", "90" },
+	{ 0x00091747, "66", "90" },
+	{ 0x00091759, "66", "90" },
+	{ 0x00091752, "66", "90" },
+	{ 0x0009175D, "66", "90" },
+	{ 0x00091878, "66", "90" },
+	{ 0x00091886, "66", "90" },
+	{ 0x0009187F, "66", "90" },
+	{ 0x00091891, "66", "90" },
+	{ 0x0009188A, "66", "90" },
+	{ 0x00091895, "66", "90" },
+	{ 0x000918C5, "0FBF", "908B" },
+	{ 0x000918D2, "0FBF", "908B" },
+	{ 0x000918D9, "0FBF", "908B" },
+	{ 0x000A7A7B, "66", "90" },
+	{ 0x000A7A82, "66", "90" },
+	{ 0x000A7A89, "66", "90" },
+	{ 0x000A7FF7, "66", "90" },
+	{ 0x000A7FFE, "66", "90" },
+	{ 0x000A8006, "66", "90" },
+	{ 0x000A906E, "66", "90" },
+	{ 0x000A9075, "66", "90" },
+	{ 0x000A907C, "66", "90" },
+	{ 0x000E0D6C, "66", "90" },
+	{ 0x000E1375, "66", "90" },
+	{ 0x000E137D, "66", "90" },
+	{ 0x000E1385, "66", "90" },
+	{ 0x000E138D, "66", "90" },
+	{ 0x000E13B5, "0FBF", "908B" },
+	{ 0x000E13B9, "0FBFC3", "908BC3" },
+	{ 0x000E13BC, "0FBFCE", "908BCE" },
+	{ 0x00118C18, "0FBF", "908B" },
+	{ 0x00118C1F, "0FBF", "908B" },
+	{ 0x00118C26, "0FBF", "908B" },
+	{ 0x000173D1, "66", "90" },
+	{ 0x000173D8, "66", "90" },
+	{ 0x000173DF, "66", "90" },
+	{ 0x0001742B, "66", "90" },
+	{ 0x00017432, "66", "90" },
+	{ 0x0001743A, "66", "90" },
+	{ 0x000A220F, "0FBF", "908B" },
+	{ 0x000A2232, "0FBF", "908B" },
+	{ 0x000A2264, "0FBF", "908B" },
+
+	{ 0x000A21DC, "8A88C6000000", "E83F5D100090" },
+
+	{ 0x001BA9E2, "0000000000000000", "FF7FFF7FFF7FFFFF" },
+	{ 0x001BA9EA, "00000000", g_weaponSlots_Offset1.c_str() },
+	{ 0x001BA9EE, "00000000", g_weaponSlots_Offset2.c_str() },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
@@ -797,4 +1793,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that selects the lod version", g_selectLodVersionPatch),
 	MAKE_HOOK_PATCH("To call the hook that computes the checksum", g_computeChecksumPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the opt meshes collision", g_meshesCollisionPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the weapon racks offsets", g_weaponRacksOffsetsPatch),
 };

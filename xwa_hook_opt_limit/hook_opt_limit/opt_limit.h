@@ -2,6 +2,9 @@
 
 int GetHitDataArrayPtr();
 
+int GetWeaponSlotsOffset1();
+int GetWeaponSlotsOffset2();
+
 int GetCraftSize();
 int GetCraftMeshesCount();
 int GetCraftEnginesCount();
@@ -9,6 +12,7 @@ int GetCraftOffset_22E();
 int GetCraftOffset_260();
 int GetCraftOffset_292();
 int GetCraftOffset_2CF();
+int GetCraftOffset_2DF();
 int GetOptModelMeshesInfoSize();
 int GetOptModelMeshesInfoPtr();
 int GetOptModelMeshesInfoOffsetType();
@@ -74,3 +78,5 @@ int L0042DB60_EngineGlowHook(int* params);
 int SelectLodVersionHook(int* params);
 
 int MeshesCollisionHook(int* params);
+
+int L004A2DD0Hook(int* params);
