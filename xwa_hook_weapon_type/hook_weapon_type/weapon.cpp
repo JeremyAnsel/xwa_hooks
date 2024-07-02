@@ -1,5 +1,6 @@
 #include "targetver.h"
 #include "weapon.h"
+#include "config.h"
 
 enum ParamsEnum
 {
@@ -12,6 +13,38 @@ enum ParamsEnum
 	Params_ESI = -9,
 	Params_EDI = -10,
 };
+
+class CraftConfig
+{
+public:
+	CraftConfig()
+	{
+		auto lines = GetFileLines("hook_opt_limit.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_opt_limit");
+		}
+
+		this->MeshesCount = GetFileKeyValueInt(lines, "MeshesCount", 0);
+		this->Craft_Size = 0x3F9 + GetFileKeyValueInt(lines, "Craft_ExtraSize", 0);
+		this->Craft_Offset_22E = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_22E", 0);
+		this->Craft_Offset_260 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_260", 0);
+		this->Craft_Offset_292 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_292", 0);
+		this->Craft_Offset_2CF = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_2CF", 0);
+		this->Craft_Offset_2DF = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_2DF", 0x2DF - 0x3F9);
+	}
+
+	int MeshesCount;
+	int Craft_Size;
+	int Craft_Offset_22E;
+	int Craft_Offset_260;
+	int Craft_Offset_292;
+	int Craft_Offset_2CF;
+	int Craft_Offset_2DF;
+};
+
+CraftConfig g_craftConfig;
 
 #pragma pack(push, 1)
 
@@ -181,6 +214,8 @@ int GetWarheadsCount(const XwaCraft* pCraft, int warheadIndex)
 {
 	const ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
 
+	const XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)pCraft + g_craftConfig.Craft_Offset_2DF);
+
 	unsigned short craftIndex = pCraft->CraftIndex;
 	int count = 0;
 
@@ -191,7 +226,7 @@ int GetWarheadsCount(const XwaCraft* pCraft, int warheadIndex)
 
 		for (int rack = startRack; rack <= endRack; rack++)
 		{
-			count += pCraft->WeaponRacks[rack].Count;
+			count += weaponRacks[rack].Count;
 		}
 	}
 
