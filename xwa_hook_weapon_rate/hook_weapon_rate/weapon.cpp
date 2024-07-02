@@ -98,6 +98,8 @@ public:
 		this->Craft_Offset_22E = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_22E", 0);
 		this->Craft_Offset_260 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_260", 0);
 		this->Craft_Offset_292 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_292", 0);
+		this->Craft_Offset_2CF = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_2CF", 0);
+		this->Craft_Offset_2DF = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_2DF", 0x2DF - 0x3F9);
 	}
 
 	int MeshesCount;
@@ -105,6 +107,8 @@ public:
 	int Craft_Offset_22E;
 	int Craft_Offset_260;
 	int Craft_Offset_292;
+	int Craft_Offset_2CF;
+	int Craft_Offset_2DF;
 };
 
 CraftConfig g_craftConfig;
@@ -346,7 +350,9 @@ struct XwaMobileObject
 	short TransformMatrixUpX;
 	short TransformMatrixUpY;
 	short TransformMatrixUpZ;
-	char Unk00D9[12];
+	char Unk00D9[4];
+	XwaCraft* pCraft;
+	char Unk00E1[4];
 };
 
 static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 229");
@@ -1691,22 +1697,24 @@ int WeaponDechargeHook(int* params)
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 
-	if (XwaCurrentCraft->WeaponRacks[weaponRackIndex].Sequence < 4)
+	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_2DF);
+
+	if (weaponRacks[weaponRackIndex].Sequence < 4)
 	{
 		//unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
 		//int dechargeRate = g_modelIndexWeapon.GetDechargeRate(objectIndex);
 
-		unsigned short weaponRackModelIndex = XwaCurrentCraft->WeaponRacks[weaponRackIndex].ModelIndex;
+		unsigned short weaponRackModelIndex = weaponRacks[weaponRackIndex].ModelIndex;
 		int energyLowHighSeparation = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).EnergyLowHighSeparation;
 
-		if (XwaCurrentCraft->WeaponRacks[weaponRackIndex].Charge >= energyLowHighSeparation)
+		if (weaponRacks[weaponRackIndex].Charge >= energyLowHighSeparation)
 		{
 			weaponRackModelIndex++;
 		}
 
 		int dechargeRate = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).DechargeRate;
 
-		XwaCurrentCraft->WeaponRacks[weaponRackIndex].Charge -= dechargeRate;
+		weaponRacks[weaponRackIndex].Charge -= dechargeRate;
 	}
 
 	return 0;
@@ -1721,12 +1729,14 @@ int WeaponRechargeHook(int* params)
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 
+	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_2DF);
+
 	//int rechargeRate = g_modelIndexWeapon.GetRechargeRate(objectIndex);
 
-	unsigned short weaponRackModelIndex = XwaCurrentCraft->WeaponRacks[weaponRackIndex].ModelIndex;
+	unsigned short weaponRackModelIndex = weaponRacks[weaponRackIndex].ModelIndex;
 	int energyLowHighSeparation = g_modelIndexWeapon.GetStats(objectIndex, weaponRackModelIndex - 0x118).EnergyLowHighSeparation;
 
-	if (XwaCurrentCraft->WeaponRacks[weaponRackIndex].Charge >= energyLowHighSeparation)
+	if (weaponRacks[weaponRackIndex].Charge >= energyLowHighSeparation)
 	{
 		weaponRackModelIndex++;
 	}
@@ -1970,7 +1980,7 @@ int WeaponDurationOffsetHook(int* params)
 
 int WeaponFireRatioHook(int* params)
 {
-	const int weaponIndex = *(unsigned short*)(params[Params_EAX] + params[Params_ESI] + 0x2DF) - 0x118;
+	const int weaponIndex = *(unsigned short*)(params[Params_EAX] + params[Params_ESI] + g_craftConfig.Craft_Offset_2DF) - 0x118;
 	const int sourceObjectIndex = *(short*)(params[Params_EBP] + 0x08);
 
 	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).FireRatio;
@@ -1986,7 +1996,7 @@ int WeaponFireRatioHook(int* params)
 
 int WeaponRange_004A8D42_Hook(int* params)
 {
-	const int weaponIndex = *(unsigned short*)(params[Params_EBP] + params[6] + 0x2DF) - 0x118;
+	const int weaponIndex = *(unsigned short*)(params[Params_EBP] + params[6] + g_craftConfig.Craft_Offset_2DF) - 0x118;
 	const int sourceObjectIndex = *(int*)0x07CA1A0;
 
 	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).Range;
@@ -2002,7 +2012,7 @@ int WeaponRange_004A8D42_Hook(int* params)
 
 int WeaponRange_004A8FB6_Hook(int* params)
 {
-	const int weaponIndex = *(unsigned short*)(params[Params_EBP] + params[6] + 0x2DF) - 0x118;
+	const int weaponIndex = *(unsigned short*)(params[Params_EBP] + params[6] + g_craftConfig.Craft_Offset_2DF) - 0x118;
 	const int sourceObjectIndex = *(int*)0x07CA1A0;
 
 	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).Range;
@@ -2018,7 +2028,7 @@ int WeaponRange_004A8FB6_Hook(int* params)
 
 int WeaponRange_004A91B2_Hook(int* params)
 {
-	const int weaponIndex = *(unsigned short*)(params[Params_EBP] + params[6] + 0x2DF) - 0x118;
+	const int weaponIndex = *(unsigned short*)(params[Params_EBP] + params[6] + g_craftConfig.Craft_Offset_2DF) - 0x118;
 	const int sourceObjectIndex = *(int*)0x07CA1A0;
 
 	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).Range;
@@ -2034,7 +2044,7 @@ int WeaponRange_004A91B2_Hook(int* params)
 
 int WeaponRange_004A9B15_Hook(int* params)
 {
-	const int weaponIndex = *(unsigned short*)(params[Params_ECX] + params[Params_ESI] + 0x2DF) - 0x118;
+	const int weaponIndex = *(unsigned short*)(params[Params_ECX] + params[Params_ESI] + g_craftConfig.Craft_Offset_2DF) - 0x118;
 	const int sourceObjectIndex = *(int*)0x07CA1A0;
 
 	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).Range;
@@ -2050,7 +2060,7 @@ int WeaponRange_004A9B15_Hook(int* params)
 
 int WeaponRange_004E2119_Hook(int* params)
 {
-	const int weaponIndex = *(unsigned short*)(params[Params_EAX] + *(int*)(params[Params_EBP] - 0x30) + 0x2DF) - 0x118;
+	const int weaponIndex = *(unsigned short*)(params[Params_EAX] + *(int*)(params[Params_EBP] - 0x30) + g_craftConfig.Craft_Offset_2DF) - 0x118;
 	const int sourceObjectIndex = *(short*)(params[Params_EBP] + 0x08);
 
 	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).Range;
@@ -2687,6 +2697,8 @@ int WeaponRackHook(int* params)
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 
+	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_2DF);
+
 	ShipCategoryEnum category = XwaObjects[A4].ShipCategory;
 
 	if (category == ShipCategory_Freighter
@@ -2705,7 +2717,7 @@ int WeaponRackHook(int* params)
 			m292 = (char*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_292);
 		}
 
-		if (m292[XwaCurrentCraft->WeaponRacks[A8].MeshId] == 0)
+		if (m292[weaponRacks[A8].MeshId] == 0)
 		{
 			return 0xffff;
 		}
@@ -3031,6 +3043,49 @@ int MirrorHardpointHook(int* params)
 	return 0;
 }
 
+struct WeaponSlot
+{
+	int PositionX;
+	int PositionZ;
+	int PositionY;
+	unsigned char HardpointId;
+	unsigned char MeshId;
+};
+
+WeaponSlot GetWeaponSlots(short craftIndex, int weaponSlotIndex)
+{
+	ExeCraftEntry* s_ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+
+	unsigned int* ptr = (unsigned int*)s_ExeCraftTable[0].WeaponSlots;
+
+	WeaponSlot slot{};
+
+	if (ptr[0] == 0x7FFF7FFFU && ptr[1] == 0xFFFF7FFFU)
+	{
+		int ptrIndex = craftIndex * 987 + weaponSlotIndex * 8;
+		int offset1 = ptr[2] + ptrIndex;
+		int offset2 = ptr[3] + ptrIndex;
+
+		slot.PositionX = *(int*)(offset1 + 0);
+		slot.PositionZ = *(int*)(offset1 + 4);
+		slot.PositionY = *(int*)(offset2 + 0);
+		slot.HardpointId = *(unsigned char*)(offset2 + 4);
+		slot.MeshId = *(unsigned char*)(offset2 + 5);
+	}
+	else
+	{
+		const ExeCraftWeaponSlot& exeWeaponSlot = s_ExeCraftTable[craftIndex].WeaponSlots[weaponSlotIndex];
+
+		slot.PositionX = exeWeaponSlot.PositionX;
+		slot.PositionZ = exeWeaponSlot.PositionZ;
+		slot.PositionY = exeWeaponSlot.PositionY;
+		slot.HardpointId = exeWeaponSlot.HardpointId;
+		slot.MeshId = exeWeaponSlot.MeshId;
+	}
+
+	return slot;
+}
+
 int PlayerFireHook(int* params)
 {
 	params[Params_EBX] = 0xffff;
@@ -3058,7 +3113,7 @@ int PlayerFireHook(int* params)
 		m292 = (char*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_292);
 	}
 
-	unsigned char meshId = s_ExeCraftTable[XwaCurrentCraft->CraftIndex].WeaponSlots[weaponSlotIndex].MeshId;
+	unsigned char meshId = GetWeaponSlots(XwaCurrentCraft->CraftIndex, weaponSlotIndex).MeshId;
 
 	if (m292[meshId] == 0)
 	{
@@ -3802,14 +3857,16 @@ void EnergyLowHighSeparationFunction1(int* params)
 
 	int weaponIndex = params[Params_ECX] / 2;
 
-	if (pCraft->WeaponRacks[rackIndex].Charge >= 0x40)
+	const XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)pCraft + g_craftConfig.Craft_Offset_2DF);
+
+	if (weaponRacks[rackIndex].Charge >= 0x40)
 	{
 		weaponIndex--;
 	}
 
 	int energyLowHighSeparation = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).EnergyLowHighSeparation;
 
-	if (pCraft->WeaponRacks[rackIndex].Charge >= energyLowHighSeparation)
+	if (weaponRacks[rackIndex].Charge >= energyLowHighSeparation)
 	{
 		weaponIndex++;
 	}
@@ -3829,13 +3886,15 @@ bool EnergyLowHighSeparationFunction2(int* params)
 	const int objectIndex = params[0];
 	const int rackIndex = params[1];
 
-	unsigned short modelIndex = XwaCurrentCraft->WeaponRacks[rackIndex].ModelIndex;
+	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_2DF);
+
+	unsigned short modelIndex = weaponRacks[rackIndex].ModelIndex;
 
 	if (modelIndex == 280 || modelIndex == 282 || modelIndex == 284)
 	{
 		int energyLowHighSeparation = g_modelIndexWeapon.GetStats(objectIndex, modelIndex - 0x118).EnergyLowHighSeparation;
 
-		if (XwaCurrentCraft->WeaponRacks[rackIndex].Charge >= energyLowHighSeparation)
+		if (weaponRacks[rackIndex].Charge >= energyLowHighSeparation)
 		{
 			modelIndex++;
 		}
@@ -3844,7 +3903,7 @@ bool EnergyLowHighSeparationFunction2(int* params)
 		params[Params_ECX] = modelIndex;
 		params[Params_EBP] = modelIndex;
 
-		int charge = XwaCurrentCraft->WeaponRacks[rackIndex].Charge;
+		int charge = weaponRacks[rackIndex].Charge;
 		int dechargeRate = g_modelIndexWeapon.GetStats(objectIndex, modelIndex - 0x118).DechargeRate;
 
 		if (charge < dechargeRate)
@@ -3864,7 +3923,10 @@ int DrawEnergyBarHook(int* params)
 
 	XwaCraft* pCraft = (XwaCraft*)params[4];
 	int rackIndex = (params[7] - params[4] - 0x02E3) / 0x0E;
-	unsigned short modelIndex = pCraft->WeaponRacks[rackIndex].ModelIndex;
+
+	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)pCraft + g_craftConfig.Craft_Offset_2DF);
+
+	unsigned short modelIndex = weaponRacks[rackIndex].ModelIndex;
 
 	int charge = (unsigned short)params[Params_ECX];
 	int energyLowHighSeparation = g_modelIndexWeapon.GetStats(objectIndex, modelIndex - 0x118).EnergyLowHighSeparation;
