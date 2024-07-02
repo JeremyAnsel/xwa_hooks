@@ -84,6 +84,38 @@ public:
 
 Config g_config;
 
+class CraftConfig
+{
+public:
+	CraftConfig()
+	{
+		auto lines = GetFileLines("hook_opt_limit.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_opt_limit");
+		}
+
+		this->MeshesCount = GetFileKeyValueInt(lines, "MeshesCount", 0);
+		this->Craft_Size = 0x3F9 + GetFileKeyValueInt(lines, "Craft_ExtraSize", 0);
+		this->Craft_Offset_22E = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_22E", 0);
+		this->Craft_Offset_260 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_260", 0);
+		this->Craft_Offset_292 = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_292", 0);
+		this->Craft_Offset_2CF = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_2CF", 0);
+		this->Craft_Offset_2DF = 0x3F9 + GetFileKeyValueInt(lines, "Craft_Offset_2DF", 0x2DF - 0x3F9);
+	}
+
+	int MeshesCount;
+	int Craft_Size;
+	int Craft_Offset_22E;
+	int Craft_Offset_260;
+	int Craft_Offset_292;
+	int Craft_Offset_2CF;
+	int Craft_Offset_2DF;
+};
+
+CraftConfig g_craftConfig;
+
 class SoundsConfig
 {
 public:
@@ -350,12 +382,14 @@ int SlamHook(int* params)
 		}
 		else
 		{
+			XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)craft + g_craftConfig.Craft_Offset_2DF);
+
 			int penalty = g_config.SlamEnablePenalty;
 			bool hasEnergy = false;
 
 			for (int i = 0; i < craft->WeaponRacksCount; i++)
 			{
-				if (craft->WeaponRacks[i].m04 > penalty)
+				if (weaponRacks[i].m04 > penalty)
 				{
 					hasEnergy = true;
 					break;
@@ -368,13 +402,13 @@ int SlamHook(int* params)
 
 				for (int i = 0; i < craft->WeaponRacksCount; i++)
 				{
-					if (craft->WeaponRacks[i].m04 > penalty)
+					if (weaponRacks[i].m04 > penalty)
 					{
-						craft->WeaponRacks[i].m04 -= penalty;
+						weaponRacks[i].m04 -= penalty;
 					}
 					else
 					{
-						craft->WeaponRacks[i].m04 = 0;
+						weaponRacks[i].m04 = 0;
 					}
 				}
 
