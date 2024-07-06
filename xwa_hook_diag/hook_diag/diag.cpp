@@ -8,9 +8,11 @@
 #include <array>
 #include <numeric>
 #include <string>
+#include <dxgi1_4.h>
 
 #pragma comment(lib, "Winmm.lib")
 #pragma comment(lib, "Shlwapi.lib")
+#pragma comment(lib, "dxgi.lib")
 
 enum ParamsEnum
 {
@@ -53,6 +55,13 @@ private:
 };
 
 std::chrono::steady_clock::time_point g_chrono[9]{};
+
+std::string MemoryToString(LONGLONG value)
+{
+	char bufferValue[160]{};
+	StrFormatByteSize64A(value, bufferValue, sizeof(bufferValue));
+	return std::string(bufferValue);
+}
 
 double GetProcessCpuUsage()
 {
@@ -134,6 +143,27 @@ double GetThreadCpuUsage()
 	return max(percent, 0.0);
 }
 
+PROCESS_MEMORY_COUNTERS GetCurrentCpuMemory()
+{
+	PROCESS_MEMORY_COUNTERS processMemory{};
+	processMemory.cb = sizeof(processMemory);
+	GetProcessMemoryInfo(GetCurrentProcess(), &processMemory, sizeof(processMemory));
+	return processMemory;
+}
+
+DXGI_QUERY_VIDEO_MEMORY_INFO GetCurrentGpuMemory()
+{
+	IDXGIFactory4* pFactory = nullptr;
+	CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void**)&pFactory);
+	IDXGIAdapter3* pAdapter = nullptr;
+	pFactory->EnumAdapters(0, reinterpret_cast<IDXGIAdapter**>(&pAdapter));
+	DXGI_QUERY_VIDEO_MEMORY_INFO videoMemoryInfo{};
+	pAdapter->QueryVideoMemoryInfo(0, DXGI_MEMORY_SEGMENT_GROUP_LOCAL, &videoMemoryInfo);
+	pAdapter->Release();
+	pFactory->Release();
+	return videoMemoryInfo;
+}
+
 unsigned int GetResDataItemsMemSize()
 {
 	unsigned int ResDataItemsMemSize = 0;
@@ -172,6 +202,16 @@ int LoadingScreenStepHook(int* params)
 			+ " total=" + std::to_string(duration.count()) + "s"
 			).c_str());
 	}
+
+	PROCESS_MEMORY_COUNTERS currentCpuMemory = GetCurrentCpuMemory();
+	DXGI_QUERY_VIDEO_MEMORY_INFO currentGpuMemory = GetCurrentGpuMemory();
+
+	OutputDebugString((
+		__FUNCTION__ " step=" + std::to_string(step)
+		+ " maxRamMemory=" + MemoryToString(currentCpuMemory.PeakPagefileUsage)
+		+ " RamMemory=" + MemoryToString(currentCpuMemory.WorkingSetSize)
+		+ " GpuMemory=" + MemoryToString(currentGpuMemory.CurrentUsage)
+		).c_str());
 
 	return L00531840(step);
 }
@@ -268,6 +308,13 @@ void DiagDrawTextValue(bool isConcourse, short x, short y, const char* text, int
 	DiagDrawText(isConcourse, x, y, buffer);
 }
 
+void DiagDrawTextValue(bool isConcourse, short x, short y, const char* text, float value)
+{
+	char buffer[160]{};
+	sprintf_s(buffer, "%s%f", text, value);
+	DiagDrawText(isConcourse, x, y, buffer);
+}
+
 void DiagDrawTextMemory(bool isConcourse, short x, short y, const char* text, unsigned long long value)
 {
 	char bufferValue[160]{};
@@ -299,11 +346,12 @@ void DiagDrawMessages(bool isConcourse)
 
 	//DiagDrawTextMemory(isConcourse, 0, text_y += text_size, "g_vector1.capacity: ", g_vector1.capacity());
 
-	PROCESS_MEMORY_COUNTERS processMemory{};
-	processMemory.cb = sizeof(processMemory);
-	GetProcessMemoryInfo(GetCurrentProcess(), &processMemory, sizeof(processMemory));
+	PROCESS_MEMORY_COUNTERS currentCpuMemory = GetCurrentCpuMemory();
+	DXGI_QUERY_VIDEO_MEMORY_INFO currentGpuMemory = GetCurrentGpuMemory();
 
-	DiagDrawTextMemory(isConcourse, 0, text_y += text_size, "Memory usage: ", processMemory.PeakPagefileUsage);
+	DiagDrawTextMemory(isConcourse, 0, text_y += text_size, "Max RAM memory: ", currentCpuMemory.PeakPagefileUsage);
+	DiagDrawTextMemory(isConcourse, 0, text_y += text_size, "RAM memory: ", currentCpuMemory.WorkingSetSize);
+	DiagDrawTextMemory(isConcourse, 0, text_y += text_size, "GPU memory: ", currentGpuMemory.CurrentUsage);
 
 	if (!isConcourse)
 	{
@@ -317,7 +365,7 @@ void DiagDrawMessages(bool isConcourse)
 	static StepValueDouble _cpuUsage;
 	int cpuUsageMean = (int)_cpuUsage.GetValue(cpuUsage);
 
-	DiagDrawTextValue(isConcourse, 0, text_y += text_size, "Cpu usage (%): ", cpuUsageMean);
+	DiagDrawTextValue(isConcourse, 0, text_y += text_size, "CPU usage (%): ", cpuUsageMean);
 
 	if (!isConcourse)
 	{
@@ -337,6 +385,12 @@ void DiagDrawMessages(bool isConcourse)
 
 			DiagDrawText(isConcourse, 0, text_y += text_size, str.c_str());
 		}
+	}
+
+	if (!isConcourse)
+	{
+		float fps = (((float*)0x00782800)[0] + ((float*)0x00782800)[1] + ((float*)0x00782800)[2] + ((float*)0x00782800)[3]) * 0.25f;
+		DiagDrawTextValue(isConcourse, 0, text_y += text_size, "FPS: ", fps);
 	}
 
 	DiagDrawEnd(isConcourse);
@@ -363,6 +417,28 @@ int InFlightPresentHook(int* params)
 	params[Params_EAX] = *(int*)0x007712B0;
 
 	DiagDrawMessages(false);
+
+	return 0;
+}
+
+int OptLoadHook(int* params)
+{
+	const int handle = params[Params_EBX];
+	const auto Unlock_Handle = (void(*)(int))0x0050E350;
+	Unlock_Handle(handle);
+
+	char* s_XwaIOFileName = (char*)0x0080DA60;
+
+	PROCESS_MEMORY_COUNTERS currentCpuMemory = GetCurrentCpuMemory();
+	DXGI_QUERY_VIDEO_MEMORY_INFO currentGpuMemory = GetCurrentGpuMemory();
+
+	OutputDebugString((
+		__FUNCTION__
+		" maxRamMemory=" + MemoryToString(currentCpuMemory.PeakPagefileUsage)
+		+ " RamMemory=" + MemoryToString(currentCpuMemory.WorkingSetSize)
+		+ " GpuMemory=" + MemoryToString(currentGpuMemory.CurrentUsage)
+		+ " " + s_XwaIOFileName
+		).c_str());
 
 	return 0;
 }
