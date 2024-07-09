@@ -13,6 +13,39 @@ E867500400              call 005A8B20, 005A8B20 - 00563AB9 = 00045067
 E8A54F0400              call 005A8B20, 005A8B20 - 00563B7B = 00044FA5
 5F                      pop edi
 
+:00564752 - 0x163B52
+A1C05E9F00              mov eax, dword ptr [009F5EC0]
+
+E8C9430400              call 005A8B20, 005A8B20 - 00564757 = 000443C9
+
+:00563B3D - 0x162F3D
+0F84FC000000            je 00563C3F
+
+E8DE4F0400              call 005A8B20, 005A8B20 - 00563B42 = 00044FDE
+90                      nop
+
+:0055DB8A - 0x15CF8A
+E84103F7FF              call 004CDED0
+
+E8A1AF0400              call 005A8B30, 005A8B30 - 0055DB8F = 0004AFA1
+
+;:00563A5C - 0x162E5C
+;A1C05E9F00              mov eax, dword ptr [009F5EC0]
+;
+;E8BF500400              call 005A8B20, 005A8B20 - 00563A61 = 000450BF
+;
+;:00563C3F - 0x16303F
+;8B74241C                mov esi, dword ptr [esp+1C]
+;
+;83C444                  add esp, 00000044
+;C3                      ret
+
+:0055E640 - 0x15DA40
+56                      push esi
+8D442408                lea eax, dword ptr [esp+08]
+
+E8DBA40400              call 005A8B20, 005A8B20 - 0055E645 = 0004A4DB
+
 :00563B1B - 0x162F1B
 E83090FFFF              call 0055CB50
 
@@ -352,10 +385,10 @@ E823400400              call 005A8B20, 005A8B20 - 00564AFD = 00044023
 14                      00000014
 
 ; mission medals up to 100
-:0055E66E - 0x15DA6E
-35                      00000035
-
-64                      00000064
+;:0055E66E - 0x15DA6E
+;35                      00000035
+;
+;64                      00000064
 
 ; Kalidor medals up to 100
 :0055E7C5 - 0x15DBC5
@@ -427,6 +460,11 @@ E8C6420200              call 005A8B30, 005A8B30 - 0058486A = 000242C6
 
 6A40                    push 00000040
 
+:0055DD60 - 0x15D160
+686A3B0000              push 00003B6A
+
+E8BBAD0400              call 005A8B20, 005A8B20 - 0055DD65 = 0004ADBB
+
 ===============================================================================
 
 ; Rank points and PilotRating points
@@ -454,6 +492,23 @@ F73C9DD42F5B00          idiv dword ptr [4*ebx+005B2FD4]
 E89341FEFF              call 0055BC20
 
 E893100300              call 005A8B20, 005A8B20 - 00577A8D = 00031093
+
+:00584CC8 - 0x1840C8
+E8536FFDFF              call 0055BC20
+
+E8533E0200              call 005A8B20, 005A8B20 - 00584CCD = 00023E53
+
+// "frontres\combat\briefoff.bmp"
+:00577844 - 0x176C44
+E827A5FBFF              call 00531D70
+
+E8D7120300              call 005A8B20, 005A8B20 - 00577849 = 000312D7
+
+// "frontres\family\markoholo.bmp" or "frontres\combat\solo.bmp"
+:00577ACD - 0x176ECD
+E89EA2FBFF              call 00531D70
+
+E84E100300              call 005A8B20, 005A8B20 - 00577AD2 = 0003104E
 
 ===============================================================================
 
@@ -557,9 +612,261 @@ E820CC0600              call 005A8B20, 005A8B20 - 0053BF00 = 0006CC20
 
 ===============================================================================
 
+; Play pod movie
+
+; L00573020 - XwaFilmRoomGameStateUpdate
+:00573043 - 0x172443
+E8D88BFEFF              call 0055BC20
+
+E8D85A0300              call 005A8B20, 005A8B20 - 00573048 = 00035AD8
+
+; L0053C120 - XwaCombatMultiGameStateUpdate
+:0053C149 - 0x13B549
+E8D2FA0100              call 0055BC20
+
+E8D2C90600              call 005A8B20, 005A8B20 - 0053C14E = 0006C9D2
+
+; L005438B0 - XwaCombatSingleGameStateUpdate
+:005438F9 - 0x142CF9
+E822830100              call 0055BC20
+
+E822520600              call 005A8B20, 005A8B20 - 005438FE = 00065222
+
+; L00573020 - XwaFilmRoomGameStateUpdate
+:005730EE - 0x1724EE
+E87DECFBFF              call 00531D70
+
+E82D5A0300              call 005A8B20, 005A8B20 - 005730F3 = 00035A2D
+
+===============================================================================
+
+; L00538850 - XwaPlaySound
+:00538850 - 0x137C50
+A10F7F9F00              mov eax, dword ptr [009F7F0F]
+
+E8DB020700              call 005A8B30, 005A8B30 - 00538855 = 000702DB
+
+===============================================================================
+
+; HD concourse
+
+; L0055E800 - XwaLoadDatImage
+:0055E811 - 0x15DC11
+B8FFFFFF7F              mov eax, 7FFFFFFF
+
+E81AA30400              call 005A8B30, 005A8B30 - 0055E816 = 0004A31A
+
+; L00537A30 - XwaFrontResLoadCbm
+:00537AB1 - 0x136EB1
+E87A32FFFF              call 0052AD30
+
+E87A100700              call 005A8B30, 005A8B30 - 00537AB6 = 0007107A
+
+; L00532080 - XwaFrontResFreeItem
+:00532087 - 0x131487
+E8B4540000              call 00537540
+
+E8A46A0700              call 005A8B30, 005A8B30 - 0053208C = 00076AA4
+
+; L00534A60 - XwaFrontResDraw
+:00534A65 - 0x133E65
+E8D62A0000              call 00537540
+
+E8C6400700              call 005A8B30, 005A8B30 - 00534A6A = 000740C6
+
+; L00535470 - XwaFrontResDrawCurrentImage
+:00535475 - 0x134875
+E8C6200000              call 00537540
+
+E8B6360700              call 005A8B30, 005A8B30 - 0053547A = 000736B6
+
+; L00532350 - XwaFrontResDrawCurrentImageAdd
+:00532355 - 0x131755
+E8E6510000              call 00537540
+
+E8D6670700              call 005A8B30, 005A8B30 - 0053235A = 000767D6
+
+; L00532C90 - Draw map icons
+:00532C95 - 0x132095
+E8A6480000              call 00537540
+
+E8965E0700              call 005A8B30, 005A8B30 - 00532C9A = 00075E96
+
+; L00533BF0 - Draw grey map icons
+:00533BF5 - 0x132FF5
+E846390000              call 00537540
+
+E8364F0700              call 005A8B30, 005A8B30 - 00533BFA = 00074F36
+
+; L005338C0 - Draw icon
+:005338C5 - 0x132CC5
+E8763C0000              call 00537540
+
+E866520700              call 005A8B30, 005A8B30 - 005338CA = 00075266
+
+; L005563C0 - Icon rect
+:005563E2 - 0x1557E2
+E8C9280000              call 00558CB0
+
+E839270500              call 005A8B20, 005A8B20 - 005563E7 = 00052739
+
+; L0055B630 - XwaDrawCursor
+:0055BA04 - 0x15AE04
+E897BBFFFF              call 005575A0
+
+E827D10400              call 005A8B30, 005A8B30 - 0055BA09 = 0004D127
+
+; L00558D90 - XwaDrawFillRectangle
+:00558D90 - 0x158190
+8B442404                mov eax, dword ptr [esp+04]
+8B4808                  mov ecx, dword ptr [eax+08]
+
+E88BFD0400              call 005A8B20, 005A8B20 - 00558D95 = 0004FD8B
+9090                    nop
+
+; L00558F60 - XwaDrawRectangle
+:00558F8F - 0x15838F
+8B4508                  mov eax, dword ptr [ebp+08]
+8B4808                  mov ecx, dword ptr [eax+08]
+
+E88CFB0400              call 005A8B20, 005A8B20 - 00558F94 = 0004FB8C
+90                      nop
+
+; L005590D0 - XwaDrawRectangleBorder
+:005590D6 - 0x1584D6
+8B4508                  mov eax, dword ptr [ebp+08]
+8B4808                  mov ecx, dword ptr [eax+08]
+
+E845FA0400              call 005A8B20, 005A8B20 - 005590DB = 0004FA45
+90                      nop
+
+; L00569660 - Draw briefing grid
+:005697B5 - 0x168BB5
+E8269EFDFF              call 005435E0
+
+E866F30300              call 005A8B20, 005A8B20 - 005697BA = 0003F366
+
+:00569878 - 0x168C78
+E8639DFDFF              call 005435E0
+
+E8A3F20300              call 005A8B20, 005A8B20 - 0056987D = 0003F2A3
+
+:0056980F - 0x168C0F
+E87C9CFDFF              call 00543490
+
+E80CF30300              call 005A8B20, 005A8B20 - 00569814 = 0003F30C
+
+:005698BF - 0x168CBF
+E8CC9BFDFF              call 00543490
+
+E85CF20300              call 005A8B20, 005A8B20 - 005698C4 = 0003F25C
+
+; L00542C90 - Draw line
+:00542CA1 - 0x1420A1
+C745F800080000          mov [ebp-08], 00000800
+
+E87A5E0600              call 005A8B20, 005A8B20 - 00542CA6 = 00065E7A
+9090                    nop
+
+; L00564E90 - XwaBriefingGameStateUpdate
+:005655A6 - 0x1649A6
+A0BCC7B000              mov al, byte ptr [00B0C7BC]
+
+E885350400              call 005A8B30, 005A8B30 - 005655AB = 00043585
+
+; L0051D100 - XwaConfigMenuGameStateUpdate
+:0051D1D6 - 0x11C5D6
+E8B5250200              call 0053F790
+
+E845B90800              call 005A8B20, 005A8B20 - 0051D1DB = 0008B945
+
+; L00569BE0 - Draw briefing bottom text
+:00567C76 - 0x167076
+E8651F0000              call 00569BE0
+
+E8A50E0400              call 005A8B20, 005A8B20 - 00567C7B = 00040EA5
+
+; L005595A0 - XwaUIMessageBoxGameStateUpdate
+:00559613 - 0x158A13
+E8B8030000              call 005599D0
+
+E818F50400              call 005A8B30, 005A8B30 - 00559618 = 0004F518
+
+; L00574D70 - XwaTechLibraryGameStateUpdate
+:0057517B - 0x17457B
+E8B0BBFCFF              call 00540D30
+
+E8B0390300              call 005A8B30, 005A8B30 - 00575180 = 000339B0
+
+; L00573020 - XwaFilmRoomGameStateUpdate
+:00573180 - 0x172580
+391DEC3F7800            cmp dword ptr [00783FEC], ebx
+0F8463020000            je 005733EF
+
+E89B590300              call 005A8B20, 005A8B20 - 00573185 = 0003599B
+90                      nop
+909090909090            nop
+
+; L00559B50 - XwaCreatePilotGameStateUpdate
+:00559BCF - 0x158FCF
+E8BCF0FFFF              call 00558C90
+
+E84CEF0400              call 005A8B20, 005A8B20 - 00559BD4 = 0004EF4C
+
+; L005438B0 - XwaCombatSingleGameStateUpdate
+:0054443A - 0x14383A
+391DB0307800            cmp dword ptr [007830B0], ebx
+0F8411010000            je 00544557
+
+E8E1460600              call 005A8B20, 005A8B20 - 0054443F = 000646E1
+90                      nop
+909090909090            nop
+
+===============================================================================
+
 ; Interactive positions
 ; L0055FF30
 ; BOOL XwaFamilyRoomGameStateUpdate( int A4 )
+
+; familyroom_backtoconcourse
+:005602CA - 0x15F6CA
+E8C189FFFF              call 00558C90
+
+E851880400              call 005A8B20, 005A8B20 - 005602CF = 00048851
+
+:00560398 - 0x15F798
+E8F388FFFF              call 00558C90
+
+E883870400              call 005A8B20, 005A8B20 - 0056039D = 00048783
+
+; familyroom_statistics
+:00560476 - 0x15F876
+E81588FFFF              call 00558C90
+
+E8A5860400              call 005A8B20, 005A8B20 - 0056047B = 000486A5
+
+; familyroom_playmission
+:005605E0 - 0x15F9E0
+E8AB86FFFF              call 00558C90
+
+E83B850400              call 005A8B20, 005A8B20 - 005605E5 = 0004853B
+
+; mkeye
+:00560231 - 0x15F631
+E82A48FDFF              call 00534A60
+
+E8FA880400              call 005A8B30, 005A8B30 - 00560236 = 000488FA
+
+; monitor
+:00564BFD - 0x163FFD
+E85EFEFCFF              call 00534A60
+
+E82E3F0400              call 005A8B30, 005A8B30 - 00564C02 = 00043F2E
+
+:00564C3A - 0x16403A
+E821FEFCFF              call 00534A60
+
+E8F13E0400              call 005A8B30, 005A8B30 - 00564C3F = 00043EF1
 
 ; ladyblue
 :00563EB7 - 0x1632B7
@@ -596,4 +903,261 @@ E82C4A0400              call 005A8B20, 005A8B20 - 005640F4 = 00044A2C
 A1EED8AE00              mov eax, dword ptr [00AED8EE]
 
 E853440400              call 005A8B30, 005A8B30 - 005646DD = 00044453
+
+; L00532180 - XwaFrontResGetArea
+:00532184 - 0x131584
+803800                  cmp byte ptr [eax], 00
+7518                    jne 005321A1
+
+E897690700              call 005A8B20, 005A8B20 - 00532189 = 00076997
+
+; L005322F0 - XwaFrontResSetCurrentImage
+:00532335 - 0x131735
+7C03                    jl 0053233A
+8D41FF                  lea eax, dword ptr [ecx-01]
+
+E8E6670700              call 005A8B20, 005A8B20 - 0053233A = 000767E6
+
+===============================================================================
+
+; L00556B20 - XwaLoadFont
+:00556B5C - 0x155F5C
+8B04BD69BC9F00          mov eax, dword ptr [4*edi+009FBC69]
+
+E8BF1F0500              call 005A8B20, 005A8B20 - 00556B61 = 00051FBF
+9090                    nop
+
+; L00557150 - XwaFreeFonts
+:00557153 - 0x156553
+BEFB7F9F00              mov esi, 009F7FFB
+
+E8C8190500              call 005A8B20, 005A8B20 - 00557158 = 000519C8
+
+; L00557EE0 - XwaFontGetLineHeight
+:00557EEF - 0x1572EF
+8B048569BC9F00          mov eax, dword ptr [4*eax+009FBC69]
+
+E82C0C0500              call 005A8B20, 005A8B20 - 00557EF4 = 00050C2C
+9090                    nop
+
+; L00557F10 - XwaFontGetStringWidth
+:00557F29 - 0x157329
+8B348569BC9F00          mov esi, dword ptr [4*eax+009FBC69]
+
+E8F20B0500              call 005A8B20, 005A8B20 - 00557F2E = 00050BF2
+9090                    nop
+
+; L00557B10
+:00557B4B - 0x156F4B
+8B3C8569BC9F00          mov edi, dword ptr [4*eax+009FBC69]
+
+E8D00F0500              call 005A8B20, 005A8B20 - 00557B50 = 00050FD0
+9090                    nop
+
+; L00557910
+:00557941 - 0x156D41
+8B34AD69BC9F00          mov esi, dword ptr [4*ebp+009FBC69]
+
+E8DA110500              call 005A8B20, 005A8B20 - 00557946 = 000511DA
+9090                    nop
+
+; L00557720
+:00557751 - 0x156B51
+8B2CB569BC9F00          mov ebp, dword ptr [4*esi+009FBC69]
+
+E8CA130500              call 005A8B20, 005A8B20 - 00557756 = 000513CA
+9090                    nop
+
+; L005575A0
+:005575D1 - 0x1569D1
+8B349D69BC9F00          mov esi, dword ptr [4*ebx+009FBC69]
+
+E84A150500              call 005A8B20, 005A8B20 - 005575D6 = 0005154A
+9090                    nop
+
+; L00557450
+:00557483 - 0x156883
+8B348569BC9F00          mov esi, dword ptr [4*eax+009FBC69]
+
+E898160500              call 005A8B20, 005A8B20 - 00557488 = 00051698
+9090                    nop
+
+; L00557310
+:00557343 - 0x156743
+8B348569BC9F00          mov esi, dword ptr [4*eax+009FBC69]
+
+E8D8170500              call 005A8B20, 005A8B20 - 00557348 = 000517D8
+9090                    nop
+
+; L005571A0
+:005571D5 - 0x1565D5
+8B348569BC9F00          mov esi, dword ptr [4*eax+009FBC69]
+
+E846190500              call 005A8B20, 005A8B20 - 005571DA = 00051946
+9090                    nop
+
+; L0051D3D0
+:0051D51A - 0x11C91A
+C744241C322E3032        mov [esp+1C], 32302E32
+
+E801B60800              call 005A8B20, 005A8B20 - 0051D51F = 0008B601
+909090                  nop
+
+===============================================================================
+
+; L00531840 - review briefing text
+
+; draw progress bar
+:00531CC6 - 0x1310C6
+B8EF010000              mov eax, 000001EF
+B909000000              mov ecx, 00000009
+
+E8556E0700              call 005A8B20, 005A8B20 - 00531CCB = 00076E55
+EB50                    jmp 00531D1D, 00531D1D - 00531CCD = 50
+909090                  nop
+
+; draw mission items
+:00531C3D - 0x13103D
+E84E700200              call 00558C90
+
+E8DE6E0700              call 005A8B20, 005A8B20 - 00531C42 = 00076EDE
+
+; draw mission title
+:00531BEA - 0x130FEA
+E8A1700200              call 00558C90
+
+E8316F0700              call 005A8B20, 005A8B20 - 00531BEF = 00076F31
+
+; draw skirmish title
+:005319C1 - 0x130DC1
+E8CA720200              call 00558C90
+
+E85A710700              call 005A8B20, 005A8B20 - 005319C6 = 0007715A
+
+; draw skirmish items
+:00531B00 - 0x130F00
+E80B580200              call 00557310
+
+E81B700700              call 005A8B20, 005A8B20 - 00531B05 = 0007701B
+
+:00531B8E - 0x130F8E
+E87D570200              call 00557310
+
+E88D6F0700              call 005A8B20, 005A8B20 - 00531B93 = 00076F8D
+
+:00531BB8 - 0x130FB8
+E853570200              call 00557310
+
+E8636F0700              call 005A8B20, 005A8B20 - 00531BBD = 00076F63
+
+===============================================================================
+
+; L005487C0 - mission selection screen
+
+:005487CF - 0x147BCF
+7507                    jne 005487D8
+BBE6000000              mov ebx, 000000E6
+
+E84C030600              call 005A8B20, 005A8B20 - 005487D4 = 0006034C
+9090                    nop
+
+===============================================================================
+
+; L00584500 - draw battlezoom and kalidorzoom
+
+:005847C8 - 0x183BC8
+E89302FBFF              call 00534A60
+
+E853430200              call 005A8B20, 005A8B20 - 005847CD = 00024353
+
+:005848D3 - 0x183CD3
+E8B844FDFF              call 00558D90
+
+E848420200              call 005A8B20, 005A8B20 - 005848D8 = 00024248
+
+:00584841 - 0x183C41
+E81A02FBFF              call 00534A60
+
+E8DA420200              call 005A8B20, 005A8B20 - 00584846 = 000242DA
+
+:005848D3 - 0x183CD3
+E8B844FDFF              call 00558D90
+
+E848420200              call 005A8B20, 005A8B20 - 005848D8 = 00024248
+
+:005845B1 - 0x1839B1
+E8AA04FBFF              call 00534A60
+
+E86A450200              call 005A8B20, 005A8B20 - 005845B6 = 0002456A
+
+:0058463B - 0x183A3B
+E85047FDFF              call 00558D90
+
+E8E0440200              call 005A8B20, 005A8B20 - 00584640 = 000244E0
+
+:005846B9 - 0x183AB9
+E8A203FBFF              call 00534A60
+
+E862440200              call 005A8B20, 005A8B20 - 005846BE = 00024462
+
+:00584759 - 0x183B59
+E8C22FFDFF              call 00557720
+
+E8C2430200              call 005A8B20, 005A8B20 - 0058475E = 000243C2
+
+===============================================================================
+
+; dsbrief movie
+
+; load
+:00568FA5 - 0x1683A5
+E8C68DFCFF              call 00531D70
+
+E876FB0300              call 005A8B20, 005A8B20 - 00568FAA = 0003FB76
+
+; free
+:00564E69 - 0x164269
+E812D2FCFF              call 00532080
+
+E8B23C0400              call 005A8B20, 005A8B20 - 00564E6E = 00043CB2
+
+; move to next image
+:005684A4 - 0x1678A4
+E8879DFCFF              call 00532230
+
+E877060400              call 005A8B20, 005A8B20 - 005684A9 = 00040677
+
+; draw
+:005685B2 - 0x1679B2
+E8A9C4FCFF              call 00534A60
+
+E869050400              call 005A8B20, 005A8B20 - 005685B7 = 00040569
+
+:005688F0 - 0x167CF0
+E86BC1FCFF              call 00534A60
+
+E82B020400              call 005A8B20, 005A8B20 - 005688F5 = 0004022B
+
+===============================================================================
+
+; Multi game state update
+
+:00571A52 - 0x170E52
+E819DFFCFF              call 0053F970
+
+E8C9700300              call 005A8B20, 005A8B20 - 00571A57 = 000370C9
+
+:0052B47F - 0x12A87F
+E88C3B0100              call 0053F010
+
+E89CD60700              call 005A8B20, 005A8B20 - 0052B484 = 0007D69C
+
+===============================================================================
+
+; View cutscenes config menu
+
+:0052716E - 0x12656E
+E81D1B0300              call 00558C90
+
+E8AD190800              call 005A8B20, 005A8B20 - 00527173 = 000819AD
 

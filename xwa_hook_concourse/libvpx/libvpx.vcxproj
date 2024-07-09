@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ivfenc.c" />
+    <ClCompile Include="tools_common.c" />
+    <ClCompile Include="vp8\common\alloccommon.c" />
+    <ClCompile Include="vp8\common\blockd.c" />
+    <ClCompile Include="vp8\common\context.c" />
+    <ClCompile Include="vp8\common\debugmodes.c" />
+    <ClCompile Include="vp8\common\dequantize.c" />
+    <ClCompile Include="vp8\common\entropy.c" />
+    <ClCompile Include="vp8\common\entropymode.c" />
+    <ClCompile Include="vp8\common\entropymv.c" />
+    <ClCompile Include="vp8\common\extend.c" />
+    <ClCompile Include="vp8\common\filter.c" />
+    <ClCompile Include="vp8\common\findnearmv.c" />
+    <ClCompile Include="vp8\common\generic\systemdependent.c" />
+    <ClCompile Include="vp8\common\idctllm.c" />
+    <ClCompile Include="vp8\common\idct_blk.c" />
+    <ClCompile Include="vp8\common\loopfilter_filters.c" />
+    <ClCompile Include="vp8\common\mbpitch.c" />
+    <ClCompile Include="vp8\common\mfqe.c" />
+    <ClCompile Include="vp8\common\modecont.c" />
+    <ClCompile Include="vp8\common\postproc.c" />
+    <ClCompile Include="vp8\common\quant_common.c" />
+    <ClCompile Include="vp8\common\reconinter.c" />
+    <ClCompile Include="vp8\common\reconintra.c" />
+    <ClCompile Include="vp8\common\reconintra4x4.c" />
+    <ClCompile Include="vp8\common\rtcd.c" />
+    <ClCompile Include="vp8\common\setupintrarecon.c" />
+    <ClCompile Include="vp8\common\swapyv12buffer.c" />
+    <ClCompile Include="vp8\common\treecoder.c" />
+    <ClCompile Include="vp8\common\vp8_loopfilter.c" />
+    <ClCompile Include="vp8\common\vp8_skin_detection.c" />
+    <ClCompile Include="vp8\common\x86\loopfilter_x86.c" />
+    <ClCompile Include="vp8\common\x86\vp8_asm_stubs.c" />
+    <ClCompile Include="vp8\decoder\dboolhuff.c" />
+    <ClCompile Include="vp8\decoder\decodeframe.c" />
+    <ClCompile Include="vp8\decoder\decodemv.c" />
+    <ClCompile Include="vp8\decoder\detokenize.c" />
+    <ClCompile Include="vp8\decoder\error_concealment.c" />
+    <ClCompile Include="vp8\decoder\onyxd_if.c" />
+    <ClCompile Include="vp8\encoder\bitstream.c" />
+    <ClCompile Include="vp8\encoder\boolhuff.c" />
+    <ClCompile Include="vp8\encoder\copy_c.c" />
+    <ClCompile Include="vp8\encoder\dct.c" />
+    <ClCompile Include="vp8\encoder\encodeframe.c" />
+    <ClCompile Include="vp8\encoder\encodeintra.c" />
+    <ClCompile Include="vp8\encoder\encodemb.c" />
+    <ClCompile Include="vp8\encoder\encodemv.c" />
+    <ClCompile Include="vp8\encoder\ethreading.c" />
+    <ClCompile Include="vp8\encoder\firstpass.c" />
+    <ClCompile Include="vp8\encoder\lookahead.c" />
+    <ClCompile Include="vp8\encoder\mcomp.c" />
+    <ClCompile Include="vp8\encoder\modecosts.c" />
+    <ClCompile Include="vp8\encoder\mr_dissim.c" />
+    <ClCompile Include="vp8\encoder\onyx_if.c" />
+    <ClCompile Include="vp8\encoder\pickinter.c" />
+    <ClCompile Include="vp8\encoder\picklpf.c" />
+    <ClCompile Include="vp8\encoder\ratectrl.c" />
+    <ClCompile Include="vp8\encoder\rdopt.c" />
+    <ClCompile Include="vp8\encoder\segmentation.c" />
+    <ClCompile Include="vp8\encoder\temporal_filter.c" />
+    <ClCompile Include="vp8\encoder\tokenize.c" />
+    <ClCompile Include="vp8\encoder\treewriter.c" />
+    <ClCompile Include="vp8\encoder\vp8_quantize.c" />
+    <ClCompile Include="vp8\vp8_cx_iface.c" />
+    <ClCompile Include="vp8\vp8_dx_iface.c" />
+    <ClCompile Include="vp8\vp8_ratectrl_rtc.cc" />
+    <ClCompile Include="vp9\common\vp9_alloccommon.c" />
+    <ClCompile Include="vp9\common\vp9_blockd.c" />
+    <ClCompile Include="vp9\common\vp9_common_data.c" />
+    <ClCompile Include="vp9\common\vp9_debugmodes.c" />
+    <ClCompile Include="vp9\common\vp9_entropy.c" />
+    <ClCompile Include="vp9\common\vp9_entropymode.c" />
+    <ClCompile Include="vp9\common\vp9_entropymv.c" />
+    <ClCompile Include="vp9\common\vp9_filter.c" />
+    <ClCompile Include="vp9\common\vp9_frame_buffers.c" />
+    <ClCompile Include="vp9\common\vp9_idct.c" />
+    <ClCompile Include="vp9\common\vp9_loopfilter.c" />
+    <ClCompile Include="vp9\common\vp9_mfqe.c" />
+    <ClCompile Include="vp9\common\vp9_mvref_common.c" />
+    <ClCompile Include="vp9\common\vp9_postproc.c" />
+    <ClCompile Include="vp9\common\vp9_pred_common.c" />
+    <ClCompile Include="vp9\common\vp9_quant_common.c" />
+    <ClCompile Include="vp9\common\vp9_reconinter.c" />
+    <ClCompile Include="vp9\common\vp9_reconintra.c" />
+    <ClCompile Include="vp9\common\vp9_rtcd.c" />
+    <ClCompile Include="vp9\common\vp9_scale.c" />
+    <ClCompile Include="vp9\common\vp9_scan.c" />
+    <ClCompile Include="vp9\common\vp9_seg_common.c" />
+    <ClCompile Include="vp9\common\vp9_thread_common.c" />
+    <ClCompile Include="vp9\common\vp9_tile_common.c" />
+    <ClCompile Include="vp9\decoder\vp9_decodeframe.c" />
+    <ClCompile Include="vp9\decoder\vp9_decodemv.c" />
+    <ClCompile Include="vp9\decoder\vp9_decoder.c" />
+    <ClCompile Include="vp9\decoder\vp9_detokenize.c" />
+    <ClCompile Include="vp9\decoder\vp9_dsubexp.c" />
+    <ClCompile Include="vp9\decoder\vp9_job_queue.c" />
+    <ClCompile Include="vp9\encoder\vp9_alt_ref_aq.c" />
+    <ClCompile Include="vp9\encoder\vp9_aq_360.c" />
+    <ClCompile Include="vp9\encoder\vp9_aq_complexity.c" />
+    <ClCompile Include="vp9\encoder\vp9_aq_cyclicrefresh.c" />
+    <ClCompile Include="vp9\encoder\vp9_aq_variance.c" />
+    <ClCompile Include="vp9\encoder\vp9_bitstream.c" />
+    <ClCompile Include="vp9\encoder\vp9_blockiness.c" />
+    <ClCompile Include="vp9\encoder\vp9_context_tree.c" />
+    <ClCompile Include="vp9\encoder\vp9_cost.c" />
+    <ClCompile Include="vp9\encoder\vp9_dct.c" />
+    <ClCompile Include="vp9\encoder\vp9_encodeframe.c" />
+    <ClCompile Include="vp9\encoder\vp9_encodemb.c" />
+    <ClCompile Include="vp9\encoder\vp9_encodemv.c" />
+    <ClCompile Include="vp9\encoder\vp9_encoder.c" />
+    <ClCompile Include="vp9\encoder\vp9_ethread.c" />
+    <ClCompile Include="vp9\encoder\vp9_extend.c" />
+    <ClCompile Include="vp9\encoder\vp9_ext_ratectrl.c" />
+    <ClCompile Include="vp9\encoder\vp9_firstpass.c" />
+    <ClCompile Include="vp9\encoder\vp9_frame_scale.c" />
+    <ClCompile Include="vp9\encoder\vp9_lookahead.c" />
+    <ClCompile Include="vp9\encoder\vp9_mbgraph.c" />
+    <ClCompile Include="vp9\encoder\vp9_mcomp.c" />
+    <ClCompile Include="vp9\encoder\vp9_multi_thread.c" />
+    <ClCompile Include="vp9\encoder\vp9_noise_estimate.c" />
+    <ClCompile Include="vp9\encoder\vp9_non_greedy_mv.c" />
+    <ClCompile Include="vp9\encoder\vp9_picklpf.c" />
+    <ClCompile Include="vp9\encoder\vp9_pickmode.c" />
+    <ClCompile Include="vp9\encoder\vp9_quantize.c" />
+    <ClCompile Include="vp9\encoder\vp9_ratectrl.c" />
+    <ClCompile Include="vp9\encoder\vp9_rd.c" />
+    <ClCompile Include="vp9\encoder\vp9_rdopt.c" />
+    <ClCompile Include="vp9\encoder\vp9_resize.c" />
+    <ClCompile Include="vp9\encoder\vp9_segmentation.c" />
+    <ClCompile Include="vp9\encoder\vp9_skin_detection.c" />
+    <ClCompile Include="vp9\encoder\vp9_speed_features.c" />
+    <ClCompile Include="vp9\encoder\vp9_subexp.c" />
+    <ClCompile Include="vp9\encoder\vp9_svc_layercontext.c" />
+    <ClCompile Include="vp9\encoder\vp9_temporal_filter.c" />
+    <ClCompile Include="vp9\encoder\vp9_tokenize.c" />
+    <ClCompile Include="vp9\encoder\vp9_treewriter.c" />
+    <ClCompile Include="vp9\ratectrl_rtc.cc" />
+    <ClCompile Include="vp9\simple_encode.cc" />
+    <ClCompile Include="vp9\vp9_cx_iface.c" />
+    <ClCompile Include="vp9\vp9_dx_iface.c" />
+    <ClCompile Include="vp9\vp9_iface_common.c" />
+    <ClCompile Include="vpx\src\vpx_codec.c" />
+    <ClCompile Include="vpx\src\vpx_decoder.c" />
+    <ClCompile Include="vpx\src\vpx_encoder.c" />
+    <ClCompile Include="vpx\src\vpx_image.c" />
+    <ClCompile Include="vpx_config.c" />
+    <ClCompile Include="vpx_dsp\add_noise.c" />
+    <ClCompile Include="vpx_dsp\avg.c" />
+    <ClCompile Include="vpx_dsp\bitreader.c" />
+    <ClCompile Include="vpx_dsp\bitreader_buffer.c" />
+    <ClCompile Include="vpx_dsp\bitwriter.c" />
+    <ClCompile Include="vpx_dsp\bitwriter_buffer.c" />
+    <ClCompile Include="vpx_dsp\deblock.c" />
+    <ClCompile Include="vpx_dsp\fastssim.c" />
+    <ClCompile Include="vpx_dsp\fwd_txfm.c" />
+    <ClCompile Include="vpx_dsp\intrapred.c" />
+    <ClCompile Include="vpx_dsp\inv_txfm.c" />
+    <ClCompile Include="vpx_dsp\loopfilter.c" />
+    <ClCompile Include="vpx_dsp\prob.c" />
+    <ClCompile Include="vpx_dsp\psnr.c" />
+    <ClCompile Include="vpx_dsp\psnrhvs.c" />
+    <ClCompile Include="vpx_dsp\quantize.c" />
+    <ClCompile Include="vpx_dsp\sad.c" />
+    <ClCompile Include="vpx_dsp\skin_detection.c" />
+    <ClCompile Include="vpx_dsp\ssim.c" />
+    <ClCompile Include="vpx_dsp\subtract.c" />
+    <ClCompile Include="vpx_dsp\sum_squares.c" />
+    <ClCompile Include="vpx_dsp\variance.c" />
+    <ClCompile Include="vpx_dsp\vpx_convolve.c" />
+    <ClCompile Include="vpx_dsp\vpx_dsp_rtcd.c" />
+    <ClCompile Include="vpx_mem\vpx_mem.c" />
+    <ClCompile Include="vpx_ports\arm_cpudetect.c" />
+    <ClCompile Include="vpx_ports\loongarch_cpudetect.c" />
+    <ClCompile Include="vpx_ports\mips_cpudetect.c" />
+    <ClCompile Include="vpx_ports\ppc_cpudetect.c" />
+    <ClCompile Include="vpx_scale\generic\gen_scalers.c" />
+    <ClCompile Include="vpx_scale\generic\vpx_scale.c" />
+    <ClCompile Include="vpx_scale\generic\yv12config.c" />
+    <ClCompile Include="vpx_scale\generic\yv12extend.c" />
+    <ClCompile Include="vpx_scale\mips\dspr2\yv12extend_dspr2.c" />
+    <ClCompile Include="vpx_scale\vpx_scale_rtcd.c" />
+    <ClCompile Include="vpx_util\vpx_debug_util.c" />
+    <ClCompile Include="vpx_util\vpx_thread.c" />
+    <ClCompile Include="vpx_util\vpx_write_yuv_frame.c" />
+    <ClCompile Include="y4minput.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="vp8\common\x86\recon_mmx.asm" />
+    <None Include="vpx_config.asm" />
+    <None Include="vpx_ports\float_control_word.asm" />
+    <None Include="vpx_ports\x86_abi_support.asm" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ivfenc.h" />
+    <ClInclude Include="tools_common.h" />
+    <ClInclude Include="vp8\common\alloccommon.h" />
+    <ClInclude Include="vp8\common\blockd.h" />
+    <ClInclude Include="vp8\common\coefupdateprobs.h" />
+    <ClInclude Include="vp8\common\common.h" />
+    <ClInclude Include="vp8\common\default_coef_probs.h" />
+    <ClInclude Include="vp8\common\entropy.h" />
+    <ClInclude Include="vp8\common\entropymode.h" />
+    <ClInclude Include="vp8\common\entropymv.h" />
+    <ClInclude Include="vp8\common\extend.h" />
+    <ClInclude Include="vp8\common\filter.h" />
+    <ClInclude Include="vp8\common\findnearmv.h" />
+    <ClInclude Include="vp8\common\header.h" />
+    <ClInclude Include="vp8\common\invtrans.h" />
+    <ClInclude Include="vp8\common\loopfilter.h" />
+    <ClInclude Include="vp8\common\modecont.h" />
+    <ClInclude Include="vp8\common\mv.h" />
+    <ClInclude Include="vp8\common\onyx.h" />
+    <ClInclude Include="vp8\common\onyxc_int.h" />
+    <ClInclude Include="vp8\common\onyxd.h" />
+    <ClInclude Include="vp8\common\postproc.h" />
+    <ClInclude Include="vp8\common\ppflags.h" />
+    <ClInclude Include="vp8\common\quant_common.h" />
+    <ClInclude Include="vp8\common\reconinter.h" />
+    <ClInclude Include="vp8\common\reconintra.h" />
+    <ClInclude Include="vp8\common\reconintra4x4.h" />
+    <ClInclude Include="vp8\common\setupintrarecon.h" />
+    <ClInclude Include="vp8\common\swapyv12buffer.h" />
+    <ClInclude Include="vp8\common\systemdependent.h" />
+    <ClInclude Include="vp8\common\threading.h" />
+    <ClInclude Include="vp8\common\treecoder.h" />
+    <ClInclude Include="vp8\common\vp8_entropymodedata.h" />
+    <ClInclude Include="vp8\common\vp8_skin_detection.h" />
+    <ClInclude Include="vp8\decoder\dboolhuff.h" />
+    <ClInclude Include="vp8\decoder\decodemv.h" />
+    <ClInclude Include="vp8\decoder\decoderthreading.h" />
+    <ClInclude Include="vp8\decoder\detokenize.h" />
+    <ClInclude Include="vp8\decoder\ec_types.h" />
+    <ClInclude Include="vp8\decoder\error_concealment.h" />
+    <ClInclude Include="vp8\decoder\onyxd_int.h" />
+    <ClInclude Include="vp8\decoder\treereader.h" />
+    <ClInclude Include="vp8\encoder\bitstream.h" />
+    <ClInclude Include="vp8\encoder\block.h" />
+    <ClInclude Include="vp8\encoder\boolhuff.h" />
+    <ClInclude Include="vp8\encoder\dct_value_cost.h" />
+    <ClInclude Include="vp8\encoder\dct_value_tokens.h" />
+    <ClInclude Include="vp8\encoder\defaultcoefcounts.h" />
+    <ClInclude Include="vp8\encoder\denoising.h" />
+    <ClInclude Include="vp8\encoder\encodeframe.h" />
+    <ClInclude Include="vp8\encoder\encodeintra.h" />
+    <ClInclude Include="vp8\encoder\encodemb.h" />
+    <ClInclude Include="vp8\encoder\encodemv.h" />
+    <ClInclude Include="vp8\encoder\ethreading.h" />
+    <ClInclude Include="vp8\encoder\firstpass.h" />
+    <ClInclude Include="vp8\encoder\lookahead.h" />
+    <ClInclude Include="vp8\encoder\mcomp.h" />
+    <ClInclude Include="vp8\encoder\modecosts.h" />
+    <ClInclude Include="vp8\encoder\mr_dissim.h" />
+    <ClInclude Include="vp8\encoder\onyx_int.h" />
+    <ClInclude Include="vp8\encoder\pickinter.h" />
+    <ClInclude Include="vp8\encoder\picklpf.h" />
+    <ClInclude Include="vp8\encoder\quantize.h" />
+    <ClInclude Include="vp8\encoder\ratectrl.h" />
+    <ClInclude Include="vp8\encoder\rdopt.h" />
+    <ClInclude Include="vp8\encoder\segmentation.h" />
+    <ClInclude Include="vp8\encoder\temporal_filter.h" />
+    <ClInclude Include="vp8\encoder\tokenize.h" />
+    <ClInclude Include="vp8\encoder\treewriter.h" />
+    <ClInclude Include="vp8\vp8_ratectrl_rtc.h" />
+    <ClInclude Include="vp8_rtcd.h" />
+    <ClInclude Include="vp9\common\vp9_alloccommon.h" />
+    <ClInclude Include="vp9\common\vp9_blockd.h" />
+    <ClInclude Include="vp9\common\vp9_common.h" />
+    <ClInclude Include="vp9\common\vp9_common_data.h" />
+    <ClInclude Include="vp9\common\vp9_entropy.h" />
+    <ClInclude Include="vp9\common\vp9_entropymode.h" />
+    <ClInclude Include="vp9\common\vp9_entropymv.h" />
+    <ClInclude Include="vp9\common\vp9_enums.h" />
+    <ClInclude Include="vp9\common\vp9_filter.h" />
+    <ClInclude Include="vp9\common\vp9_frame_buffers.h" />
+    <ClInclude Include="vp9\common\vp9_idct.h" />
+    <ClInclude Include="vp9\common\vp9_loopfilter.h" />
+    <ClInclude Include="vp9\common\vp9_mfqe.h" />
+    <ClInclude Include="vp9\common\vp9_mv.h" />
+    <ClInclude Include="vp9\common\vp9_mvref_common.h" />
+    <ClInclude Include="vp9\common\vp9_onyxc_int.h" />
+    <ClInclude Include="vp9\common\vp9_postproc.h" />
+    <ClInclude Include="vp9\common\vp9_ppflags.h" />
+    <ClInclude Include="vp9\common\vp9_pred_common.h" />
+    <ClInclude Include="vp9\common\vp9_quant_common.h" />
+    <ClInclude Include="vp9\common\vp9_reconinter.h" />
+    <ClInclude Include="vp9\common\vp9_reconintra.h" />
+    <ClInclude Include="vp9\common\vp9_scale.h" />
+    <ClInclude Include="vp9\common\vp9_scan.h" />
+    <ClInclude Include="vp9\common\vp9_seg_common.h" />
+    <ClInclude Include="vp9\common\vp9_thread_common.h" />
+    <ClInclude Include="vp9\common\vp9_tile_common.h" />
+    <ClInclude Include="vp9\decoder\vp9_decodeframe.h" />
+    <ClInclude Include="vp9\decoder\vp9_decodemv.h" />
+    <ClInclude Include="vp9\decoder\vp9_decoder.h" />
+    <ClInclude Include="vp9\decoder\vp9_detokenize.h" />
+    <ClInclude Include="vp9\decoder\vp9_dsubexp.h" />
+    <ClInclude Include="vp9\decoder\vp9_job_queue.h" />
+    <ClInclude Include="vp9\encoder\vp9_alt_ref_aq.h" />
+    <ClInclude Include="vp9\encoder\vp9_aq_360.h" />
+    <ClInclude Include="vp9\encoder\vp9_aq_complexity.h" />
+    <ClInclude Include="vp9\encoder\vp9_aq_cyclicrefresh.h" />
+    <ClInclude Include="vp9\encoder\vp9_aq_variance.h" />
+    <ClInclude Include="vp9\encoder\vp9_bitstream.h" />
+    <ClInclude Include="vp9\encoder\vp9_block.h" />
+    <ClInclude Include="vp9\encoder\vp9_blockiness.h" />
+    <ClInclude Include="vp9\encoder\vp9_context_tree.h" />
+    <ClInclude Include="vp9\encoder\vp9_cost.h" />
+    <ClInclude Include="vp9\encoder\vp9_denoiser.h" />
+    <ClInclude Include="vp9\encoder\vp9_encodeframe.h" />
+    <ClInclude Include="vp9\encoder\vp9_encodemb.h" />
+    <ClInclude Include="vp9\encoder\vp9_encodemv.h" />
+    <ClInclude Include="vp9\encoder\vp9_encoder.h" />
+    <ClInclude Include="vp9\encoder\vp9_ethread.h" />
+    <ClInclude Include="vp9\encoder\vp9_extend.h" />
+    <ClInclude Include="vp9\encoder\vp9_ext_ratectrl.h" />
+    <ClInclude Include="vp9\encoder\vp9_firstpass.h" />
+    <ClInclude Include="vp9\encoder\vp9_job_queue.h" />
+    <ClInclude Include="vp9\encoder\vp9_lookahead.h" />
+    <ClInclude Include="vp9\encoder\vp9_mbgraph.h" />
+    <ClInclude Include="vp9\encoder\vp9_mcomp.h" />
+    <ClInclude Include="vp9\encoder\vp9_multi_thread.h" />
+    <ClInclude Include="vp9\encoder\vp9_noise_estimate.h" />
+    <ClInclude Include="vp9\encoder\vp9_non_greedy_mv.h" />
+    <ClInclude Include="vp9\encoder\vp9_partition_models.h" />
+    <ClInclude Include="vp9\encoder\vp9_picklpf.h" />
+    <ClInclude Include="vp9\encoder\vp9_pickmode.h" />
+    <ClInclude Include="vp9\encoder\vp9_quantize.h" />
+    <ClInclude Include="vp9\encoder\vp9_ratectrl.h" />
+    <ClInclude Include="vp9\encoder\vp9_rd.h" />
+    <ClInclude Include="vp9\encoder\vp9_rdopt.h" />
+    <ClInclude Include="vp9\encoder\vp9_resize.h" />
+    <ClInclude Include="vp9\encoder\vp9_segmentation.h" />
+    <ClInclude Include="vp9\encoder\vp9_skin_detection.h" />
+    <ClInclude Include="vp9\encoder\vp9_speed_features.h" />
+    <ClInclude Include="vp9\encoder\vp9_subexp.h" />
+    <ClInclude Include="vp9\encoder\vp9_svc_layercontext.h" />
+    <ClInclude Include="vp9\encoder\vp9_temporal_filter.h" />
+    <ClInclude Include="vp9\encoder\vp9_tokenize.h" />
+    <ClInclude Include="vp9\encoder\vp9_treewriter.h" />
+    <ClInclude Include="vp9\encoder\x86\temporal_filter_constants.h" />
+    <ClInclude Include="vp9\ratectrl_rtc.h" />
+    <ClInclude Include="vp9\simple_encode.h" />
+    <ClInclude Include="vp9\vp9_cx_iface.h" />
+    <ClInclude Include="vp9\vp9_dx_iface.h" />
+    <ClInclude Include="vp9\vp9_iface_common.h" />
+    <ClInclude Include="vp9_rtcd.h" />
+    <ClInclude Include="vpx\internal\vpx_codec_internal.h" />
+    <ClInclude Include="vpx\internal\vpx_ratectrl_rtc.h" />
+    <ClInclude Include="vpx\vp8.h" />
+    <ClInclude Include="vpx\vp8cx.h" />
+    <ClInclude Include="vpx\vp8dx.h" />
+    <ClInclude Include="vpx\vpx_codec.h" />
+    <ClInclude Include="vpx\vpx_decoder.h" />
+    <ClInclude Include="vpx\vpx_encoder.h" />
+    <ClInclude Include="vpx\vpx_ext_ratectrl.h" />
+    <ClInclude Include="vpx\vpx_frame_buffer.h" />
+    <ClInclude Include="vpx\vpx_image.h" />
+    <ClInclude Include="vpx\vpx_integer.h" />
+    <ClInclude Include="vpx_config.h" />
+    <ClInclude Include="vpx_dsp\bitreader.h" />
+    <ClInclude Include="vpx_dsp\bitreader_buffer.h" />
+    <ClInclude Include="vpx_dsp\bitwriter.h" />
+    <ClInclude Include="vpx_dsp\bitwriter_buffer.h" />
+    <ClInclude Include="vpx_dsp\fwd_txfm.h" />
+    <ClInclude Include="vpx_dsp\inv_txfm.h" />
+    <ClInclude Include="vpx_dsp\postproc.h" />
+    <ClInclude Include="vpx_dsp\prob.h" />
+    <ClInclude Include="vpx_dsp\psnr.h" />
+    <ClInclude Include="vpx_dsp\quantize.h" />
+    <ClInclude Include="vpx_dsp\skin_detection.h" />
+    <ClInclude Include="vpx_dsp\ssim.h" />
+    <ClInclude Include="vpx_dsp\txfm_common.h" />
+    <ClInclude Include="vpx_dsp\variance.h" />
+    <ClInclude Include="vpx_dsp\vpx_convolve.h" />
+    <ClInclude Include="vpx_dsp\vpx_dsp_common.h" />
+    <ClInclude Include="vpx_dsp\vpx_filter.h" />
+    <ClInclude Include="vpx_dsp\x86\convolve.h" />
+    <ClInclude Include="vpx_dsp_rtcd.h" />
+    <ClInclude Include="vpx_mem\include\vpx_mem_intrnl.h" />
+    <ClInclude Include="vpx_mem\vpx_mem.h" />
+    <ClInclude Include="vpx_ports\arm.h" />
+    <ClInclude Include="vpx_ports\asmdefs_mmi.h" />
+    <ClInclude Include="vpx_ports\bitops.h" />
+    <ClInclude Include="vpx_ports\compiler_attributes.h" />
+    <ClInclude Include="vpx_ports\emmintrin_compat.h" />
+    <ClInclude Include="vpx_ports\loongarch.h" />
+    <ClInclude Include="vpx_ports\mem.h" />
+    <ClInclude Include="vpx_ports\mem_ops.h" />
+    <ClInclude Include="vpx_ports\mem_ops_aligned.h" />
+    <ClInclude Include="vpx_ports\mips.h" />
+    <ClInclude Include="vpx_ports\msvc.h" />
+    <ClInclude Include="vpx_ports\ppc.h" />
+    <ClInclude Include="vpx_ports\static_assert.h" />
+    <ClInclude Include="vpx_ports\system_state.h" />
+    <ClInclude Include="vpx_ports\vpx_once.h" />
+    <ClInclude Include="vpx_ports\vpx_timer.h" />
+    <ClInclude Include="vpx_ports\x86.h" />
+    <ClInclude Include="vpx_scale\vpx_scale.h" />
+    <ClInclude Include="vpx_scale\yv12config.h" />
+    <ClInclude Include="vpx_scale_rtcd.h" />
+    <ClInclude Include="vpx_util\endian_inl.h" />
+    <ClInclude Include="vpx_util\loongson_intrinsics.h" />
+    <ClInclude Include="vpx_util\vpx_atomics.h" />
+    <ClInclude Include="vpx_util\vpx_debug_util.h" />
+    <ClInclude Include="vpx_util\vpx_thread.h" />
+    <ClInclude Include="vpx_util\vpx_timestamp.h" />
+    <ClInclude Include="vpx_util\vpx_write_yuv_frame.h" />
+    <ClInclude Include="vpx_version.h" />
+    <ClInclude Include="y4minput.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{f191aca9-e9fd-4e1e-a79b-a3748c5b36a3}</ProjectGuid>
+    <RootNamespace>libvpx</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -45,9 +45,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -86,17 +90,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BitmapEffect.cpp" />
     <ClCompile Include="concourse.cpp" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="hookmain.cpp" />
+    <ClCompile Include="webm_helpers.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BitmapEffect.h" />
+    <ClInclude Include="ComPtr.h" />
     <ClInclude Include="concourse.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="hook_function.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SurfaceDC.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="webm_helpers.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="hook_concourse.rc" />

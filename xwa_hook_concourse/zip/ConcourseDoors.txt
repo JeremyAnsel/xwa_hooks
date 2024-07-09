@@ -21,6 +21,8 @@ filmdoor_posY = 286
 
 techdoor_posX = 426
 techdoor_posY = 219
+techdoor_posWidth = 92
+techdoor_posHeight = 93
 
 multidoor_posX = 24
 multidoor_posY = 140
@@ -31,6 +33,54 @@ singledoor_posY = 313
 combatbackdoor_posX = 299
 combatbackdoor_posY = 90
 
+familyroom_backtoconcourse_posX = 0
+familyroom_backtoconcourse_posY = 150
+familyroom_backtoconcourse_posWidth = 120
+familyroom_backtoconcourse_posHeight = 137
+
+familyroom_statistics_posX = 403
+familyroom_statistics_posY = 228
+familyroom_statistics_posWidth = 96
+familyroom_statistics_posHeight = 79
+
+familyroom_playmission_posX = 103
+familyroom_playmission_posY = 288
+familyroom_playmission_posWidth = 131
+familyroom_playmission_posHeight = 128
+
+familyroom_mkeye_posX = 160
+familyroom_mkeye_posY = 200
+
+familyroom_monitor_posX = 426
+familyroom_monitor_posY = 243
+familyroom_monitor_fps = 6
+
 familyroom_ladyblue_mission = 23
 familyroom_cologne_mission = 9
+
+briefing_review_item_left = 64
+briefing_review_item_right = 573
+briefing_review_item_height = 41
+
+mission_selection_screen_posX = 230
+
+battlezoom_image1_posX = 320
+battlezoom_image1_posY = 240
+battlezoom_text1_posX = 300
+battlezoom_text1_posY = 340
+
+kalidorzoom_image1_posX = 320
+kalidorzoom_image1_posY = 240
+kalidorzoom_text1_posX = 300
+kalidorzoom_text1_posY = 340
+
+battlezoom_image2_posX = 152
+battlezoom_image2_posY = 360
+battlezoom_text2_posX = 182
+battlezoom_text2_posY = 345
+
+kalidorzoom_image2_posX = 388
+kalidorzoom_image2_posY = 120
+kalidorzoom_text2_posX = 328
+kalidorzoom_text2_posY = 105
 
