@@ -4963,6 +4963,10 @@ int FontGetStringWidthHook(int* params)
 	}
 	else if (isFamilyRoomCursorMessage)
 	{
+		if ((float)g_screenWidth / dc.height < (float)g_ratioNumerator / g_ratioDenominator)
+		{
+			width += fontSize + fontSize / 2;
+		}
 	}
 	else if (isConfigMenuGameStateUpdate)
 	{
