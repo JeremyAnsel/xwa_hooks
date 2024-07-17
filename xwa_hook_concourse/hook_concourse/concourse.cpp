@@ -4953,8 +4953,13 @@ int FontGetStringWidthHook(int* params)
 	}
 	else if (isBriefingBottomText)
 	{
-		width *= 0.75f;
-		width += fontSize * 2;
+		bool isBackgroundHD = g_netFunctions._frontResIsBackgroundWide() != 0;
+
+		if (isBackgroundHD)
+		{
+			width *= 0.75f;
+			width += fontSize * 2;
+		}
 	}
 	else if (isFamilyRoomCursorMessage)
 	{
