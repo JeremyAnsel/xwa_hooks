@@ -258,6 +258,20 @@ E8564C0A00              call 005A8B20, 005A8B20 - 00503ECA = 000A4C56
 
 909090909090            nop
 
+:00503EBD - 0x01032BD
+50                      push eax
+68FFFF0000              push 0000FFFF
+6A4B                    push 0000004B
+
+90
+9090909090
+9090
+
+:00503ED8 - 0x1032D8
+83C40C                  add esp, 0000000C
+
+909090
+
 ; Map exit sound
 :0041F721 - 0x01EB21
 E86AC80100              call 0043BF90

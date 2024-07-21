@@ -168,6 +168,7 @@ enum SfxSounds
 	SfxSounds_MapEnterSound,
 	SfxSounds_MapExitSound,
 	SfxSounds_TurretSwitchSound,
+	SfxSounds_TargetSelectSound,
 };
 
 #pragma pack(push, 1)
@@ -2465,6 +2466,12 @@ int CustomSoundsHook(int* params)
 		float distance = GetRelativeDistance(currentPlayerObject, pObject);
 
 		int bufferId = modelIndexToBufferId[modelIndex];
+
+		if (bufferId == -1)
+		{
+			continue;
+		}
+
 		float minDistance = FLT_MAX;
 
 		auto it = minDistances.find(bufferId);
@@ -2567,26 +2574,65 @@ int PlayerCraftTargetedSoundHook(int* params)
 
 int MapEnterSoundHook(int* params)
 {
-	const int A4 = params[0];
-	const int A8 = params[1];
-	const int AC = params[2];
+	const int returnAddress = params[7];
+	const bool isMapEnter = returnAddress == 0x00501603;
+
+	const int A4 = 0x4B;
+	const int A8 = 0xFFFF;
+	const int AC = params[Params_EAX];
 
 	const auto XwaPlaySoundByIndex = (int(*)(int, int, int))0x0043BF90;
 
 	const auto& soundConfig = GetSoundsConfig();
 
-	// TargetSelect.wav
-	int sound = 0x4B;
-
-	if (soundConfig.SoundsCountHookExists && soundConfig.SfxSoundsCount)
+	if (isMapEnter)
 	{
-		if (SfxSounds_MapEnterSound < soundConfig.SfxSoundsCount)
+		// MapEnter.wav
+		int sound = -1;
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxSoundsCount)
 		{
-			sound = soundConfig.SfxSoundsIndex + SfxSounds_MapEnterSound;
+			if (SfxSounds_MapEnterSound < soundConfig.SfxSoundsCount)
+			{
+				sound = soundConfig.SfxSoundsIndex + SfxSounds_MapEnterSound;
+			}
+		}
+
+		if (sound != -1)
+		{
+			XwaPlaySoundByIndex(sound, A8, AC);
 		}
 	}
 
-	XwaPlaySoundByIndex(sound, A8, AC);
+	unsigned short objectIndex = (unsigned short)params[Params_EBX];
+	unsigned short playerCurrentTargetIndex = *(unsigned short*)(0x8B9505 + params[Params_EDI]);
+
+	if (objectIndex == playerCurrentTargetIndex)
+	{
+		/*
+		if( A4 == s_XwaPlayers[A8].CurrentTargetIndex )
+			return;
+		*/
+
+		params[Params_ReturnAddress] = 0x005041B7;
+		return 0;
+	}
+
+	if (!isMapEnter)
+	{
+		// TargetSelect.wav
+		int sound = 0x4B;
+
+		if (soundConfig.SoundsCountHookExists && soundConfig.SfxSoundsCount)
+		{
+			if (SfxSounds_TargetSelectSound < soundConfig.SfxSoundsCount)
+			{
+				sound = soundConfig.SfxSoundsIndex + SfxSounds_TargetSelectSound;
+			}
+		}
+
+		XwaPlaySoundByIndex(sound, A8, AC);
+	}
 
 	return 0;
 }
