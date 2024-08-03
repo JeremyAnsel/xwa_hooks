@@ -471,6 +471,16 @@ C1E20A                  shl edx, 0A
 
 ===============================================================================
 
+; L00415760 - difficulty ranks modifier
+
+:0041659E - 0x01599E
+8A1D0A548000            mov bl, byte ptr [0080540A]
+
+E87D251900              call 005A8B20, 005A8B20 - 004165A3 = 0019257D
+90                      nop
+
+===============================================================================
+
 const char* xwaMissionFileName = (const char*)0x06002E8;
 const int missionFileNameIndex = *(int*)0x06002E4;
 

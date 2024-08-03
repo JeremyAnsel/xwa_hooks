@@ -92,9 +92,11 @@ public:
 		}
 
 		this->IsWarheadCollisionDamagesEnabled = GetFileKeyValueInt(lines, "IsWarheadCollisionDamagesEnabled", 1) != 0;
+		this->IsMissionRanksModifierEnabled = GetFileKeyValueInt(lines, "IsMissionRanksModifierEnabled", 1) != 0;
 	}
 
 	bool IsWarheadCollisionDamagesEnabled;
+	bool IsMissionRanksModifierEnabled;
 };
 
 Config g_config;
@@ -2258,6 +2260,18 @@ int OrderOfBattleHook(int* params)
 	else
 	{
 		L0059A680(buffer, format, craftName.c_str(), fgName);
+	}
+
+	return 0;
+}
+
+int LoadMissionRanksModifierHook(int* params)
+{
+	params[Params_EBX] = *(char*)0x0080540A;
+
+	if (!g_config.IsMissionRanksModifierEnabled)
+	{
+		params[Params_ReturnAddress] = 0x0041669F;
 	}
 
 	return 0;

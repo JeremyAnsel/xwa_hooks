@@ -90,6 +90,9 @@ At offset 178159, replace E822190200 with E8C2FD0200.
 # To call the hook that fixes xwa.tab
 At offset 16C599, replace 8D144033DBC1E209 with 8BD09033DBC1E20A.
 
+# To call the hook that controls mission loading
+At offset 01599E, replace 8A1D0A548000 with E87D25190090.
+
 
 *** Usage ***
 
