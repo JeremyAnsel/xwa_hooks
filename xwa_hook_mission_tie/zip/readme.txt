@@ -177,6 +177,7 @@ SystemStrengthPercent = integer
 ShieldStrengthPercent = integer
 # in CraftOptName_fgc_# is an integer for the opt color marking index, starting at 0.
 To define a profile for the player craft, set "CraftOptName_fg_player = ProfileName".
+To define a profile for all color markings for a opt, set "CraftOptName = ProfileName".
 The default ProfileName is "Default".
 Player*Percent applies to the player craft.
 *Percent applies to all crafts.

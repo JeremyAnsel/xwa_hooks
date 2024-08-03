@@ -705,6 +705,11 @@ CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 
 	if (profile.empty())
 	{
+		profile = GetFileKeyValue(statsLines, GetFileNameWithoutExtension(shipPath));
+	}
+
+	if (profile.empty())
+	{
 		profile = "Default";
 	}
 
