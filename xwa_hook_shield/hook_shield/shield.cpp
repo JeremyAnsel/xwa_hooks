@@ -159,7 +159,10 @@ static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24")
 
 struct XwaCraft
 {
-	char Unk0000[418];
+	char Unk0000[387];
+	unsigned short m183; // flags
+	unsigned short m185; // flags
+	char Unk0187[27];
 	unsigned int ShieldStrength[2];
 	unsigned char PresetShield;
 	unsigned char ShieldSetting;
@@ -649,6 +652,18 @@ int ShieldRechargeHook(int* params)
 		if (shipCategory == ShipCategory_Starfighter)
 		{
 			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
+
+			if (isPart2)
+			{
+				// Craft183_HasShieldSystem
+				if ((XwaCurrentCraft->m183 & 0x01) != 0)
+				{
+					if (XwaCurrentCraft->PresetShield == 0x02)
+					{
+						XwaCurrentCraft->PresetShield = difficulty >= 0x01 ? 0x04 : 0x03;
+					}
+				}
+			}
 		}
 		else if (shipCategory == ShipCategory_Starship)
 		{
