@@ -885,9 +885,10 @@ int AIOutOfHyperspaceDistanceCheckHook(int* params)
 
 				Point3D value = GetOrAddObjectOffset(objectIndex, true, 0, 0, 0);
 
-				object->PositionX = leader->PositionX + value.X;
-				object->PositionY = leader->PositionY + value.Y;
-				object->PositionZ = leader->PositionZ + value.Z;
+				// todo
+				//object->PositionX = leader->PositionX + value.X;
+				//object->PositionY = leader->PositionY + value.Y;
+				//object->PositionZ = leader->PositionZ + value.Z;
 			}
 		}
 	}
