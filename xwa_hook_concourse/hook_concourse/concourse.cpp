@@ -1413,8 +1413,16 @@ public:
 		this->techdoor_posHeight = GetFileKeyValueInt(lines, "techdoor_posHeight", 93);
 		this->multidoor_posX = GetFileKeyValueInt(lines, "multidoor_posX", 0x18);
 		this->multidoor_posY = GetFileKeyValueInt(lines, "multidoor_posY", 0x8C);
+		this->multidoor_posSelectionX = GetFileKeyValueInt(lines, "multidoor_posSelectionX", 0x24);
+		this->multidoor_posSelectionY = GetFileKeyValueInt(lines, "multidoor_posSelectionY", 0x94);
+		this->multidoor_posSelectionWidth = GetFileKeyValueInt(lines, "multidoor_posSelectionWidth", 0x11A);
+		this->multidoor_posSelectionHeight = GetFileKeyValueInt(lines, "multidoor_posSelectionHeight", 0x6C);
 		this->singledoor_posX = GetFileKeyValueInt(lines, "singledoor_posX", 0x175);
 		this->singledoor_posY = GetFileKeyValueInt(lines, "singledoor_posY", 0x139);
+		this->singledoor_posSelectionX = GetFileKeyValueInt(lines, "singledoor_posSelectionX", 0x180);
+		this->singledoor_posSelectionY = GetFileKeyValueInt(lines, "singledoor_posSelectionY", 0xFC);
+		this->singledoor_posSelectionWidth = GetFileKeyValueInt(lines, "singledoor_posSelectionWidth", 0xF6);
+		this->singledoor_posSelectionHeight = GetFileKeyValueInt(lines, "singledoor_posSelectionHeight", 0xAC);
 		this->combatbackdoor_posX = GetFileKeyValueInt(lines, "combatbackdoor_posX", 0x12B);
 		this->combatbackdoor_posY = GetFileKeyValueInt(lines, "combatbackdoor_posY", 0x5A);
 
@@ -1503,8 +1511,16 @@ public:
 	int techdoor_posHeight;
 	int multidoor_posX;
 	int multidoor_posY;
+	int multidoor_posSelectionX;
+	int multidoor_posSelectionY;
+	int multidoor_posSelectionWidth;
+	int multidoor_posSelectionHeight;
 	int singledoor_posX;
 	int singledoor_posY;
+	int singledoor_posSelectionX;
+	int singledoor_posSelectionY;
+	int singledoor_posSelectionWidth;
+	int singledoor_posSelectionHeight;
 	int combatbackdoor_posX;
 	int combatbackdoor_posY;
 
@@ -3110,10 +3126,10 @@ int MultiDoorRectHook(int* params)
 	const auto XwaRectSet = (void(*)(RECT*, int, int, int, int))0x00558C90;
 
 	RECT* lpRect = (RECT*)params[0];
-	int left = params[1] - 0x18 + ConcourseMultiplyDivRound(g_concourseDoors.multidoor_posX);
-	int top = params[2] - 0x8C + ConcourseMultiplyDivRound(g_concourseDoors.multidoor_posY);
-	int right = params[3] - 0x18 + ConcourseMultiplyDivRound(g_concourseDoors.multidoor_posX);
-	int bottom = params[4] - 0x8C + ConcourseMultiplyDivRound(g_concourseDoors.multidoor_posY);
+	int left = ConcourseMultiplyDivRound(g_concourseDoors.multidoor_posSelectionX);
+	int top = ConcourseMultiplyDivRound(g_concourseDoors.multidoor_posSelectionY);
+	int right = left + ConcourseMultiplyDivRound(g_concourseDoors.multidoor_posSelectionWidth);
+	int bottom = top + ConcourseMultiplyDivRound(g_concourseDoors.multidoor_posSelectionHeight);
 
 	XwaRectSet(lpRect, left, top, right, bottom);
 
@@ -3125,10 +3141,10 @@ int SingleDoorRectHook(int* params)
 	const auto XwaRectSet = (void(*)(RECT*, int, int, int, int))0x00558C90;
 
 	RECT* lpRect = (RECT*)params[0];
-	int left = params[1] - 0x175 + ConcourseMultiplyDivRound(g_concourseDoors.singledoor_posX);
-	int top = params[2] - 0x139 + ConcourseMultiplyDivRound(g_concourseDoors.singledoor_posY);
-	int right = params[3] - 0x175 + ConcourseMultiplyDivRound(g_concourseDoors.singledoor_posX);
-	int bottom = params[4] - 0x139 + ConcourseMultiplyDivRound(g_concourseDoors.singledoor_posY);
+	int left = ConcourseMultiplyDivRound(g_concourseDoors.singledoor_posSelectionX);
+	int top = ConcourseMultiplyDivRound(g_concourseDoors.singledoor_posSelectionY);
+	int right = left + ConcourseMultiplyDivRound(g_concourseDoors.singledoor_posSelectionWidth);
+	int bottom = top + ConcourseMultiplyDivRound(g_concourseDoors.singledoor_posSelectionHeight);
 
 	XwaRectSet(lpRect, left, top, right, bottom);
 

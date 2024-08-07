@@ -26,9 +26,17 @@ techdoor_posHeight = 93
 
 multidoor_posX = 24
 multidoor_posY = 140
+multidoor_posSelectionX = 36
+multidoor_posSelectionY = 148
+multidoor_posSelectionWidth = 282
+multidoor_posSelectionHeight = 108
 
 singledoor_posX = 373
 singledoor_posY = 313
+singledoor_posSelectionX = 384
+singledoor_posSelectionY = 252
+singledoor_posSelectionWidth = 246
+singledoor_posSelectionHeight = 172
 
 combatbackdoor_posX = 299
 combatbackdoor_posY = 90
