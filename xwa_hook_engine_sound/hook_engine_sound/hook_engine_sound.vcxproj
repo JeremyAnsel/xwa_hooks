@@ -97,6 +97,7 @@
     <ClInclude Include="hook_function.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="zip_file.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="hook_engine_sound.rc" />

@@ -32,6 +32,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x503ECA, MapEnterSoundHook },
 	{ 0x41F726, MapExitSoundHook },
 	{ 0x42022F, TurretSwitchSoundHook },
+
+	{ 0x539195, LoadSoundsHook },
 };
 
 static const HookPatchItem g_replaceMissionSoundsPatch[] =
@@ -86,6 +88,11 @@ static const HookPatchItem g_customSoundsPatch[] =
 	{ 0x01F62A, "E861BD0100", "E8F1881800" },
 };
 
+static const HookPatchItem g_loadSoundsPatch[] =
+{
+	{ 0x138590, "8B4424085356", "E89BF90600C3" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that replaces mission sounds", g_replaceMissionSoundsPatch),
@@ -93,4 +100,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that defines weapon sounds", g_defineWeaponSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines hyper sounds", g_hyperSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines custom sounds", g_customSoundsPatch),
+	MAKE_HOOK_PATCH("To call the hook that loads sounds", g_loadSoundsPatch),
 };

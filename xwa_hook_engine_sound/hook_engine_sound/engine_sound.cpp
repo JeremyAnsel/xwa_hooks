@@ -1,6 +1,7 @@
 #include "targetver.h"
 #include "engine_sound.h"
 #include "config.h"
+#include "zip_file.hpp"
 #include <map>
 #include <fstream>
 
@@ -2685,6 +2686,131 @@ int TurretSwitchSoundHook(int* params)
 	}
 
 	XwaPlaySoundByIndex(sound, A8, AC);
+
+	return 0;
+}
+
+std::string GetFilePathParent(const std::string& path)
+{
+	return path.substr(0, path.find_last_of("/\\"));
+}
+
+int LoadSoundsHook(int* params)
+{
+	const int A4 = params[1];
+	const char* A8 = (const char*)params[2];
+	void* AC = (void*)params[3];
+	int* A10 = (int*)params[4];
+	int* A14 = (int*)params[5];
+
+	const auto L00539320 = (int(*)(const void*, void*, int*, int*))0x00539320;
+
+	std::ifstream file(A8, std::ios::binary);
+
+	if (file)
+	{
+		static std::vector<char> _buffer;
+
+		file.seekg(0, std::ios::end);
+		size_t size = (size_t)file.tellg();
+		file.seekg(0, std::ios::beg);
+
+		if (_buffer.capacity() < size)
+		{
+			_buffer.reserve(size * 2);
+		}
+
+		file.read(_buffer.data(), size);
+
+		if (L00539320(_buffer.data(), AC, A10, A14) == 0)
+		{
+			return 0;
+		}
+
+		return 1;
+	}
+
+	static std::string _zipFilename;
+	static bool _zipFileOpened = false;
+	static std::vector<char> _zipBuffer;
+	static std::map<std::string, std::vector<char>> _zipFiles;
+
+	std::string directoryPath = GetFilePathParent(A8);
+	std::string zipPath = directoryPath + ".zip";
+
+	if (zipPath != _zipFilename)
+	{
+		_zipFilename = zipPath;
+		_zipFileOpened = false;
+		_zipFiles.clear();
+
+		std::ifstream fileArchiveStream(_zipFilename, std::ios::binary);
+
+		if (fileArchiveStream)
+		{
+			fileArchiveStream.seekg(0, std::ios::end);
+			size_t fileArchiveStreamSize = (size_t)fileArchiveStream.tellg();
+			fileArchiveStream.seekg(0, std::ios::beg);
+
+			if (_zipBuffer.capacity() < fileArchiveStreamSize)
+			{
+				_zipBuffer.reserve(fileArchiveStreamSize * 2);
+			}
+
+			fileArchiveStream.read(_zipBuffer.data(), fileArchiveStreamSize);
+
+			mz_zip_archive zip{};
+			mz_zip_reader_init_mem(&zip, _zipBuffer.data(), fileArchiveStreamSize, 0);
+
+			for (unsigned int fileIndex = 0; fileIndex < zip.m_total_files; fileIndex++)
+			{
+				mz_zip_archive_file_stat stat{};
+				mz_zip_reader_file_stat(&zip, fileIndex, &stat);
+
+				std::string name(stat.m_filename);
+
+				if (name.end()[-1] == '/')
+				{
+					continue;
+				}
+
+				name = directoryPath + "/" + name;
+				std::replace(name.begin(), name.end(), '\\', '/');
+				std::transform(name.begin(), name.end(), name.begin(), std::toupper);
+
+				std::vector<char> extracted;
+				extracted.resize(stat.m_uncomp_size);
+				mz_zip_reader_extract_to_mem(&zip, fileIndex, extracted.data(), extracted.size(), 0);
+
+				_zipFiles.emplace(name, extracted);
+			}
+
+			mz_zip_reader_end(&zip);
+
+			_zipFileOpened = true;
+		}
+	}
+
+	if (_zipFileOpened)
+	{
+		std::string soundFilename = std::string(A8);
+		std::replace(soundFilename.begin(), soundFilename.end(), '\\', '/');
+		std::transform(soundFilename.begin(), soundFilename.end(), soundFilename.begin(), std::toupper);
+
+		auto it = _zipFiles.find(soundFilename);
+
+		if (it != _zipFiles.end())
+		{
+			const char* data = it->second.data();
+
+			if (L00539320(data, AC, A10, A14) == 0)
+			{
+				return 0;
+			}
+
+			return 1;
+		}
+	}
 
 	return 0;
 }

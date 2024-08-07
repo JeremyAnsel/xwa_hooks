@@ -159,6 +159,9 @@ At offset 1032D8, replace 83C40C with 909090.
 At offset 01EB21, replace E86AC80100 with E8FA931800.
 At offset 01F62A, replace E861BD0100 with E8F1881800.
 
+# To call the hook that loads sounds
+At offset 138590, replace 8B4424085356 with E89BF90600C3.
+
 
 *** Usage ***
 
@@ -415,6 +418,9 @@ Others custom sounds can be replaced in "Wave\Sfx_Sounds.lst":
 - line 2 is map exit
 - line 3 is turret switch
 - line 4 is target select
+
+
+The sounds can be compressed in zip files. When a wav file is loaded, if it doesn't exist then the hook will search it in a zip file placed in the parent directory. The name of the zip is the name of the directory.
 
 
 *** Credits ***

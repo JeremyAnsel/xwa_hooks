@@ -24,3 +24,5 @@ int PlayerCraftTargetedSoundHook(int* params);
 int MapEnterSoundHook(int* params);
 int MapExitSoundHook(int* params);
 int TurretSwitchSoundHook(int* params);
+
+int LoadSoundsHook(int* params);
