@@ -52,6 +52,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x578C69, OrderOfBattleHook },
 	{ 0x578D5E, OrderOfBattleHook },
 	{ 0x4165A3, LoadMissionRanksModifierHook },
+	{ 0x4DD134, FillSpecRciEntryHook },
 };
 
 static const HookPatchItem g_overrideTiePatch[] =
@@ -165,6 +166,11 @@ static const HookPatchItem g_loadmissionPatch[] =
 	{ 0x01599E, "8A1D0A548000", "E87D25190090" },
 };
 
+static const HookPatchItem g_specRciPatch[] =
+{
+	{ 0x0DC52F, "B801000000", "E8FCB90C00" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that override tie mission", g_overrideTiePatch),
@@ -174,4 +180,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that override order of battle strings", g_orderOfBattlePatch),
 	MAKE_HOOK_PATCH("To call the hook that fixes xwa.tab", g_xwatabPatch),
 	MAKE_HOOK_PATCH("To call the hook that controls mission loading", g_loadmissionPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the spec rci entries", g_specRciPatch),
 };

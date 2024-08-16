@@ -93,6 +93,9 @@ At offset 16C599, replace 8D144033DBC1E209 with 8BD09033DBC1E20A.
 # To call the hook that controls mission loading
 At offset 01599E, replace 8A1D0A548000 with E87D25190090.
 
+# To call the hook that sets the spec rci entries
+At offset 0DC52F, replace B801000000 with E8FCB90C00.
+
 
 *** Usage ***
 
@@ -240,6 +243,41 @@ You can modify these settings:
 - ShieldStrength
 
 The default value for each setting is 1.0.
+
+# Spec Rci
+
+Suppose that the craft is "FlightModels\[Model].opt".
+To define the spec rci values create a file named "FlightModels\[Model]SpecRci.txt" or create a section named "SpecRci" in "FlightModels\[Model].ini".
+The format is
+Speed = integer
+Acceleration = integer
+Maneuverability = integer
+Laser = integer
+Ion = integer
+Missile = integer
+Shield = integer
+Hull = integer
+Size = integer
+Score = integer
+The default value is -1.
+
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+To define the spec rci values create a file named "[MissionDir]\[Mission]_SpecRci.txt" or create a section named "[SpecRci]" in "[MissionDir]\[Mission].ini".
+ShipName is the name of the craft.
+The format is
+ShipName_Speed = integer
+ShipName_Acceleration = integer
+ShipName_Maneuverability = integer
+ShipName_Laser = integer
+ShipName_Ion = integer
+ShipName_Missile = integer
+ShipName_Shield = integer
+ShipName_Hull = integer
+ShipName_Size = integer
+ShipName_Score = integer
+The default value is -1.
+
+The hook reads the mission values then the craft values. When a value is different than -1 it overwrites the current value.
 
 
 *** Credits ***

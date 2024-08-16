@@ -28,6 +28,13 @@ float GetFileKeyValueFloat(const std::vector<std::string>& lines, const std::str
 	return std::stof(value);
 }
 
+std::string GetPathFileName(const std::string& str)
+{
+	auto a = str.find_last_of('\\');
+
+	return a == -1 ? str : str.substr(a + 1, -1);
+}
+
 class FlightModelsList
 {
 public:
@@ -456,6 +463,26 @@ struct XwaMissionDescription
 };
 
 static_assert(sizeof(XwaMissionDescription) == 328, "size of XwaMissionDescription must be 328");
+
+struct SpecRciEntry
+{
+	unsigned char CraftId;
+	char m01[3];
+	ShipCategoryEnum ShipCategory;
+	char m05[3];
+	int Speed;
+	int Acceleration;
+	int Maneuverability;
+	int Laser;
+	int Ion;
+	int Missile;
+	int Shield;
+	int Hull;
+	int Size;
+	int Score;
+};
+
+static_assert(sizeof(SpecRciEntry) == 48, "size of SpecRciEntry must be 48");
 
 #pragma pack(pop)
 
@@ -1425,6 +1452,12 @@ std::string GetMissionFileName()
 	const char* missionDirectory = ((const char**)0x00603168)[missionDirectoryId];
 	const int s_V0x09F5E74 = *(int*)0x009F5E74;
 	const XwaMissionDescription* s_XwaMissionDescriptions = *(XwaMissionDescription**)0x009F4B98;
+
+	if (s_XwaMissionDescriptions == nullptr)
+	{
+		return "default.tie";
+	}
+
 	std::string missionFilename = std::string(missionDirectory) + std::string("\\") + std::string(s_XwaMissionDescriptions[s_V0x09F5E74].MissionFileName);
 	return missionFilename;
 }
@@ -2280,4 +2313,172 @@ int LoadMissionRanksModifierHook(int* params)
 	}
 
 	return 0;
+}
+
+SpecRciEntry GetSpecRciMissionEntry(int modelIndex, const std::string& mission)
+{
+	static std::string _mission;
+	static std::vector<std::string> _lines;
+
+	if (mission != _mission)
+	{
+		_mission = mission;
+
+		const std::string path = GetStringWithoutExtension(mission);
+		_lines = GetFileLines(path + "_SpecRci.txt");
+
+		if (!_lines.size())
+		{
+			_lines = GetFileLines(path + ".ini", "SpecRci");
+		}
+	}
+
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+	std::string shipName = GetPathFileName(shipPath);
+
+	SpecRciEntry entry{};
+	entry.Speed = GetFileKeyValueInt(_lines, shipName + "_Speed", -1);
+	entry.Acceleration = GetFileKeyValueInt(_lines, shipName + "_Acceleration", -1);
+	entry.Maneuverability = GetFileKeyValueInt(_lines, shipName + "_Maneuverability", -1);
+	entry.Laser = GetFileKeyValueInt(_lines, shipName + "_Laser", -1);
+	entry.Ion = GetFileKeyValueInt(_lines, shipName + "_Ion", -1);
+	entry.Missile = GetFileKeyValueInt(_lines, shipName + "_Missile", -1);
+	entry.Shield = GetFileKeyValueInt(_lines, shipName + "_Shield", -1);
+	entry.Hull = GetFileKeyValueInt(_lines, shipName + "_Hull", -1);
+	entry.Size = GetFileKeyValueInt(_lines, shipName + "_Size", -1);
+	entry.Score = GetFileKeyValueInt(_lines, shipName + "_Score", -1);
+
+	return entry;
+}
+
+SpecRciEntry GetSpecRciModelEntry(int modelIndex)
+{
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+	std::vector<std::string> lines;
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + "SpecRci.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", "SpecRci");
+	}
+
+	SpecRciEntry entry{};
+	entry.Speed = GetFileKeyValueInt(lines, "Speed", -1);
+	entry.Acceleration = GetFileKeyValueInt(lines, "Acceleration", -1);
+	entry.Maneuverability = GetFileKeyValueInt(lines, "Maneuverability", -1);
+	entry.Laser = GetFileKeyValueInt(lines, "Laser", -1);
+	entry.Ion = GetFileKeyValueInt(lines, "Ion", -1);
+	entry.Missile = GetFileKeyValueInt(lines, "Missile", -1);
+	entry.Shield = GetFileKeyValueInt(lines, "Shield", -1);
+	entry.Hull = GetFileKeyValueInt(lines, "Hull", -1);
+	entry.Size = GetFileKeyValueInt(lines, "Size", -1);
+	entry.Score = GetFileKeyValueInt(lines, "Score", -1);
+
+	return entry;
+}
+
+int FillSpecRciEntryHook(int* params)
+{
+	unsigned short modelIndex = (unsigned short)params[4];
+	SpecRciEntry* modelSpecRciEntry = (SpecRciEntry*)params[Params_ESI];
+
+	std::string missionFileName = GetMissionFileName();
+	SpecRciEntry specRciMissionEntry = GetSpecRciMissionEntry(modelIndex, missionFileName);
+	SpecRciEntry specRciModelEntry = GetSpecRciModelEntry(modelIndex);
+
+	if (specRciMissionEntry.Speed != -1)
+	{
+		modelSpecRciEntry->Speed = specRciMissionEntry.Speed;
+	}
+	else if (specRciModelEntry.Speed != -1)
+	{
+		modelSpecRciEntry->Speed = specRciModelEntry.Speed;
+	}
+
+	if (specRciMissionEntry.Acceleration != -1)
+	{
+		modelSpecRciEntry->Acceleration = specRciMissionEntry.Acceleration;
+	}
+	else if (specRciModelEntry.Acceleration != -1)
+	{
+		modelSpecRciEntry->Acceleration = specRciModelEntry.Acceleration;
+	}
+
+	if (specRciMissionEntry.Maneuverability != -1)
+	{
+		modelSpecRciEntry->Maneuverability = specRciMissionEntry.Maneuverability;
+	}
+	else if (specRciModelEntry.Maneuverability != -1)
+	{
+		modelSpecRciEntry->Maneuverability = specRciModelEntry.Maneuverability;
+	}
+
+	if (specRciMissionEntry.Laser != -1)
+	{
+		modelSpecRciEntry->Laser = specRciMissionEntry.Laser;
+	}
+	else if (specRciModelEntry.Laser != -1)
+	{
+		modelSpecRciEntry->Laser = specRciModelEntry.Laser;
+	}
+
+	if (specRciMissionEntry.Ion != -1)
+	{
+		modelSpecRciEntry->Ion = specRciMissionEntry.Ion;
+	}
+	else if (specRciModelEntry.Ion != -1)
+	{
+		modelSpecRciEntry->Ion = specRciModelEntry.Ion;
+	}
+
+	if (specRciMissionEntry.Missile != -1)
+	{
+		modelSpecRciEntry->Missile = specRciMissionEntry.Missile;
+	}
+	else if (specRciModelEntry.Missile != -1)
+	{
+		modelSpecRciEntry->Missile = specRciModelEntry.Missile;
+	}
+
+	if (specRciMissionEntry.Shield != -1)
+	{
+		modelSpecRciEntry->Shield = specRciMissionEntry.Shield;
+	}
+	else if (specRciModelEntry.Shield != -1)
+	{
+		modelSpecRciEntry->Shield = specRciModelEntry.Shield;
+	}
+
+	if (specRciMissionEntry.Hull != -1)
+	{
+		modelSpecRciEntry->Hull = specRciMissionEntry.Hull;
+	}
+	else if (specRciModelEntry.Hull != -1)
+	{
+		modelSpecRciEntry->Hull = specRciModelEntry.Hull;
+	}
+
+	if (specRciMissionEntry.Size != -1)
+	{
+		modelSpecRciEntry->Size = specRciMissionEntry.Size;
+	}
+	else if (specRciModelEntry.Size != -1)
+	{
+		modelSpecRciEntry->Size = specRciModelEntry.Size;
+	}
+
+	if (specRciMissionEntry.Score != -1)
+	{
+		modelSpecRciEntry->Score = specRciMissionEntry.Score;
+	}
+	else if (specRciModelEntry.Score != -1)
+	{
+		modelSpecRciEntry->Score = specRciModelEntry.Score;
+	}
+
+	return 1;
 }

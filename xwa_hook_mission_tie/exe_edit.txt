@@ -481,6 +481,16 @@ E87D251900              call 005A8B20, 005A8B20 - 004165A3 = 0019257D
 
 ===============================================================================
 
+// L004DCEB0
+BOOL XwaFillSpecRciEntry( Ptr<SpecRciEntry> A4 )
+
+:004DD12F - 0x0DC52F
+B801000000              mov eax, 00000001
+
+E8FCB90C00              call 005A8B30, 005A8B30 - 004DD134 = 000CB9FC
+
+===============================================================================
+
 const char* xwaMissionFileName = (const char*)0x06002E8;
 const int missionFileNameIndex = *(int*)0x06002E4;
 

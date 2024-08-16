@@ -32,3 +32,5 @@ int ShootThroughtShieldOnHardDifficultyHook(int* params);
 int OrderOfBattleHook(int* params);
 
 int LoadMissionRanksModifierHook(int* params);
+
+int FillSpecRciEntryHook(int* params);
