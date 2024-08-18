@@ -4117,7 +4117,10 @@ int DrawRectangleHook(int* params)
 		}
 		else if (isBriefingMapIcons)
 		{
-			layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.8f;
+			if (isBackgroundHD)
+			{
+				layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.8f;
+			}
 		}
 	}
 
@@ -4221,7 +4224,10 @@ int DrawRectangleBorderHook(int* params)
 
 	if (isBriefingMapIcons)
 	{
-		layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.8f;
+		if (isBackgroundHD)
+		{
+			layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.8f;
+		}
 	}
 
 	unsigned int color = Color16BppTo32Bpp(A10);
@@ -4974,8 +4980,9 @@ int FontGetStringWidthHook(int* params)
 		if (isBackgroundHD)
 		{
 			width *= 0.75f;
-			width += fontSize * 2;
 		}
+
+		width += fontSize * 2;
 	}
 	else if (isFamilyRoomCursorMessage)
 	{
