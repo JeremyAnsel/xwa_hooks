@@ -159,7 +159,9 @@ static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24")
 
 struct XwaCraft
 {
-	char Unk0000[387];
+	char Unk0000[6];
+	int LeaderObjectIndex;
+	char Unk000A[377];
 	unsigned short m183; // flags
 	unsigned short m185; // flags
 	char Unk0187[27];
@@ -185,6 +187,20 @@ struct XwaObject
 };
 
 static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
+
+struct XwaPlayer
+{
+	int ObjectIndex;
+	char Unk0004[17];
+	unsigned char MapState;
+	char Unk0016[15];
+	short CurrentTargetIndex;
+	char Unk0027[453];
+	int AiObjectIndex;
+	char Unk01F0[2527];
+};
+
+static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 #pragma pack(pop)
 
@@ -611,6 +627,9 @@ int ShieldRechargeHook(int* params)
 
 	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
+	int XwaCurrentPlayerId = *(int*)0x008C1CC8;
+	unsigned char mapState = XwaPlayers[XwaCurrentPlayerId].MapState;
 	unsigned char difficulty = *(unsigned char*)0x0080540A;
 	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
 	ShipCategoryEnum shipCategory = XwaObjects[objectIndex].ShipCategory;
@@ -653,7 +672,7 @@ int ShieldRechargeHook(int* params)
 		{
 			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-			if (isPart2)
+			if (isPart2 && mapState == 0)
 			{
 				// Craft183_HasShieldSystem
 				if ((XwaCurrentCraft->m183 & 0x01) != 0)
@@ -678,7 +697,7 @@ int ShieldRechargeHook(int* params)
 				{
 					rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-					if (isPart2)
+					if (isPart2 && mapState == 0)
 					{
 						XwaCurrentCraft->PresetShield = 0x03;
 					}
@@ -697,7 +716,7 @@ int ShieldRechargeHook(int* params)
 		{
 			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-			if (isPart2 && difficulty >= 0x01)
+			if (isPart2 && mapState == 0 && difficulty >= 0x01)
 			{
 				XwaCurrentCraft->PresetShield = 0x03;
 			}
