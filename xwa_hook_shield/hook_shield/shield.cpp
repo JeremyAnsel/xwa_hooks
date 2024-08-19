@@ -639,6 +639,8 @@ int ShieldRechargeHook(int* params)
 	int rechargeDelayTime = g_modelIndexShield.GetRechargeRateDelayTime(objectIndex);
 	int shieldStrength = XwaCurrentCraft->ShieldStrength[0] + XwaCurrentCraft->ShieldStrength[1];
 
+	bool isPlayer = (mapState == 0 ? XwaPlayers[XwaCurrentPlayerId].ObjectIndex : XwaPlayers[XwaCurrentPlayerId].AiObjectIndex) == objectIndex;
+
 	if (rechargeDelayTime > missionTime)
 	{
 		rechargeRate = 0;
@@ -672,7 +674,7 @@ int ShieldRechargeHook(int* params)
 		{
 			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-			if (isPart2 && mapState == 0)
+			if (isPart2 && !isPlayer)
 			{
 				// Craft183_HasShieldSystem
 				if ((XwaCurrentCraft->m183 & 0x01) != 0)
@@ -697,7 +699,7 @@ int ShieldRechargeHook(int* params)
 				{
 					rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-					if (isPart2 && mapState == 0)
+					if (isPart2 && !isPlayer)
 					{
 						XwaCurrentCraft->PresetShield = 0x03;
 					}
@@ -716,7 +718,7 @@ int ShieldRechargeHook(int* params)
 		{
 			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-			if (isPart2 && mapState == 0 && difficulty >= 0x01)
+			if (isPart2 && !isPlayer && difficulty >= 0x01)
 			{
 				XwaCurrentCraft->PresetShield = 0x03;
 			}
