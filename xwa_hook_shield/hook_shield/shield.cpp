@@ -690,12 +690,7 @@ int ShieldRechargeHook(int* params)
 		{
 			if (g_config.IsShieldRechargeForStarshipsEnabled)
 			{
-				// todo
-				if (shieldStrength == 0)
-				{
-					rechargeRate = 0;
-				}
-				else if (difficulty >= 0x01)
+				if (difficulty >= 0x01)
 				{
 					rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
