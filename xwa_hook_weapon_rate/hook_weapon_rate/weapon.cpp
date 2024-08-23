@@ -2774,9 +2774,9 @@ bool IsHardpointInFront(int modelIndex, XwaFloatHardPt* hardPts, int hardHpIndex
 {
 	const auto XwaOptGetMeshRotationScale = (OptRotationScaleNode_17_Data * (*)(int, int))0x00486C30;
 
-	float hpPositionX = hardPts[hardHpIndex].Position[0];
-	float hpPositionY = hardPts[hardHpIndex].Position[2];
-	float hpPositionZ = hardPts[hardHpIndex].Position[1];
+	float hpPositionX = (float)hardPts[hardHpIndex].Position[0];
+	float hpPositionY = (float)hardPts[hardHpIndex].Position[2];
+	float hpPositionZ = (float)hardPts[hardHpIndex].Position[1];
 	int hpMeshIndex = hardPts[hardHpIndex].MeshId;
 
 	if (!IsMeshGunTurret(modelIndex, hpMeshIndex))
@@ -2784,9 +2784,9 @@ bool IsHardpointInFront(int modelIndex, XwaFloatHardPt* hardPts, int hardHpIndex
 		return true;
 	}
 
-	float targetPositionX = *(int*)0x080DA48;
-	float targetPositionY = *(int*)0x080DA44;
-	float targetPositionZ = *(int*)0x080DB64;
+	float targetPositionX = (float)*(int*)0x080DA48;
+	float targetPositionY = (float)*(int*)0x080DA44;
+	float targetPositionZ = (float)*(int*)0x080DB64;
 
 	float offsetX = targetPositionX - hpPositionX;
 	float offsetY = targetPositionY - hpPositionY;

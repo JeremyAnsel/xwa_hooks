@@ -56,8 +56,9 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -74,8 +75,9 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -85,6 +87,59 @@
       <UACUIAccess>true</UACUIAccess>
     </Link>
   </ItemDefinitionGroup>
+  <UsingTask TaskName="PreBuildTask" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup />
+    <Task>
+      <Using Namespace="System" />
+      <Using Namespace="System.IO" />
+      <Using Namespace="System.Text" />
+      <Code Type="Fragment" Language="cs"><![CDATA[
+        Encoding encoding = Encoding.GetEncoding(1252);
+        DateTime date = DateTime.Now;
+        string dateComma = date.ToString("yyyy,MMdd,HHmm,ssfff");
+        string dateDot = date.ToString("yyyy.MMdd.HHmm.ssfff");
+        string rcPath = @"$(ProjectDir)$(ProjectName).rc";
+        string[] lines = File.ReadAllLines(rcPath, encoding);
+
+        lines = lines.Select(line =>
+        {
+          int index;
+
+          index = line.IndexOf("FILEVERSION");
+          if(index != -1)
+          {
+            line = line.Substring(0, index) + "FILEVERSION " + dateComma;
+          }
+
+          index = line.IndexOf("PRODUCTVERSION");
+          if(index != -1)
+          {
+            line = line.Substring(0, index) + "PRODUCTVERSION " + dateComma;
+          }
+
+          index = line.IndexOf("VALUE \"FileVersion\"");
+          if(index != -1)
+          {
+            line = line.Substring(0, index) + "VALUE \"FileVersion\", \""  + dateDot + "\"";
+          }
+
+          index = line.IndexOf("VALUE \"ProductVersion\"");
+          if(index != -1)
+          {
+            line = line.Substring(0, index) + "VALUE \"ProductVersion\", \""  + dateDot + "\"";
+          }
+
+          return line;
+        })
+        .ToArray();
+
+        File.WriteAllLines(rcPath, lines, encoding);
+        ]]></Code>
+    </Task>
+  </UsingTask>
+  <Target Name="PreBuild" AfterTargets="PreBuildEvent">
+    <PreBuildTask />
+  </Target>
   <ItemGroup>
     <ClCompile Include="config.cpp" />
     <ClCompile Include="hangar.cpp" />

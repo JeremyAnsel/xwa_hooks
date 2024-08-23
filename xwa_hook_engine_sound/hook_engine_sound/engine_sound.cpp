@@ -2779,7 +2779,7 @@ int LoadSoundsHook(int* params)
 				std::transform(name.begin(), name.end(), name.begin(), std::toupper);
 
 				std::vector<char> extracted;
-				extracted.resize(stat.m_uncomp_size);
+				extracted.resize((size_t)stat.m_uncomp_size);
 				mz_zip_reader_extract_to_mem(&zip, fileIndex, extracted.data(), extracted.size(), 0);
 
 				_zipFiles.emplace(name, extracted);

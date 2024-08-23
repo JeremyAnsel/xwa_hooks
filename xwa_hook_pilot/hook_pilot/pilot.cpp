@@ -893,7 +893,7 @@ void ApplyHangarDroidPilot(XwaCraft* craft, int objectIndex)
 
 				if (meshRotation == 0xE1)
 				{
-					meshRotation = 0xE0;
+					meshRotation = (char)0xE0;
 				}
 			}
 			else
