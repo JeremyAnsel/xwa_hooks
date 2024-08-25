@@ -11,6 +11,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4906D4, CraftUpdateMulShieldHook },
 	{ 0x490687, CraftUpdateTimeHook },
 	{ 0x4905A0, LasersEnergyToShieldsHook },
+	{ 0x490713, ShieldRechargePercentHook },
+	{ 0x490777, ShieldRechargePercentHook },
 };
 
 static const HookPatchItem g_shieldPatch[] =
@@ -22,6 +24,8 @@ static const HookPatchItem g_shieldPatch[] =
 	//{ 0x08FACF, "0FAF542418", "E84C841100" },
 	//{ 0x08FA82, "A1C4337B00", "E899841100" },
 	{ 0x08F99B, "66396C2418736C", "E8808511009090" },
+	{ 0x08FB0E, "8B0DFC0D9100", "E80D84110090" },
+	{ 0x08FB72, "8B0DFC0D9100", "E8A983110090" },
 };
 
 static const HookPatch g_patches[] =

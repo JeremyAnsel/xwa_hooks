@@ -625,6 +625,8 @@ int ShieldRechargeHook(int* params)
 	auto& rechargeRate = params[6];
 	int objectIndex = (unsigned short)params[7];
 
+	const auto XwaGetCraftShieldStrength = (int(*)(short))0x00490E70;
+
 	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 	XwaPlayer* XwaPlayers = (XwaPlayer*)0x008B94E0;
@@ -638,6 +640,14 @@ int ShieldRechargeHook(int* params)
 	int rechargeDelay = g_modelIndexShield.GetRechargeRateDelay(objectIndex);
 	int rechargeDelayTime = g_modelIndexShield.GetRechargeRateDelayTime(objectIndex);
 	int shieldStrength = XwaCurrentCraft->ShieldStrength[0] + XwaCurrentCraft->ShieldStrength[1];
+	int craftShieldStrength = XwaGetCraftShieldStrength(objectIndex);
+
+	if (shipCategory == ShipCategory_Starfighter)
+	{
+		craftShieldStrength *= 2;
+	}
+
+	bool setPresetShield = shieldStrength < craftShieldStrength;
 
 	bool isPlayer = (mapState == 0 ? XwaPlayers[XwaCurrentPlayerId].ObjectIndex : XwaPlayers[XwaCurrentPlayerId].AiObjectIndex) == objectIndex;
 
@@ -674,14 +684,15 @@ int ShieldRechargeHook(int* params)
 		{
 			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-			if (isPart2 && !isPlayer)
+			if (isPart2 && !isPlayer && setPresetShield)
 			{
 				// Craft183_HasShieldSystem
 				if ((XwaCurrentCraft->m183 & 0x01) != 0)
 				{
 					if (XwaCurrentCraft->PresetShield == 0x02)
 					{
-						XwaCurrentCraft->PresetShield = difficulty >= 0x01 ? 0x04 : 0x03;
+						//XwaCurrentCraft->PresetShield = difficulty >= 0x01 ? 0x04 : 0x03;
+						XwaCurrentCraft->PresetShield = 0x03;
 					}
 				}
 			}
@@ -694,7 +705,7 @@ int ShieldRechargeHook(int* params)
 				{
 					rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-					if (isPart2 && !isPlayer)
+					if (isPart2 && !isPlayer && setPresetShield)
 					{
 						XwaCurrentCraft->PresetShield = 0x03;
 					}
@@ -713,7 +724,7 @@ int ShieldRechargeHook(int* params)
 		{
 			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-			if (isPart2 && !isPlayer && difficulty >= 0x01)
+			if (isPart2 && !isPlayer && setPresetShield && difficulty >= 0x01)
 			{
 				XwaCurrentCraft->PresetShield = 0x03;
 			}
@@ -801,6 +812,22 @@ int LasersEnergyToShieldsHook(int* params)
 	if (timeSpeed == 0 || esp18 >= bp)
 	{
 		params[Params_ReturnAddress] = 0x0049060E;
+	}
+
+	return 0;
+}
+
+int ShieldRechargePercentHook(int* params)
+{
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	int objectIndex = params[Params_EBP] / 0x27;
+	ShipCategoryEnum shipCategory = XwaObjects[objectIndex].ShipCategory;
+
+	params[Params_ECX] = *(int*)0x00910DFC;
+
+	if (shipCategory == ShipCategory_Starfighter)
+	{
+		params[Params_EAX] *= 2;
 	}
 
 	return 0;

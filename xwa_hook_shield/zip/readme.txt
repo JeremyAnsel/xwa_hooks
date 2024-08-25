@@ -27,6 +27,8 @@ At offset 08FA6A, replace C744241814000000 with E8B1841100909090.
 ;At offset 08FACF, replace 0FAF542418 with E84C841100.
 ;At offset 08FA82, replace A1C4337B00 with E899841100.
 At offset 08F99B, replace 66396C2418736C with E8808511009090.
+At offset 08FB0E, replace 8B0DFC0D9100 with E80D84110090.
+At offset 08FB72, replace 8B0DFC0D9100 with E8A983110090.
 
 
 *** Usage ***
