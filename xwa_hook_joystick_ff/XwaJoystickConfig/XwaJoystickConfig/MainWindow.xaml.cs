@@ -33,7 +33,7 @@ namespace XwaJoystickConfig
                 return defaultValue;
             }
 
-            if (!float.TryParse(value, out float result))
+            if (!float.TryParse(value, NumberStyles.Float | NumberStyles.AllowThousands, NumberFormatInfo.InvariantInfo, out float result))
             {
                 return defaultValue;
             }

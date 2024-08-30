@@ -50,8 +50,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2024,0830,1605,58775
- PRODUCTVERSION 2024,0830,1605,58775
+ FILEVERSION 2024,0830,1618,19486
+ PRODUCTVERSION 2024,0830,1618,19486
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "XWA hook joystick ff"
-            VALUE "FileVersion", "2024.0830.1605.58775"
+            VALUE "FileVersion", "2024.0830.1618.19486"
             VALUE "InternalName", "hook_joystick_ff.dll"
             VALUE "LegalCopyright", "Copyright (C) Jérémy Ansel 2020"
             VALUE "OriginalFilename", "hook_joystick_ff.dll"
             VALUE "ProductName", "XWA hook joystick ff"
-            VALUE "ProductVersion", "2024.0830.1605.58775"
+            VALUE "ProductVersion", "2024.0830.1618.19486"
         END
     END
     BLOCK "VarFileInfo"
