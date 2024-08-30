@@ -487,8 +487,6 @@ namespace XwaJoystickConfig
                 }
 
                 string key = line.Substring(0, pos).Trim();
-                string valueString = line.Substring(pos + 1).Trim();
-                int value = int.Parse(valueString, CultureInfo.InvariantCulture);
 
                 string start = "joybutton_";
                 if (key.StartsWith(start, StringComparison.OrdinalIgnoreCase))
@@ -504,6 +502,9 @@ namespace XwaJoystickConfig
                     {
                         continue;
                     }
+
+                    string valueString = line.Substring(pos + 1).Trim();
+                    int value = int.Parse(valueString, CultureInfo.InvariantCulture);
 
                     string controller = (string)ControllerNameConverter.Default.Convert(new object[] { this.JoystickControllers, index }, null, null, null);
                     this.JoystickConfigButtons.Add(new JoystickConfigButton(controller, key, value));
