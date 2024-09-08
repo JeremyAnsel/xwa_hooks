@@ -498,73 +498,6 @@ namespace hook_32bpp_net
             return texturesExist;
         }
 
-        //private static void CreateSwitchTextures(OptFile opt, ICollection<string> texturesExist, List<List<string>> fgSkins, List<int> fgColors)
-        //{
-        //    int fgCount = fgSkins.Count;
-
-        //    if (fgCount == 0)
-        //    {
-        //        return;
-        //    }
-
-        //    var newTextures = new ConcurrentBag<Texture>();
-
-        //    opt.Textures
-        //        .Where(texture => texturesExist.Contains(texture.Key))
-        //        .AsParallel()
-        //        .ForAll(texture =>
-        //    {
-        //        //texture.Value.Convert8To32(false);
-
-        //        foreach (int i in fgColors)
-        //        {
-        //            Texture newTexture = texture.Value.Clone();
-        //            newTexture.Name += "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]);
-        //            newTextures.Add(newTexture);
-        //        }
-        //    });
-
-        //    foreach (var newTexture in newTextures)
-        //    {
-        //        opt.Textures.Add(newTexture.Name, newTexture);
-        //    }
-
-        //    foreach (var mesh in opt.Meshes)
-        //    {
-        //        foreach (var lod in mesh.Lods)
-        //        {
-        //            foreach (var faceGroup in lod.FaceGroups)
-        //            {
-        //                if (faceGroup.Textures.Count == 0)
-        //                {
-        //                    continue;
-        //                }
-
-        //                string name = faceGroup.Textures[0];
-
-        //                if (!texturesExist.Contains(name))
-        //                {
-        //                    continue;
-        //                }
-
-        //                faceGroup.Textures.Clear();
-
-        //                for (int i = 0; i < fgCount; i++)
-        //                {
-        //                    if (fgColors.Contains(i))
-        //                    {
-        //                        faceGroup.Textures.Add(name + "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]));
-        //                    }
-        //                    else
-        //                    {
-        //                        faceGroup.Textures.Add(name);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-
         private static void CreateSwitchTextures(OptFile opt, ICollection<string> texturesExist, List<List<string>> fgSkins, List<int> fgColors)
         {
             int fgCount = fgSkins.Count;
@@ -576,20 +509,17 @@ namespace hook_32bpp_net
 
             var newTextures = new ConcurrentBag<Texture>();
 
-            opt.Textures
-                .Where(texture => texturesExist.Contains(texture.Key))
-                .AsParallel()
-                .ForAll(texture =>
-                {
-                    //texture.Value.Convert8To32(false);
+            foreach (var texture in opt.Textures.Where(texture => texturesExist.Contains(texture.Key)))
+            {
+                //texture.Value.Convert8To32(false);
 
-                    foreach (int i in fgColors)
-                    {
-                        Texture newTexture = texture.Value.Clone();
-                        newTexture.Name += "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]);
-                        newTextures.Add(newTexture);
-                    }
-                });
+                foreach (int i in fgColors)
+                {
+                    Texture newTexture = texture.Value.Clone();
+                    newTexture.Name += "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]);
+                    newTextures.Add(newTexture);
+                }
+            }
 
             foreach (var newTexture in newTextures)
             {
@@ -659,16 +589,13 @@ namespace hook_32bpp_net
                 filesSets[skin] = filesSet ?? new SortedSet<string>();
             });
 
-            opt.Textures
-                .AsParallel()
-                .Where(texture => texture.Key.IndexOf("_fg_") != -1)
-                .ForAll(texture =>
+            foreach (var texture in opt.Textures.Where(texture => texture.Key.IndexOf("_fg_") != -1))
             {
                 int position = texture.Key.IndexOf("_fg_");
 
                 if (position == -1)
                 {
-                    return;
+                    continue;
                 }
 
                 texture.Value.Convert8To32(false);
@@ -704,7 +631,7 @@ namespace hook_32bpp_net
                 }
 
                 texture.Value.GenerateMipmaps();
-            });
+            }
         }
 
         private static void CombineTextures(Texture baseTexture, IFileLocator locator, string filename, string skin)
