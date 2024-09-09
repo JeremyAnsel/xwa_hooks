@@ -642,10 +642,10 @@ int ShieldRechargeHook(int* params)
 	int shieldStrength = XwaCurrentCraft->ShieldStrength[0] + XwaCurrentCraft->ShieldStrength[1];
 	int craftShieldStrength = XwaGetCraftShieldStrength(objectIndex);
 
-	if (shipCategory == ShipCategory_Starfighter)
-	{
-		craftShieldStrength *= 2;
-	}
+	//if (shipCategory == ShipCategory_Starfighter)
+	//{
+	//	craftShieldStrength *= 2;
+	//}
 
 	bool setPresetShield = shieldStrength < craftShieldStrength;
 
@@ -825,10 +825,10 @@ int ShieldRechargePercentHook(int* params)
 
 	params[Params_ECX] = *(int*)0x00910DFC;
 
-	if (shipCategory == ShipCategory_Starfighter)
-	{
-		params[Params_EAX] *= 2;
-	}
+	//if (shipCategory == ShipCategory_Starfighter)
+	//{
+	//	params[Params_EAX] *= 2;
+	//}
 
 	return 0;
 }
