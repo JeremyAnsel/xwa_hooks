@@ -19,4 +19,5 @@ DisablePlayerLaserShoot = 0
 DisablePlayerWarheadShoot = 0
 IsWarheadCollisionDamagesEnabled = 1
 CanShootThroughtShieldOnHardDifficulty = 0
+KEY_O_TargetCraftFGs = 
 

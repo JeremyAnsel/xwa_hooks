@@ -491,6 +491,15 @@ E8FCB90C00              call 005A8B30, 005A8B30 - 004DD134 = 000CB9FC
 
 ===============================================================================
 
+; KEY_O: Target nearest objective craft
+
+:004FFBF3 - 0x0FEFF3
+A0E5538000              mov al, byte ptr [008053E5]
+
+E8288F0A00              call 005A8B20, 005A8B20 - 004FFBF8 = 000A8F28
+
+===============================================================================
+
 const char* xwaMissionFileName = (const char*)0x06002E8;
 const int missionFileNameIndex = *(int*)0x06002E4;
 

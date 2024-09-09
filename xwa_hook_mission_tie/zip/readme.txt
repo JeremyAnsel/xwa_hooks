@@ -96,6 +96,9 @@ At offset 01599E, replace 8A1D0A548000 with E87D25190090.
 # To call the hook that sets the spec rci entries
 At offset 0DC52F, replace B801000000 with E8FCB90C00.
 
+# To call the hook that targets next objective craft
+At offset 0FEFF3, replace A0E5538000 with E8288F0A00.
+
 
 *** Usage ***
 
@@ -123,6 +126,8 @@ To disable player laser shoot, set "DisablePlayerLaserShoot = 1". The default va
 To disable player warhead shoot, set "DisablePlayerWarheadShoot = 1". The default value is 0.
 To disable warhead collision damages, set "IsWarheadCollisionDamagesEnabled = 0". The default value is 1.
 To define if the ships can shoot throught the shield on hard difficulty, set "CanShootThroughtShieldOnHardDifficulty = 0". The default value is 0. It is 1 for the mission 50 (Death Star Phase 2).
+
+To define which crafts are targetable with the O key, set "KEY_O_TargetCraftFGs = values". Values are comma separated fg indices. If the KEY_O_TargetCraftFGs setting is empty then default behavior is used.
 
 See "mission.txt".
 

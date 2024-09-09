@@ -34,3 +34,5 @@ int OrderOfBattleHook(int* params);
 int LoadMissionRanksModifierHook(int* params);
 
 int FillSpecRciEntryHook(int* params);
+
+int TargetNextCraftHook(int* params);

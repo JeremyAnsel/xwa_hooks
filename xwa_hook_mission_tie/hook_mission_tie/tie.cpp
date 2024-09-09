@@ -3,6 +3,7 @@
 #include "config.h"
 #include <fstream>
 #include <map>
+#include <set>
 
 enum ParamsEnum
 {
@@ -100,10 +101,14 @@ public:
 
 		this->IsWarheadCollisionDamagesEnabled = GetFileKeyValueInt(lines, "IsWarheadCollisionDamagesEnabled", 1) != 0;
 		this->IsMissionRanksModifierEnabled = GetFileKeyValueInt(lines, "IsMissionRanksModifierEnabled", 1) != 0;
+		this->TargetCraftKeyMethod = GetFileKeyValueInt(lines, "TargetCraftKeyMethod", 0);
+		this->TargetCraftKeySelectOnlyNotInspected = GetFileKeyValueInt(lines, "TargetCraftKeySelectOnlyNotInspected", 0) != 0;
 	}
 
 	bool IsWarheadCollisionDamagesEnabled;
 	bool IsMissionRanksModifierEnabled;
+	int TargetCraftKeyMethod;
+	bool TargetCraftKeySelectOnlyNotInspected;
 };
 
 Config g_config;
@@ -184,6 +189,11 @@ public:
 		return this->_canShootThroughtShieldOnHardDifficulty;
 	}
 
+	const std::set<int>& GetTargetCraftKeyFgIndices()
+	{
+		return this->_targetCraftKeyFgIndices;
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -218,6 +228,15 @@ private:
 			this->_disablePlayerWarheadShoot = GetFileKeyValueInt(lines, "DisablePlayerWarheadShoot", 0) != 0;
 			this->_isWarheadCollisionDamagesEnabled = GetFileKeyValueInt(lines, "IsWarheadCollisionDamagesEnabled", 1) != 0;
 			this->_canShootThroughtShieldOnHardDifficulty = GetFileKeyValueInt(lines, "CanShootThroughtShieldOnHardDifficulty", this->GetDefaultCanShootThroughtShieldOnHardDifficulty()) != 0;
+
+			this->_targetCraftKeyFgIndices.clear();
+			const auto targetCraftKeyFgIndicesValues = Tokennize(GetFileKeyValue(lines, "KEY_O_TargetCraftFGs"));
+
+			for (const std::string& value : targetCraftKeyFgIndicesValues)
+			{
+				int index = std::stoi(value, 0, 0);
+				this->_targetCraftKeyFgIndices.insert(index);
+			}
 		}
 	}
 
@@ -297,6 +316,7 @@ private:
 	bool _disablePlayerWarheadShoot;
 	bool _isWarheadCollisionDamagesEnabled;
 	bool _canShootThroughtShieldOnHardDifficulty;
+	std::set<int> _targetCraftKeyFgIndices;
 };
 
 MissionConfig g_missionConfig;
@@ -370,7 +390,9 @@ struct XwaCraft
 {
 	char Unk0000[4];
 	unsigned short CraftIndex;
-	char Unk0006[190];
+	char Unk0006[5];
+	unsigned char m00B;
+	char Unk000C[184];
 	short Speed;
 	char Unk00C6[4];
 	short Pitch;
@@ -387,7 +409,9 @@ struct XwaCraft
 	unsigned short m181; // flags
 	unsigned short m183; // flags
 	unsigned short m185; // flags
-	char Unk0187[27];
+	char Unk0187[15];
+	char m196[10];
+	char Unk01A0[2];
 	unsigned int ShieldStrength[2];
 	char Unk01AA[293];
 	unsigned char EngineThrottles[16];
@@ -444,6 +468,30 @@ struct TieFlightGroupEx
 };
 
 static_assert(sizeof(TieFlightGroupEx) == 3650, "size of TieFlightGroupEx must be 3650");
+
+struct XwaPlayerCamera
+{
+	int PositionX;
+	int PositionY;
+	int PositionZ;
+	char unk000C[65];
+};
+
+static_assert(sizeof(XwaPlayerCamera) == 77, "size of XwaPlayerCamera must be 77");
+
+struct XwaPlayer
+{
+	int ObjectIndex;
+	char unk0004[8];
+	short Team;
+	short FGIndex;
+	unsigned char Region;
+	char unk0011[2871];
+	XwaPlayerCamera Camera;
+	char unk0B95[58];
+};
+
+static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 struct ShiplistEntry
 {
@@ -2481,4 +2529,209 @@ int FillSpecRciEntryHook(int* params)
 	}
 
 	return 1;
+}
+
+bool FilterTargetCraft(int objectIndex, const XwaObject* object, int team)
+{
+	if (object->pMobileObject == nullptr || object->pMobileObject->pCraft == nullptr)
+	{
+		return false;
+	}
+
+	XwaCraft* craft = object->pMobileObject->pCraft;
+
+	if (g_config.TargetCraftKeySelectOnlyNotInspected)
+	{
+		// inspected
+		if (craft->m196[team] >= 1)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+short GetNearestTargetCraft(const std::set<int>& targetFGs, int playerIndex)
+{
+	const auto L0041DA50 = (void(*)(int, int, int, int))0x0041DA50;
+	const auto L004EAC30 = (void(*)(int, int, int))0x004EAC30;
+	const auto L004A2CC0 = (void(*)(int, int))0x004A2CC0;
+
+	short targetObjectIndex = -1;
+	unsigned int targetObjectDistance = 0xffffffff;
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x008B94E0;
+
+	const XwaPlayer* player = &xwaPlayers[playerIndex];
+
+	for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x07CA3B8; objectIndex++)
+	{
+		const XwaObject* object = &xwaObjects[objectIndex];
+
+		if (object->ModelIndex == 0)
+		{
+			continue;
+		}
+
+		if (object->Region != player->Region)
+		{
+			continue;
+		}
+
+		if (!FilterTargetCraft(objectIndex, object, player->Team))
+		{
+			continue;
+		}
+
+		int fg = object->TieFlightGroupIndex;
+
+		if (!targetFGs.contains(fg))
+		{
+			continue;
+		}
+
+		if (player->ObjectIndex == 0xFFFF)
+		{
+			L0041DA50(objectIndex, 0, 0, 0);
+
+			L004EAC30(
+				*(int*)0x09109BC - player->Camera.PositionX,
+				*(int*)0x09109B8 - player->Camera.PositionY,
+				*(int*)0x09109B4 - player->Camera.PositionZ);
+		}
+		else
+		{
+			L004A2CC0(player->ObjectIndex, objectIndex);
+		}
+
+		if (*(unsigned int*)0x07D4B60 < targetObjectDistance)
+		{
+			targetObjectIndex = objectIndex;
+			targetObjectDistance = *(unsigned int*)0x07D4B60;
+		}
+	}
+
+	return targetObjectIndex;
+}
+
+short GetCycleTargetCraft(const std::set<int>& targetFGs, int playerIndex)
+{
+	static short _lastTargetObjectIndex[10];
+	static bool _init = true;
+
+	if (_init)
+	{
+		_init = false;
+
+		for (int i = 0; i < 10; i++)
+		{
+			_lastTargetObjectIndex[i] = -1;
+		}
+	}
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x008B94E0;
+	int firstObject = *(int*)0x08BF378;
+	int lastObject = *(int*)0x07CA3B8;
+	int objectsCount = lastObject - firstObject;
+
+	const XwaPlayer* player = &xwaPlayers[playerIndex];
+	short lastTargetObjectIndex = _lastTargetObjectIndex[playerIndex];
+
+	if (lastTargetObjectIndex < firstObject || lastTargetObjectIndex >= lastObject)
+	{
+		lastTargetObjectIndex = firstObject - 1;
+
+		_lastTargetObjectIndex[playerIndex] = lastTargetObjectIndex;
+	}
+
+	for (int currentIndex = 0; currentIndex < objectsCount; currentIndex++)
+	{
+		lastTargetObjectIndex++;
+
+		if (lastTargetObjectIndex >= lastObject)
+		{
+			lastTargetObjectIndex = firstObject;
+		}
+
+		_lastTargetObjectIndex[playerIndex] = lastTargetObjectIndex;
+
+		const XwaObject* object = &xwaObjects[lastTargetObjectIndex];
+
+		if (object->ModelIndex == 0)
+		{
+			continue;
+		}
+
+		if (object->Region != player->Region)
+		{
+			continue;
+		}
+
+		if (!FilterTargetCraft(lastTargetObjectIndex, object, player->Team))
+		{
+			continue;
+		}
+
+		int fg = object->TieFlightGroupIndex;
+
+		if (!targetFGs.contains(fg))
+		{
+			continue;
+		}
+
+		return lastTargetObjectIndex;
+	}
+
+	return -1;
+}
+
+int TargetNextCraftHook(int* params)
+{
+	const auto XwaTargetObject = (void(*)(short, int))0x00503E10;
+	const auto L0041DA50 = (void(*)(int, int, int, int))0x0041DA50;
+	const auto L004EAC30 = (void(*)(int, int, int))0x004EAC30;
+	const auto L004A2CC0 = (void(*)(int, int))0x004A2CC0;
+
+	unsigned char isMelee = *(unsigned char*)0x008053E5;
+	params[Params_EAX] = isMelee;
+
+	if (isMelee != 0)
+	{
+		return 0;
+	}
+
+	const std::set<int>& targetFGs = g_missionConfig.GetTargetCraftKeyFgIndices();
+
+	if (targetFGs.empty())
+	{
+		return 0;
+	}
+
+	params[Params_ReturnAddress] = 0x004FFC05;
+
+	int playerIndex = params[Params_EDI];
+	short targetObjectIndex = -1;
+
+	switch (g_config.TargetCraftKeyMethod)
+	{
+	case 0:
+	default:
+		targetObjectIndex = GetNearestTargetCraft(targetFGs, playerIndex);
+		break;
+
+	case 1:
+		targetObjectIndex = GetCycleTargetCraft(targetFGs, playerIndex);
+		break;
+	}
+
+	if (targetObjectIndex == -1)
+	{
+		return 0;
+	}
+
+	XwaTargetObject(targetObjectIndex, playerIndex);
+
+	return 0;
 }
