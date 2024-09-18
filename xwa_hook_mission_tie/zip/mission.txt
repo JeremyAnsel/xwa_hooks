@@ -20,4 +20,6 @@ DisablePlayerWarheadShoot = 0
 IsWarheadCollisionDamagesEnabled = 1
 CanShootThroughtShieldOnHardDifficulty = 0
 KEY_O_TargetCraftFGs = 
+TargetCraftKeyMethod = -1
+TargetCraftKeySelectOnlyNotInspected = -1
 

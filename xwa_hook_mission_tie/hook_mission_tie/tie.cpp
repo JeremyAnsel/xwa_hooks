@@ -191,7 +191,20 @@ public:
 
 	const std::set<int>& GetTargetCraftKeyFgIndices()
 	{
+		this->UpdateIfChanged();
 		return this->_targetCraftKeyFgIndices;
+	}
+
+	int TargetCraftKeyMethod()
+	{
+		this->UpdateIfChanged();
+		return this->_targetCraftKeyMethod;
+	}
+
+	bool TargetCraftKeySelectOnlyNotInspected()
+	{
+		this->UpdateIfChanged();
+		return this->_targetCraftKeySelectOnlyNotInspected;
 	}
 
 private:
@@ -237,6 +250,12 @@ private:
 				int index = std::stoi(value, 0, 0);
 				this->_targetCraftKeyFgIndices.insert(index);
 			}
+
+			int targetCraftKeyMethod = GetFileKeyValueInt(lines, "TargetCraftKeyMethod", -1);
+			this->_targetCraftKeyMethod = targetCraftKeyMethod == -1 ? g_config.TargetCraftKeyMethod : targetCraftKeyMethod;
+
+			int targetCraftKeySelectOnlyNotInspected = GetFileKeyValueInt(lines, "TargetCraftKeySelectOnlyNotInspected", -1);
+			this->_targetCraftKeySelectOnlyNotInspected = targetCraftKeySelectOnlyNotInspected == -1 ? g_config.TargetCraftKeySelectOnlyNotInspected : targetCraftKeySelectOnlyNotInspected != 0;
 		}
 	}
 
@@ -317,6 +336,8 @@ private:
 	bool _isWarheadCollisionDamagesEnabled;
 	bool _canShootThroughtShieldOnHardDifficulty;
 	std::set<int> _targetCraftKeyFgIndices;
+	int _targetCraftKeyMethod;
+	bool _targetCraftKeySelectOnlyNotInspected;
 };
 
 MissionConfig g_missionConfig;
@@ -2531,7 +2552,7 @@ int FillSpecRciEntryHook(int* params)
 	return 1;
 }
 
-bool FilterTargetCraft(int objectIndex, const XwaObject* object, int team)
+bool FilterTargetCraft(int objectIndex, const XwaObject* object, int team, bool selectOnlyNotInspected)
 {
 	if (object->pMobileObject == nullptr || object->pMobileObject->pCraft == nullptr)
 	{
@@ -2540,7 +2561,7 @@ bool FilterTargetCraft(int objectIndex, const XwaObject* object, int team)
 
 	XwaCraft* craft = object->pMobileObject->pCraft;
 
-	if (g_config.TargetCraftKeySelectOnlyNotInspected)
+	if (selectOnlyNotInspected)
 	{
 		// inspected
 		if (craft->m196[team] >= 1)
@@ -2565,6 +2586,8 @@ short GetNearestTargetCraft(const std::set<int>& targetFGs, int playerIndex)
 
 	const XwaPlayer* player = &xwaPlayers[playerIndex];
 
+	bool selectOnlyNotInspected = g_missionConfig.TargetCraftKeySelectOnlyNotInspected();
+
 	for (int objectIndex = *(int*)0x08BF378; objectIndex < *(int*)0x07CA3B8; objectIndex++)
 	{
 		const XwaObject* object = &xwaObjects[objectIndex];
@@ -2579,7 +2602,7 @@ short GetNearestTargetCraft(const std::set<int>& targetFGs, int playerIndex)
 			continue;
 		}
 
-		if (!FilterTargetCraft(objectIndex, object, player->Team))
+		if (!FilterTargetCraft(objectIndex, object, player->Team, selectOnlyNotInspected))
 		{
 			continue;
 		}
@@ -2639,6 +2662,8 @@ short GetCycleTargetCraft(const std::set<int>& targetFGs, int playerIndex)
 	const XwaPlayer* player = &xwaPlayers[playerIndex];
 	short lastTargetObjectIndex = _lastTargetObjectIndex[playerIndex];
 
+	bool selectOnlyNotInspected = g_missionConfig.TargetCraftKeySelectOnlyNotInspected();
+
 	if (lastTargetObjectIndex < firstObject || lastTargetObjectIndex >= lastObject)
 	{
 		lastTargetObjectIndex = firstObject - 1;
@@ -2669,7 +2694,7 @@ short GetCycleTargetCraft(const std::set<int>& targetFGs, int playerIndex)
 			continue;
 		}
 
-		if (!FilterTargetCraft(lastTargetObjectIndex, object, player->Team))
+		if (!FilterTargetCraft(lastTargetObjectIndex, object, player->Team, selectOnlyNotInspected))
 		{
 			continue;
 		}
@@ -2714,7 +2739,9 @@ int TargetNextCraftHook(int* params)
 	int playerIndex = params[Params_EDI];
 	short targetObjectIndex = -1;
 
-	switch (g_config.TargetCraftKeyMethod)
+	int targetCraftKeyMethod = g_missionConfig.TargetCraftKeyMethod();
+
+	switch (targetCraftKeyMethod)
 	{
 	case 0:
 	default:

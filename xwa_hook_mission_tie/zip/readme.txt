@@ -128,6 +128,8 @@ To disable warhead collision damages, set "IsWarheadCollisionDamagesEnabled = 0"
 To define if the ships can shoot throught the shield on hard difficulty, set "CanShootThroughtShieldOnHardDifficulty = 0". The default value is 0. It is 1 for the mission 50 (Death Star Phase 2).
 
 To define which crafts are targetable with the O key, set "KEY_O_TargetCraftFGs = values". Values are comma separated fg indices. If the KEY_O_TargetCraftFGs setting is empty then default behavior is used.
+To switch between nearest target and cycle targets, set the TargetCraftKeyMethod setting. This setting is in the global settings file and in the per-mission config file. When the per-mission value is -1 the global value is used.
+To define how filter the target crafts, set the TargetCraftKeySelectOnlyNotInspected setting. This setting is in the global settings file and in the per-mission config file. When the per-mission value is -1 the global value is used.
 
 See "mission.txt".
 
