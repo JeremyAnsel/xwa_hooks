@@ -6,6 +6,18 @@
 #include <map>
 #include <utility>
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
 unsigned int GetFileKeyValueUnsignedInt(const std::vector<std::string>& lines, const std::string& key, unsigned int defaultValue = 0)
 {
 	std::string value = GetFileKeyValue(lines, key);
@@ -161,14 +173,17 @@ struct XwaKnockoutData
 {
 	char Unk0000[712];
 	unsigned int Color;
-	char Unk02CC[24];
+	unsigned int Color2;
+	char Unk02D0[20];
 };
 
 static_assert(sizeof(XwaKnockoutData) == 740, "size of XwaKnockoutData must be 740");
 
 struct S0x0761E70
 {
-	int S0x0761E70_m00;
+	//int S0x0761E70_m00;
+	short S0x0761E70_m00;
+	unsigned short S0x0761E70_m02;
 	int S0x0761E70_m04;
 	unsigned short S0x0761E70_m08;
 	char Unk000A[50];
@@ -241,6 +256,22 @@ std::vector<std::string> GetCustomFileLines(const std::string& name)
 	}
 
 	return _lines;
+}
+
+std::string GetShipName(int modelIndex)
+{
+	std::string ship = g_flightModelsList.GetLstLine(modelIndex);
+
+	const auto objectLines = GetCustomFileLines("Objects");
+	const std::string objectValue = GetFileKeyValue(objectLines, ship + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		ship = GetStringWithoutExtension(objectValue);
+	}
+
+	const std::string shipName = GetPathFileName(ship);
+	return shipName;
 }
 
 std::vector<std::string> GetModelLines(int modelIndex, const std::string& name)
@@ -1013,50 +1044,45 @@ int WeaponAIColorHook(int* params)
 	return 0;
 }
 
-std::map<int, int> g_weaponImpactColorModelIndex;
+inline unsigned short convertColorB8G8R8X8toB5G6R5(unsigned int color32)
+{
+	unsigned int red = (unsigned char)((color32 & 0xFF0000) >> 16);
+	unsigned int green = (unsigned char)((color32 & 0xFF00) >> 8);
+	unsigned int blue = (unsigned char)(color32 & 0xFF);
+
+	red = (red * (0x1F * 2) + 0xFF) / (0xFF * 2);
+	green = (green * (0x3F * 2) + 0xFF) / (0xFF * 2);
+	blue = (blue * (0x1F * 2) + 0xFF) / (0xFF * 2);
+
+	unsigned short color16 = (unsigned short)((red << 11) | (green << 5) | blue);
+	return color16;
+}
+
+inline unsigned int convertColorB5G6R5toB8G8R8X8(unsigned short color16)
+{
+	unsigned int red = ((unsigned int)color16 & 0xF800) >> 11;
+	unsigned int green = ((unsigned int)color16 & 0x7E0) >> 5;
+	unsigned int blue = (unsigned int)color16 & 0x1F;
+
+	red = (red * (0xFF * 2) + 0x1F) / (0x1F * 2);
+	green = (green * (0xFF * 2) + 0x3F) / (0x3F * 2);
+	blue = (blue * (0xFF * 2) + 0x1F) / (0x1F * 2);
+
+	unsigned int color32 = 0xFF000000 | (red << 16) | (green << 8) | blue;
+	return color32;
+}
 
 int WeaponImpactColorHook(int* params)
 {
 	S0x0761E70* esi = (S0x0761E70*)params[0];
-	unsigned short resdataModelIndex = (unsigned short)params[1];
+	//unsigned short resdataModelIndex = (unsigned short)params[1];
 
 	const auto L004E77C0 = (XwaKnockoutData * (*)(int, int))0x004E77C0;
 	const auto L004E7DF0 = (XwaKnockoutData * (*)(int, int))0x004E7DF0;
 
-	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-
-	unsigned short weaponModelIndex;
-	unsigned short modelIndex;
-	int modelMarkings = -1;
-
-	if (resdataModelIndex == 0x228 || resdataModelIndex == 0x117)
-	{
-		int weaponObjectIndex = esi->S0x0761E70_m08;
-		//weaponModelIndex = -XwaObjects[weaponObjectIndex].ModelIndex;
-		weaponModelIndex = g_weaponImpactColorModelIndex[weaponObjectIndex];
-		modelIndex = XwaObjects[weaponObjectIndex].pMobileObject->ModelIndex;
-
-		g_weaponImpactColorModelIndex.erase(weaponObjectIndex);
-
-		short objectIndex = XwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
-
-		if (objectIndex != -1 && XwaObjects[objectIndex].pMobileObject != nullptr)
-		{
-			modelMarkings = XwaObjects[objectIndex].pMobileObject->Markings;
-		}
-
-		esi->S0x0761E70_m08 = weaponModelIndex;
-
-		//if (XwaObjects[weaponObjectIndex].ModelIndex >= 0x8000)
-		//{
-		//	XwaObjects[weaponObjectIndex].ModelIndex = 0;
-		//}
-	}
-	else
-	{
-		weaponModelIndex = esi->S0x0761E70_m08;
-		modelIndex = 0;
-	}
+	//if (resdataModelIndex == 0x228 || resdataModelIndex == 0x117 || resdataModelIndex == 0x1A3)
+	//{
+	//}
 
 	XwaKnockoutData* knockout;
 
@@ -1074,9 +1100,9 @@ int WeaponImpactColorHook(int* params)
 		return 0;
 	}
 
-	if (modelIndex != 0)
+	if (esi->S0x0761E70_m02 != 0)
 	{
-		knockout->Color = g_modelIndexWeapon.GetImpactColor(modelIndex, weaponModelIndex, modelMarkings);
+		knockout->Color = convertColorB5G6R5toB8G8R8X8(esi->S0x0761E70_m02);
 	}
 
 	return (int)knockout;
@@ -1094,21 +1120,33 @@ int WeaponImpactColorSetIndexHook(int* params)
 
 	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 
-	int weaponObjectIndex = params[29];
+	short weaponObjectIndex = (short)params[29];
 
-	g_weaponImpactColorModelIndex[weaponObjectIndex] = A8;
-
-	//if (XwaObjects[weaponObjectIndex].ModelIndex == 0)
-	//{
-	//	XwaObjects[weaponObjectIndex].ModelIndex = -A8;
-	//}
+	unsigned short modelIndex = XwaObjects[weaponObjectIndex].pMobileObject->ModelIndex;
+	short objectIndex = XwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
+	int modelMarkings = objectIndex == -1 ? -1 : XwaObjects[objectIndex].pMobileObject->Markings;
 
 	S0x0761E70* eax = L004E9440(A4, A8, AC, A10, A14);
 
-	if (eax != nullptr)
+	if (eax == nullptr)
 	{
-		eax->S0x0761E70_m08 = weaponObjectIndex;
+		return 0;
 	}
+
+	unsigned int color = g_modelIndexWeapon.GetImpactColor(modelIndex, A8, modelMarkings);
+	unsigned short color16 = convertColorB8G8R8X8toB5G6R5(color);
+	eax->S0x0761E70_m02 = color16;
+
+	return 0;
+}
+
+int WeaponImpactColorReadS0x0761E70Hook(int* params)
+{
+	params[Params_EDI] = *(int*)0x00782854;
+
+	unsigned int eax = (unsigned int)params[Params_EAX];
+	eax = eax & 0xffff;
+	params[Params_EAX] = eax;
 
 	return 0;
 }
