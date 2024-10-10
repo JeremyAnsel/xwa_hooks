@@ -131,6 +131,7 @@ public:
 		this->PreventAILasersIonWhenDisabling = GetFileKeyValueInt(lines, "PreventAILasersIonWhenDisabling", 0) != 0;
 		this->PreventAIIonWhenNotDisabling = GetFileKeyValueInt(lines, "PreventAIIonWhenNotDisabling", 0) != 0;
 		this->PreventPlayerLinkedLasersIon = GetFileKeyValueInt(lines, "PreventPlayerLinkedLasersIon", 0) != 0;
+		this->LimitLinkedWarheadFireRate = GetFileKeyValueInt(lines, "LimitLinkedWarheadFireRate", 0) != 0;
 		this->MaxTorpedoCountPerPass = GetFileKeyValueInt(lines, "MaxTorpedoCountPerPass", 6);
 		this->MaxTorpedoCountPerTarget = GetFileKeyValueInt(lines, "MaxTorpedoCountPerTarget", 16);
 		this->WeaponsCount = GetFileKeyValueInt(lines, "WeaponsCount", 12);
@@ -144,6 +145,7 @@ public:
 	bool PreventAILasersIonWhenDisabling;
 	bool PreventAIIonWhenNotDisabling;
 	bool PreventPlayerLinkedLasersIon;
+	bool LimitLinkedWarheadFireRate;
 	int MaxTorpedoCountPerPass;
 	int MaxTorpedoCountPerTarget;
 	int WeaponsCount;
@@ -2109,8 +2111,14 @@ int WeaponFireRateHook(int* params)
 	const int warheadIndex = params[Params_ESI];
 	const unsigned short weaponModelIndex = XwaCurrentCraft->WarheadsModelIndex[warheadIndex];
 	const int sourceObjectIndex = params[Params_EBP] / 0x27;
+	const int linkCount = params[6];
 
 	int rate = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponModelIndex - 0x118).FireRate;
+
+	if (g_config.LimitLinkedWarheadFireRate)
+	{
+		rate *= linkCount;
+	}
 
 	XwaCurrentCraft->m1D8[warheadIndex] += rate;
 

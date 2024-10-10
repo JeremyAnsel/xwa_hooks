@@ -416,6 +416,10 @@ LinkingProfile_fg_# = ProfileName
 Replace # with the flightgroup index.
 The default ProfileName is "Default".
 
+# warheads linking
+
+To limit the rate of fire of warheads dual mode set the "LimitLinkedWarheadFireRate" setting. it is disabled by default.
+
 # mesh filter
 
 To enable or disable the fire mesh filter set the "EnableFireMeshFilter" setting. It is enabled by default.
