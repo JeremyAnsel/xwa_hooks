@@ -1,10 +1,10 @@
-﻿using JeremyAnsel.IO.Locator;
-using JeremyAnsel.Xwa.Opt;
+﻿using JeremyAnsel.Xwa.Opt;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -335,11 +335,6 @@ namespace hook_32bpp_net
                 return path + ".zip";
             }
 
-            if (File.Exists(path + ".7z"))
-            {
-                return path + ".7z";
-            }
-
             return null;
         }
 
@@ -471,20 +466,21 @@ namespace hook_32bpp_net
                     continue;
                 }
 
-                SortedSet<string> filesSet;
+                string[] filenames;
 
-                using (IFileLocator locator = FileLocatorFactory.Create(path))
+                if (path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (locator == null)
-                    {
-                        continue;
-                    }
-
-                    var filesEnum = locator.EnumerateFiles()
-                        .Select(t => Path.GetFileName(t));
-
-                    filesSet = new SortedSet<string>(filesEnum, StringComparer.OrdinalIgnoreCase);
+                    using ZipArchive zip = ZipFile.OpenRead(path);
+                    ZipArchiveEntry[] files = zip.Entries.ToArray();
+                    filenames = Array.ConvertAll(files, t => t.Name);
                 }
+                else
+                {
+                    string[] files = Directory.GetFiles(path);
+                    filenames = Array.ConvertAll(files, t => Path.GetFileName(t));
+                }
+
+                SortedSet<string> filesSet = new(filenames, StringComparer.OrdinalIgnoreCase);
 
                 foreach (string textureName in opt.Textures.Keys)
                 {
@@ -574,16 +570,21 @@ namespace hook_32bpp_net
 
                 if (path != null)
                 {
-                    using (IFileLocator locator = FileLocatorFactory.Create(path))
-                    {
-                        if (locator != null)
-                        {
-                            var filesEnum = locator.EnumerateFiles()
-                                .Select(t => Path.GetFileName(t));
+                    string[] filenames;
 
-                            filesSet = new SortedSet<string>(filesEnum, StringComparer.OrdinalIgnoreCase);
-                        }
+                    if (path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                    {
+                        using ZipArchive zip = ZipFile.OpenRead(path);
+                        ZipArchiveEntry[] files = zip.Entries.ToArray();
+                        filenames = Array.ConvertAll(files, t => t.Name);
                     }
+                    else
+                    {
+                        string[] files = Directory.GetFiles(path);
+                        filenames = Array.ConvertAll(files, t => Path.GetFileName(t));
+                    }
+
+                    filesSet = new(filenames, StringComparer.OrdinalIgnoreCase);
                 }
 
                 filesSets[skin] = filesSet ?? new SortedSet<string>();
@@ -619,14 +620,27 @@ namespace hook_32bpp_net
                         continue;
                     }
 
-                    using (IFileLocator locator = FileLocatorFactory.Create(path))
+                    Stream file = null;
+                    ZipArchive zip = null;
+
+                    try
                     {
-                        if (locator == null)
+                        if (path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                         {
-                            continue;
+                            zip = ZipFile.OpenRead(path);
+                            file = zip.GetEntry(filename)!.Open();
+                        }
+                        else
+                        {
+                            file = File.OpenRead(Path.Combine(path, filename));
                         }
 
-                        CombineTextures(texture.Value, locator, filename, skin);
+                        CombineTextures(texture.Value, file, filename, skin);
+                    }
+                    finally
+                    {
+                        file?.Dispose();
+                        zip?.Dispose();
                     }
                 }
 
@@ -634,7 +648,7 @@ namespace hook_32bpp_net
             }
         }
 
-        private static void CombineTextures(Texture baseTexture, IFileLocator locator, string filename, string skin)
+        private static void CombineTextures(Texture baseTexture, Stream file, string filename, string skin)
         {
             string[] skinParts = skin.Split('-');
             skin = skinParts[0];
@@ -647,11 +661,8 @@ namespace hook_32bpp_net
 
             Texture newTexture;
 
-            using (Stream file = locator.Open(filename))
-            {
-                newTexture = Texture.FromStream(file);
-                newTexture.Name = Path.GetFileNameWithoutExtension(filename);
-            }
+            newTexture = Texture.FromStream(file);
+            newTexture.Name = Path.GetFileNameWithoutExtension(filename);
 
             if (newTexture.Width != baseTexture.Width || newTexture.Height != baseTexture.Height)
             {

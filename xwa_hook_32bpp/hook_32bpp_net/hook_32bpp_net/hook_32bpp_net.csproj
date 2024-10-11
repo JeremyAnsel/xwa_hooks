@@ -18,8 +18,11 @@
 
   <ItemGroup>
     <PackageReference Include="DllExport" Version="1.5.2" ExcludeAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="JeremyAnsel.IO.Locator" Version="3.0.38" />
     <PackageReference Include="JeremyAnsel.Xwa.Opt" Version="3.0.47" />		
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.IO.Compression" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,22 +33,5 @@
   </ItemGroup>
 
   <Import Project="$(PkgDllExport)/tools/net.r_eg.DllExport.targets" Condition="Exists('$(PkgDllExport)/tools/net.r_eg.DllExport.targets')" />
-
-  <UsingTask TaskName="PostBuildTask" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
-    <ParameterGroup />
-    <Task>
-      <Using Namespace="System" />
-      <Using Namespace="System.IO" />
-      <Code Type="Fragment" Language="cs">
-        <![CDATA[
-        File.SetLastWriteTime(@"$(TargetDir)SharpCompress.dll", DateTime.Now);
-        ]]>
-      </Code>
-    </Task>
-  </UsingTask>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(TargetFramework)' == 'net48' ">
-    <PostBuildTask />
-  </Target>
 
 </Project>
