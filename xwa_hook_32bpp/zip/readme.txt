@@ -19,7 +19,7 @@ This dll requires:
 
 *** Setup ***
 
-Place hook_32bpp.dll, hook_32bpp_net.dll, JeremyAnsel.ColorQuant.dll, JeremyAnsel.IO.Locator.dll, JeremyAnsel.Xwa.Opt.dll, SharpCompress.dll next to xwingalliance.exe
+Place hook_32bpp.dll, hook_32bpp_net.dll, JeremyAnsel.ColorQuant.dll, JeremyAnsel.Xwa.Opt.dll, System.Drawing.Common.dll next to xwingalliance.exe
 
 
 *** Patch ***
@@ -92,7 +92,7 @@ To replace a texture, place it in the skins folder with the same name, or the na
 The supported image formats are bmp, png, jpg. Use the png format to get transparency.
 For example, if the name of the skin is "Skin1", the name of the texture is "Tex00000", and the texture extension is ".png", then the texture filename can be "Tex00000_Skin1.png" or "Tex00000.png"
 See "Skins\XWing\Default\Tex00033.png" for an example for the vanilla X-Wing.
-To reduce the count of textures files, you can compress the directories of skins. If the directory is "FlightModels\Skins\[Model]\[Skin1]\", you can create "FlightModels\Skins\[Model]\[Skin1].zip" or "FlightModels\Skins\[Model]\[Skin1].7z". The textures are at the root of the arhive file.
+To reduce the count of textures files, you can compress the directories of skins. If the directory is "FlightModels\Skins\[Model]\[Skin1]\", you can create "FlightModels\Skins\[Model]\[Skin1].zip". The textures are at the root of the arhive file.
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 Suppose that the hangar is "FlightModels\[Model]Hangar.opt".
