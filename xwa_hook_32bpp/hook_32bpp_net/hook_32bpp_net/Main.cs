@@ -628,7 +628,16 @@ namespace hook_32bpp_net
                         if (path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                         {
                             zip = ZipFile.OpenRead(path);
-                            file = zip.GetEntry(filename)!.Open();
+                            //file = zip.GetEntry(filename)!.Open();
+
+                            foreach (ZipArchiveEntry entry in zip.Entries)
+                            {
+                                if (string.Equals(entry.Name, filename, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    file = entry.Open();
+                                    break;
+                                }
+                            }
                         }
                         else
                         {
