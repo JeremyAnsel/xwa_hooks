@@ -1118,20 +1118,20 @@ int WeaponImpactColorSetIndexHook(int* params)
 
 	const auto L004E9440 = (S0x0761E70 * (*)(int, int, int, float, float))0x004E9440;
 
-	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-
-	short weaponObjectIndex = (short)params[29];
-
-	unsigned short modelIndex = XwaObjects[weaponObjectIndex].pMobileObject->ModelIndex;
-	short objectIndex = XwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
-	int modelMarkings = objectIndex == -1 ? -1 : XwaObjects[objectIndex].pMobileObject->Markings;
-
 	S0x0761E70* eax = L004E9440(A4, A8, AC, A10, A14);
 
 	if (eax == nullptr)
 	{
 		return 0;
 	}
+
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	short weaponObjectIndex = (short)params[29];
+
+	unsigned short modelIndex = XwaObjects[weaponObjectIndex].pMobileObject->ModelIndex;
+	short objectIndex = XwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
+	int modelMarkings = (objectIndex == -1 || XwaObjects[objectIndex].pMobileObject == nullptr) ? -1 : XwaObjects[objectIndex].pMobileObject->Markings;
 
 	unsigned int color = g_modelIndexWeapon.GetImpactColor(modelIndex, A8, modelMarkings);
 	unsigned short color16 = convertColorB8G8R8X8toB5G6R5(color);
