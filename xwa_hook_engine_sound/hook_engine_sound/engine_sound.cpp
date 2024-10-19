@@ -68,6 +68,26 @@ private:
 
 FlightModelsList g_flightModelsList;
 
+class Config
+{
+public:
+	Config()
+	{
+		auto lines = GetFileLines("hook_engine_sound.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_engine_sound");
+		}
+
+		this->AreStarshipAmbientEnabled = GetFileKeyValueInt(lines, "AreStarshipAmbientEnabled", 1) != 0;
+	}
+
+	bool AreStarshipAmbientEnabled;
+};
+
+Config g_config;
+
 class SoundsConfig
 {
 public:
@@ -2400,6 +2420,11 @@ int CustomSoundsHook(int* params)
 
 	((void(*)())0x00402D20)();
 
+	if (!g_config.AreStarshipAmbientEnabled)
+	{
+		return 0;
+	}
+
 	const auto XwaStopSound = (char(*)(int))0x004DC400;
 	const auto XwaGetPlayingSoundsCount = (int(*)(int))0x004DC850;
 	const auto XwaQueueSound = (int(*)(int, int, int, int, int, int, int, int))0x004DB1A0;
@@ -2776,7 +2801,7 @@ int LoadSoundsHook(int* params)
 
 				name = directoryPath + "/" + name;
 				std::replace(name.begin(), name.end(), '\\', '/');
-				std::transform(name.begin(), name.end(), name.begin(), std::toupper);
+				std::transform(name.begin(), name.end(), name.begin(), _toupper);
 
 				std::vector<char> extracted;
 				extracted.resize((size_t)stat.m_uncomp_size);
@@ -2795,7 +2820,7 @@ int LoadSoundsHook(int* params)
 	{
 		std::string soundFilename = std::string(A8);
 		std::replace(soundFilename.begin(), soundFilename.end(), '\\', '/');
-		std::transform(soundFilename.begin(), soundFilename.end(), soundFilename.begin(), std::toupper);
+		std::transform(soundFilename.begin(), soundFilename.end(), soundFilename.begin(), _toupper);
 
 		auto it = _zipFiles.find(soundFilename);
 

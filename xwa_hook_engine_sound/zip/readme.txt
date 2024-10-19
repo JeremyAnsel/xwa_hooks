@@ -411,6 +411,7 @@ To define a global ambient sound distance, create a file named "FlightModels\Sou
 The format is:
 AmbientSoundDistance = distance
 
+To enable or disable the ambient sounds set the "AreStarshipAmbientEnabled" setting in "hook_engine_sound.cfg" or the "[hook_engine_sound]" section of "Hooks.ini". It is enabled by default.
 
 Others custom sounds can be replaced in "Wave\Sfx_Sounds.lst":
 - line 0 is player craft targeted sounds
