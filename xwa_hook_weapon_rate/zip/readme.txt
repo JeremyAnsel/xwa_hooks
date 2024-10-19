@@ -368,13 +368,16 @@ You can override the settings in "FlightModels\EnergyStats.txt" or in the "[Ener
 
 The format of the default profile is:
 SpeedFactor = value
+SpeedFactorForPlayer = value
 
 The format of a profile is:
 ProfileName_SpeedFactor = value
+ProfileName_SpeedFactorForPlayer = value
 
 ProfileName is the name of the profile.
 If the value is -1 then default values are used.
 For the SpeedFactor setting, the value is a percent float. This setting is the factor applied to the speed. For the TieBomber, the default value is 6.2. For the TieFighter, the default value is 18.7. For other crafts, the default value is 12.5.
+The SpeedFactorForPlayer setting is the same as the SpeedFactor setting but it is for player crafts.
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 To define a energy profile for a flightgroup, create a file named "[MissionDir]\[Mission]_EnergyProfiles.txt" or create a section named "[EnergyProfiles]" in "[MissionDir]\[Mission].ini".

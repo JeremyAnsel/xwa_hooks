@@ -3360,7 +3360,7 @@ struct EnergyStats
 	float SpeedFactor;
 };
 
-EnergyStats GetEnergyStats(const std::vector<std::string>& lines, int sourceModelIndex, const std::string& profileName)
+EnergyStats GetEnergyStats(const std::vector<std::string>& lines, int sourcePlayerIndex, int sourceModelIndex, const std::string& profileName)
 {
 	//auto lines = GetModelLines(sourceModelIndex, "EnergyStats");
 
@@ -3372,8 +3372,20 @@ EnergyStats GetEnergyStats(const std::vector<std::string>& lines, int sourceMode
 		energyKey = profileName + "_";
 	}
 
-	std::string speedFactorString = GetFileKeyValue(lines, energyKey + "SpeedFactor");
-	bool isDefaultValue = speedFactorString.empty() || std::stoi(speedFactorString, 0, 0) == -1;
+	std::string speedFactorString;
+	bool isDefaultValue = true;
+
+	if (sourcePlayerIndex != -1)
+	{
+		speedFactorString = GetFileKeyValue(lines, energyKey + "SpeedFactorForPlayer");
+		isDefaultValue = speedFactorString.empty() || std::stoi(speedFactorString, 0, 0) == -1;
+	}
+
+	if (isDefaultValue)
+	{
+		speedFactorString = GetFileKeyValue(lines, energyKey + "SpeedFactor");
+		isDefaultValue = speedFactorString.empty() || std::stoi(speedFactorString, 0, 0) == -1;
+	}
 
 	float speedFactor;
 
@@ -3452,6 +3464,7 @@ public:
 		const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
 		const XwaObject* sourceObject = &xwaObjects[sourceObjectIndex];
 
+		int sourcePlayerIndex = sourceObject->PlayerIndex;
 		unsigned short sourceModelIndex = sourceObject->ModelIndex;
 		int sourceFgIndex = sourceObject->TieFlightGroupIndex;
 
@@ -3461,7 +3474,7 @@ public:
 		{
 			std::string profileName = GetEnergyProfileName(sourceFgIndex);
 			auto& lines = GetEnergyStatsLines(sourceModelIndex);
-			EnergyStats stats = GetEnergyStats(lines, sourceModelIndex, profileName);
+			EnergyStats stats = GetEnergyStats(lines, sourcePlayerIndex, sourceModelIndex, profileName);
 			this->_energyStats.insert(std::make_pair(sourceFgIndex, stats));
 			it = this->_energyStats.find(sourceFgIndex);
 		}
