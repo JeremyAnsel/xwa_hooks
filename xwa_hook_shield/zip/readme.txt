@@ -68,6 +68,7 @@ ModelIndex, UseGenerator, PerGeneratorRechargeRate, RechargeRate
 See *Shield.txt.
 
 You can enable or disable the shield recharge for starships with the IsShieldRechargeForStarshipsEnabled setting.
+You can enable or disable double shield stregnth for starfighters with the IsShieldStrengthForStarfighterDoubled setting.
 ;To set the time between the updates, set the CraftUpdateTime setting. The default value is 123.
 To control the recharge rate speed, set the RechargeRatePercent setting. The default value is 100.
 

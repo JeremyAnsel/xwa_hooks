@@ -109,11 +109,13 @@ public:
 		}
 
 		this->IsShieldRechargeForStarshipsEnabled = GetFileKeyValueInt(lines, "IsShieldRechargeForStarshipsEnabled", 1) != 0;
+		this->IsShieldStrengthForStarfighterDoubled = GetFileKeyValueInt(lines, "IsShieldStrengthForStarfighterDoubled", 0) != 0;
 		this->CraftUpdateTime = GetFileKeyValueInt(lines, "CraftUpdateTime", 123);
 		this->RechargeRatePercent = GetFileKeyValueInt(lines, "RechargeRatePercent", 100);
 	}
 
 	bool IsShieldRechargeForStarshipsEnabled;
+	bool IsShieldStrengthForStarfighterDoubled;
 	int CraftUpdateTime;
 	int RechargeRatePercent;
 };
@@ -642,10 +644,13 @@ int ShieldRechargeHook(int* params)
 	int shieldStrength = XwaCurrentCraft->ShieldStrength[0] + XwaCurrentCraft->ShieldStrength[1];
 	int craftShieldStrength = XwaGetCraftShieldStrength(objectIndex);
 
-	//if (shipCategory == ShipCategory_Starfighter)
-	//{
-	//	craftShieldStrength *= 2;
-	//}
+	if (g_config.IsShieldStrengthForStarfighterDoubled)
+	{
+		if (shipCategory == ShipCategory_Starfighter)
+		{
+			craftShieldStrength *= 2;
+		}
+	}
 
 	bool setPresetShield = shieldStrength < craftShieldStrength;
 
@@ -825,10 +830,13 @@ int ShieldRechargePercentHook(int* params)
 
 	params[Params_ECX] = *(int*)0x00910DFC;
 
-	//if (shipCategory == ShipCategory_Starfighter)
-	//{
-	//	params[Params_EAX] *= 2;
-	//}
+	if (g_config.IsShieldStrengthForStarfighterDoubled)
+	{
+		if (shipCategory == ShipCategory_Starfighter)
+		{
+			params[Params_EAX] *= 2;
+		}
+	}
 
 	return 0;
 }
