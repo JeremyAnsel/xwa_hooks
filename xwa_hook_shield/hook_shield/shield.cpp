@@ -109,12 +109,14 @@ public:
 		}
 
 		this->IsShieldRechargeForStarshipsEnabled = GetFileKeyValueInt(lines, "IsShieldRechargeForStarshipsEnabled", 1) != 0;
+		this->IsShieldRechargeForStarshipsOnEasyDifficultyEnabled = GetFileKeyValueInt(lines, "IsShieldRechargeForStarshipsOnEasyDifficultyEnabled", 0) != 0;
 		this->IsShieldStrengthForStarfighterDoubled = GetFileKeyValueInt(lines, "IsShieldStrengthForStarfighterDoubled", 0) != 0;
 		this->CraftUpdateTime = GetFileKeyValueInt(lines, "CraftUpdateTime", 123);
 		this->RechargeRatePercent = GetFileKeyValueInt(lines, "RechargeRatePercent", 100);
 	}
 
 	bool IsShieldRechargeForStarshipsEnabled;
+	bool IsShieldRechargeForStarshipsOnEasyDifficultyEnabled;
 	bool IsShieldStrengthForStarfighterDoubled;
 	int CraftUpdateTime;
 	int RechargeRatePercent;
@@ -689,7 +691,7 @@ int ShieldRechargeHook(int* params)
 		{
 			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-			if (isPart2 && !isPlayer && setPresetShield)
+			if (rechargeRate != 0 && isPart2 && !isPlayer && setPresetShield)
 			{
 				// Craft183_HasShieldSystem
 				if ((XwaCurrentCraft->m183 & 0x01) != 0)
@@ -706,11 +708,11 @@ int ShieldRechargeHook(int* params)
 		{
 			if (g_config.IsShieldRechargeForStarshipsEnabled)
 			{
-				if (difficulty >= 0x01)
+				if (difficulty >= 0x01 || g_config.IsShieldRechargeForStarshipsOnEasyDifficultyEnabled)
 				{
 					rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-					if (isPart2 && !isPlayer && setPresetShield)
+					if (rechargeRate != 0 && isPart2 && !isPlayer && setPresetShield)
 					{
 						XwaCurrentCraft->PresetShield = 0x03;
 					}
@@ -729,7 +731,7 @@ int ShieldRechargeHook(int* params)
 		{
 			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
 
-			if (isPart2 && !isPlayer && setPresetShield && difficulty >= 0x01)
+			if (rechargeRate != 0 && isPart2 && !isPlayer && setPresetShield && (difficulty >= 0x01 || g_config.IsShieldRechargeForStarshipsOnEasyDifficultyEnabled))
 			{
 				XwaCurrentCraft->PresetShield = 0x03;
 			}
