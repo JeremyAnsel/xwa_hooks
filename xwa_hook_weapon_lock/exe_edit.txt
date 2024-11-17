@@ -1,0 +1,58 @@
+
+// L0048FC00
+
+:0048FE0B - 0x08F20B
+8B0DC4337B00            mov ecx, dword ptr [007B33C4]
+
+E8108D1100              call 005A8B20, 005A8B20 - 0048FE10 = 00118D10
+90                      nop
+
+:0048FE41 - 0x08F241
+BB6CBA0300              mov ebx, 0003BA6C
+
+E8DA8C1100              call 005A8B20, 005A8B20 - 0048FE46 = 00118CDA
+
+:0048FE3A - 0x08F23A
+BB487C0200              mov ebx, 00027C48
+
+E8E18C1100              call 005A8B20, 005A8B20 - 0048FE3F = 00118CE1
+
+:0048FF5D - 0x08F35D
+25FFFF0000              and eax, 0000FFFF
+
+E8BE8B1100              call 005A8B20, 005A8B20 - 0048FF62 = 00118BBE
+
+:0046BE40 - 0x06B240
+81E6FFFF0000            and esi, 0000FFFF
+
+E8DBCC1300              call 005A8B20, 005A8B20 - 0046BE45 = 0013CCDB
+90                      nop
+
+:0043C9CC - 0x03BDCC
+81E1FFFF0000            and ecx, 0000FFFF
+
+E84FC11600              call 005A8B20, 005A8B20 - 0043C9D1 = 0016C14F
+90                      nop
+
+:00491CB6 - 0x0910B6
+B8BF3CB622              mov eax, 22B63CBF
+
+E8656E1100              call 005A8B20, 005A8B20 - 00491CBB = 00116E65
+
+:004A7AFA - 0x0A6EFA
+C7442428AD8D0100        mov [esp+28], 00018DAD
+
+E821101000              call 005A8B20, 005A8B20 - 004A7AFF = 00101021
+909090                  nop
+
+:004A7B30 - 0x0A6F30
+056CBA0300              add eax, 0003BA6C
+
+E8EB0F1000              call 005A8B20, 005A8B20 - 004A7B35 = 00100FEB
+
+:004A80E4 - 0x0A74E4
+2BF0                    sub esi, eax
+C1E603                  shl esi, 03
+
+E8370A1000              call 005A8B20, 005A8B20 - 004A80E9 = 00100A37
+

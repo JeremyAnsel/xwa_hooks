@@ -196,6 +196,10 @@ This hook permits to define weapon color for any craft.
 
 See http://www.xwaupgrade.com/phpBB3/viewtopic.php?p=156215#p156215
 
+## xwa_hook_weapon_lock
+
+This hook defines the weapon lock settings.
+
 ## xwa_hook_weapon_rate
 
 This hook permits to define weapon decharge and recharge rates for any craft.
