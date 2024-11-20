@@ -317,6 +317,7 @@ struct ModelShieldRate
 {
 	bool useGenerator;
 	int rechargeRate;
+	int playerRechargeRate;
 };
 
 ModelShieldRate GetShieldRechargeRate(int modelIndex)
@@ -371,6 +372,8 @@ ModelShieldRate GetShieldRechargeRate(int modelIndex)
 			rate.useGenerator = false;
 			rate.rechargeRate = GetFileKeyValueInt(lines, "RechargeRate");
 		}
+
+		rate.playerRechargeRate = GetFileKeyValueInt(lines, "PlayerRechargeRate");
 	}
 	else
 	{
@@ -678,7 +681,14 @@ int ShieldRechargeHook(int* params)
 
 	if (XwaObjects[objectIndex].PlayerIndex != -1)
 	{
-		rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
+		ModelShieldRate rate = g_modelIndexShield.GetRechargeRate(modelIndex);
+
+		rechargeRate = rate.playerRechargeRate;
+
+		if (rechargeRate == 0)
+		{
+			rechargeRate = g_modelIndexShield.GetTotalRechargeRate(modelIndex);
+		}
 
 		if (rechargeRate == 0)
 		{

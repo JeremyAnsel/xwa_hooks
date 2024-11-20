@@ -47,6 +47,7 @@ The format is:
 UseGenerator = 0 to use RechargeRate or 1 to use PerGeneratorRechargeRate
 PerGeneratorRechargeRate = per generator recharge value
 RechargeRate =  recharge value
+PlayerRechargeRate =  recharge value
 RechargeRateDelay =  delay value
 
 If the file does not exist, default values are used.

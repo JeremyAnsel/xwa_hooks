@@ -2,3 +2,5 @@
 UseGenerator = 0
 PerGeneratorRechargeRate = 0
 RechargeRate = 20
+PlayerRechargeRate = 20
+
