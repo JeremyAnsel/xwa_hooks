@@ -594,6 +594,25 @@ int GetWeaponDechargeRate(unsigned short modelIndex, int fgIndex)
 	return rate;
 }
 
+int GetWeaponDechargeRatePercent(unsigned short modelIndex, int fgIndex)
+{
+	auto lines = GetShipLines(modelIndex);
+
+	int percent = GetMissionWeaponRate(fgIndex, "DechargeRatePercent");
+
+	if (percent == -1)
+	{
+		percent = GetFileKeyValueInt(lines, "DechargeRatePercent", -1);
+	}
+
+	if (percent == -1)
+	{
+		percent = 100;
+	}
+
+	return percent;
+}
+
 int GetWeaponRechargeRate(unsigned short modelIndex, int fgIndex)
 {
 	auto lines = GetShipLines(modelIndex);
@@ -621,6 +640,25 @@ int GetWeaponRechargeRate(unsigned short modelIndex, int fgIndex)
 	}
 
 	return rate;
+}
+
+int GetWeaponRechargeRatePercent(unsigned short modelIndex, int fgIndex)
+{
+	auto lines = GetShipLines(modelIndex);
+
+	int percent = GetMissionWeaponRate(fgIndex, "RechargeRatePercent");
+
+	if (percent == -1)
+	{
+		percent = GetFileKeyValueInt(lines, "RechargeRatePercent", -1);
+	}
+
+	if (percent == -1)
+	{
+		percent = 100;
+	}
+
+	return percent;
 }
 
 int GetWeaponCooldownTime(int modelIndex)
@@ -1220,7 +1258,9 @@ WeaponStats GetWeaponStats(const XwaObject* sourceObject, const std::vector<std:
 		stats.DechargeRate = dechargeRate;
 	}
 
-	stats.DechargeRate = stats.DechargeRate * g_config.DechargeRatePercent / 100;
+	int dechargeRatePercentGlobal = g_config.DechargeRatePercent;
+	int dechargeRatePercentPerShip = GetWeaponDechargeRatePercent(sourceModelIndex, sourceFgIndex);
+	stats.DechargeRate = stats.DechargeRate * dechargeRatePercentPerShip / 100 * dechargeRatePercentGlobal / 100;
 
 	int rechargeRate = GetWeaponKeyValue(lines, "_RechargeRate", weaponKey, playerKey, difficultyKey);
 
@@ -1233,7 +1273,9 @@ WeaponStats GetWeaponStats(const XwaObject* sourceObject, const std::vector<std:
 		stats.RechargeRate = rechargeRate;
 	}
 
-	stats.RechargeRate = stats.RechargeRate * g_config.RechargeRatePercent / 100;
+	int rechargeRatePercentGlobal = g_config.RechargeRatePercent;
+	int rechargeRatePercentPerShip = GetWeaponRechargeRatePercent(sourceModelIndex, sourceFgIndex);
+	stats.RechargeRate = stats.RechargeRate * rechargeRatePercentPerShip / 100 * rechargeRatePercentGlobal / 100;
 
 	int energyLowHighSeparation = GetWeaponKeyValue(lines, "_EnergyLowHighSeparation", weaponKey, playerKey, difficultyKey);
 
@@ -1303,63 +1345,63 @@ std::string GetWeaponProfileName(int fgIndex)
 class ModelIndexWeapon
 {
 public:
-	int GetDechargeRate(int objectIndex)
-	{
-		this->Update();
+	//int GetDechargeRate(int objectIndex)
+	//{
+	//	this->Update();
 
-		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-		unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
-		int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+	//	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	//	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	//	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
 
-		auto it = this->_weaponDechargeRate.find(fgIndex);
+	//	auto it = this->_weaponDechargeRate.find(fgIndex);
 
-		if (it != this->_weaponDechargeRate.end())
-		{
-			return it->second;
-		}
-		else
-		{
-			//bool fpsLimit = *(unsigned char*)0x008C163F != 0;
-			int value = GetWeaponDechargeRate(modelIndex, fgIndex);
+	//	if (it != this->_weaponDechargeRate.end())
+	//	{
+	//		return it->second;
+	//	}
+	//	else
+	//	{
+	//		//bool fpsLimit = *(unsigned char*)0x008C163F != 0;
+	//		int value = GetWeaponDechargeRate(modelIndex, fgIndex);
 
-			//if (fpsLimit)
-			//{
-			//	//value *= 2;
-			//}
+	//		//if (fpsLimit)
+	//		//{
+	//		//	//value *= 2;
+	//		//}
 
-			this->_weaponDechargeRate.insert(std::make_pair(fgIndex, value));
-			return value;
-		}
-	}
+	//		this->_weaponDechargeRate.insert(std::make_pair(fgIndex, value));
+	//		return value;
+	//	}
+	//}
 
-	int GetRechargeRate(int objectIndex)
-	{
-		this->Update();
+	//int GetRechargeRate(int objectIndex)
+	//{
+	//	this->Update();
 
-		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
-		unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
-		int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
+	//	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	//	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	//	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
 
-		auto it = this->_weaponRechargeRate.find(fgIndex);
+	//	auto it = this->_weaponRechargeRate.find(fgIndex);
 
-		if (it != this->_weaponRechargeRate.end())
-		{
-			return it->second;
-		}
-		else
-		{
-			bool fpsLimit = *(unsigned char*)0x008C163F != 0;
-			int value = GetWeaponRechargeRate(modelIndex, fgIndex);
+	//	if (it != this->_weaponRechargeRate.end())
+	//	{
+	//		return it->second;
+	//	}
+	//	else
+	//	{
+	//		bool fpsLimit = *(unsigned char*)0x008C163F != 0;
+	//		int value = GetWeaponRechargeRate(modelIndex, fgIndex);
 
-			if (fpsLimit)
-			{
-				//value *= 2;
-			}
+	//		if (fpsLimit)
+	//		{
+	//			//value *= 2;
+	//		}
 
-			this->_weaponRechargeRate.insert(std::make_pair(fgIndex, value));
-			return value;
-		}
-	}
+	//		this->_weaponRechargeRate.insert(std::make_pair(fgIndex, value));
+	//		return value;
+	//	}
+	//}
 
 	int GetCooldownTime(int modelIndex)
 	{
@@ -1656,8 +1698,8 @@ private:
 			_mission = xwaMissionFileName;
 			_missionIndex = missionFileNameIndex;
 
-			this->_weaponDechargeRate.clear();
-			this->_weaponRechargeRate.clear();
+			//this->_weaponDechargeRate.clear();
+			//this->_weaponRechargeRate.clear();
 			this->_weaponCooldownTime.clear();
 			this->_modelEnergyTransferRate.clear();
 			this->_modelEnergyTransferRatePenalty.clear();
@@ -1673,8 +1715,8 @@ private:
 		}
 	}
 
-	std::map<int, int> _weaponDechargeRate;
-	std::map<int, int> _weaponRechargeRate;
+	//std::map<int, int> _weaponDechargeRate;
+	//std::map<int, int> _weaponRechargeRate;
 	std::map<int, int> _weaponCooldownTime;
 	std::map<int, int> _modelEnergyTransferRate;
 	std::map<int, int> _modelEnergyTransferRatePenalty;
@@ -3943,7 +3985,7 @@ int DrawEnergyBarHook(int* params)
 	int objectIndex = XwaPlayers[playerId].ObjectIndex;
 
 	XwaCraft* pCraft = (XwaCraft*)params[4];
-	int rackIndex = (params[7] - params[4] - 0x02E3) / 0x0E;
+	int rackIndex = (params[7] - params[4] - g_craftConfig.Craft_Offset_2DF) / 0x0E;
 
 	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)pCraft + g_craftConfig.Craft_Offset_2DF);
 

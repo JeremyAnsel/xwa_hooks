@@ -159,7 +159,9 @@ You can override the settings in "FlightModels\WeaponRate.txt" or in the "[Weapo
 
 The format is:
 DechargeRate = decharge value
+DechargeRatePercent = percent value
 RechargeRate = recharge value
+RechargeRatePercent = percent value
 CooldownTimeFactor = cooldown time value
 EnergyTransferRate = energy transfer value
 EnergyTransferRatePenalty = energy transfer penalty value
@@ -177,7 +179,9 @@ Suppose that the mission is "[MissionDir]\[Mission].tie".
 To define a DechargeRate and RechargeRate for a flightgroup, create a file named "[MissionDir]\[Mission]_WeaponRates.txt" or create a section named "[WeaponRates]" in "[MissionDir]\[Mission].ini".
 The format is
 DechargeRate_fg_# = decharge value
+DechargeRatePercent_fg_# = percent value
 RechargeRate_fg_# = recharge value
+RechargeRatePercent_fg_# = percent value
 EnergyTransferRate_fg_# = energy transfer value
 EnergyTransferRatePenalty_fg_# = energy transfer penalty value
 EnergyTransferWeaponLimit_fg_# = energy transfer limit for weapons
