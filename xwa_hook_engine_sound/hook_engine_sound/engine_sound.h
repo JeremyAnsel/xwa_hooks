@@ -14,6 +14,7 @@ int CanopyOpeningSoundHook(int* params);
 int HangarShuttleSoundsHook(int* params);
 
 int WeaponSoundHook(int* params);
+int WeaponExplosionsSoundHook(int* params);
 
 int HyperStartSoundHook(int* params);
 int HyperZoomSoundHook(int* params);

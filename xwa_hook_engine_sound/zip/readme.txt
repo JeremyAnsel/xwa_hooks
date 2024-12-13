@@ -91,6 +91,18 @@ RebelLaser.wav
 RebelLaserStarship.wav
 RebelLaserTurbo.wav
 
+To setup Sfx_WeaponExplosion, copy the following files to WAVE\Sfx_WeaponExplosion\
+From WAVE\FE_HIGH_RES\
+Copy files:
+ExplosionSml1.wav
+ExplosionSml2.wav
+ExplosionSml3.wav
+ExplosionSml4.wav
+ExplosionSml5.wav
+ExplosionSml6.wav
+ExplosionSml7.wav
+ExplosionSml8.wav
+
 To setup Sfx_HyperStart, copy the following files to WAVE\Sfx_HyperStart\
 From WAVE\FE_HIGH_RES\
 Copy files:
@@ -142,6 +154,9 @@ At offset 05EFEE, replace E89DC3FDFF with E82D8F1400.
 
 # To call the hook that defines weapon sounds
 At offset 03B5DE, replace 8DB8E8FEFFFF83FF190F870801000033D28A972CC34300FF2495FCC24300 with 8B56230FBF929500000050525551E83FC9160083C4105F5E5DC390909090.
+
+# To call the hook that defines weapon explosions sounds
+At offset 03B0B0, replace A1D4D06300 with E86BCE1600.
 
 # To call the hook that defines hyper sounds
 At offset 00326A, replace E821810300 with E8B14C1A00.
@@ -383,6 +398,8 @@ WeaponSoundRangeStart_XXX = sound range start
 WeaponSoundRangeCount_XXX = sound range count
 XXX is the weapon index starting from 280. For example: WeaponSoundRangeStart_280 and WeaponSoundRangeCount_280.
 Random weapon sounds are defined in "Wave\Sfx_WeaponRange.lst"
+
+For weapon explosion sounds, sounds defined in "Wave\Sfx_WeaponExplosion.lst" are used if the lst file exists. The sounds are indexed by the crafts model index. There are 8 sounds for each craft.
 
 
 When a region in included in the "Region" setting of the "[Interdiction]" section in the mission ini file, the sound "HyperAbort.wav" will be played instead of "HyperEnd.wav" on hyper out the region.

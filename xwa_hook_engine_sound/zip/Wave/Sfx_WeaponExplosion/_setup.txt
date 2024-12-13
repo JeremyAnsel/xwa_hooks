@@ -1,0 +1,15 @@
+
+To setup Sfx_WeaponExplosion, copy the following files to WAVE\Sfx_WeaponExplosion\
+
+From WAVE\FE_HIGH_RES\
+
+Copy files:
+ExplosionSml1.wav
+ExplosionSml2.wav
+ExplosionSml3.wav
+ExplosionSml4.wav
+ExplosionSml5.wav
+ExplosionSml6.wav
+ExplosionSml7.wav
+ExplosionSml8.wav
+

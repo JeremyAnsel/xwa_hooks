@@ -209,6 +209,14 @@ C3                      ret
 90909090                nop
 
 
+// Weapon explosions sounds
+// L0043BCB0
+:0043BCB0 - 0x03B0B0
+A1D4D06300              mov eax, dword ptr [0063D0D4]
+
+E86BCE1600              call 005A8B20, 005A8B20 - 0043BCB5 = 0016CE6B
+
+
 // Hyper sounds
 L004034D0
 

@@ -125,6 +125,8 @@ public:
 		this->SfxWeaponCount = GetFileKeyValueInt(lines, "sfx_weapon_count");
 		this->SfxWeaponRangeIndex = GetFileKeyValueInt(lines, "sfx_weaponrange_index");
 		this->SfxWeaponRangeCount = GetFileKeyValueInt(lines, "sfx_weaponrange_count");
+		this->SfxWeaponExplosionIndex = GetFileKeyValueInt(lines, "sfx_weaponexplosion_index");
+		this->SfxWeaponExplosionCount = GetFileKeyValueInt(lines, "sfx_weaponexplosion_count");
 		this->SfxHyperStartIndex = GetFileKeyValueInt(lines, "sfx_hyperstart_index");
 		this->SfxHyperStartCount = GetFileKeyValueInt(lines, "sfx_hyperstart_count");
 		this->SfxHyperZoomIndex = GetFileKeyValueInt(lines, "sfx_hyperzoom_index");
@@ -163,6 +165,8 @@ public:
 	int SfxWeaponCount;
 	int SfxWeaponRangeIndex;
 	int SfxWeaponRangeCount;
+	int SfxWeaponExplosionIndex;
+	int SfxWeaponExplosionCount;
 	int SfxHyperStartIndex;
 	int SfxHyperStartCount;
 	int SfxHyperZoomIndex;
@@ -257,7 +261,9 @@ struct XwaMobileObject
 	short TransformMatrixUpX;
 	short TransformMatrixUpY;
 	short TransformMatrixUpZ;
-	char Unk00D9[12];
+	int pWarhead;
+	int pCraft;
+	int pChar;
 };
 
 static_assert(sizeof(XwaMobileObject) == 229, "size of XwaMobileObject must be 229");
@@ -2107,6 +2113,73 @@ int WeaponSoundHook(int* params)
 	}
 	}
 
+	return 0;
+}
+
+int WeaponExplosionsSoundHook(int* params)
+{
+	params[Params_EAX] = *(int*)0x0063D0D4;
+	const int objectIndex = params[1];
+
+	const auto XwaRand = (unsigned short(*)())0x00494E40;
+
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+
+	if (objectIndex == 0xFFFF)
+	{
+		return 0;
+	}
+
+	const XwaObject* object = &XwaObjects[objectIndex];
+	unsigned short modelIndex = 0;
+
+	if (object->pMobileObject)
+	{
+		modelIndex = object->pMobileObject->ModelIndex;
+	}
+
+	if (modelIndex == 0)
+	{
+		return 0;
+	}
+
+	const auto& soundConfig = GetSoundsConfig();
+	int soundIndex = -1;
+
+	if (soundConfig.SoundsCountHookExists && soundConfig.SfxWeaponExplosionCount)
+	{
+		if (modelIndex < soundConfig.SfxWeaponExplosionCount / 8)
+		{
+			soundIndex = soundConfig.SfxWeaponExplosionIndex + modelIndex * 8;
+		}
+	}
+
+	if (soundIndex == -1)
+	{
+		return 0;
+	}
+
+	static int soundsCounter[256]{};
+	static unsigned char soundsUsed[256 * 8]{};
+
+	if (soundsCounter[modelIndex] <= 0)
+	{
+		soundsCounter[modelIndex] = 4;
+		memset(soundsUsed + modelIndex * 8, 0, 8);
+	}
+
+	short randomSoundIndex = 0;
+	do
+	{
+		randomSoundIndex = XwaRand() & 0x07;
+	} while (soundsUsed[modelIndex * 8 + randomSoundIndex] != 0);
+
+	soundsUsed[modelIndex * 8 + randomSoundIndex] = 1;
+	soundsCounter[modelIndex]--;
+	soundIndex += randomSoundIndex;
+
+	params[Params_EAX] = soundIndex;
+	params[Params_ReturnAddress] = 0x0043BD13;
 	return 0;
 }
 
