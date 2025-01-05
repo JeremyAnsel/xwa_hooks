@@ -441,6 +441,23 @@ A00A548000              mov al, byte ptr [0080540A]
 
 E8478F1900              call 005A8B20, 005A8B20 - 0040FBD9 = 00198F47
 
+// L004D5AE0
+; weapons proximity check
+
+:004D700C - 0x0D640C
+66837C380200            cmp word ptr [eax+edi+02], 0000
+7457                    je 004D706B
+
+E80F1B0D00              call 005A8B20, 005A8B20 - 004D7011 = 000D1B0F
+909090                  nop
+
+:004D712E - 0x0D652E
+66837C160200            cmp word ptr [esi+edx+02], 0000
+0F84DA000000            je 004D7214
+
+E8ED190D00              call 005A8B20, 005A8B20 - 004D7133 = 000D19ED
+90909090909090          nop
+
 ===============================================================================
 
 ; L00578A60 - Order of Battle

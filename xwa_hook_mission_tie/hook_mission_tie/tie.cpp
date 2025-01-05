@@ -207,6 +207,12 @@ public:
 		return this->_targetCraftKeySelectOnlyNotInspected;
 	}
 
+	bool IsSkipProjectilesProximityCheckEnabled()
+	{
+		this->UpdateIfChanged();
+		return this->_isSkipProjectilesProximityCheckEnabled;
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -256,6 +262,8 @@ private:
 
 			int targetCraftKeySelectOnlyNotInspected = GetFileKeyValueInt(lines, "TargetCraftKeySelectOnlyNotInspected", -1);
 			this->_targetCraftKeySelectOnlyNotInspected = targetCraftKeySelectOnlyNotInspected == -1 ? g_config.TargetCraftKeySelectOnlyNotInspected : targetCraftKeySelectOnlyNotInspected != 0;
+
+			this->_isSkipProjectilesProximityCheckEnabled = GetFileKeyValueInt(lines, "SkipProjectilesProximityCheck", 0) != 0;
 		}
 	}
 
@@ -338,6 +346,7 @@ private:
 	std::set<int> _targetCraftKeyFgIndices;
 	int _targetCraftKeyMethod;
 	bool _targetCraftKeySelectOnlyNotInspected;
+	bool _isSkipProjectilesProximityCheckEnabled;
 };
 
 MissionConfig g_missionConfig;
@@ -2339,6 +2348,58 @@ int ShootThroughtShieldOnHardDifficultyHook(int* params)
 	else
 	{
 		params[Params_ReturnAddress] = shield == 0 ? 0x0040FBDF : 0x0040FC73;
+	}
+
+	return 0;
+}
+
+int TriggerProximityCheck1Hook(int* params)
+{
+	XwaObject* object = (XwaObject*)(params[Params_EAX] + params[Params_EDI]);
+	bool ret = false;
+
+	if (object->ModelIndex == 0)
+	{
+		ret = true;
+	}
+
+	if (!ret && g_missionConfig.IsSkipProjectilesProximityCheckEnabled())
+	{
+		if (object->pMobileObject == nullptr || object->pMobileObject->pCraft == nullptr)
+		{
+			ret = true;
+		}
+	}
+
+	if (ret)
+	{
+		params[Params_ReturnAddress] = 0x004D706B;
+	}
+
+	return 0;
+}
+
+int TriggerProximityCheck2Hook(int* params)
+{
+	XwaObject* object = (XwaObject*)(params[Params_ESI] + params[Params_EDX]);
+	bool ret = false;
+
+	if (object->ModelIndex == 0)
+	{
+		ret = true;
+	}
+
+	if (!ret && g_missionConfig.IsSkipProjectilesProximityCheckEnabled())
+	{
+		if (object->pMobileObject == nullptr || object->pMobileObject->pCraft == nullptr)
+		{
+			ret = true;
+		}
+	}
+
+	if (ret)
+	{
+		params[Params_ReturnAddress] = 0x004D7214;
 	}
 
 	return 0;

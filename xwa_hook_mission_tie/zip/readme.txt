@@ -82,6 +82,8 @@ At offset 090356, replace 0F8558020000 with E8C57B110090.
 At offset 065405, replace E8E6470000 with E8162B1400.
 At offset 00E818, replace 0F8C1B010000 with E80397190090.
 At offset 00EFD4, replace A00A548000 with E8478F1900.
+At offset 0D640C, replace 66837C3802007457 with E80F1B0D00909090.
+At offset 0D652E, replace 66837C1602000F84DA000000 with E8ED190D0090909090909090.
 
 # To call the hook that override order of battle strings
 At offset 178064, replace E8171A0200 with E8B7FE0200.
@@ -130,6 +132,8 @@ To define if the ships can shoot throught the shield on hard difficulty, set "Ca
 To define which crafts are targetable with the O key, set "KEY_O_TargetCraftFGs = values". Values are comma separated fg indices. If the KEY_O_TargetCraftFGs setting is empty then default behavior is used.
 To switch between nearest target and cycle targets, set the TargetCraftKeyMethod setting. This setting is in the global settings file and in the per-mission config file. When the per-mission value is -1 the global value is used.
 To define how filter the target crafts, set the TargetCraftKeySelectOnlyNotInspected setting. This setting is in the global settings file and in the per-mission config file. When the per-mission value is -1 the global value is used.
+
+To skip checking projectiles proximity, set "SkipProjectilesProximityCheck = 1". The default value is 0.
 
 See "mission.txt".
 

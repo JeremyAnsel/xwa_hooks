@@ -49,6 +49,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x46600A, MissionDrawLaserCharge3DHook },
 	{ 0x40F41D, WarheadCollisionDamagesHook },
 	{ 0x40FBD9, ShootThroughtShieldOnHardDifficultyHook },
+	{ 0x4D7011, TriggerProximityCheck1Hook },
+	{ 0x4D7133, TriggerProximityCheck2Hook },
 	{ 0x578C69, OrderOfBattleHook },
 	{ 0x578D5E, OrderOfBattleHook },
 	{ 0x4165A3, LoadMissionRanksModifierHook },
@@ -149,6 +151,8 @@ static const HookPatchItem g_missionIdsCheckPatch[] =
 	{ 0x065405, "E8E6470000", "E8162B1400" },
 	{ 0x00E818, "0F8C1B010000", "E80397190090" },
 	{ 0x00EFD4, "A00A548000", "E8478F1900" },
+	{ 0x0D640C, "66837C3802007457", "E80F1B0D00909090" },
+	{ 0x0D652E, "66837C1602000F84DA000000", "E8ED190D0090909090909090" },
 };
 
 static const HookPatchItem g_orderOfBattlePatch[] =

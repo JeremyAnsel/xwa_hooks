@@ -22,4 +22,5 @@ CanShootThroughtShieldOnHardDifficulty = 0
 KEY_O_TargetCraftFGs = 
 TargetCraftKeyMethod = -1
 TargetCraftKeySelectOnlyNotInspected = -1
+SkipProjectilesProximityCheck = 0
 
