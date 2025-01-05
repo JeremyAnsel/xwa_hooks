@@ -27,3 +27,5 @@ int MapExitSoundHook(int* params);
 int TurretSwitchSoundHook(int* params);
 
 int LoadSoundsHook(int* params);
+
+int AppendRadioMessageHook(int* params);

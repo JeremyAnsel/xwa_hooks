@@ -35,6 +35,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x42022F, TurretSwitchSoundHook },
 
 	{ 0x539195, LoadSoundsHook },
+
+	{ 0x497F6D, AppendRadioMessageHook },
 };
 
 static const HookPatchItem g_replaceMissionSoundsPatch[] =
@@ -99,6 +101,11 @@ static const HookPatchItem g_loadSoundsPatch[] =
 	{ 0x138590, "8B4424085356", "E89BF90600C3" },
 };
 
+static const HookPatchItem g_playRadioMessagePatch[] =
+{
+	{ 0x097368, "8B0C9500649B00", "E8B30B11009090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that replaces mission sounds", g_replaceMissionSoundsPatch),
@@ -108,4 +115,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that defines hyper sounds", g_hyperSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines custom sounds", g_customSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that loads sounds", g_loadSoundsPatch),
+	MAKE_HOOK_PATCH("To call the hook that plays radio messages", g_playRadioMessagePatch),
 };

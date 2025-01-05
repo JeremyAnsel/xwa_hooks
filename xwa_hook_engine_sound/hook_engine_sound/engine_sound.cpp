@@ -2912,3 +2912,162 @@ int LoadSoundsHook(int* params)
 
 	return 0;
 }
+
+int AppendRadioMessageHook(int* params)
+{
+	int edx = params[Params_EDX];
+	const char* ecx = ((const char**)0x009B6400)[edx];
+	params[Params_ECX] = (int)ecx;
+
+	const auto L004982C0 = (void(*)(short, unsigned char))0x004982C0;
+
+	const int A4 = *(int*)((int)params + 0x70);
+	const char* esp26 = (const char*)((int)params + 0x26);
+
+	while (*ecx == '{' || *ecx == '}')
+	{
+		ecx++;
+	}
+
+	unsigned char esp21 = *ecx;
+
+	if (esp21 >= 0x09)
+	{
+		esp21 = 0x06;
+	}
+
+	*(unsigned char*)((int)params + 0x21) = esp21;
+
+	bool ret = false;
+	unsigned char& s_V0x080AD28 = *(unsigned char*)0x080AD28;
+	int& s_V0x07CA34C = *(int*)0x07CA34C;
+	short& s_V0x0808124 = *(short*)0x0808124;
+	const int MSG_SYSTEMSGS_DISABLED = 494;
+
+	if (esp21 == 0x03 || esp21 == 0x04 || esp21 == 0x07)
+	{
+		if (s_V0x07CA34C != 0 || A4 == MSG_SYSTEMSGS_DISABLED)
+		{
+			if (*(unsigned short*)(0x009B6340 + 0x00) == 0xffff || *(unsigned char*)(0x009B6340 + 0x09) != 0x04 || esp21 == 0x07)
+			{
+				memcpy((char*)0x009B6340, (char*)((int)params + 0x18), 0x54);
+				L004982C0(esp21, 0);
+				s_V0x0808124 = 0;
+			}
+		}
+
+		ret = true;
+	}
+	else if (esp21 == 0x08)
+	{
+		memcpy((char*)0x009B63A0, (char*)((int)params + 0x18), 0x54);
+		L004982C0(0x08, 0);
+		s_V0x0808124 = 0;
+		ret = true;
+	}
+	else if (*(unsigned short*)(0x007C9DC0 + 0x00) == 0xffff)
+	{
+		memcpy((char*)0x007C9DC0, (char*)((int)params + 0x18), 0x54);
+		L004982C0(esp21, 0x01);
+		s_V0x0808124 = 0;
+		ret = true;
+	}
+	else
+	{
+		switch (*(unsigned char*)(0x007C9DC0 + 0x09))
+		{
+		case 1:
+		case 2:
+		case 5:
+			//if (esp21 == 0x02 || esp21 == 0x01)
+			//{
+			//	memcpy((char*)0x007C9DC0 + (s_V0x080AD28 + 1) * 0x54, (char*)((int)params + 0x18), 0x54);
+
+			//	s_V0x080AD28 += 1;
+
+			//	if (s_V0x080AD28 >= 0x0A)
+			//	{
+			//		s_V0x080AD28 -= 1;
+			//	}
+			//}
+			//else
+			{
+				if (*(unsigned char*)(0x007C9DC0 + 0x0D) < 0x02 && *(unsigned char*)(0x007C9DC0 + 0x0C) == 0)
+				{
+					for (int edx = s_V0x080AD28 + 1; edx > 0; edx--)
+					{
+						memcpy((char*)0x007C9DC0 + edx * 0x54, (char*)0x007C9DC0 + (edx - 1) * 0x54, 0x54);
+					}
+
+					s_V0x080AD28 += 1;
+
+					if (s_V0x080AD28 >= 0x0A)
+					{
+						s_V0x080AD28 -= 1;
+					}
+				}
+
+				memcpy((char*)0x007C9DC0, (char*)((int)params + 0x18), 0x54);
+				L004982C0(esp21, 0x01);
+			}
+
+			break;
+
+		case 3:
+		case 6:
+		case 7:
+		case 8:
+			memcpy((char*)0x007C9DC0, (char*)((int)params + 0x18), 0x54);
+			L004982C0(esp21, 0x01);
+			break;
+
+		case 4:
+			if (esp21 == 0x02 || esp21 == 0x01)
+			{
+				memcpy((char*)0x007C9DC0 + (s_V0x080AD28 + 1) * 0x54, (char*)((int)params + 0x18), 0x54);
+
+				s_V0x080AD28 += 1;
+
+				if (s_V0x080AD28 >= 0x0A)
+				{
+					s_V0x080AD28 -= 1;
+				}
+			}
+			else
+			{
+				memcpy((char*)0x007C9DC0, (char*)((int)params + 0x18), 0x54);
+				L004982C0(esp21, 0x01);
+			}
+
+			break;
+
+		default:
+			break;
+		}
+
+		s_V0x0808124 = 0;
+		ret = true;
+	};
+
+	if (!ret)
+	{
+		s_V0x0808124 = 0;
+	}
+
+	if (ret)
+	{
+		//params[Params_ReturnAddress] = 0x00498076;
+		
+		params[Params_ReturnAddress] = 0x00497F87;
+		*(unsigned char*)(0x00498036 + 0x00) = 0xEB;
+		*(unsigned char*)(0x00498036 + 0x01) = 0x00498076 - (0x00498036 + 0x02);
+	}
+	else
+	{
+		*(unsigned char*)(0x00498036 + 0x00) = 0x66;
+		*(unsigned char*)(0x00498036 + 0x01) = 0x83;
+	}
+
+	params[Params_EAX] = esp21;
+	return 0;
+}
