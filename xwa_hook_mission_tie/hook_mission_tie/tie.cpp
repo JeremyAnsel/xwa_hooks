@@ -401,7 +401,7 @@ struct ExeCraftEntry
 	unsigned int ShieldStrength;
 	char unk013[2];
 	unsigned int HullStrength;
-	unsigned int ExplosionStrength;
+	unsigned int CriticalDamageThreshold;
 	unsigned short SystemStrength;
 	char unk01F[1];
 	short Speed;
@@ -431,7 +431,7 @@ struct XwaCraft
 	char Unk00D4[5];
 	short Yaw;
 	char Unk00DB[33];
-	unsigned int ExplosionStrength;
+	unsigned int CriticalDamageThreshold;
 	unsigned int HullStrength;
 	unsigned short SystemStrength;
 	char Unk0106[121];
@@ -576,7 +576,7 @@ struct CraftStats
 	int Pitch;
 	int Roll;
 	int Yaw;
-	int ExplosionStrength;
+	int CriticalDamageThreshold;
 	int HullStrength;
 	int SystemStrength;
 	int ShieldStrength;
@@ -595,7 +595,7 @@ struct CraftStatsModifiers
 	float Pitch;
 	float Roll;
 	float Yaw;
-	float ExplosionStrength;
+	float CriticalDamageThreshold;
 	float HullStrength;
 	float SystemStrength;
 	float ShieldStrength;
@@ -609,7 +609,7 @@ struct CraftStatsPercent
 	int PitchPercent;
 	int RollPercent;
 	int YawPercent;
-	int ExplosionStrengthPercent;
+	int CriticalDamageThresholdPercent;
 	int HullStrengthPercent;
 	int SystemStrengthPercent;
 	int ShieldStrengthPercent;
@@ -764,7 +764,7 @@ CraftStatsModifiers GetModelObjectProfileStatsModifiers(const XwaObject* current
 	modifiers.Pitch = GetFileKeyValueFloat(lines, "Pitch", 1.0f);
 	modifiers.Roll = GetFileKeyValueFloat(lines, "Roll", 1.0f);
 	modifiers.Yaw = GetFileKeyValueFloat(lines, "Yaw", 1.0f);
-	modifiers.ExplosionStrength = GetFileKeyValueFloat(lines, "ExplosionStrength", 1.0f);
+	modifiers.CriticalDamageThreshold = GetFileKeyValueFloat(lines, "CriticalDamageThreshold", GetFileKeyValueFloat(lines, "ExplosionStrength", 1.0f));
 	modifiers.HullStrength = GetFileKeyValueFloat(lines, "HullStrength", 1.0f);
 	modifiers.SystemStrength = GetFileKeyValueFloat(lines, "SystemStrength", 1.0f);
 	modifiers.ShieldStrength = GetFileKeyValueFloat(lines, "ShieldStrength", 1.0f);
@@ -897,7 +897,7 @@ CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 	stats.Pitch = GetFileKeyValueInt(lines, "Pitch", -1);
 	stats.Roll = GetFileKeyValueInt(lines, "Roll", -1);
 	stats.Yaw = GetFileKeyValueInt(lines, "Yaw", -1);
-	stats.ExplosionStrength = GetFileKeyValueInt(lines, "ExplosionStrength", -1);
+	stats.CriticalDamageThreshold = GetFileKeyValueInt(lines, "CriticalDamageThreshold", GetFileKeyValueInt(lines, "ExplosionStrength", -1));
 	stats.HullStrength = GetFileKeyValueInt(lines, "HullStrength", -1);
 	stats.SystemStrength = GetFileKeyValueInt(lines, "SystemStrength", -1);
 	stats.ShieldStrength = GetFileKeyValueInt(lines, "ShieldStrength", -1);
@@ -935,9 +935,9 @@ CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 		stats.Yaw = stats.Yaw * 256;
 	}
 
-	if (stats.ExplosionStrength != -1)
+	if (stats.CriticalDamageThreshold != -1)
 	{
-		stats.ExplosionStrength = stats.ExplosionStrength * 105;
+		stats.CriticalDamageThreshold = stats.CriticalDamageThreshold * 105;
 	}
 
 	if (stats.HullStrength != -1)
@@ -952,9 +952,9 @@ CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 
 	if (shipCategory == ShipCategory_Starship || shipCategory == ShipCategory_Platform)
 	{
-		if (stats.ExplosionStrength != -1)
+		if (stats.CriticalDamageThreshold != -1)
 		{
-			stats.ExplosionStrength = stats.ExplosionStrength / 16;
+			stats.CriticalDamageThreshold = stats.CriticalDamageThreshold / 16;
 		}
 
 		if (stats.HullStrength != -1)
@@ -969,9 +969,9 @@ CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 	}
 	else if (shipCategory == ShipCategory_Freighter || shipCategory == ShipCategory_Container)
 	{
-		if (stats.ExplosionStrength != -1)
+		if (stats.CriticalDamageThreshold != -1)
 		{
-			stats.ExplosionStrength = stats.ExplosionStrength / 4;
+			stats.CriticalDamageThreshold = stats.CriticalDamageThreshold / 4;
 		}
 
 		if (stats.HullStrength != -1)
@@ -1027,9 +1027,9 @@ CraftStats GetModelObjectProfileStats(const XwaObject* currentObject)
 		stats.Yaw = (int)(stats.Yaw * modifiers.Yaw);
 	}
 
-	if (stats.ExplosionStrength != -1)
+	if (stats.CriticalDamageThreshold != -1)
 	{
-		stats.ExplosionStrength = (int)(stats.ExplosionStrength * modifiers.ExplosionStrength);
+		stats.CriticalDamageThreshold = (int)(stats.CriticalDamageThreshold * modifiers.CriticalDamageThreshold);
 	}
 
 	if (stats.HullStrength != -1)
@@ -1062,7 +1062,7 @@ CraftStatsPercent GetObjectPlayerStatsPercent()
 	stats.PitchPercent = GetFileKeyValueInt(statsLines, "PlayerPitchPercent", -1);
 	stats.RollPercent = GetFileKeyValueInt(statsLines, "PlayerRollPercent", -1);
 	stats.YawPercent = GetFileKeyValueInt(statsLines, "PlayerYawPercent", -1);
-	stats.ExplosionStrengthPercent = GetFileKeyValueInt(statsLines, "PlayerExplosionStrengthPercent", -1);
+	stats.CriticalDamageThresholdPercent = GetFileKeyValueInt(statsLines, "PlayerCriticalDamageThresholdPercent", GetFileKeyValueInt(statsLines, "PlayerExplosionStrengthPercent", -1));
 	stats.HullStrengthPercent = GetFileKeyValueInt(statsLines, "PlayerHullStrengthPercent", -1);
 	stats.SystemStrengthPercent = GetFileKeyValueInt(statsLines, "PlayerSystemStrengthPercent", -1);
 	stats.ShieldStrengthPercent = GetFileKeyValueInt(statsLines, "PlayerShieldStrengthPercent", -1);
@@ -1082,7 +1082,7 @@ CraftStatsPercent GetObjectStatsPercent()
 	stats.PitchPercent = GetFileKeyValueInt(statsLines, "PitchPercent", -1);
 	stats.RollPercent = GetFileKeyValueInt(statsLines, "RollPercent", -1);
 	stats.YawPercent = GetFileKeyValueInt(statsLines, "YawPercent", -1);
-	stats.ExplosionStrengthPercent = GetFileKeyValueInt(statsLines, "ExplosionStrengthPercent", -1);
+	stats.CriticalDamageThresholdPercent = GetFileKeyValueInt(statsLines, "CriticalDamageThresholdPercent", GetFileKeyValueInt(statsLines, "ExplosionStrengthPercent", -1));
 	stats.HullStrengthPercent = GetFileKeyValueInt(statsLines, "HullStrengthPercent", -1);
 	stats.SystemStrengthPercent = GetFileKeyValueInt(statsLines, "SystemStrengthPercent", -1);
 	stats.ShieldStrengthPercent = GetFileKeyValueInt(statsLines, "ShieldStrengthPercent", -1);
@@ -1235,18 +1235,18 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 		currentCraft->Yaw = currentCraft->Yaw * statsPercent.YawPercent / 100;
 	}
 
-	if (values.ExplosionStrength != -1)
+	if (values.CriticalDamageThreshold != -1)
 	{
-		currentCraft->ExplosionStrength = values.ExplosionStrength;
+		currentCraft->CriticalDamageThreshold = values.CriticalDamageThreshold;
 	}
 
-	if (currentObject->PlayerIndex != -1 && valuesPercent.ExplosionStrengthPercent != -1)
+	if (currentObject->PlayerIndex != -1 && valuesPercent.CriticalDamageThresholdPercent != -1)
 	{
-		currentCraft->ExplosionStrength = currentCraft->ExplosionStrength * valuesPercent.ExplosionStrengthPercent / 100;
+		currentCraft->CriticalDamageThreshold = currentCraft->CriticalDamageThreshold * valuesPercent.CriticalDamageThresholdPercent / 100;
 	}
-	else if (statsPercent.ExplosionStrengthPercent != -1)
+	else if (statsPercent.CriticalDamageThresholdPercent != -1)
 	{
-		currentCraft->ExplosionStrength = currentCraft->ExplosionStrength * statsPercent.ExplosionStrengthPercent / 100;
+		currentCraft->CriticalDamageThreshold = currentCraft->CriticalDamageThreshold * statsPercent.CriticalDamageThresholdPercent / 100;
 	}
 
 	if (values.HullStrength != -1)

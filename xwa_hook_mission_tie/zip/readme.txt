@@ -154,7 +154,7 @@ SpeedDecrement = integer
 Pitch = integer
 Roll = integer
 Yaw = integer
-ExplosionStrength = integer
+CriticalDamageThreshold = integer
 HullStrength = integer
 SystemStrength = integer
 ShieldStrength = integer
@@ -175,7 +175,7 @@ PlayerDecelerationPercent = integer
 PlayerPitchPercent = integer
 PlayerRollPercent = integer
 PlayerYawPercent = integer
-PlayerExplosionStrengthPercent = integer
+PlayerCriticalDamageThresholdPercent = integer
 PlayerHullStrengthPercent = integer
 PlayerSystemStrengthPercent = integer
 PlayerShieldStrengthPercent = integer
@@ -185,7 +185,7 @@ DecelerationPercent = integer
 PitchPercent = integer
 RollPercent = integer
 YawPercent = integer
-ExplosionStrengthPercent = integer
+CriticalDamageThresholdPercent = integer
 HullStrengthPercent = integer
 SystemStrengthPercent = integer
 ShieldStrengthPercent = integer
@@ -205,7 +205,7 @@ stats.Deceleration = (int)(stats.Deceleration * 2.25f + 0.5f);
 stats.Pitch = stats.Pitch * 256;
 stats.Roll = stats.Roll * 256;
 stats.Yaw = stats.Yaw * 256;
-stats.ExplosionStrength = stats.ExplosionStrength * 105;
+stats.CriticalDamageThreshold = stats.CriticalDamageThreshold * 105;
 stats.HullStrength = stats.HullStrength * 105;
 stats.ShieldStrength = stats.ShieldStrength * 50;
 
@@ -213,14 +213,14 @@ if( ShipCategory == ShipCategory_Starship || ShipCategory == ShipCategory_Platfo
 {
     HullStrength /= 16;
     ShieldStrength /= 16;
-    ExplosionStrength /= 16
+    CriticalDamageThreshold /= 16
 }
 
 if( ShipCategory == ShipCategory_Freighter || ShipCategory == ShipCategory_Container )
 {
     HullStrength /= 4;
     ShieldStrength /= 4;
-    ExplosionStrength /= 4
+    CriticalDamageThreshold /= 4
 }
 
 # Stats modifiers
@@ -248,10 +248,12 @@ You can modify these settings:
 - Pitch
 - Roll
 - Yaw
-- ExplosionStrength
+- CriticalDamageThreshold
 - HullStrength
 - SystemStrength
 - ShieldStrength
+
+The ExplosionStrength setting was renamed to CriticalDamageThreshold.
 
 The default value for each setting is 1.0.
 
