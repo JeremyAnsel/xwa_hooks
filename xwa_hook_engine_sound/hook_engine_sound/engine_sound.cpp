@@ -2979,18 +2979,25 @@ int AppendRadioMessageHook(int* params)
 		case 1:
 		case 2:
 		case 5:
-			//if (esp21 == 0x02 || esp21 == 0x01)
-			//{
-			//	memcpy((char*)0x007C9DC0 + (s_V0x080AD28 + 1) * 0x54, (char*)((int)params + 0x18), 0x54);
+			if (esp21 == 0x02 || esp21 == 0x01)
+			{
+				char buffer[0x54]{};
+				memcpy(buffer, (char*)0x007C9DC0, 0x54);
+				memcpy((char*)0x007C9DC0, (char*)((int)params + 0x18), 0x54);
+				L004982C0(esp21, 0x01);
+				memcpy((char*)0x007C9DC0, buffer, 0x54);
+				*(short*)((int)params + 0x18 + 0x02) = 0;
 
-			//	s_V0x080AD28 += 1;
+				memcpy((char*)0x007C9DC0 + (s_V0x080AD28 + 1) * 0x54, (char*)((int)params + 0x18), 0x54);
 
-			//	if (s_V0x080AD28 >= 0x0A)
-			//	{
-			//		s_V0x080AD28 -= 1;
-			//	}
-			//}
-			//else
+				s_V0x080AD28 += 1;
+
+				if (s_V0x080AD28 >= 0x0A)
+				{
+					s_V0x080AD28 -= 1;
+				}
+			}
+			else
 			{
 				if (*(unsigned char*)(0x007C9DC0 + 0x0D) < 0x02 && *(unsigned char*)(0x007C9DC0 + 0x0C) == 0)
 				{
@@ -3024,6 +3031,13 @@ int AppendRadioMessageHook(int* params)
 		case 4:
 			if (esp21 == 0x02 || esp21 == 0x01)
 			{
+				char buffer[0x54]{};
+				memcpy(buffer, (char*)0x007C9DC0, 0x54);
+				memcpy((char*)0x007C9DC0, (char*)((int)params + 0x18), 0x54);
+				L004982C0(esp21, 0x01);
+				memcpy((char*)0x007C9DC0, buffer, 0x54);
+				*(short*)((int)params + 0x18 + 0x02) = 0;
+
 				memcpy((char*)0x007C9DC0 + (s_V0x080AD28 + 1) * 0x54, (char*)((int)params + 0x18), 0x54);
 
 				s_V0x080AD28 += 1;
