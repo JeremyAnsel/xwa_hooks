@@ -2,7 +2,9 @@
 #include "hangar.h"
 #include "config.h"
 #include <fstream>
+#include <filesystem>
 #include <map>
+#include <array>
 #include <utility>
 #include <algorithm>
 
@@ -23,6 +25,23 @@ std::string GetFileNameWithoutExtension(const std::string& str)
 	auto a = str.find_last_of('\\');
 
 	return a == -1 ? str : str.substr(a + 1, -1);
+}
+
+std::string GetFirstPart(const std::string& str, char ch)
+{
+	auto a = str.find_first_of(ch);
+
+	return a == -1 ? str : str.substr(0, a);
+}
+
+bool ends_with(const std::string& first, const std::string& second)
+{
+	if (second.size() > first.size())
+	{
+		return false;
+	}
+
+	return first.substr(first.size() - second.size()) == second;
 }
 
 unsigned int GetFileKeyValueUnsignedInt(const std::vector<std::string>& lines, const std::string& key, unsigned int defaultValue = 0)
@@ -317,6 +336,14 @@ static_assert(sizeof(S0x09C6780) == 46, "size of S0x09C6780 must be 46");
 #pragma pack(pop)
 
 std::vector<unsigned short> g_hangarMapModelIndices;
+std::array<std::string, 557> g_hangarOptSkins;
+
+int g_cockpitId = -1;
+bool g_isInHangar = true;
+
+int GetCockpitId();
+std::string OptSkins_ReadOptSkinsListFunction(const std::string& optFilename);
+std::string GetShipPath(int modelIndex);
 
 std::vector<unsigned short> GetDefaultCraftSelectionTransports()
 {
@@ -434,15 +461,17 @@ std::vector<std::string> GetCustomFileLinesBase(const std::string& name, bool ap
 {
 	static std::vector<std::string> _lines;
 	static std::string _name;
+	static bool _append = false;
 	static std::string _mission;
 	static int _missionIndex = 0;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
 	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if ((_name != name) || (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex)))
+	if ((_name != name) || (_append != append) || (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex)))
 	{
 		_name = name;
+		_append = append;
 		_mission = xwaMissionFileName;
 		_missionIndex = missionFileNameIndex;
 		_lines.clear();
@@ -696,9 +725,27 @@ std::string GetCustomFilePath(const std::string& name)
 
 std::vector<std::string> GetCustomFileLines(const std::string& name, bool append)
 {
-	const bool isProvingGround = *(unsigned char*)(0x08053E0 + 0x05) != 0;
+	static std::vector<std::string> _lines;
+	static std::string _name;
+	static bool _append = false;
+	static std::string _mission;
+	static int _missionIndex = 0;
+
 	const char* xwaMissionFileName = (const char*)0x06002E8;
-	std::vector<std::string> lines;
+	const int missionFileNameIndex = *(int*)0x06002E4;
+
+	if ((_name == name) && (_append == append) && (missionFileNameIndex == 0 ? (_mission == xwaMissionFileName) : (_missionIndex == missionFileNameIndex)))
+	{
+		return _lines;
+	}
+
+	_name = name;
+	_append = append;
+	_mission = xwaMissionFileName;
+	_missionIndex = missionFileNameIndex;
+	_lines.clear();
+
+	const bool isProvingGround = *(unsigned char*)(0x08053E0 + 0x05) != 0;
 
 	if (isProvingGround)
 	{
@@ -708,8 +755,8 @@ std::vector<std::string> GetCustomFileLines(const std::string& name, bool append
 		{
 			ship = GetStringWithoutExtension(ship);
 
-			CombineFileLines(lines, GetFileLines(ship + name + ".txt"), append);
-			CombineFileLines(lines, GetFileLines(ship + ".ini", name), append);
+			CombineFileLines(_lines, GetFileLines(ship + name + ".txt"), append);
+			CombineFileLines(_lines, GetFileLines(ship + ".ini", name), append);
 		}
 	}
 	else
@@ -722,32 +769,32 @@ std::vector<std::string> GetCustomFileLines(const std::string& name, bool append
 		{
 			const std::string shipName = GetFileNameWithoutExtension(ship);
 
-			CombineFileLines(lines, GetFileLines(mission + "_" + name + "_" + shipName + "_" + std::to_string(shipIff) + ".txt"), append);
-			CombineFileLines(lines, GetFileLines(mission + ".ini", name + "_" + shipName + "_" + std::to_string(shipIff)), append);
-			CombineFileLines(lines, GetFileLines(mission + "_" + name + "_" + shipName + ".txt"), append);
-			CombineFileLines(lines, GetFileLines(mission + ".ini", name + "_" + shipName), append);
+			CombineFileLines(_lines, GetFileLines(mission + "_" + name + "_" + shipName + "_" + std::to_string(shipIff) + ".txt"), append);
+			CombineFileLines(_lines, GetFileLines(mission + ".ini", name + "_" + shipName + "_" + std::to_string(shipIff)), append);
+			CombineFileLines(_lines, GetFileLines(mission + "_" + name + "_" + shipName + ".txt"), append);
+			CombineFileLines(_lines, GetFileLines(mission + ".ini", name + "_" + shipName), append);
 		}
 
-		CombineFileLines(lines, GetFileLines(mission + "_" + name + ".txt"), append);
-		CombineFileLines(lines, GetFileLines(mission + ".ini", name), append);
+		CombineFileLines(_lines, GetFileLines(mission + "_" + name + ".txt"), append);
+		CombineFileLines(_lines, GetFileLines(mission + ".ini", name), append);
 
 		if (!ship.empty())
 		{
 			const std::string nameIff = name + std::to_string(shipIff);
 
-			CombineFileLines(lines, GetFileLines(ship + nameIff + ".txt"), append);
-			CombineFileLines(lines, GetFileLines(ship + ".ini", nameIff), append);
-			CombineFileLines(lines, GetFileLines(ship + name + ".txt"), append);
-			CombineFileLines(lines, GetFileLines(ship + ".ini", name), append);
+			CombineFileLines(_lines, GetFileLines(ship + nameIff + ".txt"), append);
+			CombineFileLines(_lines, GetFileLines(ship + ".ini", nameIff), append);
+			CombineFileLines(_lines, GetFileLines(ship + name + ".txt"), append);
+			CombineFileLines(_lines, GetFileLines(ship + ".ini", name), append);
 		}
 	}
 
 	const std::string path = "FlightModels\\";
 
-	CombineFileLines(lines, GetFileLines(path + name + ".txt"), append);
-	CombineFileLines(lines, GetFileLines(path + "default.ini", name), append);
+	CombineFileLines(_lines, GetFileLines(path + name + ".txt"), append);
+	CombineFileLines(_lines, GetFileLines(path + "default.ini", name), append);
 
-	return lines;
+	return _lines;
 }
 
 struct PlayerCraft
@@ -1435,7 +1482,8 @@ void SetXwaTempString()
 {
 	char* s_XwaTempString = (char*)0x00ABD680;
 
-	if (*(int*)0x0068BBB8 != 0)
+	//if (*(int*)0x0068BBB8 != 0)
+	if (!g_isInHangar)
 	{
 		s_XwaTempString[0] = 0;
 		s_XwaTempString[254] = 0;
@@ -1506,6 +1554,10 @@ int HangarOptLoadHook(int* params)
 		opt = argOpt;
 	}
 
+	std::string currentOptSkins = g_hangarOptSkins[argModelIndex];
+	std::string optSkins = OptSkins_ReadOptSkinsListFunction(opt);
+	g_hangarOptSkins[argModelIndex] = optSkins;
+
 	const auto lines = g_hangarObjects.GetLines();
 	const std::string value = GetFileKeyValue(lines, opt);
 
@@ -1533,11 +1585,25 @@ int HangarOptLoadHook(int* params)
 		}
 	}
 
+	if (OptModelFileMemHandles[argModelIndex] != 0)
+	{
+		bool optSkinsChanged = _stricmp(currentOptSkins.c_str(), optSkins.c_str()) != 0;
+
+		if (!optSkinsChanged)
+		{
+			return OptModelFileMemHandles[argModelIndex];
+		}
+	}
+
 	return OptLoad(opt.c_str());
 }
 
 int HangarOptReloadHook(int* params)
 {
+	g_isInHangar = true;
+
+	SetXwaTempString();
+
 	const unsigned short modelIndex = (unsigned short)params[0];
 
 	const auto HangarOptLoad = (int(*)(unsigned short))0x00456FA0;
@@ -1548,6 +1614,17 @@ int HangarOptReloadHook(int* params)
 
 	if (OptModelFileMemHandles[modelIndex] != 0)
 	{
+		std::string optPath = GetShipPath(modelIndex) + ".opt";
+
+		std::string currentOptSkins = g_hangarOptSkins[modelIndex];
+		std::string optSkins = OptSkins_ReadOptSkinsListFunction(optPath);
+		bool optSkinsChanged = _stricmp(currentOptSkins.c_str(), optSkins.c_str()) != 0;
+
+		if (!optSkinsChanged)
+		{
+			return 0;
+		}
+
 		OptUnload(OptModelFileMemHandles[modelIndex]);
 
 		OptModelFileMemHandles[modelIndex] = 0;
@@ -1575,6 +1652,17 @@ int HangarObjectCreateHook(int* params)
 
 	if (OptModelFileMemHandles[modelIndex] != 0)
 	{
+		std::string optPath = GetShipPath(modelIndex) + ".opt";
+
+		std::string currentOptSkins = g_hangarOptSkins[modelIndex];
+		std::string optSkins = OptSkins_ReadOptSkinsListFunction(optPath);
+		bool optSkinsChanged = _stricmp(currentOptSkins.c_str(), optSkins.c_str()) != 0;
+
+		if (!optSkinsChanged)
+		{
+			return 0;
+		}
+
 		OptUnload(OptModelFileMemHandles[modelIndex]);
 
 		OptModelFileMemHandles[modelIndex] = 0;
@@ -1617,6 +1705,8 @@ void HangarReloadHookReleaseObjects()
 
 int HangarReloadHook(int* params)
 {
+	g_isInHangar = true;
+
 	const short objectIndex = (short)params[2];
 
 	const auto AddObject = (short(*)(unsigned short, int, int, int, unsigned short, unsigned short))0x00456AE0;
@@ -1629,6 +1719,8 @@ int HangarReloadHook(int* params)
 	unsigned short& hangarModelIndex = *(unsigned short*)0x009C6754;
 	int& V0x068BC10 = *(int*)0x068BC10;
 	S0x09C6780* V0x09C6780 = (S0x09C6780*)0x09C6780;
+
+	g_cockpitId = GetCockpitId();
 
 	if (objectIndex == -1)
 	{
@@ -1736,13 +1828,20 @@ int HangarCameraPositionHook(int* params)
 	const auto CockpitOptReadInfos = (void(*)())0x004314B0;
 	const auto ExteriorOptReadInfos = (void(*)())0x00431960;
 
-	if (A4 == 0)
+	int cockpitId = GetCockpitId();
+
+	if (g_cockpitId != cockpitId)
 	{
-		CockpitOptReadInfos();
-	}
-	else
-	{
-		ExteriorOptReadInfos();
+		g_cockpitId = cockpitId;
+
+		if (A4 == 0)
+		{
+			CockpitOptReadInfos();
+		}
+		else
+		{
+			ExteriorOptReadInfos();
+		}
 	}
 
 	if (hangarModelIndex == 0x134)
@@ -2493,8 +2592,15 @@ int HangarShuttleOptReadInfosHook(int* params)
 
 	if (value)
 	{
-		CockpitOptReadInfos();
-		ExteriorOptReadInfos();
+		int cockpitId = GetCockpitId();
+
+		if (g_cockpitId != cockpitId)
+		{
+			g_cockpitId = cockpitId;
+
+			CockpitOptReadInfos();
+			ExteriorOptReadInfos();
+		}
 	}
 
 	return 0;
@@ -4162,9 +4268,339 @@ std::vector<unsigned short> GetHangarObjects()
 	return objects;
 }
 
+std::vector<std::string> g_OptSkins_getCustomFileLines_lines;
+std::string g_OptSkins_getCustomFileLines_name;
+std::string g_OptSkins_getCustomFileLines_mission;
+int g_OptSkins_getCustomFileLines_missionIndex;
+std::string g_OptSkins_getCustomFileLines_hangar;
+unsigned char g_OptSkins_getCustomFileLines_hangarIff;
+
+std::string OptSkins_GetSkinDirectoryLocatorPath(const std::string& optName, const std::string& skinName)
+{
+	std::string name = GetFirstPart(skinName, '-');
+	std::string path = "FlightModels\\Skins\\" + optName + "\\" + name;
+
+	if (std::filesystem::is_directory(path) && !std::filesystem::is_empty(path))
+	{
+		return path;
+	}
+
+	std::string pathZip = path + ".zip";
+
+	if (std::ifstream(pathZip))
+	{
+		return pathZip;
+	}
+
+	return std::string();
+}
+
+std::string OptSkins_GetMissionFileName()
+{
+	int currentGameState = *(int*)(0x09F60E0 + 0x25FA9);
+	int updateCallback = *(int*)(0x09F60E0 + 0x25FB1 + currentGameState * 0x850 + 0x844);
+	bool isTechLibraryGameStateUpdate = updateCallback == 0x00574D70;
+
+	if (isTechLibraryGameStateUpdate)
+	{
+		return std::string();
+	}
+
+	int missionDirectoryId = *(int*)(0x00AE2A60 + 0x002A);
+	std::string missionDirectory = *(const char**)(0x00603168 + missionDirectoryId * 4);
+	int s_V0x09F5E74 = *(int*)(0x009F5E74);
+	int s_XwaMissionDescriptions = *(int*)(0x009F4B98);
+
+	std::string missionFilename;
+
+	if (s_XwaMissionDescriptions != 0)
+	{
+		missionFilename = missionDirectory + "\\" + (const char*)(s_XwaMissionDescriptions + s_V0x09F5E74 * 0x148 + 0x0000);
+	}
+	else
+	{
+		std::string xwaMissionFileName = (const char*)(0x06002E8);
+		missionFilename = xwaMissionFileName;
+	}
+
+	return missionFilename;
+}
+
+std::vector<std::string> OptSkins_GetCustomFileLines(const std::string& name)
+{
+	std::string xwaMissionFileName = OptSkins_GetMissionFileName();
+	int xwaMissionFileNameIndex = *(int*)(0x06002E4);
+	int currentGameState = *(int*)(0x09F60E0 + 0x25FA9);
+	int updateCallback = *(int*)(0x09F60E0 + 0x25FB1 + currentGameState * 0x850 + 0x844);
+	bool isTechLibraryGameStateUpdate = updateCallback == 0x00574D70;
+	std::string hangar = (const char*)(0x00ABD680);
+	unsigned char hangarIff = *(unsigned char*)(0x00ABD680 + 255);
+
+	if (isTechLibraryGameStateUpdate)
+	{
+		g_OptSkins_getCustomFileLines_name = name;
+		g_OptSkins_getCustomFileLines_mission = std::string();
+		g_OptSkins_getCustomFileLines_missionIndex = 0;
+		g_OptSkins_getCustomFileLines_lines = GetFileLines("FlightModels\\" + name + ".txt");
+		g_OptSkins_getCustomFileLines_hangar = std::string();
+		g_OptSkins_getCustomFileLines_hangarIff = 0;
+
+		if (g_OptSkins_getCustomFileLines_lines.size() == 0)
+		{
+			g_OptSkins_getCustomFileLines_lines = GetFileLines("FlightModels\\default.ini", name);
+		}
+	}
+	else
+	{
+		if (g_OptSkins_getCustomFileLines_name != name
+			|| g_OptSkins_getCustomFileLines_mission != xwaMissionFileName
+			|| g_OptSkins_getCustomFileLines_missionIndex != xwaMissionFileNameIndex
+			|| g_OptSkins_getCustomFileLines_hangar != hangar
+			|| g_OptSkins_getCustomFileLines_hangarIff != hangarIff)
+		{
+			g_OptSkins_getCustomFileLines_name = name;
+			g_OptSkins_getCustomFileLines_mission = xwaMissionFileName;
+			g_OptSkins_getCustomFileLines_missionIndex = xwaMissionFileNameIndex;
+			g_OptSkins_getCustomFileLines_hangar = hangar;
+			g_OptSkins_getCustomFileLines_hangarIff = hangarIff;
+
+			std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+			g_OptSkins_getCustomFileLines_lines = GetFileLines(mission + "_" + name + ".txt");
+
+			if (g_OptSkins_getCustomFileLines_lines.size() == 0)
+			{
+				g_OptSkins_getCustomFileLines_lines = GetFileLines(mission + ".ini", name);
+			}
+
+			if (!g_OptSkins_getCustomFileLines_hangar.empty() && !ends_with(g_OptSkins_getCustomFileLines_hangar, "\\"))
+			{
+				std::vector<std::string> hangarLines;
+
+				if (hangarLines.size() == 0)
+				{
+					hangarLines = GetFileLines(g_OptSkins_getCustomFileLines_hangar + name + std::to_string(g_OptSkins_getCustomFileLines_hangarIff) + ".txt");
+				}
+
+				if (hangarLines.size() == 0)
+				{
+					hangarLines = GetFileLines(g_OptSkins_getCustomFileLines_hangar + ".ini", name + std::to_string(g_OptSkins_getCustomFileLines_hangarIff));
+				}
+
+				if (hangarLines.size() == 0)
+				{
+					hangarLines = GetFileLines(g_OptSkins_getCustomFileLines_hangar + name + ".txt");
+				}
+
+				if (hangarLines.size() == 0)
+				{
+					hangarLines = GetFileLines(g_OptSkins_getCustomFileLines_hangar + ".ini", name);
+				}
+
+				for (const std::string& line : hangarLines)
+				{
+					g_OptSkins_getCustomFileLines_lines.push_back(line);
+				}
+			}
+
+			if (g_OptSkins_getCustomFileLines_lines.size() == 0)
+			{
+				g_OptSkins_getCustomFileLines_lines = GetFileLines("FlightModels\\" + name + ".txt");
+			}
+
+			if (g_OptSkins_getCustomFileLines_lines.size() == 0)
+			{
+				g_OptSkins_getCustomFileLines_lines = GetFileLines("FlightModels\\default.ini", name);
+			}
+		}
+	}
+
+	return g_OptSkins_getCustomFileLines_lines;
+}
+
+int OptSkins_GetFlightgroupsDefaultCount(const std::string& optName)
+{
+	int count = 0;
+
+	for (int index = 255; index >= 0; index--)
+	{
+		std::string skinName = "Default_" + std::to_string(index);
+
+		if (!OptSkins_GetSkinDirectoryLocatorPath(optName, skinName).empty())
+		{
+			count = index + 1;
+			break;
+		}
+	}
+
+	return count;
+}
+
+int OptSkins_GetFlightgroupsCount(const std::vector<std::string>& objectLines, const std::string& optName)
+{
+	int count = 0;
+
+	for (int index = 255; index >= 0; index--)
+	{
+		std::string key = optName + "_fgc_" + std::to_string(index);
+		std::string value = GetFileKeyValue(objectLines, key);
+
+		if (!value.empty())
+		{
+			count = index + 1;
+			break;
+		}
+	}
+
+	return count;
+}
+
+std::vector<int> OptSkins_GetFlightgroupsColors(const std::vector<std::string>& objectLines, const std::string& optName, int fgCount, bool hasDefaultSkin)
+{
+	bool hasBaseSkins = hasDefaultSkin || !GetFileKeyValue(objectLines, optName).empty();
+
+	std::vector<int> colors;
+
+	for (int index = 0; index < 256; index++)
+	{
+		std::string key = optName + "_fgc_" + std::to_string(index);
+		std::string value = GetFileKeyValue(objectLines, key);
+
+		if (!value.empty() || (hasBaseSkins && index < fgCount))
+		{
+			colors.push_back(index);
+		}
+	}
+
+	return colors;
+}
+
+std::vector<std::vector<std::string>> OptSkins_ReadFgSkins(const std::string& optName, const std::vector<std::string>& objectLines, const std::vector<std::string>& baseSkins, int fgCount)
+{
+	std::vector<std::vector<std::string>> fgSkins;
+
+	for (int i = 0; i < fgCount; i++)
+	{
+		std::vector<std::string> skins;
+
+		for (const std::string& s : baseSkins)
+		{
+			skins.push_back(s);
+		}
+
+		std::string fgKey = optName + "_fgc_" + std::to_string(i);
+
+		for (const std::string& s : Tokennize(GetFileKeyValue(objectLines, fgKey)))
+		{
+			skins.push_back(s);
+		}
+
+		if (skins.size() == 0)
+		{
+			std::string skinName = "Default_" + std::to_string(i);
+
+			if (!OptSkins_GetSkinDirectoryLocatorPath(optName, skinName).empty())
+			{
+				skins.push_back(skinName);
+			}
+			else
+			{
+				skins.push_back("Default");
+			}
+		}
+
+		fgSkins.push_back(skins);
+	}
+
+	return fgSkins;
+}
+
+std::string OptSkins_UpdateOptFile(const std::string& optName, const std::vector<std::string>& objectLines, const std::vector<std::string>& baseSkins, int fgCount, bool hasDefaultSkin)
+{
+	std::vector<std::vector<std::string>> fgSkins = OptSkins_ReadFgSkins(optName, objectLines, baseSkins, fgCount);
+
+	std::string optSkins;
+	optSkins += optName;
+
+	for (const std::vector<std::string>& skins : fgSkins)
+	{
+		optSkins += "|";
+
+		for (const std::string& skin : skins)
+		{
+			optSkins += skin;
+			optSkins += ";";
+		}
+	}
+
+	return optSkins;
+}
+
+std::string OptSkins_ReadOptSkinsListFunction(const std::string& optFilename)
+{
+	if (!std::ifstream(optFilename))
+	{
+		return std::string();
+	}
+
+	std::string optName = GetFirstPart(GetFileNameWithoutExtension(optFilename), '.');
+	std::string directoryPath = "FlightModels\\Skins\\" + optName;
+
+	if (std::filesystem::is_directory(directoryPath) && !std::filesystem::is_empty(directoryPath))
+	{
+		std::vector<std::string> objectLines = OptSkins_GetCustomFileLines("Skins");
+		std::vector<std::string> baseSkins = Tokennize(GetFileKeyValue(objectLines, optName));
+		bool hasDefaultSkin = !OptSkins_GetSkinDirectoryLocatorPath(optName, "Default").empty() || OptSkins_GetFlightgroupsDefaultCount(optName) != 0;
+		int fgCount = OptSkins_GetFlightgroupsCount(objectLines, optName);
+		bool hasSkins = hasDefaultSkin || baseSkins.size() != 0 || fgCount != 0;
+
+		if (hasSkins)
+		{
+			fgCount = std::max(fgCount, 8);
+			fgCount = std::max(fgCount, OptSkins_GetFlightgroupsDefaultCount(optName));
+			return OptSkins_UpdateOptFile(optName, objectLines, baseSkins, fgCount, hasDefaultSkin);
+		}
+	}
+
+	return std::string();
+}
+
+int GetCockpitId()
+{
+	int ebp = -1;
+
+	int esi = ((int(*)())0x0049E3D0)();
+	int currentPlayerId = *(int*)0x008C1CC8;
+
+	int JumpNextCraftID = *(int*)(0x008B94E4 + currentPlayerId * 0xBCF);
+
+	if (JumpNextCraftID > 0)
+	{
+		int playerObjectIndex = *(int*)(0x008B94E0 + currentPlayerId * 0xBCF);
+		ebp = *(unsigned short*)(*(int*)0x007B33C4 + playerObjectIndex * 0x27 + 0x02);
+	}
+	else
+	{
+		for (int player = 0; player < 8; player++)
+		{
+			if (esi == *(int*)(0x00AF39C6 + player * 0x64))
+			{
+				int flightGroupId = *(int*)(0x00AF39BE + player * 0x64);
+				int craftId = *(unsigned char*)(0x0080DCEB + flightGroupId * 0xE42);
+				ebp = ((unsigned short*)0x005B0F70)[craftId];
+				break;
+			}
+		}
+	}
+
+	return ebp;
+}
+
 int HangarExitHook(int* params)
 {
 	*(int*)0x0068BBB8 = 1;
+
+	g_isInHangar = false;
+	SetXwaTempString();
 
 	g_hangarMapModelIndices.clear();
 
@@ -4194,6 +4630,17 @@ int HangarExitHook(int* params)
 			continue;
 		}
 
+		std::string optPath = GetShipPath(modelIndex) + ".opt";
+
+		std::string currentOptSkins = g_hangarOptSkins[modelIndex];
+		std::string optSkins = OptSkins_ReadOptSkinsListFunction(optPath);
+		bool optSkinsChanged = _stricmp(currentOptSkins.c_str(), optSkins.c_str()) != 0;
+
+		if (!optSkinsChanged)
+		{
+			continue;
+		}
+
 		OptUnload(OptModelFileMemHandles[modelIndex]);
 
 		OptModelFileMemHandles[modelIndex] = 0;
@@ -4206,10 +4653,19 @@ int HangarExitHook(int* params)
 		}
 
 		HangarOptLoad(modelIndex);
+
+		g_hangarOptSkins[modelIndex] = optSkins;
 	}
 
-	CockpitOptReadInfos();
-	ExteriorOptReadInfos();
+	int cockpitId = GetCockpitId();
+
+	if (g_cockpitId != cockpitId)
+	{
+		g_cockpitId = cockpitId;
+
+		CockpitOptReadInfos();
+		ExteriorOptReadInfos();
+	}
 
 	return 0;
 }
