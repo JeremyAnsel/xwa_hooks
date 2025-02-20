@@ -6,4 +6,5 @@ void WebmFreeVideo(const std::string& name);
 void WebmFreeAllVideos();
 void WebmResetAllTimecode();
 int64_t WebmGetTimecode(const std::string& name);
+uint64_t WebmGetDuration(const std::string& name);
 int WebmReadVideoFrame(const std::string& name, uint8_t** image, unsigned int* width, unsigned int* height);

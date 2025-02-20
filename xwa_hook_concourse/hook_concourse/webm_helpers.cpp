@@ -370,15 +370,15 @@ int WebmVideoCache::ReadNextFrame()
 		// 1 = keep calling
 		// 0 = eof
 		// -1 = error
-		r = nestegg_read_packet(ne, &packet);
+		int p = nestegg_read_packet(ne, &packet);
 
-		if (r == 0)
+		if (p == 0)
 		{
 			ResetTimecode();
 		}
 
-		if (r <= 0)
-			return r;
+		if (p <= 0)
+			return p;
 
 		unsigned int track = 0;
 		r = nestegg_packet_track(packet, &track);
@@ -388,7 +388,7 @@ int WebmVideoCache::ReadNextFrame()
 		if (type != NESTEGG_TRACK_VIDEO)
 			continue;
 
-		if (r != 1 || packet != 0)
+		if (p != 1 || packet != 0)
 			break;
 	}
 
@@ -539,6 +539,23 @@ int64_t WebmGetTimecode(const std::string& name)
 	}
 
 	return it->second->timecode;
+}
+
+uint64_t WebmGetDuration(const std::string& name)
+{
+	auto it = _webm_videos.find(name);
+
+	if (it == _webm_videos.end())
+	{
+		return 0;
+	}
+
+	if (!it->second->IsOpened() || !it->second->infile.IsValid())
+	{
+		return 0;
+	}
+
+	return it->second->duration;
 }
 
 int WebmReadVideoFrame(const std::string& name, uint8_t** image, unsigned int* width, unsigned int* height)
