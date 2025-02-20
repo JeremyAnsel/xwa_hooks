@@ -2327,8 +2327,8 @@ int MedalPositionHook(int* params)
 
 	if (index < (int)g_MedalsPositions.size())
 	{
-		params[0] = g_MedalsPositions[index].first;
-		params[1] = g_MedalsPositions[index].second;
+		params[0] = ConcourseMultiplyDivRound(g_MedalsPositions[index].first);
+		params[1] = ConcourseMultiplyDivRound(g_MedalsPositions[index].second);
 	}
 	else
 	{
@@ -2371,7 +2371,7 @@ int KalidorCrescentPosition1Hook(int* params)
 
 	const auto L00558CD0 = (void(*)(int, int, int))0x00558CD0;
 
-	L00558CD0(A4, g_config.KalidorCrescentPositionX, g_config.KalidorCrescentPositionY);
+	L00558CD0(A4, ConcourseMultiplyDivRound(g_config.KalidorCrescentPositionX), ConcourseMultiplyDivRound(g_config.KalidorCrescentPositionY));
 
 	return 0;
 }
@@ -4817,7 +4817,7 @@ int FrontResGetAreaHook(int* params)
 
 		if (cbmHeader)
 		{
-			width = max(width, cbmHeader->Area.right);
+			width = max(width, (int)cbmHeader->Area.right);
 		}
 
 		SetRect(pArea, 0, 0, width, 180);
@@ -6475,7 +6475,7 @@ int DrawKalidorZoomImage1Hook(int* params)
 
 	const auto L00534A60 = (void(*)(const char*, int, int))0x00534A60;
 
-	L00534A60(A4, A8 - 0x140 + g_concourseDoors.kalidorzoom_image1_posX, A8 - 0xF0 + g_concourseDoors.kalidorzoom_image1_posY);
+	L00534A60(A4, A8 - 0x140 + g_concourseDoors.kalidorzoom_image1_posX, AC - 0xF0 + g_concourseDoors.kalidorzoom_image1_posY);
 
 	return 0;
 }
