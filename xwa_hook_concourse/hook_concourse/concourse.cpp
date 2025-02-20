@@ -3299,28 +3299,6 @@ bool AreDrawPanelsRemoved()
 		}
 	}
 
-	if (isFamilyRoomGameGameStateUpdate)
-	{
-		RECT rc;
-		int left = ConcourseMultiplyDivRound(g_concourseDoors.familyroom_statistics_posX);
-		int top = ConcourseMultiplyDivRound(g_concourseDoors.familyroom_statistics_posY);
-		int right = ConcourseMultiplyDivRound(g_concourseDoors.familyroom_statistics_posX) + g_concourseDoors.familyroom_statistics_posWidth;
-		int bottom = ConcourseMultiplyDivRound(g_concourseDoors.familyroom_statistics_posY) + g_concourseDoors.familyroom_statistics_posHeight;
-		XwaRectSet(&rc, left, top, right, bottom);
-
-		int cursorX;
-		int cursorY;
-		XwaRetrieveCursorPos(&cursorX, &cursorY);
-
-		if (XwaIsPointInRect(&rc, cursorX, cursorY))
-		{
-			if (!g_config.DrawPanelsInFamilyMonitor)
-			{
-				return true;
-			}
-		}
-	}
-
 	// DrawPanelsInFilmRoom
 	if (isFilmRoomGameGameStateUpdate)
 	{
