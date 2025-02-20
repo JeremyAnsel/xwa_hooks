@@ -1318,7 +1318,7 @@ int CustomMoviesOnPoints1Hook(int* params)
 	const char* xwaMissionFileName = (const char*)0x06002E8;
 	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	bool isCombatMission = _strnicmp(xwaMissionFileName, "combat", sizeof("combat")) != 0;
+	bool isCombatMission = _strnicmp(xwaMissionFileName, "combat", sizeof("combat") - 1) == 0;
 	int& campaignMode = *(int*)(0x00AE2A60 + 0x250F3);
 
 	if (isCombatMission)
