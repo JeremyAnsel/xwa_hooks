@@ -180,6 +180,12 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x5685B7, DSBriefDrawImageHook },
 	{ 0x5688F5, DSBriefDrawImageHook },
 
+	{ 0x577975, SquadlogoLoadMovieHook },
+	{ 0x577584, SquadlogoFreeMovieHook },
+	{ 0x577DDC, SquadlogoMoveToNextImageHook },
+	{ 0x577DCD, SquadlogoDrawImageHook },
+	{ 0x577F28, SquadlogoDrawImageHook },
+
 	{ 0x571A57, DrawMultiHook },
 	{ 0x52B484, DrawMulti2Hook },
 
@@ -457,6 +463,15 @@ static const HookPatchItem g_dsbriefPatch[] =
 	{ 0x167CF0, "E86BC1FCFF", "E82B020400" },
 };
 
+static const HookPatchItem g_squadlogoPatch[] =
+{
+	{ 0x176D70, "E8FBA3FBFF", "E8AB110300" },
+	{ 0x17697F, "E8FCAAFBFF", "E89C150300" },
+	{ 0x1771D7, "E854A4FBFF", "E8440D0300" },
+	{ 0x1771C8, "E893CCFBFF", "E8530D0300" },
+	{ 0x177323, "E838CBFBFF", "E8F80B0300" },
+};
+
 static const HookPatchItem g_multiPatch[] =
 {
 	{ 0x170E52, "E819DFFCFF", "E8C9700300" },
@@ -491,6 +506,7 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that draws the mission selection screen", g_missionSelectionScreenPatch),
 	MAKE_HOOK_PATCH("To call the hook that draws the battlezoom and kalidorzoom", g_battleMedalZoomPatch),
 	MAKE_HOOK_PATCH("To call the hook that plays the ds brief movie", g_dsbriefPatch),
+	MAKE_HOOK_PATCH("To call the hook that plays the squad logo movie", g_squadlogoPatch),
 	MAKE_HOOK_PATCH("To call the hook that draws multi", g_multiPatch),
 	MAKE_HOOK_PATCH("To call the hook that draws the view cutscenes config menu", g_viewCutscenesConfigMenuPatch),
 };

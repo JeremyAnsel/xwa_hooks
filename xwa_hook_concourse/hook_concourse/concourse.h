@@ -129,6 +129,11 @@ int DSBriefFreeMovieHook(int* params);
 int DSBriefMoveToNextImageHook(int* params);
 int DSBriefDrawImageHook(int* params);
 
+int SquadlogoLoadMovieHook(int* params);
+int SquadlogoFreeMovieHook(int* params);
+int SquadlogoMoveToNextImageHook(int* params);
+int SquadlogoDrawImageHook(int* params);
+
 bool IsTechDoorMovie();
 void TechDoorLoadMovie();
 void TechDoorFreeMovie();

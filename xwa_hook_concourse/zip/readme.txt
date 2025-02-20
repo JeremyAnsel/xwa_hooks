@@ -242,6 +242,17 @@ At offset 1678A4, replace E8879DFCFF with E877060400.
 At offset 1679B2, replace E8A9C4FCFF with E869050400.
 At offset 167CF0, replace E86BC1FCFF with E82B020400.
 
+# To call the hook that plays the squad logo movie
+At offset 176D70, replace E8FBA3FBFF with E8AB110300.
+At offset 17697F, replace E8FCAAFBFF with E89C150300.
+At offset 1771D7, replace E854A4FBFF with E8440D0300.
+At offset 1771C8, replace E893CCFBFF with E8530D0300.
+At offset 177323, replace E838CBFBFF with E8F80B0300.
+
+# To call the hook that draws multi
+At offset 170E52, replace E819DFFCFF with E8C9700300.
+At offset 12A87F, replace E88C3B0100 with E89CD60700.
+
 # To call the hook that draws the view cutscenes config menu
 At offset 12656E, replace E81D1B0300 with E8AD190800.
 
@@ -359,6 +370,13 @@ RESDATA\FRONTEND.dat-15001-3100 = 1
 
 To replace the dsbrief animation with a webm video, the filename is "Resdata\dsbrief.webm".
 To replace the techdoor animation with a webm video, the filename is "Resdata\techdoor.webm".
+
+To replace the squadlogo animation with a webm video, the filename is "Resdata\squad%d.webm".
+The settings file is "Resdata\squad%d.txt". The format is:
+PositionX = integer value
+PositionY = integer value
+Width = integer value
+Height = integer value
 
 *** Credits ***
 

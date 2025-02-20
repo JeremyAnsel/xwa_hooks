@@ -85,6 +85,13 @@ bool ends_with(const std::string& first, const std::string& second)
 	return first.substr(first.size() - second.size()) == second;
 }
 
+std::string GetFileNameWithoutExtension(const std::string& str)
+{
+	auto a = str.find_last_of('\\');
+
+	return a == -1 ? str : str.substr(a + 1, -1);
+}
+
 std::vector<std::string> TokennizeSpaces(const std::string& str)
 {
 	const char* delimiters = " \t\n\r\f\v";
@@ -410,6 +417,20 @@ int MultiplyDivH(int value, bool isWide, SurfaceDC& dc)
 	else
 	{
 		value = (value * dc.height + dc.displayHeight / 2) / dc.displayHeight;
+	}
+
+	return value;
+}
+
+int MultiplyDivHReverse(int value, bool isWide, SurfaceDC& dc)
+{
+	if (isWide)
+	{
+		value = (value * dc.displayWidth + dc.width / 2) / dc.width;
+	}
+	else
+	{
+		value = (value * dc.displayHeight + dc.height / 2) / dc.height;
 	}
 
 	return value;
@@ -6660,6 +6681,166 @@ int DSBriefDrawImageHook(int* params)
 			int height = MultiplyDivV(270, dc);
 
 			DrawSurfaceDelegate(&dc, g_dsbrief_image, g_dsbrief_imageWidth, g_dsbrief_imageHeight, left, top, width, height, 0, 0, g_dsbrief_imageWidth, g_dsbrief_imageHeight, -10, 0, 25);
+		}
+	}
+	else
+	{
+		XwaFrontResDraw(A4, A8, AC);
+	}
+
+	return 0;
+}
+
+struct SquadlogoSettings
+{
+	int PositionX;
+	int PositionY;
+	int Width;
+	int Height;
+
+	bool IsDefaultValues() const
+	{
+		return this->Width == 0 || this->Height == 0;
+	}
+};
+
+SquadlogoSettings GetSquadlogoSettings(const std::string& name)
+{
+	SquadlogoSettings settings{};
+
+	auto lines = GetFileLines("Resdata\\" + name + ".txt");
+
+	settings.PositionX = GetFileKeyValueInt(lines, "PositionX", 0);
+	settings.PositionY = GetFileKeyValueInt(lines, "PositionY", 0);
+	settings.Width = GetFileKeyValueInt(lines, "Width", 0);
+	settings.Height = GetFileKeyValueInt(lines, "Height", 0);
+
+	return settings;
+}
+
+bool g_squadlogo_webm;
+std::string g_squadlogo_name;
+SquadlogoSettings g_squadlogo_settings;
+uint8_t* g_squadlogo_image;
+unsigned int g_squadlogo_imageWidth;
+unsigned int g_squadlogo_imageHeight;
+
+int SquadlogoLoadMovieHook(int* params)
+{
+	const char* A4 = (const char*)params[0];
+	const char* A8 = (const char*)params[1];
+
+	const auto XwaFrontResLoad = (int(*)(const char*, const char*))0x00531D70;
+
+	XwaFrontResLoad(A4, A8);
+
+	SurfaceDC dc;
+	bool hasDC = GetSurfaceDC(&dc);
+
+	g_squadlogo_webm = false;
+
+	std::string squadlogoName = GetStringWithoutExtension(GetFileNameWithoutExtension(A4));
+
+	if (std::ifstream("Resdata\\" + squadlogoName + ".webm"))
+	{
+		g_squadlogo_webm = true;
+		g_squadlogo_name = squadlogoName;
+		g_squadlogo_settings = GetSquadlogoSettings(squadlogoName);
+		g_squadlogo_image = nullptr;
+		g_squadlogo_imageWidth = 0;
+		g_squadlogo_imageHeight = 0;
+
+		WebmLoadVideo(g_squadlogo_name);
+	}
+
+	return 0;
+}
+
+int SquadlogoFreeMovieHook(int* params)
+{
+	const char* A4 = (const char*)params[0];
+
+	const auto XwaFrontResFreeItem = (void(*)(const char*))0x00532080;
+
+	XwaFrontResFreeItem(A4);
+
+	if (g_squadlogo_webm)
+	{
+		WebmFreeVideo(g_squadlogo_name);
+	}
+
+	return 0;
+}
+
+int SquadlogoMoveToNextImageHook(int* params)
+{
+	const char* A4 = (const char*)params[0];
+	const bool A8 = (bool)params[1];
+
+	const auto XwaFrontResMoveToNextImage = (bool(*)(const char*, bool))0x00532230;
+
+	XwaFrontResMoveToNextImage(A4, A8);
+
+	if (g_squadlogo_webm)
+	{
+		WebmReadVideoFrame(g_squadlogo_name, &g_squadlogo_image, &g_squadlogo_imageWidth, &g_squadlogo_imageHeight);
+	}
+
+	return 0;
+}
+
+int SquadlogoDrawImageHook(int* params)
+{
+	const char* A4 = (const char*)params[0];
+	int A8 = params[1];
+	int AC = params[2];
+
+	const auto XwaFrontResDraw = (int(*)(const char*, short, short))0x00534A60;
+	const auto XwaFrontResGetArea = (bool(*)(const char*, LPRECT))0x00532180;
+
+	SurfaceDC dc;
+	bool hasDC = GetSurfaceDC(&dc);
+
+	if (g_squadlogo_webm)
+	{
+		if (g_squadlogo_image)
+		{
+			//bool isBackgroundHD = g_netFunctions._frontResIsBackgroundWide() != 0;
+			bool isBackgroundHD = g_netFunctions._frontResIsBackgroundHD() != 0;
+
+			unsigned char missionType = *(unsigned char*)(*(char**)0x009EB8E0 + 0x000B1B82);
+
+			RECT rc{};
+			XwaFrontResGetArea(A4, &rc);
+
+			if (missionType != 0x07 && !g_squadlogo_settings.IsDefaultValues())
+			{
+				A8 = g_squadlogo_settings.PositionX;
+				AC = g_squadlogo_settings.PositionY;
+				rc.left = 0;
+				rc.top = 0;
+				rc.right = g_squadlogo_settings.Width;
+				rc.bottom = g_squadlogo_settings.Height;
+
+				int newWidth = MultiplyDivHReverse(MultiplyDivH(rc.right, false, dc), isBackgroundHD, dc);
+				rc.right = newWidth;
+
+				*(RECT*)(params + 11) = rc;
+				*(int*)0x00784984 = A8;
+				*(int*)0x00784980 = AC;
+				params[Params_ECX] = *(int*)0x00784984;
+				params[Params_EBX] = *(int*)0x00784980;
+			}
+
+			int posX = A8 + 0;
+			int posY = AC + 0;
+
+			int left = MultiplyDivH(posX, isBackgroundHD, dc);
+			int top = MultiplyDivV(posY, dc);
+			int width = MultiplyDivH(rc.right - rc.left, isBackgroundHD, dc);
+			int height = MultiplyDivV(rc.bottom - rc.top, dc);
+
+			DrawSurfaceDelegate(&dc, g_squadlogo_image, g_squadlogo_imageWidth, g_squadlogo_imageHeight, left, top, width, height, 0, 0, g_squadlogo_imageWidth, g_squadlogo_imageHeight, -10, 0, 25);
 		}
 	}
 	else
