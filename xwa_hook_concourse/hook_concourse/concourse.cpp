@@ -1315,7 +1315,23 @@ int CustomMoviesOnPoints1Hook(int* params)
 	int currentPilotRating = XwaPilotData_PilotRating;
 	int currentRank = XwaPilotData_Rank;
 
-	L0042E750(a4, a8);
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+	const int missionFileNameIndex = *(int*)0x06002E4;
+
+	bool isCombatMission = _strnicmp(xwaMissionFileName, "combat", sizeof("combat")) != 0;
+	int& campaignMode = *(int*)(0x00AE2A60 + 0x250F3);
+
+	if (isCombatMission)
+	{
+		int currentCampaignMode = campaignMode;
+		campaignMode = 1;
+		L0042E750(a4, a8);
+		campaignMode = currentCampaignMode;
+	}
+	else
+	{
+		L0042E750(a4, a8);
+	}
 
 	if (XwaPilotData_PilotRating != currentPilotRating)
 	{
