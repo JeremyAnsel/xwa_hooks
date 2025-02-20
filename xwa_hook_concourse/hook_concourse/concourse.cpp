@@ -1986,12 +1986,6 @@ void DrawConcourseAnimations(const char* currentRoom, int frameIndex)
 			XwaPlaySound(animation.name.c_str(), 1, 0, 0xff, volume, 0x3f);
 		}
 
-		if (g_config.SupportDatAnimations)
-		{
-			XwaFrontResDraw(animation.name.c_str(), animation.posX, animation.posY);
-			XwaFrontResMoveToNextImage(animation.name.c_str(), true);
-		}
-
 		SurfaceDC dc;
 		bool hasDC = GetSurfaceDC(&dc);
 
@@ -2022,14 +2016,22 @@ void DrawConcourseAnimations(const char* currentRoom, int frameIndex)
 			}
 		}
 
-		bool setImage = false;
-
-		if (WebmGetTimecode(animation.name) == -1 && r == 0)
+		if (!image && g_config.SupportDatAnimations)
 		{
-			setImage = true;
+			XwaFrontResDraw(animation.name.c_str(), animation.posX, animation.posY);
+			XwaFrontResMoveToNextImage(animation.name.c_str(), true);
 		}
 
-		if (g_config.SupportDatAnimations)
+		bool setImage = false;
+
+		if (image)
+		{
+			if (WebmGetTimecode(animation.name) == -1 && r == 0)
+			{
+				setImage = true;
+			}
+		}
+		else if (g_config.SupportDatAnimations)
 		{
 			if (XwaFrontResGetCurrentImage(animation.name.c_str()) == 0)
 			{
