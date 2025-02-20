@@ -165,6 +165,8 @@ public:
 
 		this->SupportDatAnimations = GetFileKeyValueInt(lines, "SupportDatAnimations", 0) != 0;
 		this->DrawStarfield = GetFileKeyValueInt(lines, "DrawStarfield", 1) != 0;
+
+		this->PlayMovieOutputDebugString = GetFileKeyValueInt(lines, "PlayMovieOutputDebugString", 0) != 0;
 	}
 
 	bool SkipFirst7Missions;
@@ -183,6 +185,7 @@ public:
 	std::string HDConcourseTextFont;
 	bool SupportDatAnimations;
 	bool DrawStarfield;
+	bool PlayMovieOutputDebugString;
 };
 
 Config g_config;
@@ -1300,6 +1303,10 @@ int CustomMoviesOnPoints1Hook(int* params)
 			for (int i = currentPilotRating + 1; i <= XwaPilotData_PilotRating; i++)
 			{
 				g_movieNames.push(g_pilotRatingMovies[i]);
+				if (g_config.PlayMovieOutputDebugString)
+				{
+					OutputDebugString(("push pilot rating movie " + g_movieNames.back()).c_str());
+				}
 			}
 		}
 
@@ -1313,6 +1320,11 @@ int CustomMoviesOnPoints1Hook(int* params)
 			for (int i = currentRank + 1; i <= XwaPilotData_Rank; i++)
 			{
 				g_movieNames.push(g_pilotRankMovies[i]);
+
+				if (g_config.PlayMovieOutputDebugString)
+				{
+					OutputDebugString(("push pilot rank movie " + g_movieNames.back()).c_str());
+				}
 			}
 		}
 
@@ -1346,6 +1358,11 @@ int CustomMoviesOnPointsPlayHook(int* params)
 			continue;
 		}
 
+		if (g_config.PlayMovieOutputDebugString)
+		{
+			OutputDebugString(("play movie " + name).c_str());
+		}
+
 		movies.push_back(name);
 		XwaPlayMovie(name.c_str(), 0);
 	}
@@ -1375,6 +1392,12 @@ int CustomPointsCheckHook(int* params)
 	while (XwaPilotData_m00012 < (int)g_CustomMoviesOnPoints.size() && points >= g_CustomMoviesOnPoints[XwaPilotData_m00012].first)
 	{
 		g_movieNames.push(g_CustomMoviesOnPoints[XwaPilotData_m00012].second);
+
+		if (g_config.PlayMovieOutputDebugString)
+		{
+			OutputDebugString(("push custom points movie " + g_movieNames.back()).c_str());
+		}
+
 		XwaPilotData_m00012++;
 	}
 
