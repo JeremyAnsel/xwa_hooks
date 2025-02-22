@@ -1527,6 +1527,11 @@ public:
 			this->familyroom_cologne_mission = 0;
 		}
 
+		this->familyroom_rating_left = GetFileKeyValueInt(lines, "familyroom_rating_left", 0);
+		this->familyroom_rating_top = GetFileKeyValueInt(lines, "familyroom_rating_top", 0);
+		this->familyroom_rating_width = GetFileKeyValueInt(lines, "familyroom_rating_width", 0);
+		this->familyroom_rating_height = GetFileKeyValueInt(lines, "familyroom_rating_height", 0);
+
 		this->briefing_review_item_left = GetFileKeyValueInt(lines, "briefing_review_item_left", 64);
 		this->briefing_review_item_right = GetFileKeyValueInt(lines, "briefing_review_item_right", 573);
 		this->briefing_review_item_height = GetFileKeyValueInt(lines, "briefing_review_item_height", 41);
@@ -1603,6 +1608,10 @@ public:
 	int familyroom_monitor_fps;
 	int familyroom_ladyblue_mission;
 	int familyroom_cologne_mission;
+	int familyroom_rating_left;
+	int familyroom_rating_top;
+	int familyroom_rating_width;
+	int familyroom_rating_height;
 
 	int briefing_review_item_left;
 	int briefing_review_item_right;
@@ -4841,6 +4850,25 @@ int FrontResGetAreaHook(int* params)
 	else if (hasDC && cbmHeader)
 	{
 		result = g_netFunctions._frontResGetArea(name, (int)pArea);
+	}
+
+	if (_strnicmp(name, "rating", sizeof("rating") - 1) == 0)
+	{
+		LONG width = pArea->right - pArea->left;
+		LONG height = pArea->bottom - pArea->top;
+		pArea->left -= width * 3 / 2;
+		pArea->right += width;
+		pArea->top -= height / 2;
+
+		if (g_concourseDoors.familyroom_rating_width != 0 && g_concourseDoors.familyroom_rating_height != 0)
+		{
+			SetRect(
+				pArea,
+				g_concourseDoors.familyroom_rating_left,
+				g_concourseDoors.familyroom_rating_top,
+				g_concourseDoors.familyroom_rating_left + g_concourseDoors.familyroom_rating_width,
+				g_concourseDoors.familyroom_rating_top + g_concourseDoors.familyroom_rating_height);
+		}
 	}
 
 	if (result == 1)

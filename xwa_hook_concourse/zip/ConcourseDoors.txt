@@ -66,6 +66,11 @@ familyroom_monitor_fps = 6
 familyroom_ladyblue_mission = 23
 familyroom_cologne_mission = 9
 
+familyroom_rating_left = 0
+familyroom_rating_top = 0
+familyroom_rating_width = 0
+familyroom_rating_height = 0
+
 briefing_review_item_left = 64
 briefing_review_item_right = 573
 briefing_review_item_height = 41
