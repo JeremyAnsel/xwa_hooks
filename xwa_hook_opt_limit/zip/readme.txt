@@ -72,6 +72,7 @@ At offset 0E75B8, replace A148D37600 with A1066D9B00.
 
 # To call the hook that generates spec.rci
 At offset 127FCF, replace E87C0D0000 with E84CFF0700.
+At offset 1768C7, replace A12CD2AB00 with E864160300.
 
 # 'fix depth buffer bug' patch
 At offset 0415C0, replace 8B442404A3B4465B00C390 with C705B4465B0000008042C3.

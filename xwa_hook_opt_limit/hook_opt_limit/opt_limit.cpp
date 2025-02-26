@@ -3,6 +3,7 @@
 #include "config.h"
 #include <fstream>
 #include <map>
+#include <Windows.h>
 
 enum ParamsEnum
 {
@@ -608,6 +609,67 @@ int GetExteriorEngineMeshIdsArrayPtr()
 	return (int)s_engineMeshIds.data();
 }
 
+class ScreenTextOverlay
+{
+public:
+	ScreenTextOverlay();
+	~ScreenTextOverlay();
+	void PrintMessage(const std::string& message);
+
+private:
+	HWND hWndXwa;
+	HDC hdc;
+	HFONT hFont;
+	HFONT hTmp;
+	RECT rect;
+	HDC hdcMem;
+	HBITMAP hbmMem;
+	HANDLE hOld;
+};
+
+ScreenTextOverlay::ScreenTextOverlay()
+{
+	hWndXwa = *(HWND*)(0x09F60E0 + 0x0F3A);
+	ShowWindow(hWndXwa, SW_MINIMIZE);
+	while (ShowCursor(FALSE) >= 0);
+
+	hdc = ::GetDC(nullptr);
+	hFont = CreateFont(96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, "Consolas");
+	hTmp = (HFONT)SelectObject(hdc, hFont);
+	SetRect(&rect, 0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+	hdcMem = CreateCompatibleDC(hdc);
+	hbmMem = CreateCompatibleBitmap(hdc, rect.right, rect.bottom);
+
+	SetBkMode(hdcMem, OPAQUE);
+	SetTextColor(hdcMem, RGB(125, 125, 255));
+	SetBkColor(hdcMem, RGB(0, 0, 0));
+	SelectObject(hdcMem, hFont);
+	hOld = SelectObject(hdcMem, hbmMem);
+}
+
+ScreenTextOverlay::~ScreenTextOverlay()
+{
+	InvalidateRect(nullptr, &rect, false);
+	//UpdateWindow(nullptr);
+
+	SelectObject(hdcMem, hOld);
+	DeleteObject(hbmMem);
+	DeleteDC(hdcMem);
+	DeleteObject(SelectObject(hdc, hTmp));
+	ReleaseDC(nullptr, hdc);
+
+	ShowWindow(hWndXwa, SW_RESTORE);
+	ShowCursor(TRUE);
+}
+
+void ScreenTextOverlay::PrintMessage(const std::string& message)
+{
+	DrawTextA(hdcMem, message.c_str(), -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+	BitBlt(hdc, 0, 0, rect.right, rect.bottom, hdcMem, 0, 0, SRCCOPY);
+}
+
+ScreenTextOverlay* g_overlay = nullptr;
+
 int GenerateSpecRciHook(int* params)
 {
 	const auto XwaReadShiplist = (void(*)())0x00529950;
@@ -625,10 +687,31 @@ int GenerateSpecRciHook(int* params)
 	}
 	else
 	{
+		ScreenTextOverlay overlay;
+		g_overlay = &overlay;
+		g_overlay->PrintMessage("Generating spec.rci ...");
 		XwaGenerateSpecRci();
+		g_overlay = nullptr;
 	}
 
 	return 0;
+}
+
+int GenerateSpecRciProgressHook(int* params)
+{
+	int current = params[Params_EBX] - 1;
+	int count = *(int*)0x00ABD7DC;
+
+	if (g_overlay)
+	{
+		if (count > 0)
+		{
+			std::string message = "   Generating spec.rci " + std::to_string(100 * current / count) + "%   ";
+			g_overlay->PrintMessage(message);
+		}
+	}
+
+	return *(int*)0x00ABD22C;
 }
 
 int CraftInitHook(int* params)

@@ -28,6 +28,7 @@ int GetExteriorEnginesArrayPtr();
 int GetExteriorEngineMeshIdsArrayPtr();
 
 int GenerateSpecRciHook(int* params);
+int GenerateSpecRciProgressHook(int* params);
 
 int CraftInitHook(int* params);
 int Set0x07821E8Hook(int* params);

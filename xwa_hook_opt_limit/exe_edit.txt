@@ -159,6 +159,11 @@ E87C0D0000              call 00529950
 
 E84CFF0700              call 005A8B20, 005A8B20 - 00528BD4 = 0007FF4C
 
+:005774C7 - 0x1768C7
+A12CD2AB00              mov eax, dword ptr [00ABD22C]
+
+E864160300              call 005A8B30, 005A8B30 - 005774CC = 00031664
+
 
 ; fix depth buffer bug
 :004421C0 - 0x0415C0

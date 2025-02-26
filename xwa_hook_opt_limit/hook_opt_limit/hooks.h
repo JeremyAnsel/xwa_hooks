@@ -21,6 +21,7 @@ std::string int_to_hex(int i)
 static const HookFunction g_hookFunctions[] =
 {
 	{ 0x528BD4, GenerateSpecRciHook },
+	{ 0x5774CC, GenerateSpecRciProgressHook },
 	{ 0x426A84, CraftInitHook },
 	{ 0x50E9E3, Set0x07821E8Hook },
 	{ 0x457A30, OptModelMeshesInfoHook1 },
@@ -205,6 +206,7 @@ static const HookPatchItem g_glowMarkUVArrayPatch[] =
 static const HookPatchItem g_generateSpecRciPatch[] =
 {
 	{ 0x127FCF, "E87C0D0000", "E84CFF0700" },
+	{ 0x1768C7, "A12CD2AB00", "E864160300" },
 };
 
 static const HookPatchItem g_fixDepthBufferBugPatch[] =
