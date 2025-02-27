@@ -4088,6 +4088,7 @@ int DrawFillRectangleHook(int* params)
 		bool isBriefingGameStateUpdate = IsUpdateCallback(0x00564E90);
 		bool isEnterFilmFilenameGameStateUpdate = IsUpdateCallback(0x00541260);
 		bool isCombatRoomGameStateUpdate = IsUpdateCallback(0x0053B500);
+		bool isShowMedalGameStateUpdate = IsUpdateCallback(0x0057ECE0) && *(int*)0x0784BCC != 0;
 
 		if (isEnterFilmFilenameGameStateUpdate)
 		{
@@ -4097,6 +4098,11 @@ int DrawFillRectangleHook(int* params)
 		{
 			layoutRect.left = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.2f;
 			layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.8f;
+		}
+		else if (isShowMedalGameStateUpdate)
+		{
+			layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.8f;
+			layoutRect.left = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.2f;
 		}
 		else if (!isFamilyAwardDetail && !isBriefingGameStateUpdate)
 		{
