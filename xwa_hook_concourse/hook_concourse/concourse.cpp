@@ -2565,6 +2565,11 @@ int BattlesMissionsImagesCountHook(int* params)
 
 bool DoesMovieExist(const std::string& name)
 {
+	if (g_config.PlayMovieOutputDebugString)
+	{
+		OutputDebugString(("try to play " + name).c_str());
+	}
+
 	const char* extensions[] =
 	{
 		".avi",
@@ -2587,7 +2592,7 @@ bool DoesMovieExist(const std::string& name)
 	return false;
 }
 
-std::string GetPerMissionMovieName(const std::string& A4)
+std::string GetPerMissionMovieName(const std::string& A4, int* params)
 {
 	static auto _lines = GetFileLines("Movies\\Movies.txt");
 
@@ -2601,6 +2606,23 @@ std::string GetPerMissionMovieName(const std::string& A4)
 	std::string missionFilename = GetStringWithoutExtension(s_XwaMissionDescriptions[s_V0x09F5E74].MissionFileName);
 
 	std::string name;
+
+	if (name.empty() && A4 == "ceremony" && params != nullptr)
+	{
+		name = A4 + "_" + (const char*)(params + 13);
+		std::vector<std::string> values = Tokennize(GetFileKeyValue(_lines, name));
+
+		if (!values.empty())
+		{
+			unsigned short rand = g_randomGenerator.Generate(0, values.size());
+			name = values[rand];
+		}
+
+		if (!DoesMovieExist(name))
+		{
+			name = std::string();
+		}
+	}
 
 	if (name.empty())
 	{
@@ -2658,7 +2680,12 @@ int PlayPerMissionMovieHook(int* params)
 	}
 	else
 	{
-		name = GetPerMissionMovieName(A4);
+		name = GetPerMissionMovieName(A4, params);
+	}
+
+	if (g_config.PlayMovieOutputDebugString)
+	{
+		OutputDebugString(("play per-mission movie " + name).c_str());
 	}
 
 	if (DoesMovieExist(name))
@@ -2684,7 +2711,7 @@ int LoadPerMissionMovieBeforeBackgroundHook(int* params)
 
 	if (ends_with(filename, "briefoff.bmp"))
 	{
-		std::string name = GetPerMissionMovieName("briefroom");
+		std::string name = GetPerMissionMovieName("briefroom", nullptr);
 
 		g_perMissionMovieFileName = name;
 		g_perMissionMovieBeforeBackground = "movies\\" + name + "_start.cbm";
