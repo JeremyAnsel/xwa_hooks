@@ -810,6 +810,11 @@ class CustomFileLinesHangarObjects
 public:
 	std::vector<std::string> GetLines()
 	{
+		if (!g_isInHangar)
+		{
+			return std::vector<std::string>();
+		}
+
 		this->UpdateIfChanged();
 		return this->_lines;
 	}
@@ -2394,6 +2399,7 @@ std::string GetShipPath(int modelIndex)
 		}
 	}
 
+	if (g_isInHangar)
 	{
 		const auto objectLines = GetCustomFileLines("HangarObjects", true);
 		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
@@ -4561,7 +4567,7 @@ std::string OptSkins_ReadOptSkinsListFunction(const std::string& optFilename)
 		}
 	}
 
-	return std::string();
+	return optName;
 }
 
 int GetCockpitId()
@@ -4600,6 +4606,8 @@ int HangarExitHook(int* params)
 	*(int*)0x0068BBB8 = 1;
 
 	g_isInHangar = false;
+	int& missionFileNameIndex = *(int*)0x06002E4;
+	missionFileNameIndex++;
 	SetXwaTempString();
 
 	g_hangarMapModelIndices.clear();
@@ -4630,7 +4638,9 @@ int HangarExitHook(int* params)
 			continue;
 		}
 
+		g_isInHangar = true;
 		std::string optPath = GetShipPath(modelIndex) + ".opt";
+		g_isInHangar = false;
 
 		std::string currentOptSkins = g_hangarOptSkins[modelIndex];
 		std::string optSkins = OptSkins_ReadOptSkinsListFunction(optPath);
