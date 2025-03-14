@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>10.0</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <Version>2025.0303.1600.00000</Version>
+    <ProductName>XWA hook Hello World</ProductName>
+    <Description>Hook_HelloWorld</Description>
+    <Company>Jérémy Ansel</Company>
+    <Copyright>Copyright © 2025 Jérémy Ansel</Copyright>
+    <PlatformTarget>x86</PlatformTarget>
+    <DllExportDDNSCecil>false</DllExportDDNSCecil>
+    <DllExportOurILAsm>false</DllExportOurILAsm>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DllExport" Version="1.5.2" ExcludeAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="JeremyAnsel.Xwa.ExePatcher" Version="1.0.4" />
+    <PackageReference Include="JeremyAnsel.Xwa.HooksConfig" Version="1.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DllExport, Version=1.5.2.30304, Culture=neutral, PublicKeyToken=8337224c9ad9e356, processorArchitecture=MSIL">
+      <HintPath>$(PkgDllExport)\lib\net20\DllExport.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Import Project="$(PkgDllExport)/tools/net.r_eg.DllExport.targets" Condition="Exists('$(PkgDllExport)/tools/net.r_eg.DllExport.targets')" />
+
+</Project>

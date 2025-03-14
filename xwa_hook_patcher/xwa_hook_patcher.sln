@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hook_patcher", "hook_patcher\hook_patcher.csproj", "{D8911C96-9B6E-4C9E-B797-F13FCCD1114F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D8911C96-9B6E-4C9E-B797-F13FCCD1114F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8911C96-9B6E-4C9E-B797-F13FCCD1114F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8911C96-9B6E-4C9E-B797-F13FCCD1114F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8911C96-9B6E-4C9E-B797-F13FCCD1114F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {79FDE2E9-FDAB-4F5F-8666-6700D02D8CDF}
+	EndGlobalSection
+EndGlobal

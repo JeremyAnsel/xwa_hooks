@@ -127,6 +127,10 @@ This hook transmits vertex normals to DDraw via the specular component.
 This hook removes the opt limit of 512 vertices per mesh.
 It also generates the "spec.rci" file.
 
+## xwa_hook_patcher
+
+This hook applies patches to the xwa exe.
+
 ## xwa_hook_pilot
 
 This hook enables pilot meshes animation for any craft.

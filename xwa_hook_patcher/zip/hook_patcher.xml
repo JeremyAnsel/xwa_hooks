@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfPatch>
+  <Patch Name="show framerate" Description="Show in-flight framerate">
+    <Item Offset="05A3EA" From="85C07405" To="90909090" />
+    <Item Offset="0F165A" From="85C07405" To="90909090" />
+    <Item Offset="07978B" From="746F" To="EB6F" />
+  </Patch>
+</ArrayOfPatch>
