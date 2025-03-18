@@ -379,11 +379,33 @@ enum ShipCategoryEnum : unsigned char
 	ShipCategory_SalvageYard = 21,
 };
 
+enum ExeEnable10Enum : unsigned short
+{
+	ExeEnable10_None = 0,
+	ExeEnable10_Targetable = 1,
+	ExeEnable10_AIControlled = 2,
+	ExeEnable10_IsBuoy = 4,
+	ExeEnable10_In3dModeOnly = 8,
+	ExeEnable10_U5 = 16,
+	ExeEnable10_IsBackdrop = 32,
+	ExeEnable10_U7 = 64,
+	ExeEnable10_InfiniteWaves = 128,
+	ExeEnable10_IsAnimation = 256,
+	ExeEnable10_AnimationLoop = 512,
+	ExeEnable10_HasDatImageBorder = 1024,
+	ExeEnable10_HardpointsMirroring = 2048,
+	ExeEnable10_AxisAligned = 4096,
+	ExeEnable10_U14 = 8192,
+	ExeEnable10_UseImageColorKey = 16384,
+	ExeEnable10_UseImageAlpha = 32768,
+};
+
 struct ExeEnableEntry
 {
 	char unk00[3];
 	ShipCategoryEnum ShipCategory;
-	char unk04[14];
+	char unk04[12];
+	ExeEnable10Enum GameOptions;
 	unsigned short CraftIndex;
 	char unk14[4];
 };
@@ -411,7 +433,22 @@ struct ExeCraftEntry
 	char unk028[2];
 	short Roll;
 	short Pitch;
-	char unk02E[941];
+	char unk02E[260];
+	short LaserTypeId[3];
+	unsigned char LaserStartRack[3];
+	unsigned char LaserEndRack[3];
+	unsigned char LaserLinkCode[3];
+	unsigned char LaserSequence[3];
+	int LaserRange[3];
+	short LaserFireRatio[3];
+	short WarheadTypeId[2];
+	unsigned char WarheadStartRack[2];
+	unsigned char WarheadEndRack[2];
+	unsigned char WarheadLinkCode[2];
+	unsigned char WarheadCapacity[2];
+	char unk162[209];
+	unsigned char CounterMeasuresCount;
+	char unk234[423];
 };
 
 static_assert(sizeof(ExeCraftEntry) == 987, "size of ExeCraftEntry must be 987");
@@ -526,7 +563,11 @@ static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 struct ShiplistEntry
 {
 	char Name[256];
-	char unk100[40];
+	char unk100[24];
+	int MapIconRect_left;
+	int MapIconRect_top;
+	int MapIconRect_right;
+	int MapIconRect_bottom;
 };
 
 static_assert(sizeof(ShiplistEntry) == 296, "size of ShiplistEntry must be 296");
@@ -1345,9 +1386,54 @@ void ApplyStatsProfile(XwaObject* currentObject, XwaCraft* currentCraft)
 	currentObject->pMobileObject->Speed = newSpeed;
 }
 
+std::vector<std::string> GetCraftExeCraftValues(int modelIndex)
+{
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, shipPath + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		shipPath = GetStringWithoutExtension(objectValue);
+	}
+
+	lines = GetFileLines(shipPath + "ExeCraftValues.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", "ExeCraftValues");
+	}
+
+	return lines;
+}
+
 struct SpecEntry
 {
 	char Name[256];
+	int MapIconRect_left;
+	int MapIconRect_top;
+	int MapIconRect_right;
+	int MapIconRect_bottom;
 	char SpecName[256];
 	unsigned char Gender;
 	char PluralName[256];
@@ -1369,7 +1455,7 @@ int GetCraftId(int craftIndex)
 	const auto XwaGetModelCraftId = (int(*)(int))0x00422B50;
 	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 
-	int modelIndex = 0;
+	int modelIndex = -1;
 
 	for (int i = 0; i < 557; i++)
 	{
@@ -1380,8 +1466,32 @@ int GetCraftId(int craftIndex)
 		}
 	}
 
+	if (modelIndex == -1)
+	{
+		return -1;
+	}
+
 	int craftId = XwaGetModelCraftId(modelIndex);
 	return craftId;
+}
+
+int GetCraftModelIndex(int craftIndex)
+{
+	const auto XwaGetModelCraftId = (int(*)(int))0x00422B50;
+	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+
+	int modelIndex = -1;
+
+	for (int i = 0; i < 557; i++)
+	{
+		if (ExeEnableTable[i].CraftIndex == craftIndex)
+		{
+			modelIndex = i;
+			break;
+		}
+	}
+
+	return modelIndex;
 }
 
 class SpecTable
@@ -1396,9 +1506,16 @@ public:
 	{
 		const ShiplistEntry* ShiplistEntries = *(ShiplistEntry**)0x00ABD22C;
 		const int* ShiplistEntriesIndexFromId = (int*)0x00ABD280;
+		const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 		const ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
 		const unsigned char* SpecGender = (unsigned char*)0x009CF640;
 		const char** SpecPluralName = (const char**)0x0091B4C0;
+
+		this->_defaultExeEnableTable.reserve(557);
+		memcpy(this->_defaultExeEnableTable.data(), ExeEnableTable, sizeof(ExeEnableEntry) * this->_defaultExeEnableTable.capacity());
+
+		this->_defaultExeCraftTable.reserve(265);
+		memcpy(this->_defaultExeCraftTable.data(), ExeCraftTable, sizeof(ExeCraftEntry) * this->_defaultExeCraftTable.capacity());
 
 		this->_defaultEntries.reserve(218);
 		this->_currentEntries.reserve(218);
@@ -1407,8 +1524,21 @@ public:
 		{
 			SpecEntry* entry = this->_defaultEntries.data() + i;
 
+			//int modelIndex = GetCraftModelIndex(i);
 			int craftId = GetCraftId(i);
+
+			if (craftId == -1)
+			{
+				*entry = {};
+				continue;
+			}
+
 			strcpy_s(entry->Name, ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].Name);
+			entry->MapIconRect_left = ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].MapIconRect_left;
+			entry->MapIconRect_top = ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].MapIconRect_top;
+			entry->MapIconRect_right = ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].MapIconRect_right;
+			entry->MapIconRect_bottom = ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].MapIconRect_bottom;
+
 			strcpy_s(entry->SpecName, ExeCraftTable[i].SpecName);
 			entry->Gender = SpecGender[i];
 			strcpy_s(entry->PluralName, SpecPluralName[i]);
@@ -1420,16 +1550,59 @@ public:
 	{
 		ShiplistEntry* ShiplistEntries = *(ShiplistEntry**)0x00ABD22C;
 		const int* ShiplistEntriesIndexFromId = (int*)0x00ABD280;
+		ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 		ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
 		unsigned char* SpecGender = (unsigned char*)0x009CF640;
 		const char** SpecPluralName = (const char**)0x0091B4C0;
+
+		for (size_t i = 0; i < this->_defaultExeEnableTable.capacity(); i++)
+		{
+			ExeEnableEntry* defaultEntry = this->_defaultExeEnableTable.data() + i;
+			ExeEnableEntry* exeEntry = ExeEnableTable + i;
+
+			exeEntry->GameOptions = defaultEntry->GameOptions;
+		}
+
+		for (size_t i = 0; i < this->_defaultExeCraftTable.capacity(); i++)
+		{
+			ExeCraftEntry* defaultEntry = this->_defaultExeCraftTable.data() + i;
+			ExeCraftEntry* exeEntry = ExeCraftTable + i;
+
+			for (int index = 0; index < 3; index++)
+			{
+				exeEntry->LaserTypeId[index] = defaultEntry->LaserTypeId[index];
+				exeEntry->LaserSequence[index] = defaultEntry->LaserSequence[index];
+				exeEntry->LaserRange[index] = defaultEntry->LaserRange[index];
+				exeEntry->LaserFireRatio[index] = defaultEntry->LaserFireRatio[index];
+			}
+
+			for (int index = 0; index < 2; index++)
+			{
+				exeEntry->WarheadTypeId[index] = defaultEntry->WarheadTypeId[index];
+				exeEntry->WarheadCapacity[index] = defaultEntry->WarheadCapacity[index];
+			}
+
+			exeEntry->CounterMeasuresCount = defaultEntry->CounterMeasuresCount;
+		}
 
 		for (int i = 0; i < 218; i++)
 		{
 			SpecEntry* entry = this->_defaultEntries.data() + i;
 
+			//int modelIndex = GetCraftModelIndex(i);
 			int craftId = GetCraftId(i);
+
+			if (craftId == -1)
+			{
+				continue;
+			}
+
 			strcpy_s(ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].Name, entry->Name);
+			ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].MapIconRect_left = entry->MapIconRect_left;
+			ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].MapIconRect_top = entry->MapIconRect_top;
+			ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].MapIconRect_right = entry->MapIconRect_right;
+			ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].MapIconRect_bottom = entry->MapIconRect_bottom;
+
 			ExeCraftTable[i].SpecName = entry->SpecName;
 			SpecGender[i] = entry->Gender;
 			SpecPluralName[i] = entry->PluralName;
@@ -1450,8 +1623,41 @@ public:
 
 		int craftId = GetCraftId(craftIndex);
 
+		if (craftId == -1)
+		{
+			return;
+		}
+
 		strcpy_s(entry->Name, name);
 		strcpy_s(ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].Name, entry->Name);
+	}
+
+	void SetMapIconRect(int craftIndex, int icon_left, int icon_top, int icon_right, int icon_bottom)
+	{
+		if (craftIndex < 0 || craftIndex >= 218)
+		{
+			return;
+		}
+
+		ShiplistEntry* ShiplistEntries = *(ShiplistEntry**)0x00ABD22C;
+		const int* ShiplistEntriesIndexFromId = (int*)0x00ABD280;
+		SpecEntry* entry = this->_currentEntries.data() + craftIndex;
+
+		int craftId = GetCraftId(craftIndex);
+
+		if (craftId == -1)
+		{
+			return;
+		}
+
+		entry->MapIconRect_left = icon_left;
+		entry->MapIconRect_top = icon_top;
+		entry->MapIconRect_right = icon_right;
+		entry->MapIconRect_bottom = icon_bottom;
+		ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].MapIconRect_left = entry->MapIconRect_left;
+		ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].MapIconRect_top = entry->MapIconRect_top;
+		ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].MapIconRect_right = entry->MapIconRect_right;
+		ShiplistEntries[ShiplistEntriesIndexFromId[craftId]].MapIconRect_bottom = entry->MapIconRect_bottom;
 	}
 
 	void SetSpecName(int craftIndex, const char* specName)
@@ -1510,7 +1716,75 @@ public:
 		ExeCraftTable[craftIndex].SpecShortName = entry->ShortName;
 	}
 
+	void SetCraftsValues()
+	{
+		ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+		ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+
+		for (int modelIndex = 0; modelIndex < 219; modelIndex++)
+		{
+			unsigned short craftIndex = ExeEnableTable[modelIndex].CraftIndex;
+
+			if (craftIndex >= 218)
+			{
+				continue;
+			}
+
+			std::vector<std::string> lines = GetCraftExeCraftValues(modelIndex);
+
+			if (lines.empty())
+			{
+				continue;
+			}
+
+			SpecEntry* entry = this->_currentEntries.data() + craftIndex;
+
+			ExeEnable10Enum gameOptions = ExeEnableTable[modelIndex].GameOptions;
+
+			int IsHardpointsMirroring = GetFileKeyValueInt(lines, "GameOptions_IsHardpointsMirroring", (gameOptions & ExeEnable10_HardpointsMirroring) ? 1 : 0) != 0;
+			int IsAxisAligned = GetFileKeyValueInt(lines, "GameOptions_IsAxisAligned", (gameOptions & ExeEnable10_AxisAligned) ? 1 : 0) != 0;
+
+			if (IsHardpointsMirroring)
+			{
+				gameOptions = (ExeEnable10Enum)(gameOptions | ExeEnable10_HardpointsMirroring);
+			}
+			else
+			{
+				gameOptions = (ExeEnable10Enum)(gameOptions & ~ExeEnable10_HardpointsMirroring);
+			}
+
+			if (IsAxisAligned)
+			{
+				gameOptions = (ExeEnable10Enum)(gameOptions | ExeEnable10_AxisAligned);
+			}
+			else
+			{
+				gameOptions = (ExeEnable10Enum)(gameOptions & ~ExeEnable10_AxisAligned);
+			}
+
+			ExeEnableTable[modelIndex].GameOptions = gameOptions;
+
+			for (int index = 0; index < 3; index++)
+			{
+				ExeCraftTable[craftIndex].LaserTypeId[index] = (short)GetFileKeyValueInt(lines, "LaserTypeId" + std::to_string(index), this->_defaultExeCraftTable[craftIndex].LaserTypeId[index]);
+				ExeCraftTable[craftIndex].LaserSequence[index] = (unsigned char)GetFileKeyValueInt(lines, "LaserSequence" + std::to_string(index), this->_defaultExeCraftTable[craftIndex].LaserSequence[index]);
+				ExeCraftTable[craftIndex].LaserRange[index] = (int)GetFileKeyValueInt(lines, "LaserRange" + std::to_string(index), this->_defaultExeCraftTable[craftIndex].LaserRange[index]);
+				ExeCraftTable[craftIndex].LaserFireRatio[index] = (short)GetFileKeyValueInt(lines, "LaserFireRatio" + std::to_string(index), this->_defaultExeCraftTable[craftIndex].LaserFireRatio[index]);
+			}
+
+			for (int index = 0; index < 2; index++)
+			{
+				ExeCraftTable[craftIndex].WarheadTypeId[index] = (short)GetFileKeyValueInt(lines, "WarheadTypeId" + std::to_string(index), this->_defaultExeCraftTable[craftIndex].WarheadTypeId[index]);
+				ExeCraftTable[craftIndex].WarheadCapacity[index] = (unsigned char)GetFileKeyValueInt(lines, "WarheadCapacity" + std::to_string(index), this->_defaultExeCraftTable[craftIndex].WarheadCapacity[index]);
+			}
+
+			ExeCraftTable[craftIndex].CounterMeasuresCount = (unsigned char)GetFileKeyValueInt(lines, "CounterMeasuresCount", ExeCraftTable[craftIndex].CounterMeasuresCount);
+		}
+	}
+
 private:
+	std::vector<ExeEnableEntry> _defaultExeEnableTable;
+	std::vector<ExeCraftEntry> _defaultExeCraftTable;
 	std::vector<SpecEntry> _defaultEntries;
 	std::vector<SpecEntry> _currentEntries;
 };
@@ -1620,7 +1894,7 @@ int TieHook(int* params)
 		return 0;
 	}
 
-	GetSpecTable().RestoreDefaultValues();
+	GetSpecTable().SetCraftsValues();
 
 	const std::string path = GetStringWithoutExtension(fileName);
 	auto file = GetFileLines(path + ".txt");
@@ -1701,6 +1975,19 @@ int TieHook(int* params)
 			{
 				std::string value = line[3];
 				GetSpecTable().SetName(craft, value.c_str());
+			}
+			else if (_stricmp(element.c_str(), "mapicon") == 0)
+			{
+				if (line.size() < 7)
+				{
+					continue;
+				}
+
+				int left = std::stoi(line[3]);
+				int top = std::stoi(line[4]);
+				int right = std::stoi(line[5]);
+				int bottom = std::stoi(line[6]);
+				GetSpecTable().SetMapIconRect(craft, left, top, right, bottom);
 			}
 			else if (_stricmp(element.c_str(), "specname") == 0)
 			{

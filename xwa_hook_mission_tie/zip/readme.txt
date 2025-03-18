@@ -115,6 +115,7 @@ To replace the flight group iff, the format is: "fg", fg number, "iff", value.
 To replace the flight group pilot voice, the format is: "fg", fg number, "pilotvoice", value.
 
 To replace the craft name in shiplist.txt, the format is: "craft", craft index, "name", value.
+To replace the craft map icon rect in shiplist.txt, the format is: "craft", craft index, "mapicon", left value, top value, right value, bottom value.
 To replace the craft spec name in strings.txt, the format is: "craft", craft index, "specname", value.
 To replace the craft plural name in strings.txt, the format is: "craft", craft index, "pluralname", value.
 To replace the craft short name in strings.txt, the format is: "craft", craft index, "shortname", value.
@@ -136,6 +137,34 @@ To define how filter the target crafts, set the TargetCraftKeySelectOnlyNotInspe
 To skip checking projectiles proximity, set "SkipProjectilesProximityCheck = 1". The default value is 0.
 
 See "mission.txt".
+
+
+# ExeCraft values
+
+Suppose that the craft is "FlightModels\[Model].opt".
+To define the values for the ExeCraft entry, create a file named "FlightModels\[Model]ExeCraftValues.txt" or create a section named "ExeCraftValues" in "FlightModels\[Model].ini".
+The format is
+GameOptions_IsHardpointsMirroring = 0 or 1
+GameOptions_IsAxisAligned = 0 or 1
+LaserTypeId0 = integer
+LaserSequence0 = integer
+LaserRange0 = integer
+LaserFireRatio0 = integer
+LaserTypeId1 = integer
+LaserSequence1 = integer
+LaserRange1 = integer
+LaserFireRatio1 = integer
+LaserTypeId2 = integer
+LaserSequence2 = integer
+LaserRange2 = integer
+LaserFireRatio2 = integer
+WarheadTypeId0 = integer
+WarheadCapacity0 = integer
+WarheadTypeId1 = integer
+WarheadCapacity1 = integer
+CounterMeasuresCount = integer
+
+See "XWing.ini".
 
 
 # Stats Profiles

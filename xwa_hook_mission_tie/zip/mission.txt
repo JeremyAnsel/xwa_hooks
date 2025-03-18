@@ -4,6 +4,7 @@ fg, 0, iff, 1
 fg, 0, pilotvoice, IP1
 
 craft, 0, name, X-Wing
+craft, 0, mapcion, 100, 50, 116, 66
 craft, 0, specname, X-Wing
 craft, 0, pluralname, X-Wings
 craft, 0, shortname, X-W
