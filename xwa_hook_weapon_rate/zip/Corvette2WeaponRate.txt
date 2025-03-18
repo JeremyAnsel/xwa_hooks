@@ -1,0 +1,5 @@
+MaxSystemDamages = 1000
+Weapon284_LaserIon_Damages = 1
+Weapon285_LaserIonTurbo_Damages = 2
+Weapon290_LaserIonTurbo_Damages = 4
+Weapon296_MagPulse_Damages = 30

@@ -147,6 +147,9 @@ At offset 00E825, replace 3C0474083C050F8508010000 with 909090909090909090909090
 At offset 05FDAD, replace 663BCA7369 with E86E811400.
 At offset 06088B, replace 89156C6D6800 with E89076140090.
 
+# To call the hook that defines system damages
+At offset 00F9DA, replace 6681F9E8037338 with E8418519009090.
+
 
 *** Usage ***
 
@@ -154,7 +157,7 @@ At offset 06088B, replace 89156C6D6800 with E89076140090.
 
 Suppose that the craft is "FlightModels\[Model].opt".
 
-To define the decharge and recharge rates, create a file named "FlightModels\[Model]WeaponRate.txt" or create a section named "[WeaponRate]" in "FlightModels\[Model].ini".
+To define the weapon rate settings, create a file named "FlightModels\[Model]WeaponRate.txt" or create a section named "[WeaponRate]" in "FlightModels\[Model].ini".
 You can override the settings in "FlightModels\WeaponRate.txt" or in the "[WeaponRate]" section in "FlightModels\default.ini".
 
 The format is:
@@ -172,11 +175,16 @@ MaxTorpedoCountPerTarget = value
 IsImpactSpinningEnabled = enabled value
 ImpactSpinningSpeedFactorPercent = percent value
 ImpactSpinningAngleFactorPercent = percent value
+MaxSystemDamages = value
+Weapon284_LaserIon_Damages = value
+Weapon285_LaserIonTurbo_Damages = value
+Weapon290_LaserIonTurbo_Damages = value
+Weapon296_MagPulse_Damages = value
 
 If the file does not exist, default values are used.
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".
-To define a DechargeRate and RechargeRate for a flightgroup, create a file named "[MissionDir]\[Mission]_WeaponRates.txt" or create a section named "[WeaponRates]" in "[MissionDir]\[Mission].ini".
+To define weapon rate settings for a flightgroup, create a file named "[MissionDir]\[Mission]_WeaponRates.txt" or create a section named "[WeaponRates]" in "[MissionDir]\[Mission].ini".
 The format is
 DechargeRate_fg_# = decharge value
 DechargeRatePercent_fg_# = percent value
@@ -191,6 +199,11 @@ MaxTorpedoCountPerTarget_fg_# = value
 IsImpactSpinningEnabled_fg_# = enabled value
 ImpactSpinningSpeedFactorPercent_fg_# = percent value
 ImpactSpinningAngleFactorPercent_fg_# = percent value
+MaxSystemDamages_fg_# = value
+Weapon284_LaserIon_Damages_fg_# = value
+Weapon285_LaserIonTurbo_Damages_fg_# = value
+Weapon290_LaserIonTurbo_Damages_fg_# = value
+Weapon296_MagPulse_Damages_fg_# = value
 
 Replace # with the flightgroup index.
 Set the value to -1 to use per-craft settings.
@@ -226,6 +239,12 @@ If the value is -1, then the global value is used.
 By default, the "is impact spinning enabled" setting is the global value (1).
 The ImpactSpinningSpeedFactorPercent is a percent applied to the craft speed on computing the spinning. The default value is 100.
 The ImpactSpinningAngleFactorPercent is a percent applied to the angle between the craft and the weapon on computing the spinning. The default value is 100.
+
+By default, the value for MaxSystemDamages is 1000.
+By default, the value for Weapon284_LaserIon_Damages is 1.
+By default, the value for Weapon285_LaserIonTurbo_Damages is 2.
+By default, the value for Weapon290_LaserIonTurbo_Damages is 4.
+By default, the value for Weapon296_MagPulse_Damages is 30.
 
 See TieFighterWeaponRate.txt and TieBomberWeaponRate.txt.
 

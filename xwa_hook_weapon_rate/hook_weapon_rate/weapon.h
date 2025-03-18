@@ -102,3 +102,5 @@ int SetWeaponsCount2Hook(int* params);
 
 int HangarWarheadReloadHook(int* params);
 int HangarWarheadCountHook(int* params);
+
+int MaxSystemDamagesHook(int* params);

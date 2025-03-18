@@ -983,6 +983,56 @@ int GetModelImpactSpinningAngleFactorPercent(int objectIndex)
 	return rate;
 }
 
+struct SystemDamagesData
+{
+	int MaxSystemDamages;
+	int Weapon284_LaserIon_Damages;
+	int Weapon285_LaserIonTurbo_Damages;
+	int Weapon290_LaserIonTurbo_Damages;
+	int Weapon296_MagPulse_Damages;
+};
+
+int GetModelSystemDamagesData(int fgIndex, const std::vector<std::string>& lines, const std::string& name, int defaultValue)
+{
+	int value = -1;
+
+	if (fgIndex != -1)
+	{
+		value = GetMissionWeaponRate(fgIndex, name);
+	}
+
+	if (value == -1)
+	{
+		value = GetFileKeyValueInt(lines, name, -1);
+	}
+
+	if (value == -1)
+	{
+		value = defaultValue;
+	}
+
+	return value;
+}
+
+SystemDamagesData GetModelSystemDamages(short objectIndex, unsigned short modelIndex)
+{
+	XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	//unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	int fgIndex = objectIndex == -1 ? -1 : XwaObjects[objectIndex].TieFlightGroupIndex;
+
+
+	auto lines = GetShipLines(modelIndex);
+
+	SystemDamagesData data{};
+	data.MaxSystemDamages = GetModelSystemDamagesData(fgIndex, lines, "MaxSystemDamages", 1000);
+	data.Weapon284_LaserIon_Damages = GetModelSystemDamagesData(fgIndex, lines, "Weapon284_LaserIon_Damages", 1);
+	data.Weapon285_LaserIonTurbo_Damages = GetModelSystemDamagesData(fgIndex, lines, "Weapon285_LaserIonTurbo_Damages", 2);
+	data.Weapon290_LaserIonTurbo_Damages = GetModelSystemDamagesData(fgIndex, lines, "Weapon290_LaserIonTurbo_Damages", 4);
+	data.Weapon296_MagPulse_Damages = GetModelSystemDamagesData(fgIndex, lines, "Weapon296_MagPulse_Damages", 30);
+
+	return data;
+}
+
 struct WeaponStats
 {
 	unsigned short DurationIntegerPart;
@@ -1715,6 +1765,28 @@ public:
 		}
 	}
 
+	SystemDamagesData GetSystemDamages(short objectIndex, unsigned short modelIndex)
+	{
+		this->Update();
+
+		XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+		int fgIndex = objectIndex == -1 ? -1 : XwaObjects[objectIndex].TieFlightGroupIndex;
+
+		auto it = this->_modelSystemDamages.find(std::make_tuple(fgIndex, (int)modelIndex));
+
+		if (it != this->_modelSystemDamages.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			SystemDamagesData value = GetModelSystemDamages(objectIndex, modelIndex);
+
+			this->_modelSystemDamages.insert(std::make_pair(std::make_tuple(fgIndex, (int)modelIndex), value));
+			return value;
+		}
+	}
+
 	int GetSwitchBasedOnIff(int modelIndex)
 	{
 		this->Update();
@@ -1849,6 +1921,7 @@ private:
 			this->_modelIsImpactSpinningEnabled.clear();
 			this->_modelImpactSpinningSpeedFactorPercent.clear();
 			this->_modelImpactSpinningAngleFactorPercent.clear();
+			this->_modelSystemDamages.clear();
 			this->_weaponSwitch.clear();
 			this->_weaponStats.clear();
 			this->_weaponStatsLines.clear();
@@ -1867,6 +1940,7 @@ private:
 	std::map<int, bool> _modelIsImpactSpinningEnabled;
 	std::map<int, int> _modelImpactSpinningSpeedFactorPercent;
 	std::map<int, int> _modelImpactSpinningAngleFactorPercent;
+	std::map<std::tuple<int, int>, SystemDamagesData> _modelSystemDamages;
 	std::map<int, int> _weaponSwitch;
 	std::map<std::tuple<int, int>, WeaponStats> _weaponStats;
 	std::map<int, std::vector<std::string>> _weaponStatsLines;
@@ -4466,6 +4540,50 @@ int HangarWarheadCountHook(int* params)
 		strcat_s(name, 50, " (");
 		strcat_s(name, 50, std::to_string(load).c_str());
 		strcat_s(name, 50, ")");
+	}
+
+	return 0;
+}
+
+int MaxSystemDamagesHook(int* params)
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+	unsigned short& systemStrength = *(unsigned short*)(params[Params_EBX] + 0x000104);
+	unsigned short weaponModelIndex = *(unsigned short*)(params[Params_EBP] - 0x10);
+	int objectIndex = *(int*)(params[Params_EBP] - 0x08) / 0x27;
+	int weaponObjectIndex = *(int*)(params[Params_EBP] + 0x10);
+	short sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
+	unsigned short sourceModelIndex = xwaObjects[weaponObjectIndex].pMobileObject->ModelIndex;
+
+	SystemDamagesData systemDamages = g_modelIndexWeapon.GetSystemDamages(objectIndex, xwaObjects[objectIndex].ModelIndex);
+	SystemDamagesData sourceSystemDamages = g_modelIndexWeapon.GetSystemDamages(sourceObjectIndex, sourceModelIndex);
+
+	params[Params_ReturnAddress] = 0x00410619;
+
+	if (systemStrength < systemDamages.MaxSystemDamages)
+	{
+		switch (weaponModelIndex)
+		{
+		case 284:
+			// ModelIndex_284_1_22_LaserIon
+			systemStrength += sourceSystemDamages.Weapon284_LaserIon_Damages;
+			break;
+
+		case 285:
+			// ModelIndex_285_1_23_LaserIonTurbo
+			systemStrength += sourceSystemDamages.Weapon285_LaserIonTurbo_Damages;
+			break;
+
+		case 290:
+			// ModelIndex_290_1_23_LaserIonTurbo
+			systemStrength += sourceSystemDamages.Weapon290_LaserIonTurbo_Damages;
+			break;
+
+		case 296:
+			// ModelIndex_296_1_28_MagPulse
+			systemStrength += sourceSystemDamages.Weapon296_MagPulse_Damages;
+			break;
+		}
 	}
 
 	return 0;
