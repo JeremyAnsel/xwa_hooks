@@ -81,6 +81,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x45C4CE, HangarExitHook },
 	{ 0x45C7F3, HangarExitHook },
 	{ 0x45D164, HangarExitHook },
+	{ 0x4FD7FB, CraftEjectHook },
 };
 
 static const HookPatchItem g_selectHangarTypePatch[] =
@@ -311,6 +312,11 @@ static const HookPatchItem g_hangarExitPatch[] =
 	{ 0x05C55F, "C705B8BB680001000000", "E8BCB914009090909090" },
 };
 
+static const HookPatchItem g_craftEjectPatch[] =
+{
+	{ 0x0FCBF6, "E865A50000", "E825B30A00" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that selects the hangar type", g_selectHangarTypePatch),
@@ -344,4 +350,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that defines hangar ambient sounds", g_hangarAmbientSoundsPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines hangar light", g_hangarLightPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines hangar exit", g_hangarExitPatch),
+	MAKE_HOOK_PATCH("To call the hook that eject craft", g_craftEjectPatch),
 };

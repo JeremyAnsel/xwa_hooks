@@ -204,6 +204,9 @@ At offset 05B8C9, replace C705B8BB680001000000 with E852C614009090909090.
 At offset 05BBEE, replace 8935B8BB6800 with E82DC3140090.
 At offset 05C55F, replace C705B8BB680001000000 with E8BCB914009090909090.
 
+# To call the hook that eject craft
+At offset 0FCBF6, replace E865A50000 with E825B30A00.
+
 
 *** Usage ***
 

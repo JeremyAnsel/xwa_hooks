@@ -345,6 +345,10 @@ int GetCockpitId();
 std::string OptSkins_ReadOptSkinsListFunction(const std::string& optFilename);
 std::string GetShipPath(int modelIndex);
 
+bool g_isCraftEject = false;
+std::vector<unsigned short> GetHhangarMapModelIndices();
+void CraftEjectReload();
+
 std::vector<unsigned short> GetDefaultCraftSelectionTransports()
 {
 	std::vector<unsigned short> selection;
@@ -1559,12 +1563,12 @@ int HangarOptLoadHook(int* params)
 		opt = argOpt;
 	}
 
-	std::string currentOptSkins = g_hangarOptSkins[argModelIndex];
-	std::string optSkins = OptSkins_ReadOptSkinsListFunction(opt);
-	g_hangarOptSkins[argModelIndex] = optSkins;
-
 	const auto lines = g_hangarObjects.GetLines();
 	const std::string value = GetFileKeyValue(lines, opt);
+
+	std::string currentOptSkins = g_hangarOptSkins[argModelIndex];
+	std::string optSkins = OptSkins_ReadOptSkinsListFunction(value.empty() ? opt : value);
+	g_hangarOptSkins[argModelIndex] = optSkins;
 
 	if (!value.empty())
 	{
@@ -2541,6 +2545,8 @@ int HangarShuttleUpdateHook(int* params)
 
 int HangarShuttleReenterPositionHook(int* params)
 {
+	CraftEjectReload();
+
 	ReadIsHangarFloorInverted();
 
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
@@ -4659,11 +4665,14 @@ int HangarExitHook(int* params)
 
 		if ((ExeEnableTable[modelIndex].m01 & 0x18) == 0)
 		{
+			g_hangarOptSkins[modelIndex] = std::string();
 			continue;
 		}
 
 		HangarOptLoad(modelIndex);
 
+		optPath = GetShipPath(modelIndex) + ".opt";
+		optSkins = OptSkins_ReadOptSkinsListFunction(optPath);
 		g_hangarOptSkins[modelIndex] = optSkins;
 	}
 
@@ -4676,6 +4685,230 @@ int HangarExitHook(int* params)
 		CockpitOptReadInfos();
 		ExteriorOptReadInfos();
 	}
+
+	return 0;
+}
+
+std::vector<unsigned short> GetFLightObjects()
+{
+	std::vector<unsigned short> objects;
+
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+
+	for (int eax = 0; eax < *(int*)0x07FFD80; eax++)
+	{
+		XwaObject* object = &xwaObjects[eax];
+
+		if (object->ModelIndex == 0)
+			continue;
+
+		// Hangar or FamilyBase
+		if (object->ModelIndex == 0x134 || object->ModelIndex == 0xB3)
+			continue;
+
+		objects.push_back(object->ModelIndex);
+	}
+
+	return objects;
+}
+
+std::vector<unsigned short> GetHhangarMapModelIndices()
+{
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	//const int playerObjectIndex = *(int*)0x068BB98;
+	const int playerObjectIndex = *(int*)0x068BC08;
+
+	unsigned short playerModelIndex = xwaObjects[playerObjectIndex].ModelIndex;
+
+	int xwaMission = *(int*)0x09EB8E0;
+	unsigned char missionType = *(unsigned char*)(xwaMission + 0xAF7DC + 0x23A6);
+	unsigned short hangarModelIndex = (missionType == 7 && SelectHangarTypeHook(nullptr) == 1) ? 0xB3 : 0x134;
+
+	std::vector<unsigned short> hangarMapModelIndices;
+	hangarMapModelIndices.push_back(0x134);
+	hangarMapModelIndices.push_back(0xB3);
+	hangarMapModelIndices.push_back(playerModelIndex);
+
+	const auto hangarMapLines = GetCustomFileLines(hangarModelIndex == 0x134 ? "HangarMap" : "FamHangarMap", false);
+
+	if (hangarMapLines.size())
+	{
+		const auto hangarMapValues = GetFileListValues(hangarMapLines);
+
+		for (unsigned int i = 0; i < hangarMapValues.size(); i++)
+		{
+			const auto& value = hangarMapValues[i];
+
+			if (value.size() < 6)
+			{
+				continue;
+			}
+
+			unsigned short modelIndex = static_cast<unsigned short>(std::stoi(value[0], 0, 0));
+			hangarMapModelIndices.push_back(modelIndex);
+		}
+	}
+	else
+	{
+		if (hangarModelIndex == 0x134)
+		{
+			// default HangarMap
+			hangarMapModelIndices.push_back(314);
+			hangarMapModelIndices.push_back(309);
+			hangarMapModelIndices.push_back(313);
+			hangarMapModelIndices.push_back(315);
+			hangarMapModelIndices.push_back(315);
+			hangarMapModelIndices.push_back(315);
+			hangarMapModelIndices.push_back(310);
+			hangarMapModelIndices.push_back(310);
+			hangarMapModelIndices.push_back(310);
+			hangarMapModelIndices.push_back(83);
+			hangarMapModelIndices.push_back(83);
+			hangarMapModelIndices.push_back(83);
+			hangarMapModelIndices.push_back(84);
+			hangarMapModelIndices.push_back(80);
+			hangarMapModelIndices.push_back(2);
+			hangarMapModelIndices.push_back(50);
+			hangarMapModelIndices.push_back(315);
+			hangarMapModelIndices.push_back(310);
+			hangarMapModelIndices.push_back(310);
+			hangarMapModelIndices.push_back(83);
+			hangarMapModelIndices.push_back(83);
+			hangarMapModelIndices.push_back(84);
+			hangarMapModelIndices.push_back(80);
+			hangarMapModelIndices.push_back(80);
+			hangarMapModelIndices.push_back(3);
+			hangarMapModelIndices.push_back(2);
+			hangarMapModelIndices.push_back(1);
+		}
+		else
+		{
+			// default FamHangarMap
+			hangarMapModelIndices.push_back(315);
+			hangarMapModelIndices.push_back(314);
+			hangarMapModelIndices.push_back(309);
+			hangarMapModelIndices.push_back(313);
+			hangarMapModelIndices.push_back(80);
+			hangarMapModelIndices.push_back(80);
+			hangarMapModelIndices.push_back(83);
+			hangarMapModelIndices.push_back(83);
+			hangarMapModelIndices.push_back(83);
+			hangarMapModelIndices.push_back(84);
+			hangarMapModelIndices.push_back(84);
+			hangarMapModelIndices.push_back(80);
+			hangarMapModelIndices.push_back(80);
+			hangarMapModelIndices.push_back(310);
+			hangarMapModelIndices.push_back(310);
+			hangarMapModelIndices.push_back(83);
+			hangarMapModelIndices.push_back(83);
+		}
+	}
+
+	return hangarMapModelIndices;
+}
+
+void CraftEjectReload()
+{
+	if (!g_isCraftEject)
+	{
+		return;
+	}
+
+	g_isCraftEject = false;
+
+	const auto HangarOptLoad = (int(*)(unsigned short))0x00456FA0;
+	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
+	const auto CockpitOptReadInfos = (void(*)())0x004314B0;
+	const auto ExteriorOptReadInfos = (void(*)())0x00431960;
+
+	//g_hangarMapModelIndices.clear();
+
+	g_isInHangar = true;
+	int& missionFileNameIndex = *(int*)0x06002E4;
+	missionFileNameIndex++;
+
+	unsigned short* OptModelFileMemHandles = (unsigned short*)0x007CA6E0;
+	const int OptModelFileMemHandlesCount = 557;
+	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
+
+	std::vector<unsigned short> hangarMapModelIndices = GetHhangarMapModelIndices();
+
+	bool modelIndexes[OptModelFileMemHandlesCount];
+	memset(modelIndexes, 0, sizeof(modelIndexes));
+
+	std::vector<unsigned short> flightObjects = GetFLightObjects();
+
+	for (unsigned short modelIndex : flightObjects)
+	{
+		modelIndexes[modelIndex] = true;
+	}
+
+	for (unsigned short modelIndex = 1; modelIndex < OptModelFileMemHandlesCount; modelIndex++)
+	{
+		if (!modelIndexes[modelIndex] || OptModelFileMemHandles[modelIndex] == 0)
+		{
+			continue;
+		}
+
+		g_isInHangar = false;
+		std::string optPath = GetShipPath(modelIndex) + ".opt";
+		g_isInHangar = true;
+
+		std::string currentOptSkins = g_hangarOptSkins[modelIndex];
+		std::string optSkins = OptSkins_ReadOptSkinsListFunction(optPath);
+		bool optSkinsChanged = _stricmp(currentOptSkins.c_str(), optSkins.c_str()) != 0;
+
+		if (!optSkinsChanged)
+		{
+			continue;
+		}
+
+		bool modelInMap = std::find(hangarMapModelIndices.begin(), hangarMapModelIndices.end(), modelIndex) != hangarMapModelIndices.end();
+
+		if (!modelInMap)
+		{
+			continue;
+		}
+
+		OptUnload(OptModelFileMemHandles[modelIndex]);
+
+		OptModelFileMemHandles[modelIndex] = 0;
+		ExeEnableTable[modelIndex].pData1 = nullptr;
+		ExeEnableTable[modelIndex].pData2 = nullptr;
+
+		if ((ExeEnableTable[modelIndex].m01 & 0x18) == 0)
+		{
+			g_hangarOptSkins[modelIndex] = std::string();
+			continue;
+		}
+
+		HangarOptLoad(modelIndex);
+
+		optPath = GetShipPath(modelIndex) + ".opt";
+		optSkins = OptSkins_ReadOptSkinsListFunction(optPath);
+		g_hangarOptSkins[modelIndex] = optSkins;
+	}
+
+	int cockpitId = GetCockpitId();
+
+	if (g_cockpitId != cockpitId)
+	{
+		g_cockpitId = cockpitId;
+
+		CockpitOptReadInfos();
+		ExteriorOptReadInfos();
+	}
+}
+
+int CraftEjectHook(int* params)
+{
+	const int A4 = params[0];
+
+	const auto L00507D60 = (void(*)(int))0x00507D60;
+
+	L00507D60(A4);
+
+	g_isCraftEject = true;
 
 	return 0;
 }
