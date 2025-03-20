@@ -275,6 +275,22 @@ std::vector<std::vector<int>> GetMeshesCollisionList()
 	return meshesValues;
 }
 
+std::vector<int> GetSubcomponentsStrengthList(int modelIndex)
+{
+	const std::string ship = GetShipPath(modelIndex);
+
+	auto lines = GetFileLines(ship + "SubcomponentsStrength.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", "SubcomponentsStrength");
+	}
+
+	const std::vector<int> values = GetFileListIntValues(lines);
+
+	return values;
+}
+
 class ModelIndexSettings
 {
 public:
@@ -330,6 +346,35 @@ public:
 		return value != 0;
 	}
 
+	int GetSubcomponentStrength(int modelIndex, int meshType)
+	{
+		this->UpdateIfChanged();
+
+		auto it = this->_subcomponentsStrength.find(modelIndex);
+
+		if (it != this->_subcomponentsStrength.end())
+		{
+			if (meshType < 0 || meshType >= (int)it->second.size())
+			{
+				return -1;
+			}
+
+			return it->second[meshType];
+		}
+		else
+		{
+			auto values = GetSubcomponentsStrengthList(modelIndex);
+			this->_subcomponentsStrength.insert(std::make_pair(modelIndex, values));
+
+			if (meshType < 0 || meshType >= (int)values.size())
+			{
+				return -1;
+			}
+
+			return values[meshType];
+		}
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -346,11 +391,13 @@ private:
 
 			this->_engines.clear();
 			this->_meshesCollision.clear();
+			this->_subcomponentsStrength.clear();
 		}
 	}
 
 	std::map<std::tuple<int, int>, EngineGlow> _engines;
 	std::vector<std::vector<int>> _meshesCollision;
+	std::map<int, std::vector<int>> _subcomponentsStrength;
 };
 
 ModelIndexSettings g_modelIndexSettings;
@@ -1467,5 +1514,49 @@ int L004A2DD0Hook(int* params)
 
 	params[Params_ECX] = *(unsigned char*)(params[Params_EAX] + 0x000000C6);
 
+	return 0;
+}
+
+int SubcomponentsStrengthHook(int* params)
+{
+	const int meshType = params[Params_EDI];
+	const int modelIndex = params[Params_EBP];
+
+	int strength = ((unsigned char*)0x005B12D8)[meshType];
+
+	int value = g_modelIndexSettings.GetSubcomponentStrength(modelIndex, meshType);
+
+	if (value >= 0)
+	{
+		strength = value;
+	}
+
+	params[Params_EDX] = strength;
+	return 0;
+}
+
+int SubcomponentsStrengthPercentHook(int* params)
+{
+	const int meshType = params[Params_EAX];
+	const int currentPlayerId = *(int*)0x008C1CC8;
+	const int currentTargetIndex = *(short*)(0x008B9505 + currentPlayerId * 0xBCF);
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const int modelIndex = XwaObjects[currentTargetIndex].ModelIndex;
+
+	int strength = ((unsigned char*)0x005B12D8)[meshType];
+
+	int value = g_modelIndexSettings.GetSubcomponentStrength(modelIndex, meshType);
+
+	if (value >= 0)
+	{
+		strength = value;
+	}
+
+	if (strength <= 0)
+	{
+		strength = 1;
+	}
+
+	params[Params_ECX] = strength;
 	return 0;
 }

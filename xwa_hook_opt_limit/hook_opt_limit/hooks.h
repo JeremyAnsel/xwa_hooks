@@ -72,6 +72,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4825BE, SelectLodVersionHook },
 	{ 0x4DF31C, MeshesCollisionHook },
 	{ 0x4A2DE1, L004A2DD0Hook },
+	{ 0x41C8BD, SubcomponentsStrengthHook },
+	{ 0x47AD00, SubcomponentsStrengthPercentHook },
 };
 
 static const std::string g_hitDataArray0 = int_to_hex(GetHitDataArrayPtr());
@@ -1769,6 +1771,12 @@ static const HookPatchItem g_weaponRacksOffsetsPatch[] =
 	{ 0x001BA9EE, "00000000", g_weaponSlots_Offset2.c_str() },
 };
 
+static const HookPatchItem g_subcomponentsStrengthPatch[] =
+{
+	{ 0x01BCB8, "8A97D8125B00", "E863C2180090" },
+	{ 0x07A0FB, "8A88D8125B00", "E820DE120090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("'triangling to infinity' patch", g_trianglingPatch),
@@ -1796,4 +1804,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that computes the checksum", g_computeChecksumPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the opt meshes collision", g_meshesCollisionPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the weapon racks offsets", g_weaponRacksOffsetsPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the subcomponents strength", g_subcomponentsStrengthPatch),
 };

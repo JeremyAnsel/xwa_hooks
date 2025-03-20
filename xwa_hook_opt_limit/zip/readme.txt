@@ -126,6 +126,10 @@ At offset 0DE717, replace E83497FAFF with E814980C00.
 # To call the hook that sets the weapon racks offsets
 See "exe_edit_weaponracks.txt"
 
+# To call the hook that sets the subcomponents strength
+At offset 01BCB8, replace 8A97D8125B00 with E863C2180090.
+At offset 07A0FB, replace 8A88D8125B00 with E820DE120090.
+
 
 *** Usage ***
 
@@ -157,6 +161,43 @@ value is 1 or 0.
 XXX is the mesh index.
 The default value for the MeshCollision setting is 1.
 The default value for the MeshCollision_XXX setting is the value of the MeshCollision setting.
+
+Suppose that the craft is "FlightModels\[Model].opt".
+To define the strength of the subcomponents, create a file named "FlightModels\[Model]SubcomponentsStrength.txt" or create a section named "[SubcomponentsStrength]" in "FlightModels\[Model].ini".
+The section contains 32 lines: one for each mesh type. If a value is -1 then a default value is used.
+The list is:
+Default,
+MainHull,
+Wing,
+Fuselage,
+GunTurret,
+SmallGun,
+Engine,
+Bridge,
+ShieldGenerator,
+EnergyGenerator,
+Launcher,
+CommunicationSystem,
+BeamSystem,
+CommandSystem,
+DockingPlatform,
+LandingPlatform,
+Hangar,
+CargoPod,
+MiscHull,
+Antenna,
+RotaryWing,
+RotaryGunTurret,
+RotaryLauncher,
+RotaryCommunicationSystem,
+RotaryBeamSystem,
+RotaryCommandSystem,
+Hatch,
+Custom,
+WeaponSystem1,
+WeaponSystem2,
+PowerRegenerator,
+Reactor
 
 
 *** Credits ***

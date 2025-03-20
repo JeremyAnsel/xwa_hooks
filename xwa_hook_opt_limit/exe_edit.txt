@@ -198,3 +198,17 @@ E83497FAFF              call 00488A50
 
 E814980C00              call 005A8B30, 005A8B30 - 004DF31C = 000C9814
 
+
+; subcomponents strength
+; L0041A960
+:0041C8B8 - 0x01BCB8
+8A97D8125B00            mov dl, byte ptr [edi+005B12D8]
+
+E863C21800              call 005A8B20, 005A8B20 - 0041C8BD = 0018C263
+90                      nop
+
+:0047ACFB - 0x07A0FB
+8A88D8125B00            mov cl, byte ptr [eax+005B12D8]
+
+E820DE1200              call 005A8B20, 005A8B20 - 0047AD00 = 0012DE20
+90                      nop

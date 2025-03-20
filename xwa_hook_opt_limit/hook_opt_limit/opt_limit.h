@@ -81,3 +81,6 @@ int SelectLodVersionHook(int* params);
 int MeshesCollisionHook(int* params);
 
 int L004A2DD0Hook(int* params);
+
+int SubcomponentsStrengthHook(int* params);
+int SubcomponentsStrengthPercentHook(int* params);
