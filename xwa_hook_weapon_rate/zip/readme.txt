@@ -150,6 +150,13 @@ At offset 06088B, replace 89156C6D6800 with E89076140090.
 # To call the hook that defines system damages
 At offset 00F9DA, replace 6681F9E8037338 with E8418519009090.
 
+# To call the hook that defines weapon hardpoint types
+At offset 0322C0, replace 8A87E0305B00 with E85B5C170090.
+At offset 0323AE, replace 0F8591000000 with E86D5B170090.
+At offset 032272, replace 8D8F17010000 with E8A95C170090.
+At offset 0324EE, replace 662D1701897C2428 with E82D5A1700909090.
+At offset 032704, replace 8B4C2454662D1701 with E817581700909090.
+
 
 *** Usage ***
 
@@ -471,7 +478,24 @@ The warhead type is one of these values:
 - AdvancedMagPulse
 - ClusterBombs
 
+# Weapon hardpoints types
+
+Suppose that the craft is "FlightModels\[Model].opt".
+
+To define the type of the weapon hardpoints, create a file named "FlightModels\[Model]WeaponHardpointTypes.txt" or create a section named "[WeaponHardpointTypes]" in "FlightModels\[Model].ini".
+0 means not a weapon
+1 means a laser (rebel, imperial, ion)
+2 means a wharhead
+
+These hardpoints are remapped:
+HardpointType_Unknown1 = 33 => ModelIndex_301_1_18_LaserRebelTurbo = 301
+HardpointType_Unknown2 = 34 => ModelIndex_302_1_18_LaserRebelTurbo = 302
+HardpointType_Unknown3 = 35 => ModelIndex_303_1_20_LaserImpTurbo = 303
+HardpointType_Unknown4 = 36 => ModelIndex_304_1_20_LaserImpTurbo = 304
+HardpointType_Unknown5 = 37 => ModelIndex_305_1_20_LaserImpTurbo = 305
+HardpointType_Unknown6 = 38 => ModelIndex_307__1_0 = 307
+
 
 *** Credits ***
 
-- JÃ©rÃ©my Ansel (JeremyaFr)
+- Jérémy Ansel (JeremyaFr)

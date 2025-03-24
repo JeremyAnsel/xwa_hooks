@@ -104,3 +104,9 @@ int HangarWarheadReloadHook(int* params);
 int HangarWarheadCountHook(int* params);
 
 int MaxSystemDamagesHook(int* params);
+
+int WeaponHardpointType1Hook(int* params);
+int WeaponHardpointType2Hook(int* params);
+int WeaponHardpointTypeToModelIndexHook(int* params);
+int WeaponLaserModelIndexToHardpointTypeHook(int* params);
+int WeaponWarheadModelIndexToHardpointTypeHook(int* params);

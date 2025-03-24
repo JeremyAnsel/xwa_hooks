@@ -125,6 +125,11 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4609B2, HangarWarheadReloadHook },
 	{ 0x461490, HangarWarheadCountHook },
 	{ 0x4105DF, MaxSystemDamagesHook },
+	{ 0x432EC5, WeaponHardpointType1Hook },
+	{ 0x432FB3, WeaponHardpointType2Hook },
+	{ 0x432E77, WeaponHardpointTypeToModelIndexHook },
+	{ 0x4330F3, WeaponLaserModelIndexToHardpointTypeHook },
+	{ 0x433309, WeaponWarheadModelIndexToHardpointTypeHook },
 };
 
 static const HookPatchItem g_weaponRatePatch[] =
@@ -296,6 +301,15 @@ static const HookPatchItem g_systemDamagesPatch[] =
 	{ 0x00F9DA, "6681F9E8037338", "E8418519009090" },
 };
 
+static const HookPatchItem g_weaponHardpointTypesPatch[] =
+{
+	{ 0x0322C0, "8A87E0305B00", "E85B5C170090" },
+	{ 0x0323AE, "0F8591000000", "E86D5B170090" },
+	{ 0x032272, "8D8F17010000", "E8A95C170090" },
+	{ 0x0324EE, "662D1701897C2428", "E82D5A1700909090" },
+	{ 0x032704, "8B4C2454662D1701", "E817581700909090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that defines weapon decharge and recharge rates", g_weaponRatePatch),
@@ -312,4 +326,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that filters ship type for weapons", g_weaponsShipTypeFilterPatch),
 	MAKE_HOOK_PATCH("To call the hook that reloads warheads in hangar", g_hangarWarheadReloadPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines system damages", g_systemDamagesPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines weapon hardpoint types", g_weaponHardpointTypesPatch),
 };

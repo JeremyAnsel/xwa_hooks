@@ -3,6 +3,7 @@
 #include "config.h"
 #include <fstream>
 #include <map>
+#include <array>
 #include <utility>
 #include <Windows.h>
 
@@ -1488,6 +1489,33 @@ std::string GetWeaponProfileName(int fgIndex)
 	return name;
 }
 
+std::array<int, 40> GetWeaponHardpointTypes(int modelIndex)
+{
+	auto lines = GetModelLines(modelIndex, "WeaponHardpointTypes");
+	std::array<int, 40> typesArray;
+	typesArray.fill(0);
+
+	if (lines.size())
+	{
+		auto types = GetFileListIntValues(lines);
+		int count = min(types.size(), 40);
+
+		for (int i = 0; i < count; i++)
+		{
+			typesArray[i] = types[i];
+		}
+	}
+	else
+	{
+		for (int i = 0; i < 36; i++)
+		{
+			typesArray[i] = ((unsigned char*)0x05B30E0)[i];
+		}
+	}
+
+	return typesArray;
+}
+
 class ModelIndexWeapon
 {
 public:
@@ -1895,6 +1923,24 @@ public:
 		return it->second;
 	}
 
+	const std::array<int, 40>& GetHardpointWeaponTypes(int modelIndex)
+	{
+		this->Update();
+
+		auto it = this->_weaponHardpointTypes.find(modelIndex);
+
+		if (it != this->_weaponHardpointTypes.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetWeaponHardpointTypes(modelIndex);
+			this->_weaponHardpointTypes.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
 private:
 	void Update()
 	{
@@ -1925,6 +1971,7 @@ private:
 			this->_weaponSwitch.clear();
 			this->_weaponStats.clear();
 			this->_weaponStatsLines.clear();
+			this->_weaponHardpointTypes.clear();
 		}
 	}
 
@@ -1944,6 +1991,7 @@ private:
 	std::map<int, int> _weaponSwitch;
 	std::map<std::tuple<int, int>, WeaponStats> _weaponStats;
 	std::map<int, std::vector<std::string>> _weaponStatsLines;
+	std::map<int, std::array<int, 40>> _weaponHardpointTypes;
 };
 
 ModelIndexWeapon g_modelIndexWeapon;
@@ -4586,5 +4634,104 @@ int MaxSystemDamagesHook(int* params)
 		}
 	}
 
+	return 0;
+}
+
+int WeaponHardpointType1Hook(int* params)
+{
+	int hardpointType = params[Params_EDI];
+	int modelIndex = params[9];
+
+	auto& types = g_modelIndexWeapon.GetHardpointWeaponTypes(modelIndex);
+	int weaponType = (hardpointType >= 0 && hardpointType < (int)types.size()) ? types[hardpointType] : 0;
+
+	params[Params_EAX] = weaponType;
+
+	return 0;
+}
+
+int WeaponHardpointType2Hook(int* params)
+{
+	int hardpointType = params[Params_EDX];
+	int modelIndex = params[9];
+
+	auto& types = g_modelIndexWeapon.GetHardpointWeaponTypes(modelIndex);
+	int weaponType = (hardpointType >= 0 && hardpointType < (int)types.size()) ? types[hardpointType] : 0;
+
+	if (weaponType != 0x01)
+	{
+		params[Params_ReturnAddress] = 0x00433045;
+	}
+
+	return 0;
+}
+
+int ConvertWeaponHardpointTypeToModelIndex(int hardpointType)
+{
+	int modelIndex = 0;
+
+	if (hardpointType >= 1 && hardpointType <= 18)
+	{
+		modelIndex = 280 + hardpointType - 1;
+	}
+	else if (hardpointType >= 33 && hardpointType <= 37)
+	{
+		modelIndex = 301 + hardpointType - 33;
+	}
+	else if (hardpointType == 38)
+	{
+		modelIndex = 307;
+	}
+
+	return modelIndex;
+}
+
+int ConvertWeaponModelIndexToHardpointType(int modelIndex)
+{
+	int hardpointType = 0;
+
+	if (modelIndex >= 280 && modelIndex <= 297)
+	{
+		hardpointType = 1 + modelIndex - 280;
+	}
+	else if (modelIndex >= 301 && modelIndex <= 305)
+	{
+		hardpointType = 33 + modelIndex - 301;
+	}
+	else if (modelIndex == 307)
+	{
+		hardpointType = 38;
+	}
+
+	return hardpointType;
+}
+
+int WeaponHardpointTypeToModelIndexHook(int* params)
+{
+	int hardpointType = params[Params_EDI];
+	int modelIndex = ConvertWeaponHardpointTypeToModelIndex(hardpointType);
+
+	params[Params_ECX] = modelIndex;
+	return 0;
+}
+
+int WeaponLaserModelIndexToHardpointTypeHook(int* params)
+{
+	*(int*)((int)params + 0x28) = params[Params_EDI];
+
+	unsigned short modelIndex = (unsigned short)params[Params_EAX];
+	int hardpointType = ConvertWeaponModelIndexToHardpointType(modelIndex);
+	params[Params_EAX] = hardpointType;
+	return 0;
+}
+
+int WeaponWarheadModelIndexToHardpointTypeHook(int* params)
+{
+	params[Params_ECX] = *(int*)((int)params + 0x54);
+
+	unsigned short modelIndex = (unsigned short)params[Params_EAX];
+	int hardpointType = ConvertWeaponModelIndexToHardpointType(modelIndex);
+
+	params[Params_EAX] = hardpointType;
 	return 0;
 }
