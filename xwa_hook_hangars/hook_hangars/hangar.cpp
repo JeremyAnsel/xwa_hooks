@@ -2417,6 +2417,37 @@ std::string GetShipPath(int modelIndex)
 	return shipPath;
 }
 
+std::vector<int> GetModelObjectProfileIndices(const std::vector<std::string>& lines, const std::string& profile)
+{
+	const auto values = Tokennize(GetFileKeyValue(lines, profile));
+	std::vector<int> indices;
+
+	for (const std::string& value : values)
+	{
+		int index = -1;
+
+		try
+		{
+			index = std::stoi(value);
+		}
+		catch (const std::exception&)
+		{
+		}
+
+		if (index >= 0)
+		{
+			indices.push_back(index);
+		}
+		else if (index == -1)
+		{
+			std::vector<int> refIndices = GetModelObjectProfileIndices(lines, value);
+			indices.insert(std::end(indices), std::begin(refIndices), std::end(refIndices));
+		}
+	}
+
+	return indices;
+}
+
 void ApplyObjectProfile(unsigned short modelIndex, std::string objectProfile, XwaCraft* pCraft)
 {
 	const ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
@@ -2452,7 +2483,7 @@ void ApplyObjectProfile(unsigned short modelIndex, std::string objectProfile, Xw
 		lines = GetFileLines(shipPath + ".ini", "ObjectProfiles");
 	}
 
-	const auto values = Tokennize(GetFileKeyValue(lines, objectProfile));
+	const auto indices = GetModelObjectProfileIndices(lines, objectProfile);
 
 	for (int index = 0; index < meshesCount; index++)
 	{
@@ -2460,10 +2491,8 @@ void ApplyObjectProfile(unsigned short modelIndex, std::string objectProfile, Xw
 		m22E[index] = 0;
 	}
 
-	for (const std::string& value : values)
+	for (const int index : indices)
 	{
-		int index = std::stoi(value);
-
 		if (index < 0 || index >= meshesCount)
 		{
 			continue;
