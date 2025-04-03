@@ -685,8 +685,25 @@ std::vector<int> GetModelObjectProfileIndices(int modelIndex, const std::string&
 
 	for (const std::string& value : values)
 	{
-		int index = std::stoi(value);
-		indices.push_back(index);
+		int index = -1;
+
+		try
+		{
+			index = std::stoi(value);
+		}
+		catch (const std::exception&)
+		{
+		}
+
+		if (index >= 0)
+		{
+			indices.push_back(index);
+		}
+		else if (index == -1)
+		{
+			std::vector<int> refIndices = GetModelObjectProfileIndices(modelIndex, value);
+			indices.insert(std::end(indices), std::begin(refIndices), std::end(refIndices));
+		}
 	}
 
 	return indices;

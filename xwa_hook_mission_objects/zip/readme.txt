@@ -183,7 +183,7 @@ Suppose that the new craft is "FlightModels\[Model].opt".
 To hide meshes for a craft, create a file named "FlightModels\[Model]ObjectProfiles.txt" or create a section named "[ObjectProfiles]" in "FlightModels\[Model].ini".
 The format is:
 ProfileName = indices
-indices are a comma separated list.
+indices are a comma separated list. It contains integers and/or references to other profiles.
 See "ModelObjectProfiles.txt"
 
 In Skirmish, the default profile is "Skirmish".
