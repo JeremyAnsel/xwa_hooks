@@ -60,6 +60,18 @@ enum ParamsEnum
 	Params_EDI = -10,
 };
 
+float GetFileKeyValueFloat(const std::vector<std::string>& lines, const std::string& key, float defaultValue)
+{
+	std::string value = GetFileKeyValue(lines, key);
+
+	if (value.empty())
+	{
+		return defaultValue;
+	}
+
+	return std::stof(value);
+}
+
 std::wstring string_towstring(const char* text)
 {
 	std::wstringstream path;
@@ -115,6 +127,57 @@ std::vector<std::string> TokennizeSpaces(const std::string& str)
 
 	return tokens;
 }
+
+class FlightModelsList
+{
+public:
+	FlightModelsList()
+	{
+		for (const auto& line : GetFileLines("FlightModels\\Spacecraft0.LST"))
+		{
+			this->_spacecraftList.push_back(GetStringWithoutExtension(line));
+		}
+
+		for (const auto& line : GetFileLines("FlightModels\\Equipment0.LST"))
+		{
+			this->_equipmentList.push_back(GetStringWithoutExtension(line));
+		}
+	}
+
+	std::string GetLstLine(int modelIndex)
+	{
+		const int xwaObjectStats = 0x05FB240;
+		const int dataIndex1 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x14);
+		const int dataIndex2 = *(short*)(xwaObjectStats + modelIndex * 0x18 + 0x16);
+
+		switch (dataIndex1)
+		{
+		case 0:
+			if ((unsigned int)dataIndex2 < this->_spacecraftList.size())
+			{
+				return this->_spacecraftList[dataIndex2];
+			}
+
+			break;
+
+		case 1:
+			if ((unsigned int)dataIndex2 < this->_equipmentList.size())
+			{
+				return this->_equipmentList[dataIndex2];
+			}
+
+			break;
+		}
+
+		return std::string();
+	}
+
+private:
+	std::vector<std::string> _spacecraftList;
+	std::vector<std::string> _equipmentList;
+};
+
+FlightModelsList g_flightModelsList;
 
 class Config
 {
@@ -174,6 +237,15 @@ public:
 		this->DrawStarfield = GetFileKeyValueInt(lines, "DrawStarfield", 1) != 0;
 
 		this->PlayMovieOutputDebugString = GetFileKeyValueInt(lines, "PlayMovieOutputDebugString", 0) != 0;
+
+		this->SkirmishOptEnabled = GetFileKeyValueInt(lines, "SkirmishOptEnabled", 1) != 0 && this->HDConcourseEnabled;
+		this->SkirmishOptScale = GetFileKeyValueFloat(lines, "SkirmishOptScale", 1.0f);
+		this->SkirmishOptAnglePitch = GetFileKeyValueFloat(lines, "SkirmishOptAnglePitch", 110.0f);
+		this->SkirmishOptAngleYaw = GetFileKeyValueFloat(lines, "SkirmishOptAngleYaw", 225.0f);
+		this->SkirmishOptAngleRoll = GetFileKeyValueFloat(lines, "SkirmishOptAngleRoll", 0.0f);
+		this->SkirmishOptPositionX = GetFileKeyValueFloat(lines, "SkirmishOptPositionX", 0.5f);
+		this->SkirmishOptPositionY = GetFileKeyValueFloat(lines, "SkirmishOptPositionY", 0.0f);
+		this->SkirmishOptPositionZ = GetFileKeyValueFloat(lines, "SkirmishOptPositionZ", 0.25f);
 	}
 
 	bool SkipFirst7Missions;
@@ -193,6 +265,14 @@ public:
 	bool SupportDatAnimations;
 	bool DrawStarfield;
 	bool PlayMovieOutputDebugString;
+	bool SkirmishOptEnabled;
+	float SkirmishOptScale;
+	float SkirmishOptAnglePitch;
+	float SkirmishOptAngleYaw;
+	float SkirmishOptAngleRoll;
+	float SkirmishOptPositionX;
+	float SkirmishOptPositionY;
+	float SkirmishOptPositionZ;
 };
 
 Config g_config;
@@ -370,6 +450,112 @@ public:
 };
 
 NetFunctions g_netFunctions;
+
+struct ViewConfigurationSettings
+{
+	float SkirmishOptScale;
+	float SkirmishOptAnglePitch;
+	float SkirmishOptAngleYaw;
+	float SkirmishOptAngleRoll;
+	float SkirmishOptPositionX;
+	float SkirmishOptPositionY;
+	float SkirmishOptPositionZ;
+};
+
+ViewConfigurationSettings GetShipViewConfigurationSettings(int modelIndex)
+{
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_Objects.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!lines.size())
+	{
+		lines = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+
+	const std::string objectValue = GetFileKeyValue(lines, shipPath + ".opt");
+
+	if (!objectValue.empty() && std::ifstream(objectValue))
+	{
+		shipPath = GetStringWithoutExtension(objectValue);
+	}
+
+	ViewConfigurationSettings settings{};
+
+	lines = GetFileLines(shipPath + "ViewConfiguration.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", "ViewConfiguration");
+	}
+
+	settings.SkirmishOptScale = GetFileKeyValueFloat(lines, "SkirmishOptScale", g_config.SkirmishOptScale);
+	settings.SkirmishOptAnglePitch = GetFileKeyValueFloat(lines, "SkirmishOptAnglePitch", g_config.SkirmishOptAnglePitch);
+	settings.SkirmishOptAngleYaw = GetFileKeyValueFloat(lines, "SkirmishOptAngleYaw", g_config.SkirmishOptAngleYaw);
+	settings.SkirmishOptAngleRoll = GetFileKeyValueFloat(lines, "SkirmishOptAngleRoll", g_config.SkirmishOptAngleRoll);
+	settings.SkirmishOptPositionX = GetFileKeyValueFloat(lines, "SkirmishOptPositionX", g_config.SkirmishOptPositionX);
+	settings.SkirmishOptPositionY = GetFileKeyValueFloat(lines, "SkirmishOptPositionY", g_config.SkirmishOptPositionY);
+	settings.SkirmishOptPositionZ = GetFileKeyValueFloat(lines, "SkirmishOptPositionZ", g_config.SkirmishOptPositionZ);
+
+	return settings;
+}
+
+class ModelIndexSettings
+{
+public:
+	ViewConfigurationSettings GetViewConfiguration(int modelIndex)
+	{
+		this->Update();
+
+		auto it = this->_viewConfiguration.find(modelIndex);
+
+		if (it != this->_viewConfiguration.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			ViewConfigurationSettings value = GetShipViewConfigurationSettings(modelIndex);
+			this->_viewConfiguration.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
+private:
+	void Update()
+	{
+		static std::string _mission;
+		static int _missionIndex = 0;
+
+		const char* xwaMissionFileName = (const char*)0x06002E8;
+		const int missionFileNameIndex = *(int*)0x06002E4;
+
+		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
+		{
+			_mission = xwaMissionFileName;
+			_missionIndex = missionFileNameIndex;
+
+			this->_viewConfiguration.clear();
+		}
+	}
+
+	std::map<int, ViewConfigurationSettings> _viewConfiguration;
+};
+
+ModelIndexSettings g_modelIndexSettings;
 
 static std::map<int, ID2D1Bitmap*> g_videoBitmaps;
 static std::map<void*, ID2D1Bitmap*> g_dataBitmaps;
@@ -1944,6 +2130,8 @@ int FreeGameStateHook(int* params)
 	const auto XwaFrontResFreeItem = (void(*)(const char*))0x00532080;
 	const auto XwaFreeResDataItem = (short(*)(short))0x004CDE40;
 
+	FreeSkirmishImage();
+
 	for (const auto& animation : g_concourseAnimations.animations)
 	{
 		StopSound(animation.name.c_str());
@@ -3404,6 +3592,97 @@ int PlaySoundHook(int* params)
 	return *(int*)0x009F7F0F;
 }
 
+void FreeSkirmishImage()
+{
+	const auto L0050EC00 = (bool(*)())0x0050EC00;
+
+	L0050EC00();
+}
+
+void DrawSkirmishImage(const SurfaceDC& dc, int craftId)
+{
+	const auto XwaOffScreenSurfaceLock = (int(*)())0x0053F830;
+	const auto XwaOffScreenSurfaceUnlock = (int(*)(int))0x0053F8D0;
+	const auto XwaGetCraftOptFilename = (const char* (*)(int))0x004341B0;
+	const auto LoadOpt = (bool(*)(const char*, int))0x0050E5C0;
+	const auto XwaSetOptAngle = (void(*)(float, float, float))0x0050FB10;
+	const auto L0050FB80 = (void(*)(float))0x0050FB80;
+	const auto XwaSetOptPosition = (void(*)(int, int, int))0x0050FB60;
+	const auto XwaSetGlobalLight = (void(*)(int, int, int))0x0050FA50;
+	const auto L0050EC70 = (bool(*)(int, int, int, int, void*, int, int))0x0050EC70;
+	const auto XwaResetScreenArea = (void(*)())0x0053F760;
+
+	const char* optFilename = XwaGetCraftOptFilename(craftId);
+
+	if (optFilename == 0)
+	{
+		return;
+	}
+
+	bool isBackgroundHD = g_netFunctions._frontResIsBackgroundHD() != 0;
+	bool isBackgroundWide = g_netFunctions._frontResIsBackgroundWide() != 0;
+
+	const unsigned short* xwaExeSpecies = (unsigned short*)0x005B0F70;
+	const int modelIndex = xwaExeSpecies[craftId];
+
+	ViewConfigurationSettings settings = g_modelIndexSettings.GetViewConfiguration(modelIndex);
+
+	XwaOffScreenSurfaceUnlock(1);
+
+	// L0050EC70
+	*(unsigned char*)0x0050EC90 = 0xEB;
+	*(unsigned char*)0x0050ECA0 = 0xEB;
+	*(unsigned char*)0x0050ECA1 = 0x44;
+
+	float scale = (isBackgroundHD || isBackgroundWide) ? 1536.0f : 512.0f;
+	*(float*)(0x0050EDCA + 0x06) = scale * settings.SkirmishOptScale * dc.displayHeight / dc.height;
+
+	unsigned short& engineGlowsSetting = *(unsigned short*)0x00B0C7C2;
+	unsigned short currentEngineGlowsSetting = engineGlowsSetting;
+	engineGlowsSetting = 0;
+
+	LoadOpt(optFilename, craftId);
+
+	XwaResetScreenArea();
+
+	*(int*)0x0783B8C = 0;
+	*(float*)0x0783C0C = settings.SkirmishOptAnglePitch;
+	*(float*)0x0783BD0 = settings.SkirmishOptAngleYaw;
+	*(float*)0x0783BFC = settings.SkirmishOptAngleRoll;
+	*(int*)0x0783B98 = 0x01;
+	*(int*)0x0783BD8 = 0x01;
+	*(int*)0x0783BF4 = 0x01;
+	*(float*)0x0783B9C = 0;
+	*(int*)0x0783BF0 = 0x258;
+
+	XwaSetGlobalLight(*(int*)0x0783B98, *(int*)0x0783BD8, *(int*)0x0783BF4);
+	XwaSetOptAngle(*(float*)0x0783C0C, *(float*)0x0783BD0, *(float*)0x0783BFC);
+	L0050FB80(*(float*)0x0783B9C);
+	XwaSetOptPosition((int)(settings.SkirmishOptPositionX * dc.displayHeight), (int)(settings.SkirmishOptPositionY * dc.displayHeight), (int)(settings.SkirmishOptPositionZ * dc.displayHeight));
+
+	// lod distance
+	((unsigned char*)0x0050F04D)[0] = 0x90;
+	((unsigned char*)0x0050F04D)[1] = 0x90;
+	((unsigned char*)0x0050F04D)[2] = 0x90;
+	((unsigned char*)0x0050F04D)[3] = 0x90;
+	((unsigned char*)0x0050F04D)[4] = 0x90;
+	*(int*)0x007D4F8C = 0;
+
+	float position_left = (isBackgroundHD || isBackgroundWide) ? 400.0f : 100.0f;
+	L0050EC70((int)(position_left * dc.displayHeight / dc.height), 0, 640, 480, nullptr, 0, 0);
+
+	((unsigned char*)0x0050F04D)[0] = 0xA3;
+	((unsigned char*)0x0050F04D)[1] = 0x8C;
+	((unsigned char*)0x0050F04D)[2] = 0x90;
+	((unsigned char*)0x0050F04D)[3] = 0x7D;
+	((unsigned char*)0x0050F04D)[4] = 0x00;
+
+	*(float*)(0x0050EDCA + 0x06) = 512.0f;
+	engineGlowsSetting = currentEngineGlowsSetting;
+
+	XwaOffScreenSurfaceLock();
+}
+
 int LoadDatImageHook(int* params)
 {
 	const char* name = (const char*)params[11];
@@ -3510,6 +3789,22 @@ int FrontResDrawHook(int* params)
 
 	SurfaceDC dc;
 	bool hasDC = GetSurfaceDC(&dc);
+
+	if (g_config.SkirmishOptEnabled && strcmp(name, "shipbmp") == 0)
+	{
+		FreeSkirmishImage();
+
+		int craftId = *(int*)0x007838A0 - 0x4E20;
+
+		if (craftId <= 0 || !hasDC || frameIndex == 0)
+		{
+			return -1;
+		}
+
+		DrawSkirmishImage(dc, craftId);
+
+		return -1;
+	}
 
 	const CbmHeader* cbmHeader = GetCbmHeaderByName(name);
 
@@ -4693,6 +4988,17 @@ int DrawCombatSingleGameStateBackgroundHook(int* params)
 	return 0;
 }
 
+int DrawSkirmishShipbmpBackgroundHook(int* params)
+{
+	const auto L0054CF90 = (void(*)(int))0x0054CF90;
+	const auto XwaFreeShipImage = (int(*)())0x0055DC70;
+
+	XwaFreeShipImage();
+	L0054CF90(0);
+
+	return 0;
+}
+
 int FamilyRoomBacktoconcoursePositionHook(int* params)
 {
 	const auto XwaRectSet = (void(*)(RECT*, int, int, int, int))0x00558C90;
@@ -4855,7 +5161,16 @@ int FrontResGetAreaHook(int* params)
 
 	const CbmHeader* cbmHeader = GetCbmHeaderByName(name);
 
-	if (_stricmp(name, "hud") == 0)
+	bool isBackgroundHD = g_netFunctions._frontResIsBackgroundHD() != 0;
+	bool isBackgroundWide = g_netFunctions._frontResIsBackgroundWide() != 0;
+
+	if (g_config.SkirmishOptEnabled && _stricmp(name, "shipbmp") == 0)
+	{
+		SetRect(pArea, 0, 0, 256, 256);
+
+		result = 1;
+	}
+	else if (_stricmp(name, "hud") == 0)
 	{
 		if (cbmHeader)
 		{

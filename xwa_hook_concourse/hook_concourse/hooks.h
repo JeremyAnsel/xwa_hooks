@@ -126,6 +126,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x573185, DrawFilmRoomBackgroundHook },
 	{ 0x559BD4, DrawCreatePilotBackgroundHook },
 	{ 0x54443F, DrawCombatSingleGameStateBackgroundHook },
+	{ 0x54A1B1, DrawSkirmishShipbmpBackgroundHook },
 
 	{ 0x5602CF, FamilyRoomBacktoconcoursePositionHook },
 	{ 0x56039D, FamilyRoomBacktoconcoursePositionHook },
@@ -390,6 +391,7 @@ static const HookPatchItem g_concourseHDPatch[] =
 	{ 0x172580, "391DEC3F78000F8463020000", "E89B59030090909090909090" },
 	{ 0x158FCF, "E8BCF0FFFF", "E84CEF0400" },
 	{ 0x14383A, "391DB03078000F8411010000", "E8E146060090909090909090" },
+	{ 0x1495AC, "E8DF2D0000", "E86FE90500" },
 };
 
 static const HookPatchItem g_concourseInteractivePositionsPatch[] =

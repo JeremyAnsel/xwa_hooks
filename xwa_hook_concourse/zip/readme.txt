@@ -182,6 +182,7 @@ At offset 17457B, replace E8B0BBFCFF with E8B0390300.
 At offset 172580, replace 391DEC3F78000F8463020000 with E89B59030090909090909090.
 At offset 158FCF, replace E8BCF0FFFF with E84CEF0400.
 At offset 14383A, replace 391DB03078000F8411010000 with E8E146060090909090909090.
+At offset 1495AC, replace E8DF2D0000 with E86FE90500.
 
 # To call the hook that defines interactive positions
 At offset 15F6CA, replace E8C189FFFF with E851880400.
@@ -378,6 +379,23 @@ PositionY = integer value
 Width = integer value
 Height = integer value
 
+# View configuration
+
+Suppose that the craft is "FlightModels\[Model].opt".
+
+To define the view configuration settings, create a file named "FlightModels\[Model]ViewConfiguration.txt" or create a section named "[ViewConfiguration]" in "FlightModels\[Model].ini".
+The format is:
+SkirmishOptScale = 1.0
+SkirmishOptAnglePitch = 110.0
+SkirmishOptAngleYaw = 225.0
+SkirmishOptAngleRoll = 0.0
+SkirmishOptPositionX = 0.5
+SkirmishOptPositionY = 0.0
+SkirmishOptPositionZ = 0.25
+
+If the file does not exist, default values from "hook_concourse.cfg" or the "[hook_concourse]" section of "Hooks.ini" are used.
+
+
 *** Credits ***
 
-- JÃ©rÃ©my Ansel (JeremyaFr)
+- Jérémy Ansel (JeremyaFr)

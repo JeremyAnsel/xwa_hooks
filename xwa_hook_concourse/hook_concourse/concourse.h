@@ -78,6 +78,8 @@ int DrawTechLibraryBackgroundHook(int* params);
 int DrawFilmRoomBackgroundHook(int* params);
 int DrawCreatePilotBackgroundHook(int* params);
 int DrawCombatSingleGameStateBackgroundHook(int* params);
+int DrawSkirmishShipbmpBackgroundHook(int* params);
+void FreeSkirmishImage();
 
 int FamilyRoomBacktoconcoursePositionHook(int* params);
 int FamilyRoomStatisticsPositionHook(int* params);
