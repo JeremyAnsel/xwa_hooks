@@ -130,6 +130,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x432E77, WeaponHardpointTypeToModelIndexHook },
 	{ 0x4330F3, WeaponLaserModelIndexToHardpointTypeHook },
 	{ 0x433309, WeaponWarheadModelIndexToHardpointTypeHook },
+	{ 0x43321C, ReadLasersLinksHook },
+	{ 0x4E19E9, FireRatioRankHook },
 };
 
 static const HookPatchItem g_weaponRatePatch[] =
@@ -310,6 +312,16 @@ static const HookPatchItem g_weaponHardpointTypesPatch[] =
 	{ 0x032704, "8B4C2454662D1701", "E817581700909090" },
 };
 
+static const HookPatchItem g_lasersLinksPatch[] =
+{
+	{ 0x032617, "660FB65C2420", "E80459170090" },
+};
+
+static const HookPatchItem g_fireratioRankPatch[] =
+{
+	{ 0x0E0DE4, "837DD8FF752C", "E837710C0090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that defines weapon decharge and recharge rates", g_weaponRatePatch),
@@ -327,4 +339,6 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that reloads warheads in hangar", g_hangarWarheadReloadPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines system damages", g_systemDamagesPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines weapon hardpoint types", g_weaponHardpointTypesPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines lasers links", g_lasersLinksPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines fireratio per rank", g_fireratioRankPatch),
 };

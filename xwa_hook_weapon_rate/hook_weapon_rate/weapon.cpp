@@ -138,6 +138,12 @@ public:
 		this->WeaponsCount = GetFileKeyValueInt(lines, "WeaponsCount", 12);
 		this->DechargeRatePercent = GetFileKeyValueInt(lines, "DechargeRatePercent", 100);
 		this->RechargeRatePercent = GetFileKeyValueInt(lines, "RechargeRatePercent", 100);
+		this->NoviceRankFireratioMultiplicator = GetFileKeyValueFloat(lines, "NoviceRankFireratioMultiplicator", 4.0f);
+		this->OfficerRankFireratioMultiplicator = GetFileKeyValueFloat(lines, "OfficerRankFireratioMultiplicator", 3.0f);
+		this->VeteranRankFireratioMultiplicator = GetFileKeyValueFloat(lines, "VeteranRankFireratioMultiplicator", 2.0f);
+		this->AceRankFireratioMultiplicator = GetFileKeyValueFloat(lines, "AceRankFireratioMultiplicator", 2.0f);
+		this->TopAceRankFireratioMultiplicator = GetFileKeyValueFloat(lines, "TopAceRankFireratioMultiplicator", 1.0f);
+		this->SuperAceRankFireratioMultiplicator = GetFileKeyValueFloat(lines, "SuperAceRankFireratioMultiplicator", 1.0f);
 
 		lines = GetFileLines("hook_weapon_color.cfg");
 
@@ -161,6 +167,12 @@ public:
 	int WeaponsCount;
 	int DechargeRatePercent;
 	int RechargeRatePercent;
+	float NoviceRankFireratioMultiplicator;
+	float OfficerRankFireratioMultiplicator;
+	float VeteranRankFireratioMultiplicator;
+	float AceRankFireratioMultiplicator;
+	float TopAceRankFireratioMultiplicator;
+	float SuperAceRankFireratioMultiplicator;
 
 	bool WeaponSwitchBasedOnIff;
 };
@@ -168,6 +180,16 @@ public:
 Config g_config;
 
 #pragma pack(push, 1)
+
+enum AIRankEnum : unsigned char
+{
+	AIRank_Novice = 0,
+	AIRank_Officer = 1,
+	AIRank_Veteran = 2,
+	AIRank_Ace = 3,
+	AIRank_TopAce = 4,
+	AIRank_SuperAce = 5,
+};
 
 enum ShipCategoryEnum : unsigned char
 {
@@ -307,12 +329,13 @@ struct XwaCraftWeaponRack
 {
 	unsigned short ModelIndex;
 	char Sequence;
-	char Unk0003[1];
+	unsigned char LaserIndex;
 	char Charge;
 	char Unk0005[3];
 	unsigned char MeshId;
 	unsigned char HardpointId;
-	char Unk000A[4];
+	short ObjectIndex;
+	short m0C;
 };
 
 static_assert(sizeof(XwaCraftWeaponRack) == 14, "size of XwaCraftWeaponRack must be 14");
@@ -4733,5 +4756,58 @@ int WeaponWarheadModelIndexToHardpointTypeHook(int* params)
 	int hardpointType = ConvertWeaponModelIndexToHardpointType(modelIndex);
 
 	params[Params_EAX] = hardpointType;
+	return 0;
+}
+
+int ReadLasersLinksHook(int* params)
+{
+	params[Params_EBX] = (unsigned char)params[8];
+
+	params[20]--;
+
+	return 0;
+}
+
+int FireRatioRankHook(int* params)
+{
+	const int objectIndex = *(int*)(params[Params_EBP] + 0x08);
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+
+	if (xwaObjects[objectIndex].PlayerIndex == -1)
+	{
+		int fireratio = (unsigned short)params[Params_EBX];
+		AIRankEnum rank = xwaObjects[objectIndex].TieFlightGroupIndex == 0xff ? (AIRankEnum)0xff : (AIRankEnum)s_XwaTieFlightGroups[xwaObjects[objectIndex].TieFlightGroupIndex].Rank;
+
+		switch (rank)
+		{
+		case AIRank_Novice:
+			fireratio = (int)(fireratio * g_config.NoviceRankFireratioMultiplicator);
+			break;
+
+		case AIRank_Officer:
+			fireratio = (int)(fireratio * g_config.OfficerRankFireratioMultiplicator);
+			break;
+
+		case AIRank_Veteran:
+			fireratio = (int)(fireratio * g_config.VeteranRankFireratioMultiplicator);
+			break;
+
+		case AIRank_Ace:
+			fireratio = (int)(fireratio * g_config.AceRankFireratioMultiplicator);
+			break;
+
+		case AIRank_TopAce:
+			fireratio = (int)(fireratio * g_config.TopAceRankFireratioMultiplicator);
+			break;
+
+		case AIRank_SuperAce:
+			fireratio = (int)(fireratio * g_config.SuperAceRankFireratioMultiplicator);
+			break;
+		}
+
+		params[Params_EBX] = fireratio;
+	}
+
+	params[Params_ReturnAddress] = 0x004E1A16;
 	return 0;
 }

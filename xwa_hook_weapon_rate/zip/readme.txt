@@ -157,6 +157,12 @@ At offset 032272, replace 8D8F17010000 with E8A95C170090.
 At offset 0324EE, replace 662D1701897C2428 with E82D5A1700909090.
 At offset 032704, replace 8B4C2454662D1701 with E817581700909090.
 
+# To call the hook that defines lasers links
+At offset 032617, replace 660FB65C2420 with E80459170090.
+
+# To call the hook that defines fireratio per rank
+At offset 0E0DE4, replace 837DD8FF752C with E837710C0090.
+
 
 *** Usage ***
 
@@ -494,6 +500,16 @@ HardpointType_Unknown3 = 35 => ModelIndex_303_1_20_LaserImpTurbo = 303
 HardpointType_Unknown4 = 36 => ModelIndex_304_1_20_LaserImpTurbo = 304
 HardpointType_Unknown5 = 37 => ModelIndex_305_1_20_LaserImpTurbo = 305
 HardpointType_Unknown6 = 38 => ModelIndex_307__1_0 = 307
+
+# Weapon fire ratio per rank
+
+To define a fire ratio multiplicator for each rank, set these config settings:
+NoviceRankFireratioMultiplicator = 4.0
+OfficerRankFireratioMultiplicator = 3.0
+VeteranRankFireratioMultiplicator = 2.0
+AceRankFireratioMultiplicator = 2.0
+TopAceRankFireratioMultiplicator = 1.0
+SuperAceRankFireratioMultiplicator = 1.0
 
 
 *** Credits ***
