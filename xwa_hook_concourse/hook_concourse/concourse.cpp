@@ -3680,6 +3680,8 @@ void DrawSkirmishImage(const SurfaceDC& dc, int craftId)
 	*(float*)(0x0050EDCA + 0x06) = 512.0f;
 	engineGlowsSetting = currentEngineGlowsSetting;
 
+	FreeSkirmishImage();
+
 	XwaOffScreenSurfaceLock();
 }
 
