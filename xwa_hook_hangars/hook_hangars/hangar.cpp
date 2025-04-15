@@ -1398,7 +1398,7 @@ int GetCraftElevation(unsigned short modelIndex, bool isHangarFloorInverted)
 {
 	const auto ModelGetSizeZ = (int(*)(unsigned int))0x0485820;
 
-	const std::string optSize = g_flightModelsList.GetLstLine(modelIndex);
+	const std::string optSize = GetShipPath(modelIndex);
 	auto optSizeLines = GetFileLines(optSize + "Size.txt");
 
 	if (!optSizeLines.size())
