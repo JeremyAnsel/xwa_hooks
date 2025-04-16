@@ -4943,7 +4943,7 @@ int DrawCreatePilotBackgroundHook(int* params)
 
 		int left = 640 / 2 - 15;
 		int right = left + 120;
-		int top = 250;
+		int top = 250 + 10;
 		int bottom = top + 20;
 
 		*(int*)(0x00559C0C + 0x01) = left;
