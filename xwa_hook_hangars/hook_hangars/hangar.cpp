@@ -4676,9 +4676,10 @@ int HangarExitHook(int* params)
 		g_isInHangar = true;
 		std::string optPath = GetShipPath(modelIndex) + ".opt";
 		g_isInHangar = false;
+		std::string optPath_flight = GetShipPath(modelIndex) + ".opt";
 
 		std::string currentOptSkins = g_hangarOptSkins[modelIndex];
-		std::string optSkins = OptSkins_ReadOptSkinsListFunction(optPath);
+		std::string optSkins = OptSkins_ReadOptSkinsListFunction(optPath_flight);
 		bool optSkinsChanged = _stricmp(currentOptSkins.c_str(), optSkins.c_str()) != 0;
 
 		if (!optSkinsChanged)
