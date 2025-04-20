@@ -3668,6 +3668,9 @@ void DrawSkirmishImage(const SurfaceDC& dc, int craftId)
 	((unsigned char*)0x0050F04D)[4] = 0x90;
 	*(int*)0x007D4F8C = 0;
 
+	int& s_XwaOptCurrentSwitchIndex = *(int*)0x007827C0;
+	s_XwaOptCurrentSwitchIndex = 0;
+
 	float position_left = (isBackgroundHD || isBackgroundWide) ? 400.0f : 100.0f;
 	L0050EC70((int)(position_left * dc.displayHeight / dc.height), 0, 640, 480, nullptr, 0, 0);
 
