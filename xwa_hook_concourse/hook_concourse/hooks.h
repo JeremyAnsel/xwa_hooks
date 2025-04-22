@@ -191,6 +191,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x52B484, DrawMulti2Hook },
 
 	{ 0x527173, ViewCustscenesConfigMenuSetPositionHook },
+
+	{ 0x57F4A1, DefineMedalCaseHook },
 };
 
 static const std::string g_RankPointsArray = int_to_hex(GetRankPointsArrayPtr() + 0x00);
@@ -485,6 +487,19 @@ static const HookPatchItem g_viewCutscenesConfigMenuPatch[] =
 	{ 0x12656E, "E81D1B0300", "E8AD190800" },
 };
 
+static const HookPatchItem g_medalsCeremonyPatch[] =
+{
+	{ 0x17E89C, "A1CC4B7800", "E87F960200" },
+	{ 0x183995, "BB98000000", "BB40010000" },
+	{ 0x183AA1, "BB84010000", "BB40010000" },
+	{ 0x1839F7, "8D441D1E", "8D441D80" },
+	{ 0x183A3B, "E85047FDFF", "9090909090" },
+	{ 0x183A56, "E8452FFDFF", "9090909090" },
+	{ 0x183B59, "E8C22FFDFF", "9090909090" },
+	{ 0x183CD3, "E8B844FDFF", "9090909090" },
+	{ 0x183CED, "E8AE2CFDFF", "9090909090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that loads medal details", g_medalDetailsPatch),
@@ -511,4 +526,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that plays the squad logo movie", g_squadlogoPatch),
 	MAKE_HOOK_PATCH("To call the hook that draws multi", g_multiPatch),
 	MAKE_HOOK_PATCH("To call the hook that draws the view cutscenes config menu", g_viewCutscenesConfigMenuPatch),
+	MAKE_HOOK_PATCH("To call the hook that draws the medals ceremony screen", g_medalsCeremonyPatch),
 };

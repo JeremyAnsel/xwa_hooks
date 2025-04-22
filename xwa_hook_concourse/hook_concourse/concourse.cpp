@@ -7358,3 +7358,31 @@ int ViewCustscenesConfigMenuSetPositionHook(int* params)
 
 	return 0;
 }
+
+int DefineMedalCaseHook(int* params)
+{
+	unsigned int& s_V0x0784BCC = *(unsigned int*)0x0784BCC;
+	unsigned int& s_XwaPilot_KalidorCresent = *(unsigned int*)0x00AF3906;
+
+	auto lines = GetFileLines("hook_concourse.cfg");
+
+	if (lines.empty())
+	{
+		lines = GetFileLines("hooks.ini", "hook_concourse");
+	}
+
+	int test_Overwrite = GetFileKeyValueInt(lines, "TestMedalCase_Overwrite", 0) != 0;
+	int test_MedalCaseDuration = GetFileKeyValueInt(lines, "TestMedalCase_Duration", 10);
+	int test_BattleZoomMedalIndex = GetFileKeyValueInt(lines, "TestMedalCase_BattleZoomMedalIndex", 1);
+	int test_KalidorZoomMedalIndex = GetFileKeyValueInt(lines, "TestMedalCase_KalidorZoomMedalIndex", 1);
+
+	if (test_Overwrite)
+	{
+		*(int*)(0x00584902 + 0x06) = 24 * test_MedalCaseDuration;
+		s_V0x0784BCC = test_BattleZoomMedalIndex | (test_KalidorZoomMedalIndex == 0 ? 0 : 0x80000000);
+		s_XwaPilot_KalidorCresent = test_KalidorZoomMedalIndex;
+	}
+
+	params[Params_EAX] = *(int*)0x00784BCC;
+	return 0;
+}

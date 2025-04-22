@@ -257,6 +257,17 @@ At offset 12A87F, replace E88C3B0100 with E89CD60700.
 # To call the hook that draws the view cutscenes config menu
 At offset 12656E, replace E81D1B0300 with E8AD190800.
 
+# To call the hook that draws the medals ceremony screen
+At offset 17E89C, replace A1CC4B7800 with E87F960200.
+At offset 183995, replace BB98000000 with BB40010000.
+At offset 183AA1, replace BB84010000 with BB40010000.
+At offset 1839F7, replace 8D441D1E with 8D441D80.
+At offset 183A3B, replace E85047FDFF with 9090909090.
+At offset 183A56, replace E8452FFDFF with 9090909090.
+At offset 183B59, replace E8C22FFDFF with 9090909090.
+At offset 183CD3, replace E8B844FDFF with 9090909090.
+At offset 183CED, replace E8AE2CFDFF with 9090909090.
+
 
 *** Usage ***
 
@@ -394,6 +405,22 @@ SkirmishOptPositionY = 0.0
 SkirmishOptPositionZ = 0.25
 
 If the file does not exist, default values from "hook_concourse.cfg" or the "[hook_concourse]" section of "Hooks.ini" are used.
+
+# Medal case test
+
+To test the medal case after mission ceremony, set these settings in "hook_concourse.cfg" or the "[hook_concourse]" section of "Hooks.ini".
+
+; 0 (disabled) or 1 (enabled)
+TestMedalCase_Overwrite = 1
+
+; Duration in seconds
+TestMedalCase_Duration = 10
+
+; BattleZoom medal index or 0 to not show
+TestMedalCase_BattleZoomMedalIndex = 1
+
+; KalidorZoom medal index or 0 to not show
+TestMedalCase_KalidorZoomMedalIndex = 1
 
 
 *** Credits ***
