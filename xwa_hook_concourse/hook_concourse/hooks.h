@@ -169,11 +169,11 @@ static const HookFunction g_hookFunctions[] =
 
 	{ 0x5847CD, DrawBattleZoomImage1Hook },
 	{ 0x584846, DrawKalidorZoomImage1Hook },
-	{ 0x5848D8, DrawBattleKalidorZoomText1Hook },
+	//{ 0x5848D8, DrawBattleKalidorZoomText1Hook },
 	{ 0x5845B6, DrawBattleZoomImage2Hook },
-	{ 0x584640, DrawBattleZoomText2Hook },
+	//{ 0x584640, DrawBattleZoomText2Hook },
 	{ 0x5846BE, DrawKalidorZoomImage2Hook },
-	{ 0x58475E, DrawKalidorZoomText2Hook },
+	//{ 0x58475E, DrawKalidorZoomText2Hook },
 
 	{ 0x568FAA, DSBriefLoadMovieHook },
 	{ 0x564E6E, DSBriefFreeMovieHook },
@@ -451,11 +451,11 @@ static const HookPatchItem g_battleMedalZoomPatch[] =
 {
 	{ 0x183BC8, "E89302FBFF", "E853430200" },
 	{ 0x183C41, "E81A02FBFF", "E8DA420200" },
-	{ 0x183CD3, "E8B844FDFF", "E848420200" },
+	//{ 0x183CD3, "E8B844FDFF", "E848420200" },
 	{ 0x1839B1, "E8AA04FBFF", "E86A450200" },
-	{ 0x183A3B, "E85047FDFF", "E8E0440200" },
+	//{ 0x183A3B, "E85047FDFF", "E8E0440200" },
 	{ 0x183AB9, "E8A203FBFF", "E862440200" },
-	{ 0x183B59, "E8C22FFDFF", "E8C2430200" },
+	//{ 0x183B59, "E8C22FFDFF", "E8C2430200" },
 };
 
 static const HookPatchItem g_dsbriefPatch[] =
