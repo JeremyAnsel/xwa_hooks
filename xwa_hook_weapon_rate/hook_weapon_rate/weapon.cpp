@@ -144,6 +144,7 @@ public:
 		this->AceRankFireratioMultiplicator = GetFileKeyValueFloat(lines, "AceRankFireratioMultiplicator", 2.0f);
 		this->TopAceRankFireratioMultiplicator = GetFileKeyValueFloat(lines, "TopAceRankFireratioMultiplicator", 1.0f);
 		this->SuperAceRankFireratioMultiplicator = GetFileKeyValueFloat(lines, "SuperAceRankFireratioMultiplicator", 1.0f);
+		this->IsLaserLinksFixEnabled = GetFileKeyValueInt(lines, "IsLaserLinksFixEnabled", 0) != 0;
 
 		lines = GetFileLines("hook_weapon_color.cfg");
 
@@ -173,6 +174,7 @@ public:
 	float AceRankFireratioMultiplicator;
 	float TopAceRankFireratioMultiplicator;
 	float SuperAceRankFireratioMultiplicator;
+	bool IsLaserLinksFixEnabled;
 
 	bool WeaponSwitchBasedOnIff;
 };
@@ -1539,6 +1541,13 @@ std::array<int, 40> GetWeaponHardpointTypes(int modelIndex)
 	return typesArray;
 }
 
+bool GetWeaponIsLaserLinksFixEnabled(int modelIndex)
+{
+	auto lines = GetShipLines(modelIndex);
+	bool enabled = GetFileKeyValueInt(lines, "IsLaserLinksFixEnabled", 0) != 0;
+	return enabled;
+}
+
 class ModelIndexWeapon
 {
 public:
@@ -1964,6 +1973,24 @@ public:
 		}
 	}
 
+	int IsLaserLinksFixEnabled(int modelIndex)
+	{
+		this->Update();
+
+		auto it = this->_modelIsLaserLinksFixEnabled.find(modelIndex);
+
+		if (it != this->_modelIsLaserLinksFixEnabled.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetWeaponIsLaserLinksFixEnabled(modelIndex);
+			this->_modelIsLaserLinksFixEnabled.insert(std::make_pair(modelIndex, value));
+			return value;
+		}
+	}
+
 private:
 	void Update()
 	{
@@ -1995,6 +2022,7 @@ private:
 			this->_weaponStats.clear();
 			this->_weaponStatsLines.clear();
 			this->_weaponHardpointTypes.clear();
+			this->_modelIsLaserLinksFixEnabled.clear();
 		}
 	}
 
@@ -2015,6 +2043,7 @@ private:
 	std::map<std::tuple<int, int>, WeaponStats> _weaponStats;
 	std::map<int, std::vector<std::string>> _weaponStatsLines;
 	std::map<int, std::array<int, 40>> _weaponHardpointTypes;
+	std::map<int, bool> _modelIsLaserLinksFixEnabled;
 };
 
 ModelIndexWeapon g_modelIndexWeapon;
@@ -4762,6 +4791,14 @@ int WeaponWarheadModelIndexToHardpointTypeHook(int* params)
 int ReadLasersLinksHook(int* params)
 {
 	params[Params_EBX] = (unsigned char)params[8];
+
+	int modelIndex = params[15];
+	bool isFixEnabled = g_config.IsLaserLinksFixEnabled && g_modelIndexWeapon.IsLaserLinksFixEnabled(modelIndex);
+
+	if (!isFixEnabled)
+	{
+		return 0;
+	}
 
 	params[20]--;
 
