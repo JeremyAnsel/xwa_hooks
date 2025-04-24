@@ -11,6 +11,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4F225A, InFlightPresentHook },
 
 	{ 0x4CCA40, OptLoadHook },
+	{ 0x4323E8, DatLoadHook },
 };
 
 static const HookPatchItem g_diagMessagesPatch[] =
@@ -21,6 +22,7 @@ static const HookPatchItem g_diagMessagesPatch[] =
 	{ 0x0F1655, "A1B0127700", "E8C6680B00" },
 
 	{ 0x0CBE3B, "E810190400", "E8E0C00D00" },
+	{ 0x0317E3, "E858BA0900", "E838671700" },
 };
 
 static const HookPatch g_patches[] =

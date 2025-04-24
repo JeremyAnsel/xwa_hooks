@@ -442,3 +442,24 @@ int OptLoadHook(int* params)
 
 	return 0;
 }
+
+int DatLoadHook(int* params)
+{
+	const short id = (short)params[0];
+	const auto XwaFreeResDataItem = (short(*)(short))0x004CDE40;
+
+	params[Params_EAX] = XwaFreeResDataItem(id);
+
+	PROCESS_MEMORY_COUNTERS currentCpuMemory = GetCurrentCpuMemory();
+	DXGI_QUERY_VIDEO_MEMORY_INFO currentGpuMemory = GetCurrentGpuMemory();
+
+	OutputDebugString((
+		__FUNCTION__
+		" maxRamMemory=" + MemoryToString(currentCpuMemory.PeakPagefileUsage)
+		+ " RamMemory=" + MemoryToString(currentCpuMemory.WorkingSetSize)
+		+ " GpuMemory=" + MemoryToString(currentGpuMemory.CurrentUsage)
+		+ " Index1=" + std::to_string(id)
+		).c_str());
+
+	return 0;
+}
