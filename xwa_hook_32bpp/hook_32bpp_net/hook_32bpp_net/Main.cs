@@ -352,11 +352,13 @@ namespace hook_32bpp_net
                 return 0;
             }
 
+            bool isInSkirmishShipScreen = Marshal.ReadInt32(new IntPtr(0x007838A0)) != 0;
+
             string optName = Path.GetFileNameWithoutExtension(optFilename);
 
             var opt = OptFile.FromFile(optFilename, false);
 
-            if (Directory.Exists($"FlightModels\\Skins\\{optName}"))
+            if (!isInSkirmishShipScreen && Directory.Exists($"FlightModels\\Skins\\{optName}"))
             {
                 IList<string> objectLines = GetCustomFileLines("Skins");
                 IList<string> baseSkins = XwaHooksConfig.Tokennize(XwaHooksConfig.GetFileKeyValue(objectLines, optName));
