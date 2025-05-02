@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="DllExport" Version="1.5.2" ExcludeAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="JeremyAnsel.Xwa.Opt" Version="3.0.47" />		
+    <PackageReference Include="JeremyAnsel.Xwa.Opt" Version="3.0.52" />		
   </ItemGroup>
 
   <ItemGroup>

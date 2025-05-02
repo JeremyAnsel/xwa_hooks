@@ -509,7 +509,7 @@ namespace hook_32bpp_net
 
             foreach (var texture in opt.Textures.Where(texture => texturesExist.Contains(texture.Key)))
             {
-                //texture.Value.Convert8To32(false);
+                texture.Value.Convert8To32(false, true);
 
                 foreach (int i in fgColors)
                 {
@@ -592,16 +592,14 @@ namespace hook_32bpp_net
                 filesSets[skin] = filesSet ?? new SortedSet<string>();
             });
 
-            foreach (var texture in opt.Textures.Where(texture => texture.Key.IndexOf("_fg_") != -1))
+            opt.Textures.Where(texture => texture.Key.IndexOf("_fg_") != -1).AsParallel().ForAll(texture =>
             {
                 int position = texture.Key.IndexOf("_fg_");
 
                 if (position == -1)
                 {
-                    continue;
+                    return;
                 }
-
-                texture.Value.Convert8To32(false);
 
                 string textureName = texture.Key.Substring(0, position);
                 int fgIndex = int.Parse(texture.Key.Substring(position + 4, texture.Key.IndexOf('_', position + 4) - position - 4), CultureInfo.InvariantCulture);
@@ -656,7 +654,7 @@ namespace hook_32bpp_net
                 }
 
                 texture.Value.GenerateMipmaps();
-            }
+            });
         }
 
         private static void CombineTextures(Texture baseTexture, Stream file, string filename, string skin)
@@ -687,30 +685,32 @@ namespace hook_32bpp_net
             byte[] src = newTexture.ImageData;
             byte[] dst = baseTexture.ImageData;
 
-            //for (int i = 0; i < size; i++)
-            //{
-            //    int a = src[i * 4 + 3];
-
-            //    dst[i * 4 + 0] = (byte)(dst[i * 4 + 0] * (255 - a) / 255 + src[i * 4 + 0] * a / 255);
-            //    dst[i * 4 + 1] = (byte)(dst[i * 4 + 1] * (255 - a) / 255 + src[i * 4 + 1] * a / 255);
-            //    dst[i * 4 + 2] = (byte)(dst[i * 4 + 2] * (255 - a) / 255 + src[i * 4 + 2] * a / 255);
-            //}
-
-            var partition = Partitioner.Create(0, size);
-
-            Parallel.ForEach(partition, range =>
+            for (int i = 0; i < size; i++)
             {
-                for (int i = range.Item1; i < range.Item2; i++)
-                {
-                    int a = src[i * 4 + 3];
+                int a = src[i * 4 + 3];
 
-                    a = (a * skinOpacity + 50) / 100;
+                a = (a * skinOpacity + 50) / 100;
 
-                    dst[i * 4 + 0] = (byte)(dst[i * 4 + 0] * (255 - a) / 255 + src[i * 4 + 0] * a / 255);
-                    dst[i * 4 + 1] = (byte)(dst[i * 4 + 1] * (255 - a) / 255 + src[i * 4 + 1] * a / 255);
-                    dst[i * 4 + 2] = (byte)(dst[i * 4 + 2] * (255 - a) / 255 + src[i * 4 + 2] * a / 255);
-                }
-            });
+                dst[i * 4 + 0] = (byte)(dst[i * 4 + 0] * (255 - a) / 255 + src[i * 4 + 0] * a / 255);
+                dst[i * 4 + 1] = (byte)(dst[i * 4 + 1] * (255 - a) / 255 + src[i * 4 + 1] * a / 255);
+                dst[i * 4 + 2] = (byte)(dst[i * 4 + 2] * (255 - a) / 255 + src[i * 4 + 2] * a / 255);
+            }
+
+            //var partition = Partitioner.Create(0, size);
+
+            //Parallel.ForEach(partition, range =>
+            //{
+            //    for (int i = range.Item1; i < range.Item2; i++)
+            //    {
+            //        int a = src[i * 4 + 3];
+
+            //        a = (a * skinOpacity + 50) / 100;
+
+            //        dst[i * 4 + 0] = (byte)(dst[i * 4 + 0] * (255 - a) / 255 + src[i * 4 + 0] * a / 255);
+            //        dst[i * 4 + 1] = (byte)(dst[i * 4 + 1] * (255 - a) / 255 + src[i * 4 + 1] * a / 255);
+            //        dst[i * 4 + 2] = (byte)(dst[i * 4 + 2] * (255 - a) / 255 + src[i * 4 + 2] * a / 255);
+            //    }
+            //});
         }
 
         private static void FlipPixels(byte[] pixels, int width, int height, int bpp)
