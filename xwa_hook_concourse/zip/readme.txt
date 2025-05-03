@@ -235,6 +235,8 @@ At offset 1839B1, replace E8AA04FBFF with E86A450200.
 At offset 183A3B, replace E85047FDFF with E8E0440200.
 At offset 183AB9, replace E8A203FBFF with E862440200.
 At offset 183B59, replace E8C22FFDFF with E8C2430200.
+At offset 183A56, replace E8452FFDFF with E8C5440200.
+At offset 183CED, replace E8AE2CFDFF with E82E420200.
 
 # To call the hook that plays the ds brief movie
 At offset 1683A5, replace E8C68DFCFF with E876FB0300.
@@ -259,14 +261,6 @@ At offset 12656E, replace E81D1B0300 with E8AD190800.
 
 # To call the hook that draws the medals ceremony screen
 At offset 17E89C, replace A1CC4B7800 with E87F960200.
-At offset 183995, replace BB98000000 with BB40010000.
-At offset 183AA1, replace BB84010000 with BB40010000.
-At offset 1839F7, replace 8D441D1E with 8D441D80.
-At offset 183A3B, replace E85047FDFF with 9090909090.
-At offset 183A56, replace E8452FFDFF with 9090909090.
-At offset 183B59, replace E8C22FFDFF with 9090909090.
-At offset 183CD3, replace E8B844FDFF with 9090909090.
-At offset 183CED, replace E8AE2CFDFF with 9090909090.
 
 
 *** Usage ***

@@ -1724,6 +1724,7 @@ public:
 
 		this->mission_selection_screen_posX = GetFileKeyValueInt(lines, "mission_selection_screen_posX", 230);
 
+		this->draw_medalzoom_texts = GetFileKeyValueInt(lines, "draw_medalzoom_texts", 1) != 0;
 		this->battlezoom_image1_posX = GetFileKeyValueInt(lines, "battlezoom_image1_posX", 320);
 		this->battlezoom_image1_posY = GetFileKeyValueInt(lines, "battlezoom_image1_posY", 240);
 		this->battlezoom_text1_posX = GetFileKeyValueInt(lines, "battlezoom_text1_posX", 300);
@@ -1732,13 +1733,13 @@ public:
 		this->kalidorzoom_image1_posY = GetFileKeyValueInt(lines, "kalidorzoom_image1_posY", 240);
 		this->kalidorzoom_text1_posX = GetFileKeyValueInt(lines, "kalidorzoom_text1_posX", 300);
 		this->kalidorzoom_text1_posY = GetFileKeyValueInt(lines, "kalidorzoom_text1_posY", 340);
-		this->battlezoom_image2_posX = GetFileKeyValueInt(lines, "battlezoom_image2_posX", 152);
+		this->battlezoom_image2_posX = GetFileKeyValueInt(lines, "battlezoom_image2_posX", 320);
 		this->battlezoom_image2_posY = GetFileKeyValueInt(lines, "battlezoom_image2_posY", 360);
 		this->battlezoom_text2_posX = GetFileKeyValueInt(lines, "battlezoom_text2_posX", 182);
 		this->battlezoom_text2_posY = GetFileKeyValueInt(lines, "battlezoom_text2_posY", 345);
-		this->kalidorzoom_image2_posX = GetFileKeyValueInt(lines, "kalidorzoom_image2_posX", 388);
+		this->kalidorzoom_image2_posX = GetFileKeyValueInt(lines, "kalidorzoom_image2_posX", 320);
 		this->kalidorzoom_image2_posY = GetFileKeyValueInt(lines, "kalidorzoom_image2_posY", 120);
-		this->kalidorzoom_text2_posX = GetFileKeyValueInt(lines, "kalidorzoom_text2_posX", 328);
+		this->kalidorzoom_text2_posX = GetFileKeyValueInt(lines, "kalidorzoom_text2_posX", 182);
 		this->kalidorzoom_text2_posY = GetFileKeyValueInt(lines, "kalidorzoom_text2_posY", 105);
 	}
 
@@ -1805,6 +1806,7 @@ public:
 
 	int mission_selection_screen_posX;
 
+	bool draw_medalzoom_texts;
 	int battlezoom_image1_posX;
 	int battlezoom_image1_posY;
 	int battlezoom_text1_posX;
@@ -6878,6 +6880,11 @@ int DrawKalidorZoomImage1Hook(int* params)
 
 int DrawBattleKalidorZoomText1Hook(int* params)
 {
+	if (!g_concourseDoors.draw_medalzoom_texts)
+	{
+		return 0;
+	}
+
 	RECT* A4 = (RECT*)params[0];
 	int A8 = params[1];
 	int AC = params[2];
@@ -6922,6 +6929,11 @@ int DrawBattleZoomImage2Hook(int* params)
 
 int DrawBattleZoomText2Hook(int* params)
 {
+	if (!g_concourseDoors.draw_medalzoom_texts)
+	{
+		return 0;
+	}
+
 	RECT* A4 = (RECT*)params[0];
 	int A8 = params[1];
 	int AC = params[2];
@@ -6954,6 +6966,11 @@ int DrawKalidorZoomImage2Hook(int* params)
 
 int DrawKalidorZoomText2Hook(int* params)
 {
+	if (!g_concourseDoors.draw_medalzoom_texts)
+	{
+		return 0;
+	}
+
 	int A4 = params[0];
 	const char* A8 = (const char*)params[1];
 	RECT* AC = (RECT*)params[2];
@@ -6962,12 +6979,40 @@ int DrawKalidorZoomText2Hook(int* params)
 
 	const auto L00557720 = (void(*)(int, const char*, RECT*, int, int))0x00557720;
 
-	AC->left = AC->left - 0x148 + g_concourseDoors.kalidorzoom_text2_posX;
+	AC->left = AC->left - 0x148 + g_concourseDoors.kalidorzoom_text2_posX + 0x100;
 	AC->top = AC->top - 0x69 + g_concourseDoors.kalidorzoom_text2_posY;
-	AC->right = AC->right - 0x148 + g_concourseDoors.kalidorzoom_text2_posX;
+	AC->right = AC->right - 0x148 + g_concourseDoors.kalidorzoom_text2_posX + 0x100;
 	AC->bottom = AC->bottom - 0x69 + g_concourseDoors.kalidorzoom_text2_posY;
 
 	L00557720(A4, A8, AC, A10, A14);
+
+	return 0;
+}
+
+int DrawMedalZoomRect1Hook(int* params)
+{
+	if (!g_concourseDoors.draw_medalzoom_texts)
+	{
+		return 0;
+	}
+
+	const auto XwaUILabel = (int(*)(int, int, int, int))0x005575A0;
+
+	XwaUILabel(params[0], params[1], params[2], params[3]);
+
+	return 0;
+}
+
+int DrawMedalZoomRect2Hook(int* params)
+{
+	if (!g_concourseDoors.draw_medalzoom_texts)
+	{
+		return 0;
+	}
+
+	const auto XwaUILabel = (int(*)(int, int, int, int))0x005575A0;
+
+	XwaUILabel(params[0], params[1], params[2], params[3]);
 
 	return 0;
 }

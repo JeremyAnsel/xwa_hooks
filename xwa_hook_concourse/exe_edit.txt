@@ -1111,6 +1111,21 @@ E8C22FFDFF              call 00557720
 
 E8C2430200              call 005A8B20, 005A8B20 - 0058475E = 000243C2
 
+:00584656 - 0x183A56
+E8452FFDFF              call 005575A0
+
+E8C5440200              call 005A8B20, 005A8B20 - 0058465B = 000244C5
+
+:005848ED - 0x183CED
+E8AE2CFDFF              call 005575A0
+
+E82E420200              call 005A8B20, 005A8B20 - 005848F2 = 0002422E
+
+:005845F7 - 0x1839F7
+8D441D1E                lea eax, dword ptr [ebp+ebx+1E]
+
+8D441D80                lea eax, dword ptr [ebp+ebx+80]
+
 ===============================================================================
 
 ; dsbrief movie
@@ -1210,46 +1225,3 @@ E8AD190800              call 005A8B20, 005A8B20 - 00527173 = 000819AD
 A1CC4B7800              mov eax, dword ptr [00784BCC]
 
 E87F960200              call 005A8B20, 005A8B20 - 0057F4A1 = 0002967F
-
-:00584595 - 0x183995
-BB98000000              mov ebx, 00000098
-
-BB40010000              mov ebx, 00000140
-
-:005846A1 - 0x183AA1
-BB84010000              mov ebx, 00000184
-
-BB40010000              mov ebx, 00000140
-
-:005845F7 - 0x1839F7
-8D441D1E                lea eax, dword ptr [ebp+ebx+1E]
-
-8D441D80                lea eax, dword ptr [ebp+ebx+80]
-
-; L00584500
-; hide text of medal names
-
-:0058463B - 0x183A3B
-E85047FDFF              call 00558D90
-
-9090909090              nop
-
-:00584656 - 0x183A56
-E8452FFDFF              call 005575A0
-
-9090909090              nop
-
-:00584759 - 0x183B59
-E8C22FFDFF              call 00557720
-
-9090909090              nop
-
-:005848D3 - 0x183CD3
-E8B844FDFF              call 00558D90
-
-9090909090              nop
-
-:005848ED - 0x183CED
-E8AE2CFDFF              call 005575A0
-
-9090909090              nop

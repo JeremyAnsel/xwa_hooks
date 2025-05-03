@@ -125,6 +125,8 @@ int DrawBattleZoomImage2Hook(int* params);
 int DrawBattleZoomText2Hook(int* params);
 int DrawKalidorZoomImage2Hook(int* params);
 int DrawKalidorZoomText2Hook(int* params);
+int DrawMedalZoomRect1Hook(int* params);
+int DrawMedalZoomRect2Hook(int* params);
 
 int DSBriefLoadMovieHook(int* params);
 int DSBriefFreeMovieHook(int* params);

@@ -77,6 +77,8 @@ briefing_review_item_height = 41
 
 mission_selection_screen_posX = 230
 
+draw_medalzoom_texts = 1
+
 battlezoom_image1_posX = 320
 battlezoom_image1_posY = 240
 battlezoom_text1_posX = 300
@@ -87,13 +89,12 @@ kalidorzoom_image1_posY = 240
 kalidorzoom_text1_posX = 300
 kalidorzoom_text1_posY = 340
 
-battlezoom_image2_posX = 152
+battlezoom_image2_posX = 320
 battlezoom_image2_posY = 360
 battlezoom_text2_posX = 182
 battlezoom_text2_posY = 345
 
-kalidorzoom_image2_posX = 388
+kalidorzoom_image2_posX = 320
 kalidorzoom_image2_posY = 120
-kalidorzoom_text2_posX = 328
+kalidorzoom_text2_posX = 182
 kalidorzoom_text2_posY = 105
-
