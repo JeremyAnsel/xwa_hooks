@@ -4754,6 +4754,10 @@ int ConvertWeaponModelIndexToHardpointType(int modelIndex)
 	{
 		hardpointType = 38;
 	}
+	else
+	{
+		hardpointType = 1 + modelIndex - 280;
+	}
 
 	return hardpointType;
 }
