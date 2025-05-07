@@ -509,7 +509,7 @@ namespace hook_32bpp_net
 
             foreach (var texture in opt.Textures.Where(texture => texturesExist.Contains(texture.Key)))
             {
-                texture.Value.Convert8To32(false, true);
+                //texture.Value.Convert8To32(false, true);
 
                 foreach (int i in fgColors)
                 {
@@ -600,6 +600,8 @@ namespace hook_32bpp_net
                 {
                     return;
                 }
+
+                texture.Value.Convert8To32(false, true);
 
                 string textureName = texture.Key.Substring(0, position);
                 int fgIndex = int.Parse(texture.Key.Substring(position + 4, texture.Key.IndexOf('_', position + 4) - position - 4), CultureInfo.InvariantCulture);
