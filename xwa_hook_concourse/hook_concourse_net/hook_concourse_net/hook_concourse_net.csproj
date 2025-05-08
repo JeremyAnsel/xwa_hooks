@@ -18,8 +18,8 @@
 
   <ItemGroup>
     <PackageReference Include="DllExport" Version="1.5.2" ExcludeAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="JeremyAnsel.Xwa.Cbm" Version="3.0.16" />
-    <PackageReference Include="JeremyAnsel.Xwa.Dat" Version="3.0.22" />
+    <PackageReference Include="JeremyAnsel.Xwa.Cbm" Version="3.0.20" />
+    <PackageReference Include="JeremyAnsel.Xwa.Dat" Version="3.0.26" />
   </ItemGroup>
 
   <ItemGroup>
