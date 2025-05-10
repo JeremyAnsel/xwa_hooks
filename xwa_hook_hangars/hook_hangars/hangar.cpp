@@ -1731,12 +1731,13 @@ int HangarReloadHook(int* params)
 
 	g_cockpitId = GetCockpitId();
 
-	if (objectIndex == -1)
-	{
-		return *(int*)0x0077330C;
-	}
+	// todo
+	//if (objectIndex == -1)
+	//{
+	//	return *(int*)0x0077330C;
+	//}
 
-	unsigned short modelIndex = xwaObjects[objectIndex].ModelIndex;
+	//unsigned short modelIndex = xwaObjects[objectIndex].ModelIndex;
 
 	int xwaMission = *(int*)0x09EB8E0;
 	unsigned char missionType = *(unsigned char*)(xwaMission + 0xAF7DC + 0x23A6);
@@ -4873,6 +4874,9 @@ void CraftEjectReload()
 		modelIndexes[modelIndex] = true;
 	}
 
+	unsigned short droid1ModelIndex = g_hangarObjects.GetDroid1ModelIndex();
+	unsigned short droid2ModelIndex = g_hangarObjects.GetDroid2ModelIndex();
+
 	for (unsigned short modelIndex = 1; modelIndex < OptModelFileMemHandlesCount; modelIndex++)
 	{
 		if (!modelIndexes[modelIndex] || OptModelFileMemHandles[modelIndex] == 0)
@@ -4881,8 +4885,9 @@ void CraftEjectReload()
 		}
 
 		g_isInHangar = false;
-		std::string optPath = GetShipPath(modelIndex) + ".opt";
+		//std::string optPath = GetShipPath(modelIndex) + ".opt";
 		g_isInHangar = true;
+		std::string optPath = GetShipPath(modelIndex) + ".opt";
 
 		std::string currentOptSkins = g_hangarOptSkins[modelIndex];
 		std::string optSkins = OptSkins_ReadOptSkinsListFunction(optPath);
@@ -4894,8 +4899,10 @@ void CraftEjectReload()
 		}
 
 		bool modelInMap = std::find(hangarMapModelIndices.begin(), hangarMapModelIndices.end(), modelIndex) != hangarMapModelIndices.end();
+		bool isDroid1 = modelIndex == droid1ModelIndex;
+		bool isDroid2 = modelIndex == droid2ModelIndex;
 
-		if (!modelInMap)
+		if (!modelInMap && !isDroid1 && !isDroid2)
 		{
 			continue;
 		}
