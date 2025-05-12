@@ -542,17 +542,26 @@ namespace hook_32bpp_net
                         return;
                     }
 
-                    faceGroup.Textures.Clear();
-
                     for (int i = 0; i < fgCount; i++)
                     {
+                        string textureName;
+
                         if (fgColors.Contains(i))
                         {
-                            faceGroup.Textures.Add(name + "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]));
+                            textureName = name + "_fg_" + i.ToString(CultureInfo.InvariantCulture) + "_" + string.Join(",", fgSkins[i]);
                         }
                         else
                         {
-                            faceGroup.Textures.Add(name);
+                            textureName = i < faceGroup.Textures.Count ? faceGroup.Textures[i] : name;
+                        }
+
+                        if (i < faceGroup.Textures.Count)
+                        {
+                            faceGroup.Textures[i] = textureName;
+                        }
+                        else
+                        {
+                            faceGroup.Textures.Add(textureName);
                         }
                     }
                 });
