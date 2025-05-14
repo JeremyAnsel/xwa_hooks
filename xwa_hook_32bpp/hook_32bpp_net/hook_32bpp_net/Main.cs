@@ -353,23 +353,32 @@ namespace hook_32bpp_net
             }
 
             bool isInSkirmishShipScreen = Marshal.ReadInt32(new IntPtr(0x007838A0)) != 0;
+            int loadSkins = isInSkirmishShipScreen ? 0 : 1;
 
             string optName = Path.GetFileNameWithoutExtension(optFilename);
 
             var opt = OptFile.FromFile(optFilename, false);
 
-            if (!isInSkirmishShipScreen && Directory.Exists($"FlightModels\\Skins\\{optName}"))
+            if (Directory.Exists($"FlightModels\\Skins\\{optName}"))
             {
-                IList<string> objectLines = GetCustomFileLines("Skins");
-                IList<string> baseSkins = XwaHooksConfig.Tokennize(XwaHooksConfig.GetFileKeyValue(objectLines, optName));
-                bool hasDefaultSkin = GetSkinDirectoryLocatorPath(optName, "Default") != null || GetFlightgroupsDefaultCount(optName) != 0;
-                int fgCount = GetFlightgroupsCount(objectLines, optName);
+                IList<string> objectLines = loadSkins == 0 ? new List<string>() : GetCustomFileLines("Skins");
+                IList<string> baseSkins = loadSkins == 0 ? new List<string>() : XwaHooksConfig.Tokennize(XwaHooksConfig.GetFileKeyValue(objectLines, optName));
+                bool hasDefaultSkin = GetSkinDirectoryLocatorPath(optName, "Default") != null || (loadSkins == 0 ? GetSkinDirectoryLocatorPath(optName, "Default_0") != null : GetFlightgroupsDefaultCount(optName) != 0);
+                int fgCount = loadSkins == 0 ? 0 : GetFlightgroupsCount(objectLines, optName);
                 bool hasSkins = hasDefaultSkin || baseSkins.Count != 0 || fgCount != 0;
 
                 if (hasSkins)
                 {
-                    fgCount = Math.Max(fgCount, opt.MaxTextureVersion);
-                    fgCount = Math.Max(fgCount, GetFlightgroupsDefaultCount(optName));
+                    if (loadSkins == 0)
+                    {
+                        fgCount = 1;
+                    }
+                    else
+                    {
+                        fgCount = Math.Max(fgCount, opt.MaxTextureVersion);
+                        fgCount = Math.Max(fgCount, GetFlightgroupsDefaultCount(optName));
+                    }
+
                     UpdateOptFile(optName, opt, objectLines, baseSkins, fgCount, hasDefaultSkin);
                 }
             }
