@@ -42,3 +42,5 @@ int TargetableComponentBackHook(int* params);
 int TargetComponent1Hook(int* params);
 int TargetComponent2Hook(int* params);
 int TargetComponent3Hook(int* params);
+
+int AjustLodDistanceHook(int* params);

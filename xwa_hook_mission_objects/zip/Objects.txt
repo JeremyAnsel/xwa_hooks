@@ -8,3 +8,5 @@ ObjectProfile_fg_0 = Default
 ObjectProfile_XWing = Default
 
 ObjectProfile_BWing_281 = Default
+
+AdjustLodDistance = 1.0

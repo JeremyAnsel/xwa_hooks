@@ -49,3 +49,11 @@ E883701700              call 005A8B30, 005A8B30 - 00431AAD = 00177083
 E88B6D0A00              call 005A8B20, 005A8B20 - 00501D95 = 000A6D8B
 C3                      ret
 9090                    nop
+
+; from L0050A7E0
+; AdjustLodDistance
+
+:0050ADB5 - 0x10A1B5
+E8961BF9FF              call 0049C950
+
+E866DD0900              call 005A8B20, 005A8B20 - 0050ADBA = 0009DD66

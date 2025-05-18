@@ -23,6 +23,18 @@ std::string GetFileNameWithoutExtension(const std::string& str)
 	return a == -1 ? str : str.substr(a + 1, -1);
 }
 
+float GetFileKeyValueFloat(const std::vector<std::string>& lines, const std::string& key, float defaultValue)
+{
+	std::string value = GetFileKeyValue(lines, key);
+
+	if (value.empty())
+	{
+		return defaultValue;
+	}
+
+	return std::stof(value);
+}
+
 class FlightModelsList
 {
 public:
@@ -87,9 +99,11 @@ public:
 		}
 
 		this->UnlimitedTurretLaser = GetFileKeyValueInt(lines, "UnlimitedTurretLaser", 1) != 0;
+		this->AdjustLodDistance = GetFileKeyValueFloat(lines, "AdjustLodDistance", 1.0f);
 	}
 
 	bool UnlimitedTurretLaser;
+	float AdjustLodDistance;
 };
 
 Config g_config;
@@ -2219,6 +2233,19 @@ int TargetComponent3Hook(int* params)
 	{
 		params[Params_ReturnAddress] = 0x0050405F;
 	}
+
+	return 0;
+}
+
+int AjustLodDistanceHook(int* params)
+{
+	float& xwaFlightLod = *(float*)0x00600288;
+
+	xwaFlightLod /= g_config.AdjustLodDistance;
+
+	const auto lines = GetCustomFileLines("Objects");
+	float missionAdjustLodDistance = GetFileKeyValueFloat(lines, "AdjustLodDistance", 1.0f);
+	xwaFlightLod /= missionAdjustLodDistance;
 
 	return 0;
 }

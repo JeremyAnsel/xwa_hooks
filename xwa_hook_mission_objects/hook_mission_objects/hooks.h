@@ -59,6 +59,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x503F6E, TargetComponent1Hook },
 	{ 0x503FE5, TargetComponent2Hook },
 	{ 0x504039, TargetComponent3Hook },
+
+	{ 0x50ADBA, AjustLodDistanceHook },
 };
 
 static const HookPatchItem g_loadMissionObjectsPatch[] =
@@ -155,6 +157,11 @@ static const HookPatchItem g_objectProfilePatch[] =
 	{ 0x103434, "740583F8037524", "E8E74A0A009090" },
 };
 
+static const HookPatchItem g_setLodDistancePatch[] =
+{
+	{ 0x10A1B5, "E8961BF9FF", "E866DD0900" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that loads mission objects", g_loadMissionObjectsPatch),
@@ -164,4 +171,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that read exe crafts turrets data", g_readExeCraftsTurretsPatch),
 	MAKE_HOOK_PATCH("To call the hook that set turret index", g_setTurretIndexPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines object profile", g_objectProfilePatch),
+	MAKE_HOOK_PATCH("To call the hook that set the lod distance", g_setLodDistancePatch),
 };

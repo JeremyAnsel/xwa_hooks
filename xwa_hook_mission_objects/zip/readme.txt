@@ -99,6 +99,9 @@ At offset 103369, replace 741683F8037411 with E8B24B0A009090.
 At offset 1033E0, replace 0F849200000083F8030F8489000000 with E83B4B0A0090909090909090909090.
 At offset 103434, replace 740583F8037524 with E8E74A0A009090.
 
+# To call the hook that set the lod distance
+At offset 10A1B5, replace E8961BF9FF with E866DD0900.
+
 
 *** Usage ***
 
@@ -215,6 +218,10 @@ The format is:
 TargetableMeshes = indices
 indices are a comma separated list.
 If the list is empty then all meshes are targetable.
+
+# lod distance
+To define a global lod distance set the "AdjustLodDistance" setting in the "hook_mission_objects.cfg" file or the "hook_mission_objects" section of "hooks.ini". The default value is 1.0.
+To define a per-mission value set "AdjustLodDistance" setting in the "[MissionDir]\[Mission]_Objects.txt" file or the "[Objects]" section of "[MissionDir]\[Mission].ini". The default value is 1.0.
 
 
 *** Credits ***
