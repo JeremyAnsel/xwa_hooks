@@ -640,3 +640,8 @@ E803E91600              call 005A8B20, 005A8B20 - 0043A21D = 0016E903
 
 E85CE71600              call 005A8B20, 005A8B20 - 0043A3C4 = 0016E75C
 9090                    nop
+
+// s_XwaSound3dEnabled
+:005BA990 - 0x1B9D90
+02
+00

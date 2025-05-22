@@ -610,6 +610,9 @@ static const HookPatchItem g_soundsCountPatch[] =
 	{ 0x0306B0, "E89B8E0000", "E86B781700" },
 	{ 0x039618, "8A44242C8D74242C", "E803E91600909090" },
 	{ 0x0397BF, "8D7C242C83C9FF", "E85CE716009090" },
+
+	// s_XwaSound3dEnabled
+	{ 0x1B9D90, "02", "00" },
 };
 
 static const HookPatch g_patches[] =
