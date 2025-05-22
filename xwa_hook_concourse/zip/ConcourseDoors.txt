@@ -98,3 +98,4 @@ kalidorzoom_image2_posX = 320
 kalidorzoom_image2_posY = 120
 kalidorzoom_text2_posX = 182
 kalidorzoom_text2_posY = 105
+

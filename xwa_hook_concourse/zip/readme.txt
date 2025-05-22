@@ -417,6 +417,11 @@ TestMedalCase_BattleZoomMedalIndex = 1
 TestMedalCase_KalidorZoomMedalIndex = 1
 
 
+## Side process
+
+To load the resources from the side process set "EnableSideProcess = 1".
+
+
 *** Credits ***
 
 - Jérémy Ansel (JeremyaFr)

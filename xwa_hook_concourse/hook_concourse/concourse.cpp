@@ -14,6 +14,8 @@
 #include <ddraw.h>
 #include <d3d.h>
 #include <dxgi.h>
+#include <d3d11.h>
+#include <d3d11_1.h>
 #include <d2d1.h>
 #include <d2d1effects.h>
 #include <d2d1effectauthor.h>
@@ -25,16 +27,28 @@
 #include "SurfaceDC.h"
 #include "BitmapEffect.h"
 
-#pragma comment(lib, "Winmm.lib")
+#pragma comment(lib, "Winmm")
+#pragma comment(lib, "dxguid")
+#pragma comment(lib, "dxgi")
+#pragma comment(lib, "d3d11")
 #pragma comment(lib, "d2d1")
 #pragma comment(lib, "dwrite")
 #pragma comment(lib, "Gdiplus")
 
 #include "webm_helpers.h"
+#include "hookexe.h"
 
 #include <string>
 #include <sstream>
 #include <iomanip>
+
+#ifdef _DEBUG
+#include "../Debug/MainVertexShader.h"
+#include "../Debug/MainPixelShader.h"
+#else
+#include "../Release/MainVertexShader.h"
+#include "../Release/MainPixelShader.h"
+#endif
 
 std::string address_to_hex(int i)
 {
@@ -246,6 +260,8 @@ public:
 		this->SkirmishOptPositionX = GetFileKeyValueFloat(lines, "SkirmishOptPositionX", 0.5f);
 		this->SkirmishOptPositionY = GetFileKeyValueFloat(lines, "SkirmishOptPositionY", 0.0f);
 		this->SkirmishOptPositionZ = GetFileKeyValueFloat(lines, "SkirmishOptPositionZ", 0.25f);
+
+		this->EnableSideProcess = GetFileKeyValueInt(lines, "EnableSideProcess", 0) != 0;
 	}
 
 	bool SkipFirst7Missions;
@@ -273,6 +289,7 @@ public:
 	float SkirmishOptPositionX;
 	float SkirmishOptPositionY;
 	float SkirmishOptPositionZ;
+	bool EnableSideProcess;
 };
 
 Config g_config;
@@ -881,6 +898,234 @@ void DrawSurfaceDelegate(
 	{
 		//dataBitmap->Release();
 	}
+}
+
+static bool g_mainResourcesInitialized = false;
+static ComPtr<ID3D11VertexShader> g_mainVertexShader;
+static ComPtr<ID3D11PixelShader> g_mainPixelShader;
+static ComPtr<ID3D11Buffer> g_mainConstantBuffer;
+static ComPtr<ID3D11SamplerState> g_mainSampler;
+static ComPtr<ID3D11RasterizerState> g_mainRasterizerState;
+static ComPtr<ID3D11BlendState> g_mainBlendState;
+static ComPtr<ID3D11DepthStencilState> g_mainDepthStencilState;
+
+struct MainConstantBuffer
+{
+	float positionX;
+	float positionY;
+	float sizeX;
+	float sizeY;
+};
+
+void InitD3dResources(SurfaceDC* dc)
+{
+	if (g_mainResourcesInitialized)
+	{
+		return;
+	}
+
+	dc->d3d11Device->CreateVertexShader(g_MainVertexShader, sizeof(g_MainVertexShader), nullptr, &g_mainVertexShader);
+	dc->d3d11Device->CreatePixelShader(g_MainPixelShader, sizeof(g_MainPixelShader), nullptr, &g_mainPixelShader);
+
+	D3D11_BUFFER_DESC constantBufferDesc{};
+	constantBufferDesc.ByteWidth = sizeof(MainConstantBuffer);
+	constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constantBufferDesc.CPUAccessFlags = 0;
+	constantBufferDesc.MiscFlags = 0;
+	constantBufferDesc.StructureByteStride = 0;
+	dc->d3d11Device->CreateBuffer(&constantBufferDesc, nullptr, &g_mainConstantBuffer);
+
+	D3D11_SAMPLER_DESC sampDesc{};
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sampDesc.MinLOD = 0;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	dc->d3d11Device->CreateSamplerState(&sampDesc, &g_mainSampler);
+
+	D3D11_RASTERIZER_DESC rsDesc{};
+	rsDesc.FillMode = D3D11_FILL_SOLID;
+	rsDesc.CullMode = D3D11_CULL_BACK;
+	rsDesc.FrontCounterClockwise = FALSE;
+	rsDesc.DepthBias = 0;
+	rsDesc.DepthBiasClamp = 0.0f;
+	rsDesc.SlopeScaledDepthBias = 0.0f;
+	rsDesc.DepthClipEnable = FALSE;
+	rsDesc.ScissorEnable = FALSE;
+	rsDesc.MultisampleEnable = TRUE;
+	rsDesc.AntialiasedLineEnable = FALSE;
+	dc->d3d11Device->CreateRasterizerState(&rsDesc, &g_mainRasterizerState);
+
+	D3D11_BLEND_DESC blendDesc{};
+	blendDesc.AlphaToCoverageEnable = FALSE;
+	blendDesc.IndependentBlendEnable = FALSE;
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	dc->d3d11Device->CreateBlendState(&blendDesc, &g_mainBlendState);
+
+	D3D11_DEPTH_STENCIL_DESC depthDesc{};
+	depthDesc.DepthEnable = FALSE;
+	depthDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+	depthDesc.StencilEnable = FALSE;
+	dc->d3d11Device->CreateDepthStencilState(&depthDesc, &g_mainDepthStencilState);
+
+	g_mainResourcesInitialized = true;
+}
+
+void DrawSurfaceTexture(
+	SurfaceDC* dc,
+	unsigned int data,
+	int dataWidth,
+	int dataHeight,
+	int destinationX,
+	int destinationY,
+	int destinationWidth,
+	int destinationHeight)
+{
+	InitD3dResources(dc);
+
+	if (!g_mainResourcesInitialized)
+	{
+		return;
+	}
+
+	int offsetX = (g_screenWidth - dc->width) / 2;
+
+	bool isBackgroundHD = g_netFunctions._frontResIsBackgroundHD() != 0;
+	bool isBackgroundWide = g_netFunctions._frontResIsBackgroundWide() != 0;
+
+	//if (!isBackgroundWide)
+	//{
+	//	int offsetLeft = offsetX + (dc->width - (dc->displayWidth * dc->height + dc->displayHeight / 2) / dc->displayHeight) / 2;
+	//	int offsetRight = offsetX + (dc->width + (dc->displayWidth * dc->height + dc->displayHeight / 2) / dc->displayHeight) / 2;
+
+	//	dc->d2d1RenderTarget->PushAxisAlignedClip(D2D1::RectF(offsetLeft, 0, offsetRight, dc->height), D2D1_ANTIALIAS_MODE_ALIASED);
+	//}
+	//else
+	//{
+	//	dc->d2d1RenderTarget->PushAxisAlignedClip(D2D1::RectF(offsetX, 0, offsetX + dc->width, dc->height), D2D1_ANTIALIAS_MODE_ALIASED);
+	//}
+
+	float scaleX = (float)destinationWidth / (float)dataWidth;
+	float scaleY = (float)destinationHeight / (float)dataHeight;
+
+	D2D1_POINT_2F destinationPoint = D2D1::Point2F(offsetX + destinationX, destinationY);
+	D2D1_MATRIX_3X2_F scaleMatrix = D2D1::Matrix3x2F::Scale(scaleX, scaleY, destinationPoint);
+
+	MainConstantBuffer constantBuffer{};
+	constantBuffer.positionX = (float)(offsetX + destinationX) / g_screenWidth;
+	constantBuffer.positionY = (float)destinationY / dc->height;
+	constantBuffer.sizeX = (float)destinationWidth / g_screenWidth;
+	constantBuffer.sizeY = (float)destinationHeight / dc->height;
+
+	dc->d3d11DeviceContext->UpdateSubresource(g_mainConstantBuffer, 0, nullptr, &constantBuffer, 0, 0);
+
+	ComPtr<ID3D11Texture2D> texture;
+	dc->d3d11Device->OpenSharedResource((HANDLE)data, IID_PPV_ARGS(&texture));
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC textureViewDesc{};
+	textureViewDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	textureViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	textureViewDesc.Texture2D.MipLevels = 1;
+	textureViewDesc.Texture2D.MostDetailedMip = 0;
+
+	ComPtr<ID3D11ShaderResourceView> textureView;
+	dc->d3d11Device->CreateShaderResourceView(texture, &textureViewDesc, &textureView);
+
+	static const FLOAT factors[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	UINT mask = 0xffffffff;
+
+	D3D11_VIEWPORT viewport{};
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.Width = g_screenWidth;
+	viewport.Height = dc->height;
+	viewport.MinDepth = D3D11_MIN_DEPTH;
+	viewport.MaxDepth = D3D11_MAX_DEPTH;
+
+	D3D11_RECT scissorRects{};
+
+	ID3D11RenderTargetView* oldRenderTargetView;
+	ID3D11DepthStencilView* ol1DepthStencilView;
+	ID3D11VertexShader* oldVertexShader;
+	ID3D11PixelShader* oldPixelShader;
+	ID3D11GeometryShader* oldGeometryShader;
+	ID3D11InputLayout* oldInputLayout;
+	D3D11_PRIMITIVE_TOPOLOGY oldPrimitiveTopology;
+	ID3D11ShaderResourceView* oldShaderResourceView;
+	ID3D11Buffer* oldVSConstantBuffer;
+	ID3D11Buffer* oldPSConstantBuffer;
+	ID3D11SamplerState* oldPSSamplerState;
+	ID3D11RasterizerState* oldRasterizerState;
+	ID3D11BlendState* oldBlendState;
+	FLOAT oldBlendFactor[4];
+	UINT oldSampleMask;
+	ID3D11DepthStencilState* oldDepthStateState;
+	UINT oldStencilReference;
+	UINT oldViewportCount = 1;
+	D3D11_VIEWPORT oldViewport;
+	D3D11_RECT oldScissorRects;
+	UINT oldScissorRectsCount = 1;
+
+	dc->d3d11DeviceContext->OMGetRenderTargets(1, &oldRenderTargetView, &ol1DepthStencilView);
+	dc->d3d11DeviceContext->VSGetShader(&oldVertexShader, nullptr, nullptr);
+	dc->d3d11DeviceContext->PSGetShader(&oldPixelShader, nullptr, nullptr);
+	dc->d3d11DeviceContext->GSGetShader(&oldGeometryShader, nullptr, nullptr);
+	dc->d3d11DeviceContext->IAGetInputLayout(&oldInputLayout);
+	dc->d3d11DeviceContext->IAGetPrimitiveTopology(&oldPrimitiveTopology);
+	dc->d3d11DeviceContext->PSGetShaderResources(0, 1, &oldShaderResourceView);
+	dc->d3d11DeviceContext->VSGetConstantBuffers(0, 1, &oldVSConstantBuffer);
+	dc->d3d11DeviceContext->PSGetConstantBuffers(0, 1, &oldPSConstantBuffer);
+	dc->d3d11DeviceContext->PSGetSamplers(0, 1, &oldPSSamplerState);
+	dc->d3d11DeviceContext->RSGetState(&oldRasterizerState);
+	dc->d3d11DeviceContext->OMGetBlendState(&oldBlendState, oldBlendFactor, &oldSampleMask);
+	dc->d3d11DeviceContext->OMGetDepthStencilState(&oldDepthStateState, &oldStencilReference);
+	dc->d3d11DeviceContext->RSGetViewports(&oldViewportCount, &oldViewport);
+	dc->d3d11DeviceContext->RSGetScissorRects(&oldScissorRectsCount, &oldScissorRects);
+
+	dc->d3d11DeviceContext->OMSetRenderTargets(1, &dc->d3d11RenderTargetView, nullptr);
+	dc->d3d11DeviceContext->VSSetShader(g_mainVertexShader, nullptr, 0);
+	dc->d3d11DeviceContext->PSSetShader(g_mainPixelShader, nullptr, 0);
+	dc->d3d11DeviceContext->GSSetShader(nullptr, nullptr, 0);
+	dc->d3d11DeviceContext->IASetInputLayout(nullptr);
+	dc->d3d11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	dc->d3d11DeviceContext->PSSetShaderResources(0, 1, textureView.GetAddressOf());
+	dc->d3d11DeviceContext->VSSetConstantBuffers(0, 1, g_mainConstantBuffer.GetAddressOf());
+	dc->d3d11DeviceContext->PSSetConstantBuffers(0, 1, g_mainConstantBuffer.GetAddressOf());
+	dc->d3d11DeviceContext->PSSetSamplers(0, 1, g_mainSampler.GetAddressOf());
+	dc->d3d11DeviceContext->RSSetState(g_mainRasterizerState);
+	dc->d3d11DeviceContext->OMSetBlendState(g_mainBlendState, factors, mask);
+	dc->d3d11DeviceContext->OMSetDepthStencilState(g_mainDepthStencilState, 0);
+	dc->d3d11DeviceContext->RSSetViewports(1, &viewport);
+	dc->d3d11DeviceContext->RSSetScissorRects(1, &scissorRects);
+
+	dc->d3d11DeviceContext->Draw(4, 0);
+
+	dc->d3d11DeviceContext->OMSetRenderTargets(1, &oldRenderTargetView, ol1DepthStencilView);
+	dc->d3d11DeviceContext->VSSetShader(oldVertexShader, nullptr, 0);
+	dc->d3d11DeviceContext->PSSetShader(oldPixelShader, nullptr, 0);
+	dc->d3d11DeviceContext->GSSetShader(oldGeometryShader, nullptr, 0);
+	dc->d3d11DeviceContext->IASetInputLayout(oldInputLayout);
+	dc->d3d11DeviceContext->IASetPrimitiveTopology(oldPrimitiveTopology);
+	dc->d3d11DeviceContext->PSSetShaderResources(0, 1, &oldShaderResourceView);
+	dc->d3d11DeviceContext->VSSetConstantBuffers(0, 1, &oldVSConstantBuffer);
+	dc->d3d11DeviceContext->PSSetConstantBuffers(0, 1, &oldPSConstantBuffer);
+	dc->d3d11DeviceContext->PSSetSamplers(0, 1, &oldPSSamplerState);
+	dc->d3d11DeviceContext->RSSetState(oldRasterizerState);
+	dc->d3d11DeviceContext->OMSetBlendState(oldBlendState, oldBlendFactor, oldSampleMask);
+	dc->d3d11DeviceContext->OMSetDepthStencilState(oldDepthStateState, oldStencilReference);
+	dc->d3d11DeviceContext->RSSetViewports(1, &oldViewport);
+	dc->d3d11DeviceContext->RSSetScissorRects(oldScissorRectsCount, &oldScissorRects);
 }
 
 bool HasSurfaceDC()
@@ -2116,7 +2361,14 @@ int LoadGameStateHook(int* params)
 			XwaLoadDatImage(animation.name.c_str(), animation.nameGroupId, 1, imageCount);
 		}
 
-		WebmLoadVideo(animation.name);
+		if (g_config.EnableSideProcess)
+		{
+			ExeWebmLoadVideo(animation.name);
+		}
+		else
+		{
+			WebmLoadVideo(animation.name);
+		}
 	}
 
 	TechDoorLoadMovie();
@@ -2159,7 +2411,14 @@ int FreeGameStateHook(int* params)
 
 	g_videoBitmaps.clear();
 
-	WebmFreeAllVideos();
+	if (g_config.EnableSideProcess)
+	{
+		ExeWebmFreeAllVideos();
+	}
+	else
+	{
+		WebmFreeAllVideos();
+	}
 
 	TechDoorFreeMovie();
 
@@ -2186,7 +2445,14 @@ void DrawConcourseAnimations(const char* currentRoom, int frameIndex)
 			}
 		}
 
-		WebmResetAllTimecode();
+		if (g_config.EnableSideProcess)
+		{
+			ExeWebmResetAllTimecode();
+		}
+		else
+		{
+			WebmResetAllTimecode();
+		}
 
 		for (const auto& group : g_concourseAnimations.GetGroups(currentRoom))
 		{
@@ -2225,16 +2491,27 @@ void DrawConcourseAnimations(const char* currentRoom, int frameIndex)
 		SurfaceDC dc;
 		bool hasDC = GetSurfaceDC(&dc);
 
-		uint8_t* image = 0;
+		uint8_t* imagePtr = nullptr;
+		unsigned int image = 0;
 		unsigned int imageWidth = 0;
 		unsigned int imageHeight = 0;
+		bool hasImage = false;
 		int r = -1;
 
 		if (hasDC)
 		{
-			r = WebmReadVideoFrame(animation.name, &image, &imageWidth, &imageHeight);
+			if (g_config.EnableSideProcess)
+			{
+				r = ExeWebmReadVideoFrame(animation.name, &image, &imageWidth, &imageHeight);
+				hasImage = image != 0;
+			}
+			else
+			{
+				r = WebmReadVideoFrame(animation.name, &imagePtr, &imageWidth, &imageHeight);
+				hasImage = imagePtr != nullptr;
+			}
 
-			if (image)
+			if (hasImage)
 			{
 				int animPosX = animation.posX;
 				int animPosY = animation.posY;
@@ -2248,11 +2525,18 @@ void DrawConcourseAnimations(const char* currentRoom, int frameIndex)
 				int width = MultiplyDivH(animWidth, isBackgroundHD, dc);
 				int height = MultiplyDivV(animHeight, dc);
 
-				DrawSurfaceDelegate(&dc, image, imageWidth, imageHeight, left, top, width, height, 0, 0, imageWidth, imageHeight, -10, 0, 25);
+				if (g_config.EnableSideProcess)
+				{
+					DrawSurfaceTexture(&dc, image, imageWidth, imageHeight, left, top, width, height);
+				}
+				else
+				{
+					DrawSurfaceDelegate(&dc, (void*)imagePtr, imageWidth, imageHeight, left, top, width, height, 0, 0, imageWidth, imageHeight, -10, 0, 25);
+				}
 			}
 		}
 
-		if (!image && g_config.SupportDatAnimations)
+		if (!hasImage && g_config.SupportDatAnimations)
 		{
 			XwaFrontResDraw(animation.name.c_str(), animation.posX, animation.posY);
 			XwaFrontResMoveToNextImage(animation.name.c_str(), true);
@@ -2260,11 +2544,21 @@ void DrawConcourseAnimations(const char* currentRoom, int frameIndex)
 
 		bool setImage = false;
 
-		if (image)
+		if (hasImage)
 		{
-			if (WebmGetTimecode(animation.name) == -1 && r == 0)
+			if (g_config.EnableSideProcess)
 			{
-				setImage = true;
+				if (ExeWebmGetTimecode(animation.name) == -1 && r == 0)
+				{
+					setImage = true;
+				}
+			}
+			else
+			{
+				if (WebmGetTimecode(animation.name) == -1 && r == 0)
+				{
+					setImage = true;
+				}
 			}
 		}
 		else if (g_config.SupportDatAnimations)
@@ -3719,6 +4013,8 @@ int LoadCbmImageHook(int* params)
 	const char* fileName = (const char*)params[0];
 	const char* fileMode = (const char*)params[1];
 	const char* name = (const char*)params[92];
+
+	//OutputDebugString((std::string("Load CBM Image: ") + name).c_str());
 
 	const auto XwaFileOpen = (int(*)(const char*, const char*))0x0052AD30;
 
@@ -7018,7 +7314,8 @@ int DrawMedalZoomRect2Hook(int* params)
 }
 
 bool g_dsbrief_webm;
-uint8_t* g_dsbrief_image;
+uint8_t* g_dsbrief_imagePtr;
+unsigned int g_dsbrief_image;
 unsigned int g_dsbrief_imageWidth;
 unsigned int g_dsbrief_imageHeight;
 
@@ -7035,11 +7332,19 @@ int DSBriefLoadMovieHook(int* params)
 	if (hasDC && std::ifstream("Resdata\\dsbrief.webm"))
 	{
 		g_dsbrief_webm = true;
-		g_dsbrief_image = nullptr;
+		g_dsbrief_imagePtr = nullptr;
+		g_dsbrief_image = 0;
 		g_dsbrief_imageWidth = 0;
 		g_dsbrief_imageHeight = 0;
 
-		WebmLoadVideo("dsbrief");
+		if (g_config.EnableSideProcess)
+		{
+			ExeWebmLoadVideo("dsbrief");
+		}
+		else
+		{
+			WebmLoadVideo("dsbrief");
+		}
 	}
 	else
 	{
@@ -7068,7 +7373,14 @@ int DSBriefFreeMovieHook(int* params)
 
 	if (g_dsbrief_webm)
 	{
-		WebmFreeVideo("dsbrief");
+		if (g_config.EnableSideProcess)
+		{
+			ExeWebmFreeVideo("dsbrief");
+		}
+		else
+		{
+			WebmFreeVideo("dsbrief");
+		}
 	}
 	else
 	{
@@ -7087,7 +7399,14 @@ int DSBriefMoveToNextImageHook(int* params)
 
 	if (g_dsbrief_webm)
 	{
-		WebmReadVideoFrame("dsbrief", &g_dsbrief_image, &g_dsbrief_imageWidth, &g_dsbrief_imageHeight);
+		if (g_config.EnableSideProcess)
+		{
+			ExeWebmReadVideoFrame("dsbrief", &g_dsbrief_image, &g_dsbrief_imageWidth, &g_dsbrief_imageHeight);
+		}
+		else
+		{
+			WebmReadVideoFrame("dsbrief", &g_dsbrief_imagePtr, &g_dsbrief_imageWidth, &g_dsbrief_imageHeight);
+		}
 	}
 	else
 	{
@@ -7110,7 +7429,9 @@ int DSBriefDrawImageHook(int* params)
 
 	if (g_dsbrief_webm)
 	{
-		if (g_dsbrief_image)
+		bool hasImage = g_config.EnableSideProcess ? (g_dsbrief_image != 0) : (g_dsbrief_imagePtr != nullptr);
+
+		if (hasImage)
 		{
 			int posX = A8 + 5;
 			int posY = AC + 3;
@@ -7122,7 +7443,14 @@ int DSBriefDrawImageHook(int* params)
 			int width = MultiplyDivH(272, isBackgroundHD, dc);
 			int height = MultiplyDivV(270, dc);
 
-			DrawSurfaceDelegate(&dc, g_dsbrief_image, g_dsbrief_imageWidth, g_dsbrief_imageHeight, left, top, width, height, 0, 0, g_dsbrief_imageWidth, g_dsbrief_imageHeight, -10, 0, 25);
+			if (g_config.EnableSideProcess)
+			{
+				DrawSurfaceTexture(&dc, g_dsbrief_image, g_dsbrief_imageWidth, g_dsbrief_imageHeight, left, top, width, height);
+			}
+			else
+			{
+				DrawSurfaceDelegate(&dc, (void*)g_dsbrief_imagePtr, g_dsbrief_imageWidth, g_dsbrief_imageHeight, left, top, width, height, 0, 0, g_dsbrief_imageWidth, g_dsbrief_imageHeight, -10, 0, 25);
+			}
 		}
 	}
 	else
@@ -7163,7 +7491,8 @@ SquadlogoSettings GetSquadlogoSettings(const std::string& name)
 bool g_squadlogo_webm;
 std::string g_squadlogo_name;
 SquadlogoSettings g_squadlogo_settings;
-uint8_t* g_squadlogo_image;
+uint8_t* g_squadlogo_imagePtr;
+unsigned int g_squadlogo_image;
 unsigned int g_squadlogo_imageWidth;
 unsigned int g_squadlogo_imageHeight;
 
@@ -7188,11 +7517,19 @@ int SquadlogoLoadMovieHook(int* params)
 		g_squadlogo_webm = true;
 		g_squadlogo_name = squadlogoName;
 		g_squadlogo_settings = GetSquadlogoSettings(squadlogoName);
-		g_squadlogo_image = nullptr;
+		g_squadlogo_imagePtr = nullptr;
+		g_squadlogo_image = 0;
 		g_squadlogo_imageWidth = 0;
 		g_squadlogo_imageHeight = 0;
 
-		WebmLoadVideo(g_squadlogo_name);
+		if (g_config.EnableSideProcess)
+		{
+			ExeWebmLoadVideo(g_squadlogo_name);
+		}
+		else
+		{
+			WebmLoadVideo(g_squadlogo_name);
+		}
 	}
 
 	return 0;
@@ -7208,7 +7545,14 @@ int SquadlogoFreeMovieHook(int* params)
 
 	if (g_squadlogo_webm)
 	{
-		WebmFreeVideo(g_squadlogo_name);
+		if (g_config.EnableSideProcess)
+		{
+			ExeWebmFreeVideo(g_squadlogo_name);
+		}
+		else
+		{
+			WebmFreeVideo(g_squadlogo_name);
+		}
 	}
 
 	return 0;
@@ -7225,7 +7569,14 @@ int SquadlogoMoveToNextImageHook(int* params)
 
 	if (g_squadlogo_webm)
 	{
-		WebmReadVideoFrame(g_squadlogo_name, &g_squadlogo_image, &g_squadlogo_imageWidth, &g_squadlogo_imageHeight);
+		if (g_config.EnableSideProcess)
+		{
+			ExeWebmReadVideoFrame(g_squadlogo_name, &g_squadlogo_image, &g_squadlogo_imageWidth, &g_squadlogo_imageHeight);
+		}
+		else
+		{
+			WebmReadVideoFrame(g_squadlogo_name, &g_squadlogo_imagePtr, &g_squadlogo_imageWidth, &g_squadlogo_imageHeight);
+		}
 	}
 
 	return 0;
@@ -7245,7 +7596,9 @@ int SquadlogoDrawImageHook(int* params)
 
 	if (g_squadlogo_webm)
 	{
-		if (g_squadlogo_image)
+		bool hasImage = g_config.EnableSideProcess ? (g_squadlogo_image != 0) : (g_squadlogo_imagePtr != nullptr);
+
+		if (hasImage)
 		{
 			//bool isBackgroundHD = g_netFunctions._frontResIsBackgroundWide() != 0;
 			bool isBackgroundHD = g_netFunctions._frontResIsBackgroundHD() != 0;
@@ -7282,7 +7635,14 @@ int SquadlogoDrawImageHook(int* params)
 			int width = MultiplyDivH(rc.right - rc.left, isBackgroundHD, dc);
 			int height = MultiplyDivV(rc.bottom - rc.top, dc);
 
-			DrawSurfaceDelegate(&dc, g_squadlogo_image, g_squadlogo_imageWidth, g_squadlogo_imageHeight, left, top, width, height, 0, 0, g_squadlogo_imageWidth, g_squadlogo_imageHeight, -10, 0, 25);
+			if (g_config.EnableSideProcess)
+			{
+				DrawSurfaceTexture(&dc, g_squadlogo_image, g_squadlogo_imageWidth, g_squadlogo_imageHeight, left, top, width, height);
+			}
+			else
+			{
+				DrawSurfaceDelegate(&dc, (void*)g_squadlogo_imagePtr, g_squadlogo_imageWidth, g_squadlogo_imageHeight, left, top, width, height, 0, 0, g_squadlogo_imageWidth, g_squadlogo_imageHeight, -10, 0, 25);
+			}
 		}
 	}
 	else
@@ -7294,7 +7654,8 @@ int SquadlogoDrawImageHook(int* params)
 }
 
 bool g_techdoor_webm = false;
-uint8_t* g_techdoor_image;
+uint8_t* g_techdoor_imagePtr;
+unsigned int g_techdoor_image;
 unsigned int g_techdoor_imageWidth;
 unsigned int g_techdoor_imageHeight;
 
@@ -7311,11 +7672,19 @@ void TechDoorLoadMovie()
 	if (std::ifstream("Resdata\\techdoor.webm"))
 	{
 		g_techdoor_webm = true;
-		g_techdoor_image = nullptr;
+		g_techdoor_imagePtr = nullptr;
+		g_techdoor_image = 0;
 		g_techdoor_imageWidth = 0;
 		g_techdoor_imageHeight = 0;
 
-		WebmLoadVideo("techdoor");
+		if (g_config.EnableSideProcess)
+		{
+			ExeWebmLoadVideo("techdoor");
+		}
+		else
+		{
+			WebmLoadVideo("techdoor");
+		}
 
 		*(unsigned short*)0x0053A939 = 0x9090;
 		*(int*)(0x0053A942 + 0x01) = (int)TechDoorMoveToNextImage - (0x0053A942 + 0x05);
@@ -7327,7 +7696,15 @@ void TechDoorFreeMovie()
 	if (g_techdoor_webm)
 	{
 		g_techdoor_webm = false;
-		WebmFreeVideo("techdoor");
+
+		if (g_config.EnableSideProcess)
+		{
+			ExeWebmFreeVideo("techdoor");
+		}
+		else
+		{
+			WebmFreeVideo("techdoor");
+		}
 
 		*(unsigned short*)0x0053A939 = 0x0F75;
 		*(int*)(0x0053A942 + 0x01) = 0x00532230 - (0x0053A942 + 0x05);
@@ -7340,7 +7717,14 @@ void TechDoorMoveToNextImage()
 
 	if (g_techdoor_webm)
 	{
-		WebmReadVideoFrame("techdoor", &g_techdoor_image, &g_techdoor_imageWidth, &g_techdoor_imageHeight);
+		if (g_config.EnableSideProcess)
+		{
+			ExeWebmReadVideoFrame("techdoor", &g_techdoor_image, &g_techdoor_imageWidth, &g_techdoor_imageHeight);
+		}
+		else
+		{
+			WebmReadVideoFrame("techdoor", &g_techdoor_imagePtr, &g_techdoor_imageWidth, &g_techdoor_imageHeight);
+		}
 	}
 }
 
@@ -7351,7 +7735,9 @@ void TechDoorDrawImage(int x, int y, int w, int h)
 
 	if (g_techdoor_webm)
 	{
-		if (g_techdoor_image)
+		bool hasImage = g_config.EnableSideProcess ? (g_techdoor_image != 0) : (g_techdoor_imagePtr != nullptr);
+
+		if (hasImage)
 		{
 			bool isBackgroundHD = g_netFunctions._frontResIsBackgroundWide() != 0;
 
@@ -7360,7 +7746,14 @@ void TechDoorDrawImage(int x, int y, int w, int h)
 			int width = MultiplyDivH(w, isBackgroundHD, dc);
 			int height = MultiplyDivV(h, dc);
 
-			DrawSurfaceDelegate(&dc, g_techdoor_image, g_techdoor_imageWidth, g_techdoor_imageHeight, left, top, width, height, 0, 0, g_techdoor_imageWidth, g_techdoor_imageHeight, -10, 0, 25);
+			if (g_config.EnableSideProcess)
+			{
+				DrawSurfaceTexture(&dc, g_techdoor_image, g_techdoor_imageWidth, g_techdoor_imageHeight, left, top, width, height);
+			}
+			else
+			{
+				DrawSurfaceDelegate(&dc, (void*)g_techdoor_imagePtr, g_techdoor_imageWidth, g_techdoor_imageHeight, left, top, width, height, 0, 0, g_techdoor_imageWidth, g_techdoor_imageHeight, -10, 0, 25);
+			}
 		}
 	}
 }

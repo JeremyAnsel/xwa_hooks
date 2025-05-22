@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XwaConcoursePlayer", "XwaConcoursePlayer\XwaConcoursePlayer.vcxproj", "{6253A1F6-E7F9-4BBE-9FE4-03042CA26208}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BD490818-5C16-4A6E-BB30-35E92EED5A47} = {BD490818-5C16-4A6E-BB30-35E92EED5A47}
+		{F237E9CF-F0F0-454B-8AB0-42D382E35356} = {F237E9CF-F0F0-454B-8AB0-42D382E35356}
+		{F30609FE-B30C-4A54-A75D-C6DC45CF67A7} = {F30609FE-B30C-4A54-A75D-C6DC45CF67A7}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nestegg", "nestegg\nestegg.vcxproj", "{BD490818-5C16-4A6E-BB30-35E92EED5A47}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libyuv", "libyuv\libyuv.vcxproj", "{F30609FE-B30C-4A54-A75D-C6DC45CF67A7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libvpx", "libvpx\libvpx.vcxproj", "{F237E9CF-F0F0-454B-8AB0-42D382E35356}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6253A1F6-E7F9-4BBE-9FE4-03042CA26208}.Debug|x64.ActiveCfg = Debug|x64
+		{6253A1F6-E7F9-4BBE-9FE4-03042CA26208}.Debug|x64.Build.0 = Debug|x64
+		{6253A1F6-E7F9-4BBE-9FE4-03042CA26208}.Release|x64.ActiveCfg = Release|x64
+		{6253A1F6-E7F9-4BBE-9FE4-03042CA26208}.Release|x64.Build.0 = Release|x64
+		{BD490818-5C16-4A6E-BB30-35E92EED5A47}.Debug|x64.ActiveCfg = Debug|x64
+		{BD490818-5C16-4A6E-BB30-35E92EED5A47}.Debug|x64.Build.0 = Debug|x64
+		{BD490818-5C16-4A6E-BB30-35E92EED5A47}.Release|x64.ActiveCfg = Release|x64
+		{BD490818-5C16-4A6E-BB30-35E92EED5A47}.Release|x64.Build.0 = Release|x64
+		{F30609FE-B30C-4A54-A75D-C6DC45CF67A7}.Debug|x64.ActiveCfg = Debug|x64
+		{F30609FE-B30C-4A54-A75D-C6DC45CF67A7}.Debug|x64.Build.0 = Debug|x64
+		{F30609FE-B30C-4A54-A75D-C6DC45CF67A7}.Release|x64.ActiveCfg = Release|x64
+		{F30609FE-B30C-4A54-A75D-C6DC45CF67A7}.Release|x64.Build.0 = Release|x64
+		{F237E9CF-F0F0-454B-8AB0-42D382E35356}.Debug|x64.ActiveCfg = Debug|x64
+		{F237E9CF-F0F0-454B-8AB0-42D382E35356}.Debug|x64.Build.0 = Debug|x64
+		{F237E9CF-F0F0-454B-8AB0-42D382E35356}.Release|x64.ActiveCfg = Release|x64
+		{F237E9CF-F0F0-454B-8AB0-42D382E35356}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EBB341C0-3675-4421-8A18-45704C08591A}
+	EndGlobalSection
+EndGlobal

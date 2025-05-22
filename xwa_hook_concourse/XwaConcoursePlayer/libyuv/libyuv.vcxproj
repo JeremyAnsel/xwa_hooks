@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="convert.cc" />
+    <ClCompile Include="convert_argb.cc" />
+    <ClCompile Include="convert_from.cc" />
+    <ClCompile Include="convert_from_argb.cc" />
+    <ClCompile Include="convert_jpeg.cc" />
+    <ClCompile Include="convert_to_argb.cc" />
+    <ClCompile Include="convert_to_i420.cc" />
+    <ClCompile Include="cpu_id.cc" />
+    <ClCompile Include="mjpeg_decoder.cc" />
+    <ClCompile Include="mjpeg_validate.cc" />
+    <ClCompile Include="planar_functions.cc" />
+    <ClCompile Include="rotate.cc" />
+    <ClCompile Include="rotate_any.cc" />
+    <ClCompile Include="rotate_argb.cc" />
+    <ClCompile Include="rotate_common.cc" />
+    <ClCompile Include="rotate_gcc.cc" />
+    <ClCompile Include="rotate_msa.cc" />
+    <ClCompile Include="rotate_neon.cc" />
+    <ClCompile Include="rotate_neon64.cc" />
+    <ClCompile Include="rotate_win.cc" />
+    <ClCompile Include="row_any.cc" />
+    <ClCompile Include="row_common.cc" />
+    <ClCompile Include="row_gcc.cc" />
+    <ClCompile Include="row_msa.cc" />
+    <ClCompile Include="row_neon.cc" />
+    <ClCompile Include="row_neon64.cc" />
+    <ClCompile Include="row_win.cc" />
+    <ClCompile Include="scale.cc" />
+    <ClCompile Include="scale_any.cc" />
+    <ClCompile Include="scale_argb.cc" />
+    <ClCompile Include="scale_common.cc" />
+    <ClCompile Include="scale_gcc.cc" />
+    <ClCompile Include="scale_msa.cc" />
+    <ClCompile Include="scale_neon.cc" />
+    <ClCompile Include="scale_neon64.cc" />
+    <ClCompile Include="scale_win.cc" />
+    <ClCompile Include="video_common.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="basic_types.h" />
+    <ClInclude Include="convert.h" />
+    <ClInclude Include="convert_argb.h" />
+    <ClInclude Include="convert_from.h" />
+    <ClInclude Include="convert_from_argb.h" />
+    <ClInclude Include="cpu_id.h" />
+    <ClInclude Include="macros_msa.h" />
+    <ClInclude Include="mjpeg_decoder.h" />
+    <ClInclude Include="planar_functions.h" />
+    <ClInclude Include="rotate.h" />
+    <ClInclude Include="rotate_argb.h" />
+    <ClInclude Include="rotate_row.h" />
+    <ClInclude Include="row.h" />
+    <ClInclude Include="scale.h" />
+    <ClInclude Include="scale_argb.h" />
+    <ClInclude Include="scale_row.h" />
+    <ClInclude Include="version.h" />
+    <ClInclude Include="video_common.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{f30609fe-b30c-4a54-a75d-c6dc45cf67a7}</ProjectGuid>
+    <RootNamespace>libyuv</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(SolutionDir);$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

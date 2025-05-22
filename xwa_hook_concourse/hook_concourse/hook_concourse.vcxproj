@@ -148,6 +148,8 @@
     <ClCompile Include="BitmapEffect.cpp" />
     <ClCompile Include="concourse.cpp" />
     <ClCompile Include="config.cpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="hookexe.cpp" />
     <ClCompile Include="hookmain.cpp" />
     <ClCompile Include="webm_helpers.cpp" />
   </ItemGroup>
@@ -156,6 +158,7 @@
     <ClInclude Include="ComPtr.h" />
     <ClInclude Include="concourse.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="hookexe.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="hook_function.h" />
     <ClInclude Include="resource.h" />

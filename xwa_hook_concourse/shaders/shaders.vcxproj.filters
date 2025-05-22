@@ -16,6 +16,8 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BitmapPixelShader.hlsl" />
+    <FxCompile Include="MainVertexShader.hlsl" />
+    <FxCompile Include="MainPixelShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="d2d1effecthelpers.hlsli" />
