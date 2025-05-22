@@ -107,6 +107,11 @@ To define an opacity parameter for a skin, apend -### to the skin name. Replace 
 See "Skins.txt"
 
 
+## Side process
+
+To load the resources from the side process set "EnableSideProcess = 1".
+
+
 *** Credits ***
 
 - Jérémy Ansel (JeremyaFr)

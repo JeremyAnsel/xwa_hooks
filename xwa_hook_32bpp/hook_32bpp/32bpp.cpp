@@ -1,8 +1,10 @@
 #include "targetver.h"
 #include "32bpp.h"
+#include "config.h"
 #include <vector>
 #include <string>
 #include <Windows.h>
+#include "hookexe.h"
 
 enum ParamsEnum
 {
@@ -15,6 +17,26 @@ enum ParamsEnum
 	Params_ESI = -9,
 	Params_EDI = -10,
 };
+
+class Config
+{
+public:
+	Config()
+	{
+		auto lines = GetFileLines("hook_32bpp.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_32bpp");
+		}
+
+		this->EnableSideProcess = GetFileKeyValueInt(lines, "EnableSideProcess", 0) != 0;
+	}
+
+	bool EnableSideProcess;
+};
+
+Config g_config;
 
 #pragma pack(push, 1)
 
@@ -195,7 +217,17 @@ int SetOptNameHook(int* params)
 
 	*pVersion = 0;
 
-	int requiredFileSize = g_netFunctions._readOptFunction(filename);
+	int requiredFileSize;
+
+	if (g_config.EnableSideProcess)
+	{
+		ExeSetSettings();
+		requiredFileSize = ExeReadOpt(filename);
+	}
+	else
+	{
+		requiredFileSize = g_netFunctions._readOptFunction(filename);
+	}
 
 	int version = 0;
 	int filesize = 0;
@@ -205,7 +237,15 @@ int SetOptNameHook(int* params)
 	{
 		strcpy_s(s_XwaIOFileName, 256, filename);
 
-		version = g_netFunctions._getOptVersionFunction();
+		if (g_config.EnableSideProcess)
+		{
+			version = ExeGetOptVersion();
+		}
+		else
+		{
+			version = g_netFunctions._getOptVersionFunction();
+		}
+
 		filesize = requiredFileSize;
 	}
 	else
@@ -262,7 +302,16 @@ int SetOptNameHook(int* params)
 
 	if (requiredFileSize)
 	{
-		g_netFunctions._writeOptFunction(optPtr);
+		if (g_config.EnableSideProcess)
+		{
+			void* lpData = ExeWriteOpt();
+			memcpy_s(optPtr, requiredFileSize, lpData, requiredFileSize);
+			ExeFreeOptMemory();
+		}
+		else
+		{
+			g_netFunctions._writeOptFunction(optPtr);
+		}
 	}
 	else
 	{

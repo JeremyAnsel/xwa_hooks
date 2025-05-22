@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>10.0</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Version>1.0.0</Version>
+    <ProductName>XWA hook 32bpp net</ProductName>
+    <Description>Xwa32bppPlayerNet</Description>
+    <Company>Jérémy Ansel</Company>
+    <Copyright>Copyright © 2025 Jérémy Ansel</Copyright>
+    <PlatformTarget>x64</PlatformTarget>
+    <DllExportDDNSCecil>false</DllExportDDNSCecil>
+    <DllExportOurILAsm>false</DllExportOurILAsm>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DllExport" Version="1.5.2" ExcludeAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="JeremyAnsel.Xwa.Opt" Version="3.0.52" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.IO.Compression" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DllExport, Version=1.5.2.30304, Culture=neutral, PublicKeyToken=8337224c9ad9e356, processorArchitecture=MSIL">
+      <HintPath>$(PkgDllExport)\lib\net20\DllExport.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Import Project="$(PkgDllExport)/tools/net.r_eg.DllExport.targets" Condition="Exists('$(PkgDllExport)/tools/net.r_eg.DllExport.targets')" />
+
+</Project>
