@@ -26,6 +26,8 @@ At offset 05A3E5, replace A1B0127700 with E836DB1400.
 At offset 0F1655, replace A1B0127700 with E8C6680B00.
 At offset 0CBE3B, replace E810190400 with E8E0C00D00.
 At offset 0317E3, replace E858BA0900 with E838671700.
+At offset 13DB8F, replace A171C0A100 with E88CA30600.
+At offset 127F3C, replace E86F4E0300 with E8DFFF0700.
 
 
 *** Usage ***

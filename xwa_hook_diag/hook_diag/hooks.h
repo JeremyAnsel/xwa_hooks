@@ -12,6 +12,9 @@ static const HookFunction g_hookFunctions[] =
 
 	{ 0x4CCA40, OptLoadHook },
 	{ 0x4323E8, DatLoadHook },
+
+	{ 0x53E794, MainGameInitCallbackHook },
+	{ 0x528B41, LoadSfxLstHook },
 };
 
 static const HookPatchItem g_diagMessagesPatch[] =
@@ -23,6 +26,9 @@ static const HookPatchItem g_diagMessagesPatch[] =
 
 	{ 0x0CBE3B, "E810190400", "E8E0C00D00" },
 	{ 0x0317E3, "E858BA0900", "E838671700" },
+
+	{ 0x13DB8F, "A171C0A100", "E88CA30600" },
+	{ 0x127F3C, "E86F4E0300", "E8DFFF0700" },
 };
 
 static const HookPatch g_patches[] =

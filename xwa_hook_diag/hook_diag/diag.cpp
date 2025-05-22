@@ -463,3 +463,48 @@ int DatLoadHook(int* params)
 
 	return 0;
 }
+
+int MainGameInitCallbackHook(int* params)
+{
+	OutputDebugString(__FUNCTION__ " before");
+
+	typedef int(*callbackFunction)();
+	auto callback = *(callbackFunction*)0x00A1C071;
+
+	std::chrono::steady_clock::time_point chronoStart = std::chrono::high_resolution_clock::now();
+
+	if (callback && callback())
+	{
+		params[Params_ReturnAddress] = 0x0053E79E;
+	}
+	else
+	{
+		params[Params_ReturnAddress] = 0x0053E7B2;
+	}
+
+	std::chrono::steady_clock::time_point chronoEnd = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> duration = chronoEnd - chronoStart;
+
+	OutputDebugString((__FUNCTION__ " elapsed=" + std::to_string(duration.count()) + "s").c_str());
+
+	return 0;
+}
+
+int LoadSfxLstHook(int* params)
+{
+	OutputDebugString(__FUNCTION__ " before");
+
+	const char* A4 = (const char*)params[0];
+
+	const auto LoadSfxLst = (int(*)(const char*))0x0055D9B0;
+
+	std::chrono::steady_clock::time_point chronoStart = std::chrono::high_resolution_clock::now();
+
+	LoadSfxLst(A4);
+
+	std::chrono::steady_clock::time_point chronoEnd = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> duration = chronoEnd - chronoStart;
+
+	OutputDebugString((__FUNCTION__ " elapsed=" + std::to_string(duration.count()) + "s " + A4).c_str());
+	return 0;
+}
