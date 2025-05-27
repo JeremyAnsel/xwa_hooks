@@ -1,6 +1,27 @@
 #include "targetver.h"
 #include <Windows.h>
+#include "config.h"
 #include "hookexe.h"
+
+class MainConfig
+{
+public:
+	MainConfig()
+	{
+		auto lines = GetFileLines("hook_32bpp.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_32bpp");
+		}
+
+		this->EnableSideProcess = GetFileKeyValueInt(lines, "EnableSideProcess", 0) != 0;
+	}
+
+	bool EnableSideProcess;
+};
+
+MainConfig g_mainConfig;
 
 DWORD WINAPI ThreadFunction(LPVOID lpParameter)
 {
@@ -53,6 +74,11 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved)
 	{
 	case DLL_PROCESS_ATTACH:
 	{
+		if (!g_mainConfig.EnableSideProcess)
+		{
+			break;
+		}
+
 		HANDLE threadHandle = CreateThread(NULL, 0, ThreadFunction, NULL, 0, NULL);
 
 		if (threadHandle)
