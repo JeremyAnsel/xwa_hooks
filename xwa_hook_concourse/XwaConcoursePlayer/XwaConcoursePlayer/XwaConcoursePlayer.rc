@@ -138,8 +138,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2025,0522,1805,35010
- PRODUCTVERSION 2025,0522,1805,35010
+ FILEVERSION 2025,0529,1815,13844
+ PRODUCTVERSION 2025,0529,1815,13844
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -156,12 +156,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "XwaConcoursePlayer"
-            VALUE "FileVersion", "2025.0522.1805.35010"
+            VALUE "FileVersion", "2025.0529.1815.13844"
             VALUE "InternalName", "XwaConcoursePlayer.exe"
             VALUE "LegalCopyright", "Copyright (C) Jérémy Ansel 2025"
             VALUE "OriginalFilename", "XwaConcoursePlayer.exe"
             VALUE "ProductName", "XwaConcoursePlayer"
-            VALUE "ProductVersion", "2025.0522.1805.35010"
+            VALUE "ProductVersion", "2025.0529.1815.13844"
         END
     END
     BLOCK "VarFileInfo"
