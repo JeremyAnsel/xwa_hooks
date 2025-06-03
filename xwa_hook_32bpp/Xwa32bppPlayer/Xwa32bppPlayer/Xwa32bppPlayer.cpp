@@ -118,7 +118,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hWnd, &ps);
-		LPCWSTR text = L"This window is used by X-Wing Alliance.\nDo not close it while the game is running.\nIf the game is closed then you can safetly close this window.";
+		LPCWSTR text = L"This window is used by X-Wing Alliance.\nDo not close it while the game is running.\nIf the game is closed then you can safely close this window.";
 		RECT rc;
 		GetClientRect(hWnd, &rc);
 		DrawTextW(hdc, text, -1, &rc, DT_WORDBREAK);
