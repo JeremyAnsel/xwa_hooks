@@ -339,7 +339,7 @@ std::vector<unsigned short> g_hangarMapModelIndices;
 std::array<std::string, 557> g_hangarOptSkins;
 
 int g_cockpitId = -1;
-bool g_isInHangar = true;
+bool& g_isInHangar = *(bool*)0x009C6E44;
 
 int GetCockpitId();
 std::string OptSkins_ReadOptSkinsListFunction(const std::string& optFilename);
@@ -1541,8 +1541,10 @@ int HangarOptLoadHook(int* params)
 	const char* argOpt = (char*)params[0];
 	const unsigned short argModelIndex = (unsigned short)params[0x60];
 	unsigned short* OptModelFileMemHandles = (unsigned short*)0x007CA6E0;
+	ExeEnableEntry* ExeEnableTable = (ExeEnableEntry*)0x005FB240;
 
 	const auto OptLoad = (int(*)(const char*))0x004CC940;
+	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
 
 	if (std::find(g_hangarMapModelIndices.begin(), g_hangarMapModelIndices.end(), argModelIndex) != g_hangarMapModelIndices.end())
 	{
@@ -1561,6 +1563,11 @@ int HangarOptLoadHook(int* params)
 	else
 	{
 		opt = argOpt;
+	}
+
+	if (!g_isInHangar)
+	{
+		opt = GetShipPath(argModelIndex) + ".opt";
 	}
 
 	const auto lines = g_hangarObjects.GetLines();
@@ -1602,6 +1609,15 @@ int HangarOptLoadHook(int* params)
 		{
 			return OptModelFileMemHandles[argModelIndex];
 		}
+
+		OptUnload(OptModelFileMemHandles[argModelIndex]);
+
+		int* s_XwaModelAreMinMaxPositionsComputed = (int*)0x00690530;
+		s_XwaModelAreMinMaxPositionsComputed[argModelIndex] = 0;
+
+		OptModelFileMemHandles[argModelIndex] = 0;
+		ExeEnableTable[argModelIndex].pData1 = nullptr;
+		ExeEnableTable[argModelIndex].pData2 = nullptr;
 	}
 
 	return OptLoad(opt.c_str());
@@ -1635,6 +1651,9 @@ int HangarOptReloadHook(int* params)
 		}
 
 		OptUnload(OptModelFileMemHandles[modelIndex]);
+
+		int* s_XwaModelAreMinMaxPositionsComputed = (int*)0x00690530;
+		s_XwaModelAreMinMaxPositionsComputed[modelIndex] = 0;
 
 		OptModelFileMemHandles[modelIndex] = 0;
 		ExeEnableTable[modelIndex].pData1 = nullptr;
@@ -1673,6 +1692,9 @@ int HangarObjectCreateHook(int* params)
 		}
 
 		OptUnload(OptModelFileMemHandles[modelIndex]);
+
+		int* s_XwaModelAreMinMaxPositionsComputed = (int*)0x00690530;
+		s_XwaModelAreMinMaxPositionsComputed[modelIndex] = 0;
 
 		OptModelFileMemHandles[modelIndex] = 0;
 		ExeEnableTable[modelIndex].pData1 = nullptr;
@@ -2394,8 +2416,9 @@ std::string GetShipPath(int modelIndex)
 {
 	const std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
 
+	if (g_isInHangar)
 	{
-		const auto objectLines = GetCustomFileLinesBase("Objects", false);
+		const auto objectLines = GetCustomFileLines("HangarObjects", true);
 		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
 
 		if (!objectValue.empty() && std::ifstream(objectValue))
@@ -2403,10 +2426,9 @@ std::string GetShipPath(int modelIndex)
 			return GetStringWithoutExtension(objectValue);
 		}
 	}
-
-	if (g_isInHangar)
+	else
 	{
-		const auto objectLines = GetCustomFileLines("HangarObjects", true);
+		const auto objectLines = GetCustomFileLinesBase("Objects", false);
 		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
 
 		if (!objectValue.empty() && std::ifstream(objectValue))
@@ -4597,7 +4619,7 @@ std::string OptSkins_ReadOptSkinsListFunction(const std::string& optFilename)
 
 		if (hasSkins)
 		{
-			fgCount = std::max(fgCount, 8);
+			fgCount = std::max(fgCount, 16);
 			fgCount = std::max(fgCount, OptSkins_GetFlightgroupsDefaultCount(optName));
 			return OptSkins_UpdateOptFile(optName, objectLines, baseSkins, fgCount, hasDefaultSkin);
 		}
@@ -4689,6 +4711,9 @@ int HangarExitHook(int* params)
 		}
 
 		OptUnload(OptModelFileMemHandles[modelIndex]);
+
+		int* s_XwaModelAreMinMaxPositionsComputed = (int*)0x00690530;
+		s_XwaModelAreMinMaxPositionsComputed[modelIndex] = 0;
 
 		OptModelFileMemHandles[modelIndex] = 0;
 		ExeEnableTable[modelIndex].pData1 = nullptr;
@@ -4908,6 +4933,9 @@ void CraftEjectReload()
 		}
 
 		OptUnload(OptModelFileMemHandles[modelIndex]);
+
+		int* s_XwaModelAreMinMaxPositionsComputed = (int*)0x00690530;
+		s_XwaModelAreMinMaxPositionsComputed[modelIndex] = 0;
 
 		OptModelFileMemHandles[modelIndex] = 0;
 		ExeEnableTable[modelIndex].pData1 = nullptr;

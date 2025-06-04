@@ -7,6 +7,9 @@ static const int g_hookFunctionsCount = sizeof(g_hookFunctions) / sizeof(HookFun
 
 extern "C" __declspec(dllexport) int GetHookFunctionsCount()
 {
+	bool& inInHangar = *(bool*)0x009C6E44;
+	inInHangar = true;
+
 	return g_hookFunctionsCount;
 }
 
