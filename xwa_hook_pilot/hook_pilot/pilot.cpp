@@ -442,10 +442,12 @@ std::vector<std::string> GetCustomFileLines(const std::string& name, bool append
 
 std::string GetShipPath(int modelIndex)
 {
+	bool isInHangar = *(bool*)0x009C6E44;
 	const std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
 
+	if (isInHangar)
 	{
-		const auto objectLines = GetCustomFileLines("Objects", false);
+		const auto objectLines = GetCustomFileLines("HangarObjects", true);
 		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
 
 		if (!objectValue.empty() && std::ifstream(objectValue))
@@ -453,9 +455,9 @@ std::string GetShipPath(int modelIndex)
 			return GetStringWithoutExtension(objectValue);
 		}
 	}
-
+	else
 	{
-		const auto objectLines = GetCustomFileLines("HangarObjects", true);
+		const auto objectLines = GetCustomFileLines("Objects", false);
 		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
 
 		if (!objectValue.empty() && std::ifstream(objectValue))
