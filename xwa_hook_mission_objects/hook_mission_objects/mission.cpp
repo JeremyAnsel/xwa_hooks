@@ -675,11 +675,11 @@ private:
 
 ModelIndexTurrets g_modelIndexTurrets;
 
-std::vector<int> GetModelObjectProfileIndices(int modelIndex, const std::string& profile)
+std::vector<int> GetModelObjectProfileIndices(int modelIndex, const std::string& profile, bool isPlayerInHangar)
 {
 	std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
 
-	const auto objectLines = GetCustomFileLines("Objects");
+	const auto objectLines = GetCustomFileLines(isPlayerInHangar ? "HangarObjects" : "Objects");
 	const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
 
 	if (!objectValue.empty() && std::ifstream(objectValue))
@@ -715,7 +715,7 @@ std::vector<int> GetModelObjectProfileIndices(int modelIndex, const std::string&
 		}
 		else if (index == -1)
 		{
-			std::vector<int> refIndices = GetModelObjectProfileIndices(modelIndex, value);
+			std::vector<int> refIndices = GetModelObjectProfileIndices(modelIndex, value, isPlayerInHangar);
 			indices.insert(std::end(indices), std::begin(refIndices), std::end(refIndices));
 		}
 	}
@@ -757,7 +757,7 @@ std::vector<int> GetModelObjectTargetableMeshes(int modelIndex)
 class ModelIndexProfiles
 {
 public:
-	std::vector<int>& GetProfileIndices(int modelIndex, const std::string& profile)
+	std::vector<int>& GetProfileIndices(int modelIndex, const std::string& profile, bool isPlayerInHangar)
 	{
 		this->UpdateIfChanged();
 
@@ -769,7 +769,7 @@ public:
 		}
 		else
 		{
-			auto value = GetModelObjectProfileIndices(modelIndex, profile);
+			auto value = GetModelObjectProfileIndices(modelIndex, profile, isPlayerInHangar);
 			this->_profiles.insert(std::make_pair(std::make_pair(modelIndex, profile), value));
 			//return value;
 			return this->_profiles.find(std::make_pair(modelIndex, profile))->second;
@@ -1859,7 +1859,7 @@ int TurretIndex2BlockedHook(int* params)
 	return 1;
 }
 
-void ApplyProfile(short objectIndex, unsigned short modelIndex, unsigned short flightgroupIndex, XwaCraft* s_pXwaCurrentCraft)
+void ApplyProfile(short objectIndex, unsigned short modelIndex, unsigned short flightgroupIndex, XwaCraft* s_pXwaCurrentCraft, bool isPlayerInHangar)
 {
 	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
 
@@ -1870,7 +1870,7 @@ void ApplyProfile(short objectIndex, unsigned short modelIndex, unsigned short f
 		markings = XwaObjects[objectIndex].pMobileObject->Markings;
 	}
 
-	const auto objectLines = GetCustomFileLines("Objects");
+	const auto objectLines = GetCustomFileLines(isPlayerInHangar ? "HangarObjects" : "Objects");
 
 	std::string profile = GetFileKeyValue(objectLines, "ObjectProfile_fg_" + std::to_string(flightgroupIndex));
 
@@ -1884,7 +1884,7 @@ void ApplyProfile(short objectIndex, unsigned short modelIndex, unsigned short f
 	{
 		if (profile.empty())
 		{
-			auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, "Skirmish");
+			auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, "Skirmish", isPlayerInHangar);
 
 			if (!indices.empty())
 			{
@@ -1912,11 +1912,11 @@ void ApplyProfile(short objectIndex, unsigned short modelIndex, unsigned short f
 		m22E = (char*)((int)s_pXwaCurrentCraft + g_craftConfig.Craft_Offset_22E);
 	}
 
-	auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, profile);
+	auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, profile, isPlayerInHangar);
 
 	if (indices.empty())
 	{
-		indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, "Default");
+		indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, "Default", isPlayerInHangar);
 	}
 
 	for (const int index : indices)
@@ -1939,7 +1939,7 @@ int ObjectProfileHook(int* params)
 	const unsigned short flightgroupIndex = *(unsigned short*)0x09E9708;
 	XwaCraft* s_pXwaCurrentCraft = *(XwaCraft**)0x00910DFC;
 
-	ApplyProfile(objectIndex, modelIndex, flightgroupIndex, s_pXwaCurrentCraft);
+	ApplyProfile(objectIndex, modelIndex, flightgroupIndex, s_pXwaCurrentCraft, false);
 
 	return 0;
 }
@@ -1962,7 +1962,7 @@ int AddObjectProfileHook(int* params)
 		return 0;
 	}
 
-	ApplyProfile(objectIndex, modelIndex, flightgroupIndex, s_pXwaCurrentCraft);
+	ApplyProfile(objectIndex, modelIndex, flightgroupIndex, s_pXwaCurrentCraft, true);
 
 	return 0;
 }
@@ -1984,7 +1984,7 @@ int BriefingObjectProfileHook(int* params)
 		flightgroupIndex = 0xffff;
 	}
 
-	ApplyProfile(-1, modelIndex, flightgroupIndex, craft);
+	ApplyProfile(-1, modelIndex, flightgroupIndex, craft, false);
 
 	return 0;
 }
@@ -1996,11 +1996,12 @@ int RenderOptObjectProfileHook(int* params)
 
 	if (currentCraft == nullptr)
 	{
+		bool isInHangar = *(bool*)0x009C6E44;
 		unsigned short modelIndex = currentObject->ModelIndex;
 		unsigned short originModelIndex = currentObject->pMobileObject->ModelIndex;
 		int meshIndex = params[Params_EDI] - 1;
 
-		const auto objectLines = GetCustomFileLines("Objects");
+		const auto objectLines = GetCustomFileLines(isInHangar ? "HangarObjects" : "Objects");
 		const std::string shipName = GetFileNameWithoutExtension(g_flightModelsList.GetLstLine(originModelIndex));
 
 		std::string profileKey = "ObjectProfile_" + shipName + "_" + std::to_string(modelIndex);
@@ -2010,7 +2011,7 @@ int RenderOptObjectProfileHook(int* params)
 		{
 			if (profile.empty())
 			{
-				auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, "Skirmish");
+				auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, "Skirmish", isInHangar);
 
 				if (!indices.empty())
 				{
@@ -2024,7 +2025,7 @@ int RenderOptObjectProfileHook(int* params)
 			profile = "Default";
 		}
 
-		const auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, profile);
+		const auto& indices = g_modelIndexProfiles.GetProfileIndices(modelIndex, profile, isInHangar);
 
 		for (const int index : indices)
 		{
