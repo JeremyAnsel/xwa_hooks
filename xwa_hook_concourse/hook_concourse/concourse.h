@@ -150,3 +150,5 @@ int DrawMulti2Hook(int* params);
 int ViewCustscenesConfigMenuSetPositionHook(int* params);
 
 int DefineMedalCaseHook(int* params);
+
+int RenderBug01Hook(int* params);

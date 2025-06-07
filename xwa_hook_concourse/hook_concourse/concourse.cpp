@@ -260,6 +260,8 @@ public:
 		this->SkirmishOptPositionX = GetFileKeyValueFloat(lines, "SkirmishOptPositionX", 0.5f);
 		this->SkirmishOptPositionY = GetFileKeyValueFloat(lines, "SkirmishOptPositionY", 0.0f);
 		this->SkirmishOptPositionZ = GetFileKeyValueFloat(lines, "SkirmishOptPositionZ", 0.25f);
+		this->SkirmishOptPositionLeft = GetFileKeyValueInt(lines, "SkirmishOptPositionLeft", 200);
+		this->SkirmishOptPositionTop = GetFileKeyValueInt(lines, "SkirmishOptPositionTop", 100);
 
 		this->EnableSideProcess = GetFileKeyValueInt(lines, "EnableSideProcess", 0) != 0;
 	}
@@ -289,6 +291,8 @@ public:
 	float SkirmishOptPositionX;
 	float SkirmishOptPositionY;
 	float SkirmishOptPositionZ;
+	int SkirmishOptPositionLeft;
+	int SkirmishOptPositionTop;
 	bool EnableSideProcess;
 };
 
@@ -477,6 +481,8 @@ struct ViewConfigurationSettings
 	float SkirmishOptPositionX;
 	float SkirmishOptPositionY;
 	float SkirmishOptPositionZ;
+	int SkirmishOptPositionLeft;
+	int SkirmishOptPositionTop;
 };
 
 ViewConfigurationSettings GetShipViewConfigurationSettings(int modelIndex)
@@ -526,6 +532,8 @@ ViewConfigurationSettings GetShipViewConfigurationSettings(int modelIndex)
 	settings.SkirmishOptPositionX = GetFileKeyValueFloat(lines, "SkirmishOptPositionX", g_config.SkirmishOptPositionX);
 	settings.SkirmishOptPositionY = GetFileKeyValueFloat(lines, "SkirmishOptPositionY", g_config.SkirmishOptPositionY);
 	settings.SkirmishOptPositionZ = GetFileKeyValueFloat(lines, "SkirmishOptPositionZ", g_config.SkirmishOptPositionZ);
+	settings.SkirmishOptPositionLeft = GetFileKeyValueFloat(lines, "SkirmishOptPositionLeft", g_config.SkirmishOptPositionLeft);
+	settings.SkirmishOptPositionTop = GetFileKeyValueFloat(lines, "SkirmishOptPositionTop", g_config.SkirmishOptPositionTop);
 
 	return settings;
 }
@@ -3967,8 +3975,11 @@ void DrawSkirmishImage(const SurfaceDC& dc, int craftId)
 	int& s_XwaOptCurrentSwitchIndex = *(int*)0x007827C0;
 	s_XwaOptCurrentSwitchIndex = 0;
 
-	float position_left = (isBackgroundHD || isBackgroundWide) ? 400.0f : 100.0f;
-	L0050EC70((int)(position_left * dc.displayHeight / dc.height), 0, 640, 480, nullptr, 0, 0);
+	//float position_left = (isBackgroundHD || isBackgroundWide) ? 400.0f : 100.0f;
+	//L0050EC70((int)(position_left * dc.displayHeight / dc.height), 0, 640, 480, nullptr, 0, 0);
+
+	//L0050EC70(settings.SkirmishOptPositionLeft * dc.displayHeight / dc.height, settings.SkirmishOptPositionTop * dc.displayHeight / dc.height, 240, 240, nullptr, 0, 0);
+	L0050EC70(settings.SkirmishOptPositionLeft, settings.SkirmishOptPositionTop, 240, 240, nullptr, 0, 0);
 
 	((unsigned char*)0x0050F04D)[0] = 0xA3;
 	((unsigned char*)0x0050F04D)[1] = 0x8C;
@@ -3979,6 +3990,7 @@ void DrawSkirmishImage(const SurfaceDC& dc, int craftId)
 	*(float*)(0x0050EDCA + 0x06) = 512.0f;
 	engineGlowsSetting = currentEngineGlowsSetting;
 
+	XwaResetScreenArea();
 	FreeSkirmishImage();
 
 	XwaOffScreenSurfaceLock();
@@ -7830,4 +7842,15 @@ int DefineMedalCaseHook(int* params)
 
 	params[Params_EAX] = *(int*)0x00784BCC;
 	return 0;
+}
+
+int RenderBug01Hook(int* params)
+{
+	*(int*)0x07D5244 = *(short*)0x07D5244;
+	*(int*)0x07CA354 = *(short*)0x07CA354;
+
+	*(unsigned short*)0x0044825E = 0x44DB;
+	*(unsigned short*)0x00448298 = 0x44DB;
+
+	return *(int*)0x005B46B8;
 }

@@ -195,6 +195,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x527173, ViewCustscenesConfigMenuSetPositionHook },
 
 	{ 0x57F4A1, DefineMedalCaseHook },
+
+	{ 0x448205, RenderBug01Hook },
 };
 
 static const std::string g_RankPointsArray = int_to_hex(GetRankPointsArrayPtr() + 0x00);
@@ -496,6 +498,11 @@ static const HookPatchItem g_medalsCeremonyPatch[] =
 	{ 0x17E89C, "A1CC4B7800", "E87F960200" },
 };
 
+static const HookPatchItem g_renderBugsPatch[] =
+{
+	{ 0x047600, "A1B8465B00", "E82B091600" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that loads medal details", g_medalDetailsPatch),
@@ -523,4 +530,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that draws multi", g_multiPatch),
 	MAKE_HOOK_PATCH("To call the hook that draws the view cutscenes config menu", g_viewCutscenesConfigMenuPatch),
 	MAKE_HOOK_PATCH("To call the hook that draws the medals ceremony screen", g_medalsCeremonyPatch),
+	MAKE_HOOK_PATCH("To call the hook that fixes render bugs", g_renderBugsPatch),
 };

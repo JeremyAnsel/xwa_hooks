@@ -262,6 +262,9 @@ At offset 12656E, replace E81D1B0300 with E8AD190800.
 # To call the hook that draws the medals ceremony screen
 At offset 17E89C, replace A1CC4B7800 with E87F960200.
 
+# To call the hook that fixes render bugs
+At offset 047600, replace A1B8465B00 with E82B091600.
+
 
 *** Usage ***
 
@@ -397,6 +400,8 @@ SkirmishOptAngleRoll = 0.0
 SkirmishOptPositionX = 0.5
 SkirmishOptPositionY = 0.0
 SkirmishOptPositionZ = 0.25
+SkirmishOptPositionLeft = 200
+SkirmishOptPositionTop = 100
 
 If the file does not exist, default values from "hook_concourse.cfg" or the "[hook_concourse]" section of "Hooks.ini" are used.
 
