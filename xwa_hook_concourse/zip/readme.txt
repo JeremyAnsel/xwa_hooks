@@ -393,6 +393,7 @@ Suppose that the craft is "FlightModels\[Model].opt".
 
 To define the view configuration settings, create a file named "FlightModels\[Model]ViewConfiguration.txt" or create a section named "[ViewConfiguration]" in "FlightModels\[Model].ini".
 The format is:
+SkirmishOptEnabled = 1
 SkirmishOptScale = 1.0
 SkirmishOptAnglePitch = 110.0
 SkirmishOptAngleYaw = 225.0
@@ -400,8 +401,8 @@ SkirmishOptAngleRoll = 0.0
 SkirmishOptPositionX = 0.5
 SkirmishOptPositionY = 0.0
 SkirmishOptPositionZ = 0.25
-SkirmishOptPositionLeft = 200
-SkirmishOptPositionTop = 100
+SkirmishOptPositionLeft = 340
+SkirmishOptPositionTop = 180
 
 If the file does not exist, default values from "hook_concourse.cfg" or the "[hook_concourse]" section of "Hooks.ini" are used.
 

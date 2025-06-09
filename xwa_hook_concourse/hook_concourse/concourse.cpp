@@ -260,8 +260,8 @@ public:
 		this->SkirmishOptPositionX = GetFileKeyValueFloat(lines, "SkirmishOptPositionX", 0.5f);
 		this->SkirmishOptPositionY = GetFileKeyValueFloat(lines, "SkirmishOptPositionY", 0.0f);
 		this->SkirmishOptPositionZ = GetFileKeyValueFloat(lines, "SkirmishOptPositionZ", 0.25f);
-		this->SkirmishOptPositionLeft = GetFileKeyValueInt(lines, "SkirmishOptPositionLeft", 200);
-		this->SkirmishOptPositionTop = GetFileKeyValueInt(lines, "SkirmishOptPositionTop", 100);
+		this->SkirmishOptPositionLeft = GetFileKeyValueInt(lines, "SkirmishOptPositionLeft", 340);
+		this->SkirmishOptPositionTop = GetFileKeyValueInt(lines, "SkirmishOptPositionTop", 180);
 
 		this->EnableSideProcess = GetFileKeyValueInt(lines, "EnableSideProcess", 0) != 0;
 	}
@@ -3931,6 +3931,17 @@ void DrawSkirmishImage(const SurfaceDC& dc, int craftId)
 
 	ViewConfigurationSettings settings = g_modelIndexSettings.GetViewConfiguration(modelIndex);
 
+	// test
+	//settings.SkirmishOptScale = 1.0f;
+	//settings.SkirmishOptAnglePitch = 90.0f;
+	//settings.SkirmishOptAngleYaw = 180.0f;
+	//settings.SkirmishOptAngleRoll = 0.0f;
+	//settings.SkirmishOptPositionX = 0.0f;
+	//settings.SkirmishOptPositionY = 0.0f;
+	//settings.SkirmishOptPositionZ = 0.0f;
+	//settings.SkirmishOptPositionLeft = 0;
+	//settings.SkirmishOptPositionTop = 0
+
 	XwaOffScreenSurfaceUnlock(1);
 
 	// L0050EC70
@@ -3938,8 +3949,8 @@ void DrawSkirmishImage(const SurfaceDC& dc, int craftId)
 	*(unsigned char*)0x0050ECA0 = 0xEB;
 	*(unsigned char*)0x0050ECA1 = 0x44;
 
-	float scale = (isBackgroundHD || isBackgroundWide) ? 1536.0f : 512.0f;
-	*(float*)(0x0050EDCA + 0x06) = scale * settings.SkirmishOptScale * dc.displayHeight / dc.height;
+	float scale = (isBackgroundHD || isBackgroundWide) ? 1024.0f : 384.0f;
+	*(float*)(0x0050EDCA + 0x06) = scale * settings.SkirmishOptScale;
 
 	unsigned short& engineGlowsSetting = *(unsigned short*)0x00B0C7C2;
 	unsigned short currentEngineGlowsSetting = engineGlowsSetting;
@@ -3962,7 +3973,7 @@ void DrawSkirmishImage(const SurfaceDC& dc, int craftId)
 	XwaSetGlobalLight(*(int*)0x0783B98, *(int*)0x0783BD8, *(int*)0x0783BF4);
 	XwaSetOptAngle(*(float*)0x0783C0C, *(float*)0x0783BD0, *(float*)0x0783BFC);
 	L0050FB80(*(float*)0x0783B9C);
-	XwaSetOptPosition((int)(settings.SkirmishOptPositionX * dc.displayHeight), (int)(settings.SkirmishOptPositionY * dc.displayHeight), (int)(settings.SkirmishOptPositionZ * dc.displayHeight));
+	XwaSetOptPosition((int)(settings.SkirmishOptPositionX * dc.displayHeight), (int)((settings.SkirmishOptPositionY * dc.displayHeight + 240) * dc.height / dc.displayHeight * dc.height / dc.displayHeight), (int)(settings.SkirmishOptPositionZ * dc.displayHeight));
 
 	// lod distance
 	((unsigned char*)0x0050F04D)[0] = 0x90;
@@ -3975,11 +3986,14 @@ void DrawSkirmishImage(const SurfaceDC& dc, int craftId)
 	int& s_XwaOptCurrentSwitchIndex = *(int*)0x007827C0;
 	s_XwaOptCurrentSwitchIndex = 0;
 
-	//float position_left = (isBackgroundHD || isBackgroundWide) ? 400.0f : 100.0f;
-	//L0050EC70((int)(position_left * dc.displayHeight / dc.height), 0, 640, 480, nullptr, 0, 0);
-
-	//L0050EC70(settings.SkirmishOptPositionLeft * dc.displayHeight / dc.height, settings.SkirmishOptPositionTop * dc.displayHeight / dc.height, 240, 240, nullptr, 0, 0);
-	L0050EC70(settings.SkirmishOptPositionLeft, settings.SkirmishOptPositionTop, 240, 240, nullptr, 0, 0);
+	L0050EC70(
+		(settings.SkirmishOptPositionLeft - 240) * dc.displayHeight / dc.height,
+		(settings.SkirmishOptPositionTop - 240) * dc.displayHeight / dc.height,
+		640,
+		480,
+		nullptr,
+		0,
+		0);
 
 	((unsigned char*)0x0050F04D)[0] = 0xA3;
 	((unsigned char*)0x0050F04D)[1] = 0x8C;
@@ -3987,6 +4001,8 @@ void DrawSkirmishImage(const SurfaceDC& dc, int craftId)
 	((unsigned char*)0x0050F04D)[3] = 0x7D;
 	((unsigned char*)0x0050F04D)[4] = 0x00;
 
+	*(int*)(0x0050EDA8 + 0x06) = 0x200;
+	*(int*)(0x0050EDB2 + 0x06) = 0x100;
 	*(float*)(0x0050EDCA + 0x06) = 512.0f;
 	engineGlowsSetting = currentEngineGlowsSetting;
 
