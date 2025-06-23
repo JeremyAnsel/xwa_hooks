@@ -132,6 +132,12 @@ To create object hatches or ramps, create a file named "FlightModels\[Model]SFoi
 The format is a line per mesh:
 mesh index, angle, opening speed, closing speed.
 
+To override a setting in the mission ini, set this section where ## is the flightgroup index
+[SFoils_fg_##]
+[SFoilsLandingGears_fg_##]
+[SFoilsHangarDoors_fg_##]
+[SFoilsHatches_fg_##]
+
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 
 To override the mission data, create a file named "[MissionDir]\[Mission].txt" or create a section named "[mission_tie]" in "[MissionDir]\[Mission].ini".

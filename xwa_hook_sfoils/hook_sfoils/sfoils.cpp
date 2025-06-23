@@ -7,6 +7,97 @@
 #include <algorithm>
 #include <utility>
 
+enum ParamsEnum
+{
+	Params_ReturnAddress = -1,
+	Params_EAX = -3,
+	Params_ECX = -4,
+	Params_EDX = -5,
+	Params_EBX = -6,
+	Params_EBP = -8,
+	Params_ESI = -9,
+	Params_EDI = -10,
+};
+
+std::string GetPathFileName(const std::string& str)
+{
+	auto a = str.find_last_of('\\');
+
+	return a == -1 ? str : str.substr(a + 1, -1);
+}
+
+std::vector<std::string> MergeFileLines(const std::vector<std::string>& a, const std::vector<std::string>& b)
+{
+	std::vector<std::string> lines = a;
+
+	for (const auto& lineB : b)
+	{
+		auto tokensB = Tokennize(lineB);
+
+		if (tokensB.size() < 2)
+		{
+			lines.push_back(lineB);
+			continue;
+		}
+
+		int indexB = -1;
+
+		try
+		{
+			indexB = std::stoi(tokensB[0], 0, 0);
+		}
+		catch (const std::exception&)
+		{
+		}
+
+		if (indexB < 0)
+		{
+			lines.push_back(lineB);
+			continue;
+		}
+
+		bool exists = false;
+
+		for (const auto& lineA : a)
+		{
+			auto tokensA = Tokennize(lineA);
+
+			if (tokensA.size() < 2)
+			{
+				continue;
+			}
+
+			int indexA = -1;
+
+			try
+			{
+				indexA = std::stoi(tokensA[0], 0, 0);
+			}
+			catch (const std::exception&)
+			{
+			}
+
+			if (indexA < 0)
+			{
+				continue;
+			}
+
+			if (indexA == indexB)
+			{
+				exists = true;
+				break;
+			}
+		}
+
+		if (!exists)
+		{
+			lines.push_back(lineB);
+		}
+	}
+
+	return lines;
+}
+
 class FlightModelsList
 {
 public:
@@ -381,7 +472,7 @@ std::vector<SFoil> GetDefaultSFoils(int modelIndex)
 	return values;
 }
 
-std::vector<SFoil> GetSFoilsList(int modelIndex)
+std::vector<SFoil> GetSFoilsList(int modelIndex, int fg)
 {
 	const std::string ship = GetShipPath(modelIndex);
 
@@ -390,6 +481,16 @@ std::vector<SFoil> GetSFoilsList(int modelIndex)
 	if (!lines.size())
 	{
 		lines = GetFileLines(ship + ".ini", "SFoils");
+	}
+
+	if (fg != -1)
+	{
+		auto missionLines = GetCustomFileLines("SFoils_fg_" + std::to_string(fg));
+
+		if (missionLines.size())
+		{
+			lines = MergeFileLines(missionLines, lines);
+		}
 	}
 
 	std::vector<SFoil> sfoils;
@@ -406,7 +507,7 @@ std::vector<SFoil> GetSFoilsList(int modelIndex)
 	return sfoils;
 }
 
-std::vector<SFoil> GetLandingGearsList(int modelIndex)
+std::vector<SFoil> GetLandingGearsList(int modelIndex, int fg)
 {
 	const std::string ship = GetShipPath(modelIndex);
 
@@ -417,6 +518,16 @@ std::vector<SFoil> GetLandingGearsList(int modelIndex)
 		lines = GetFileLines(ship + ".ini", "SFoilsLandingGears");
 	}
 
+	if (fg != -1)
+	{
+		auto missionLines = GetCustomFileLines("SFoilsLandingGears_fg_" + std::to_string(fg));
+
+		if (missionLines.size())
+		{
+			lines = MergeFileLines(missionLines, lines);
+		}
+	}
+
 	const auto sfoils = GetFileListValues(lines);
 
 	std::vector<SFoil> values;
@@ -442,7 +553,7 @@ std::vector<SFoil> GetLandingGearsList(int modelIndex)
 	return values;
 }
 
-std::vector<SFoil> GetHangarDoorsList(int modelIndex)
+std::vector<SFoil> GetHangarDoorsList(int modelIndex, int fg)
 {
 	const std::string ship = GetShipPath(modelIndex);
 
@@ -453,6 +564,16 @@ std::vector<SFoil> GetHangarDoorsList(int modelIndex)
 		lines = GetFileLines(ship + ".ini", "SFoilsHangarDoors");
 	}
 
+	if (fg != -1)
+	{
+		auto missionLines = GetCustomFileLines("SFoilsHangarDoors_fg_" + std::to_string(fg));
+
+		if (missionLines.size())
+		{
+			lines = MergeFileLines(missionLines, lines);
+		}
+	}
+
 	const auto sfoils = GetFileListValues(lines);
 
 	std::vector<SFoil> values;
@@ -478,7 +599,7 @@ std::vector<SFoil> GetHangarDoorsList(int modelIndex)
 	return values;
 }
 
-std::vector<SFoil> GetHatchesList(int modelIndex)
+std::vector<SFoil> GetHatchesList(int modelIndex, int fg)
 {
 	const std::string ship = GetShipPath(modelIndex);
 
@@ -489,6 +610,16 @@ std::vector<SFoil> GetHatchesList(int modelIndex)
 		lines = GetFileLines(ship + ".ini", "SFoilsHatches");
 	}
 
+	if (fg != -1)
+	{
+		auto missionLines = GetCustomFileLines("SFoilsHatches_fg_" + std::to_string(fg));
+
+		if (missionLines.size())
+		{
+			lines = MergeFileLines(missionLines, lines);
+		}
+	}
+
 	const auto sfoils = GetFileListValues(lines);
 
 	std::vector<SFoil> values;
@@ -514,7 +645,7 @@ std::vector<SFoil> GetHatchesList(int modelIndex)
 	return values;
 }
 
-CraftSettings GetSFoilsSettings(int modelIndex)
+CraftSettings GetSFoilsSettings(int modelIndex, int fg)
 {
 	const std::string ship = GetShipPath(modelIndex);
 
@@ -523,6 +654,16 @@ CraftSettings GetSFoilsSettings(int modelIndex)
 	if (!lines.size())
 	{
 		lines = GetFileLines(ship + ".ini", "SFoils");
+	}
+
+	if (fg != -1)
+	{
+		auto missionLines = GetCustomFileLines("SFoils_fg_" + std::to_string(fg));
+
+		if (missionLines.size())
+		{
+			lines = MergeFileLines(missionLines, lines);
+		}
 	}
 
 	CraftSettings settings{};
@@ -538,11 +679,12 @@ CraftSettings GetSFoilsSettings(int modelIndex)
 class ModelIndexSFoils
 {
 public:
-	std::vector<SFoil> GetSFoils(int modelIndex)
+	std::vector<SFoil> GetSFoils(int modelIndex, int fg)
 	{
 		this->UpdateIfChanged();
 
-		auto it = this->_sfoils.find(modelIndex);
+		int index = fg == -1 ? modelIndex : (-1 - fg);
+		auto it = this->_sfoils.find(index);
 
 		if (it != this->_sfoils.end())
 		{
@@ -550,17 +692,18 @@ public:
 		}
 		else
 		{
-			auto value = GetSFoilsList(modelIndex);
-			this->_sfoils.insert(std::make_pair(modelIndex, value));
+			auto value = GetSFoilsList(modelIndex, fg);
+			this->_sfoils.insert(std::make_pair(index, value));
 			return value;
 		}
 	}
 
-	std::vector<SFoil> GetLandingGears(int modelIndex)
+	std::vector<SFoil> GetLandingGears(int modelIndex, int fg)
 	{
 		this->UpdateIfChanged();
 
-		auto it = this->_landingGears.find(modelIndex);
+		int index = fg == -1 ? modelIndex : (-1 - fg);
+		auto it = this->_landingGears.find(index);
 
 		if (it != this->_landingGears.end())
 		{
@@ -568,26 +711,27 @@ public:
 		}
 		else
 		{
-			auto value = GetLandingGearsList(modelIndex);
-			this->_landingGears.insert(std::make_pair(modelIndex, value));
+			auto value = GetLandingGearsList(modelIndex, fg);
+			this->_landingGears.insert(std::make_pair(index, value));
 			return value;
 		}
 	}
 
-	std::vector<SFoil> GetSFoilsAndLandingGears(int modelIndex)
+	std::vector<SFoil> GetSFoilsAndLandingGears(int modelIndex, int fg)
 	{
-		auto sfoils = this->GetSFoils(modelIndex);
-		auto landingGears = this->GetLandingGears(modelIndex);
+		auto sfoils = this->GetSFoils(modelIndex, fg);
+		auto landingGears = this->GetLandingGears(modelIndex, fg);
 
 		sfoils.insert(sfoils.end(), landingGears.begin(), landingGears.end());
 		return sfoils;
 	}
 
-	std::vector<SFoil> GetHangarDoors(int modelIndex)
+	std::vector<SFoil> GetHangarDoors(int modelIndex, int fg)
 	{
 		this->UpdateIfChanged();
 
-		auto it = this->_hangarDoors.find(modelIndex);
+		int index = fg == -1 ? modelIndex : (-1 - fg);
+		auto it = this->_hangarDoors.find(index);
 
 		if (it != this->_hangarDoors.end())
 		{
@@ -595,13 +739,13 @@ public:
 		}
 		else
 		{
-			auto value = GetHangarDoorsList(modelIndex);
-			this->_hangarDoors.insert(std::make_pair(modelIndex, value));
+			auto value = GetHangarDoorsList(modelIndex, fg);
+			this->_hangarDoors.insert(std::make_pair(index, value));
 			return value;
 		}
 	}
 
-	std::vector<SFoil> GetHatches(int modelIndex)
+	std::vector<SFoil> GetHatches(int modelIndex, int fg)
 	{
 		int s_XwaNetworkPlayersCount = *(int*)0x00910DEC;
 
@@ -612,7 +756,8 @@ public:
 
 		this->UpdateIfChanged();
 
-		auto it = this->_hatches.find(modelIndex);
+		int index = fg == -1 ? modelIndex : (-1 - fg);
+		auto it = this->_hatches.find(index);
 
 		if (it != this->_hatches.end())
 		{
@@ -620,17 +765,18 @@ public:
 		}
 		else
 		{
-			auto value = GetHatchesList(modelIndex);
-			this->_hatches.insert(std::make_pair(modelIndex, value));
+			auto value = GetHatchesList(modelIndex, fg);
+			this->_hatches.insert(std::make_pair(index, value));
 			return value;
 		}
 	}
 
-	CraftSettings GetSettings(int modelIndex)
+	CraftSettings GetSettings(int modelIndex, int fg)
 	{
 		this->UpdateIfChanged();
 
-		auto it = this->_settings.find(modelIndex);
+		int index = fg == -1 ? modelIndex : (-1 - fg);
+		auto it = this->_settings.find(index);
 
 		if (it != this->_settings.end())
 		{
@@ -638,8 +784,8 @@ public:
 		}
 		else
 		{
-			auto value = GetSFoilsSettings(modelIndex);
-			this->_settings.insert(std::make_pair(modelIndex, value));
+			auto value = GetSFoilsSettings(modelIndex, fg);
+			this->_settings.insert(std::make_pair(index, value));
 			return value;
 		}
 	}
@@ -648,7 +794,7 @@ public:
 	{
 		const XwaCraft* craft = object->pMobileObject->pCraft;
 		const unsigned short modelIndex = object->ModelIndex;
-		const auto sfoils = this->GetSFoils(modelIndex);
+		const auto sfoils = this->GetSFoils(modelIndex, object->TieFlightGroupIndex);
 
 		const unsigned char* craftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? craft->MeshRotationAngles : (unsigned char*)((int)craft + g_craftConfig.Craft_Offset_260);
 
@@ -677,7 +823,7 @@ public:
 	{
 		const XwaCraft* craft = object->pMobileObject->pCraft;
 		const unsigned short modelIndex = object->ModelIndex;
-		const auto landingGears = this->GetLandingGears(modelIndex);
+		const auto landingGears = this->GetLandingGears(modelIndex, object->TieFlightGroupIndex);
 
 		const unsigned char* craftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? craft->MeshRotationAngles : (unsigned char*)((int)craft + g_craftConfig.Craft_Offset_260);
 
@@ -768,7 +914,8 @@ public:
 
 	int RetrieveTimeSpeed(int modelIndex, int objectIndex, int elapsedTime)
 	{
-		const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
+		const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+		const auto settings = g_modelIndexSFoils.GetSettings(modelIndex, xwaObjects[objectIndex].TieFlightGroupIndex);
 
 		const int timeFrame = 15 * settings.SFoilsAnimationSpeed;
 		int time = this->Get(objectIndex);
@@ -849,7 +996,7 @@ int SFoilsFilterHook(int* params)
 		XwaCraft* currentCraft = object->pMobileObject->pCraft;
 		unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
 
-		const auto hatches = g_modelIndexSFoils.GetHatches(modelIndex);
+		const auto hatches = g_modelIndexSFoils.GetHatches(modelIndex, object->TieFlightGroupIndex);
 
 		for (unsigned int i = 0; i < hatches.size(); i++)
 		{
@@ -874,7 +1021,7 @@ int SFoilsFilterHook(int* params)
 		// Key_V = 118
 		if (key == 118)
 		{
-			sfoils = g_modelIndexSFoils.GetSFoils(modelIndex);
+			sfoils = g_modelIndexSFoils.GetSFoils(modelIndex, object->TieFlightGroupIndex);
 
 			if (g_keyLandingGears)
 			{
@@ -908,7 +1055,7 @@ int SFoilsFilterHook(int* params)
 		// Key_Control_L = 282
 		else if (key == 282)
 		{
-			sfoils = g_modelIndexSFoils.GetLandingGears(modelIndex);
+			sfoils = g_modelIndexSFoils.GetLandingGears(modelIndex, object->TieFlightGroupIndex);
 
 			if (g_keySFoils)
 			{
@@ -944,14 +1091,14 @@ int SFoilsFilterHook(int* params)
 	}
 	else
 	{
-		sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex);
+		sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex, object->TieFlightGroupIndex);
 
-		bool hasSFoils = g_modelIndexSFoils.GetSFoils(modelIndex).size() != 0;
+		bool hasSFoils = g_modelIndexSFoils.GetSFoils(modelIndex, object->TieFlightGroupIndex).size() != 0;
 		bool areSFoilsOpened = g_modelIndexSFoils.AreSFoilsOpened(object);
-		bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(modelIndex).size() != 0;
+		bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(modelIndex, object->TieFlightGroupIndex).size() != 0;
 		bool areLandingGearsClosed = g_modelIndexSFoils.AreLandingGearsClosed(object);
 
-		const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
+		const auto settings = g_modelIndexSFoils.GetSettings(modelIndex, object->TieFlightGroupIndex);
 
 		if (!hasSFoils && hasLandingGears && areLandingGearsClosed)
 		{
@@ -997,6 +1144,7 @@ int SFoilsFilterHook(int* params)
 int SFoilsHook1(int* params)
 {
 	const int modelIndex = params[0];
+	const XwaObject* object = (XwaObject*)params[Params_ECX];
 
 	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
 
@@ -1005,7 +1153,7 @@ int SFoilsHook1(int* params)
 	// hangar start
 	if (*(int*)0x0686B94 == 0)
 	{
-		const auto hatches = g_modelIndexSFoils.GetHatches(modelIndex);
+		const auto hatches = g_modelIndexSFoils.GetHatches(modelIndex, object->TieFlightGroupIndex);
 
 		for (unsigned int i = 0; i < hatches.size(); i++)
 		{
@@ -1015,7 +1163,7 @@ int SFoilsHook1(int* params)
 		}
 	}
 
-	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex);
+	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex, object->TieFlightGroupIndex);
 
 	if (!sfoils.size())
 	{
@@ -1054,22 +1202,22 @@ int SFoilsHook2(int* params)
 	{
 		if (g_keySFoils)
 		{
-			sfoils = g_modelIndexSFoils.GetSFoils(modelIndex);
+			sfoils = g_modelIndexSFoils.GetSFoils(modelIndex, xwaObjects[objectIndex].TieFlightGroupIndex);
 		}
 		else if (g_keyLandingGears)
 		{
-			sfoils = g_modelIndexSFoils.GetLandingGears(modelIndex);
+			sfoils = g_modelIndexSFoils.GetLandingGears(modelIndex, xwaObjects[objectIndex].TieFlightGroupIndex);
 		}
 	}
 	else
 	{
 		if (currentCraft->SFoilsState == 3 && (aiData->ManrId == 21 || xwaObjects[objectIndex].PlayerIndex == currentPlayerId))
 		{
-			sfoils = g_modelIndexSFoils.GetSFoils(modelIndex);
+			sfoils = g_modelIndexSFoils.GetSFoils(modelIndex, xwaObjects[objectIndex].TieFlightGroupIndex);
 		}
 		else
 		{
-			sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex);
+			sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex, xwaObjects[objectIndex].TieFlightGroupIndex);
 		}
 	}
 
@@ -1151,7 +1299,7 @@ int SFoilsHangarShuttleHook(int* params)
 
 	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
 
-	auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex);
+	auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(modelIndex, xwaObjects[objectIndex].TieFlightGroupIndex);
 
 	if (!sfoils.size())
 	{
@@ -1210,7 +1358,7 @@ int SFoilsAIOutOfHyperspace1Hook(int* params)
 
 	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
 
-	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
+	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex, xwaObjects[objectIndex].TieFlightGroupIndex);
 
 	L0049AE20(objectIndex);
 
@@ -1223,7 +1371,7 @@ int SFoilsAIOutOfHyperspace1Hook(int* params)
 			currentCraftMeshRotationAngles[i] = 0;
 		}
 
-		const auto sfoils = g_modelIndexSFoils.GetSFoils(modelIndex);
+		const auto sfoils = g_modelIndexSFoils.GetSFoils(modelIndex, xwaObjects[objectIndex].TieFlightGroupIndex);
 
 		if (!sfoils.size())
 		{
@@ -1255,7 +1403,7 @@ int SFoilsAIOutOfHyperspace2Hook(int* params)
 	const XwaAIData* pAIData = *(XwaAIData**)(0x07CA1A0 + 0x10);
 	const unsigned short modelIndex = pObject->ModelIndex;
 
-	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
+	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex, pObject->TieFlightGroupIndex);
 
 	if (settings.CloseSFoilsInHyperspace)
 	{
@@ -1281,7 +1429,7 @@ int SFoilsAIIntoHyperspace1Hook(int* params)
 	XwaCraft* pCraft = *(XwaCraft**)(0x07CA1A0 + 0x0C);
 	const unsigned short modelIndex = pObject->ModelIndex;
 
-	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
+	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex, pObject->TieFlightGroupIndex);
 
 	L004A3660();
 
@@ -1304,7 +1452,7 @@ int SFoilsAIHyperspaceOrderHook(int* params)
 	const unsigned short modelIndex = pObject->ModelIndex;
 	XwaCraft* currentCraft = *(XwaCraft**)0x0910DFC;
 
-	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex);
+	const auto settings = g_modelIndexSFoils.GetSettings(modelIndex, pObject->TieFlightGroupIndex);
 
 	L004B64F0(param0, param1);
 
@@ -1388,7 +1536,7 @@ int InitSFoilsLandingGearsHook(int* params)
 					continue;
 				}
 
-				sfoils = g_modelIndexSFoils.GetSFoils(modelIndex);
+				sfoils = g_modelIndexSFoils.GetSFoils(modelIndex, objectFlightGroupIndex);
 			}
 			else if (_stricmp(element.c_str(), "open_LandingGears") == 0)
 			{
@@ -1399,7 +1547,7 @@ int InitSFoilsLandingGearsHook(int* params)
 					continue;
 				}
 
-				sfoils = g_modelIndexSFoils.GetLandingGears(modelIndex);
+				sfoils = g_modelIndexSFoils.GetLandingGears(modelIndex, objectFlightGroupIndex);
 			}
 
 			if (sfoils.size())
@@ -1442,9 +1590,9 @@ int EnterHangarHook(int* params)
 		return 1;
 	}
 
-	bool hasSFoils = g_modelIndexSFoils.GetSFoils(object->ModelIndex).size() != 0;
+	bool hasSFoils = g_modelIndexSFoils.GetSFoils(object->ModelIndex, object->TieFlightGroupIndex).size() != 0;
 	bool areSFoilsOpened = g_modelIndexSFoils.AreSFoilsOpened(object);
-	bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(object->ModelIndex).size() != 0;
+	bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(object->ModelIndex, object->TieFlightGroupIndex).size() != 0;
 	bool areLandingGearsClosed = g_modelIndexSFoils.AreLandingGearsClosed(object);
 
 	int ret;
@@ -1513,9 +1661,9 @@ int EnterHyperspaceHook(int* params)
 		return 1;
 	}
 
-	bool hasSFoils = g_modelIndexSFoils.GetSFoils(object->ModelIndex).size() != 0;
+	bool hasSFoils = g_modelIndexSFoils.GetSFoils(object->ModelIndex, object->TieFlightGroupIndex).size() != 0;
 	bool areSFoilsOpened = g_modelIndexSFoils.AreSFoilsOpened(object);
-	bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(object->ModelIndex).size() != 0;
+	bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(object->ModelIndex, object->TieFlightGroupIndex).size() != 0;
 	bool areLandingGearsClosed = g_modelIndexSFoils.AreLandingGearsClosed(object);
 
 	int ret;
@@ -1549,11 +1697,11 @@ int NoFireMessageHook(int* params)
 
 	params[0] = currentCraft->CraftIndex;
 
-	bool hasSFoils = g_modelIndexSFoils.GetSFoils(object->ModelIndex).size() != 0;
+	bool hasSFoils = g_modelIndexSFoils.GetSFoils(object->ModelIndex, object->TieFlightGroupIndex).size() != 0;
 	bool areSFoilsOpened = g_modelIndexSFoils.AreSFoilsOpened(object);
-	bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(object->ModelIndex).size() != 0;
+	bool hasLandingGears = g_modelIndexSFoils.GetLandingGears(object->ModelIndex, object->TieFlightGroupIndex).size() != 0;
 	bool areLandingGearsClosed = g_modelIndexSFoils.AreLandingGearsClosed(object);
-	const auto settings = g_modelIndexSFoils.GetSettings(object->ModelIndex);
+	const auto settings = g_modelIndexSFoils.GetSettings(object->ModelIndex, object->TieFlightGroupIndex);
 
 	int ret = 0;
 
@@ -1581,8 +1729,8 @@ int AILookForParkOrderHook(int* params)
 
 	pAIData->PositionZ = eax;
 
-	const auto settings = g_modelIndexSFoils.GetSettings(pObject->ModelIndex);
-	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(pObject->ModelIndex);
+	const auto settings = g_modelIndexSFoils.GetSettings(pObject->ModelIndex, pObject->TieFlightGroupIndex);
+	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(pObject->ModelIndex, pObject->TieFlightGroupIndex);
 
 	if (settings.ParkOrderSFoilsClosed)
 	{
@@ -1606,8 +1754,8 @@ int AIParkManrHook(int* params)
 	XwaAIData* pAIData = *(XwaAIData**)(0x07CA1A0 + 0x10);
 	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? pCraft->MeshRotationAngles : (unsigned char*)((int)pCraft + g_craftConfig.Craft_Offset_260);
 
-	const auto settings = g_modelIndexSFoils.GetSettings(pObject->ModelIndex);
-	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(pObject->ModelIndex);
+	const auto settings = g_modelIndexSFoils.GetSettings(pObject->ModelIndex, pObject->TieFlightGroupIndex);
+	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(pObject->ModelIndex, pObject->TieFlightGroupIndex);
 
 	if (settings.ParkOrderSFoilsClosed)
 	{
@@ -1639,8 +1787,8 @@ int AIParkManrFunctionHook(int* params)
 
 	pAIData->m5D++;
 
-	const auto settings = g_modelIndexSFoils.GetSettings(pObject->ModelIndex);
-	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(pObject->ModelIndex);
+	const auto settings = g_modelIndexSFoils.GetSettings(pObject->ModelIndex, pObject->TieFlightGroupIndex);
+	const auto sfoils = g_modelIndexSFoils.GetSFoilsAndLandingGears(pObject->ModelIndex, pObject->TieFlightGroupIndex);
 
 	if (settings.ParkOrderSFoilsClosed)
 	{
@@ -1757,7 +1905,7 @@ int HangarDoorsHook(int* params)
 			continue;
 		}
 
-		const auto sfoils = g_modelIndexSFoils.GetHangarDoors(currentModelIndex);
+		const auto sfoils = g_modelIndexSFoils.GetHangarDoors(currentModelIndex, currentObject->TieFlightGroupIndex);
 
 		if (!sfoils.size())
 		{
@@ -1824,7 +1972,7 @@ int HangarDoorsHook(int* params)
 			}
 		}
 
-		const auto settings = g_modelIndexSFoils.GetSettings(currentModelIndex);
+		const auto settings = g_modelIndexSFoils.GetSettings(currentModelIndex, currentObject->TieFlightGroupIndex);
 		unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
 		int timeSpeed = g_hangarDoorsObjectIndexTime.RetrieveTimeSpeed(currentModelIndex, currentObjectIndex, elapsedTime);
 		bool openDoors = currentDistanceSameTeam < settings.HangarDoorsDistance && currentDistanceOtherTeams >= settings.HangarDoorsDistance;
@@ -1879,7 +2027,7 @@ int ShuttleHatchHook(int* params)
 	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
 	int timeSpeed = g_hatchesObjectIndexTime.RetrieveTimeSpeed(modelIndex, shuttleObjectIndex, elapsedTime);
 
-	auto hatches = g_modelIndexSFoils.GetHatches(modelIndex);
+	auto hatches = g_modelIndexSFoils.GetHatches(modelIndex, xwaObjects[shuttleObjectIndex].TieFlightGroupIndex);
 
 	switch (step)
 	{
@@ -1964,7 +2112,7 @@ int PlayerCraftHatchHook(int* params)
 	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
 	int timeSpeed = g_hatchesObjectIndexTime.RetrieveTimeSpeed(modelIndex, playerObjectIndex, elapsedTime);
 
-	auto hatches = g_modelIndexSFoils.GetHatches(modelIndex);
+	auto hatches = g_modelIndexSFoils.GetHatches(modelIndex, xwaObjects[playerObjectIndex].TieFlightGroupIndex);
 
 	switch (step)
 	{
@@ -1975,7 +2123,7 @@ int PlayerCraftHatchHook(int* params)
 	{
 		if (step >= 2)
 		{
-			auto landingGears = g_modelIndexSFoils.GetLandingGears(modelIndex);
+			auto landingGears = g_modelIndexSFoils.GetLandingGears(modelIndex, xwaObjects[playerObjectIndex].TieFlightGroupIndex);
 			hatches.insert(hatches.end(), landingGears.begin(), landingGears.end());
 		}
 
