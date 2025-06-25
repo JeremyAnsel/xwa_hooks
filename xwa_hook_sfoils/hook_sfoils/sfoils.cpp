@@ -322,7 +322,9 @@ static_assert(sizeof(XwaAIData) == 102, "size of XwaAIData must be 102");
 struct XwaPlayer
 {
 	int ObjectIndex;
-	char unk004[78];
+	char unk004[48];
+	unsigned char WarheadArmed;
+	char unk035[29];
 	unsigned char m052;
 	char unk053[2940];
 };
@@ -645,6 +647,52 @@ std::vector<SFoil> GetHatchesList(int modelIndex, int fg)
 	return values;
 }
 
+std::vector<SFoil> GetWarheadsBayList(int modelIndex, int fg)
+{
+	const std::string ship = GetShipPath(modelIndex);
+
+	auto lines = GetFileLines(ship + "SFoilsWarheadsBay.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", "SFoilsWarheadsBay");
+	}
+
+	if (fg != -1)
+	{
+		auto missionLines = GetCustomFileLines("SFoilsWarheadsBay_fg_" + std::to_string(fg));
+
+		if (missionLines.size())
+		{
+			lines = MergeFileLines(missionLines, lines);
+		}
+	}
+
+	const auto sfoils = GetFileListValues(lines);
+
+	std::vector<SFoil> values;
+
+	for (unsigned int i = 0; i < sfoils.size(); i++)
+	{
+		const auto& value = sfoils[i];
+
+		if (value.size() < 4)
+		{
+			continue;
+		}
+
+		SFoil sfoil{};
+		sfoil.meshIndex = std::stoi(value[0], 0, 0);
+		sfoil.angle = std::stoi(value[1], 0, 0);
+		sfoil.closingSpeed = std::stoi(value[2], 0, 0);
+		sfoil.openingSpeed = std::stoi(value[3], 0, 0);
+
+		values.push_back(sfoil);
+	}
+
+	return values;
+}
+
 CraftSettings GetSFoilsSettings(int modelIndex, int fg)
 {
 	const std::string ship = GetShipPath(modelIndex);
@@ -771,6 +819,25 @@ public:
 		}
 	}
 
+	std::vector<SFoil> GetWarheadsBay(int modelIndex, int fg)
+	{
+		this->UpdateIfChanged();
+
+		int index = fg == -1 ? modelIndex : (-1 - fg);
+		auto it = this->_warheadsBay.find(index);
+
+		if (it != this->_warheadsBay.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetWarheadsBayList(modelIndex, fg);
+			this->_warheadsBay.insert(std::make_pair(index, value));
+			return value;
+		}
+	}
+
 	CraftSettings GetSettings(int modelIndex, int fg)
 	{
 		this->UpdateIfChanged();
@@ -866,6 +933,7 @@ private:
 			this->_landingGears.clear();
 			this->_hangarDoors.clear();
 			this->_hatches.clear();
+			this->_warheadsBay.clear();
 			this->_settings.clear();
 		}
 	}
@@ -874,6 +942,7 @@ private:
 	std::map<int, std::vector<SFoil>> _landingGears;
 	std::map<int, std::vector<SFoil>> _hangarDoors;
 	std::map<int, std::vector<SFoil>> _hatches;
+	std::map<int, std::vector<SFoil>> _warheadsBay;
 	std::map<int, CraftSettings> _settings;
 };
 
@@ -940,6 +1009,7 @@ private:
 ObjectIndexTime g_objectIndexTime;
 ObjectIndexTime g_hangarDoorsObjectIndexTime;
 ObjectIndexTime g_hatchesObjectIndexTime;
+ObjectIndexTime g_warheadsBayObjectIndexTime;
 
 bool g_keySFoils = false;
 bool g_keyLandingGears = false;
@@ -1867,6 +1937,80 @@ int Distance(int objectIndex1, int objectIndex2)
 	return distance;
 }
 
+void HandleWarheadsBay()
+{
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
+	const int currentPlayerId = *(int*)0x08C1CC8;
+	const XwaPlayer* player = &xwaPlayers[currentPlayerId];
+	int playerObjectIndex = player->ObjectIndex;
+	short elapsedTime = *(short*)0x08C1640;
+
+	if (playerObjectIndex == 0xFFFF)
+	{
+		return;
+	}
+
+	XwaObject* playerObject = &xwaObjects[playerObjectIndex];
+
+	XwaMobileObject* currentMobileObject = playerObject->pMobileObject;
+
+	if (currentMobileObject == nullptr)
+	{
+		return;
+	}
+
+	XwaCraft* currentCraft = currentMobileObject->pCraft;
+
+	if (currentCraft == nullptr)
+	{
+		return;
+	}
+
+	const auto sfoils = g_modelIndexSFoils.GetWarheadsBay(playerObject->ModelIndex, playerObject->TieFlightGroupIndex);
+
+	if (!sfoils.size())
+	{
+		return;
+	}
+
+	unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+	int timeSpeed = g_warheadsBayObjectIndexTime.RetrieveTimeSpeed(playerObject->ModelIndex, playerObjectIndex, elapsedTime);
+
+	for (unsigned int i = 0; i < sfoils.size(); i++)
+	{
+		SFoil sfoil = sfoils[i];
+
+		sfoil.closingSpeed *= timeSpeed;
+		sfoil.openingSpeed *= timeSpeed;
+
+		if (player->WarheadArmed == 1)
+		{
+			if (currentCraftMeshRotationAngles[sfoil.meshIndex] < sfoil.angle)
+			{
+				currentCraftMeshRotationAngles[sfoil.meshIndex] += sfoil.closingSpeed;
+
+				if (currentCraftMeshRotationAngles[sfoil.meshIndex] > sfoil.angle)
+				{
+					currentCraftMeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+				}
+			}
+		}
+		else
+		{
+			if (currentCraftMeshRotationAngles[sfoil.meshIndex] >= sfoil.openingSpeed)
+			{
+				currentCraftMeshRotationAngles[sfoil.meshIndex] -= sfoil.openingSpeed;
+
+				if (currentCraftMeshRotationAngles[sfoil.meshIndex] < sfoil.openingSpeed)
+				{
+					currentCraftMeshRotationAngles[sfoil.meshIndex] = 0;
+				}
+			}
+		}
+	}
+}
+
 int HangarDoorsHook(int* params)
 {
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
@@ -1875,6 +2019,8 @@ int HangarDoorsHook(int* params)
 	const auto L00408DC0 = (void(*)())0x00408DC0;
 
 	L00408DC0();
+
+	HandleWarheadsBay();
 
 	for (int currentObjectIndex = *(int*)0x08BF378; currentObjectIndex < *(int*)0x08D9628; currentObjectIndex++)
 	{

@@ -132,11 +132,18 @@ To create object hatches or ramps, create a file named "FlightModels\[Model]SFoi
 The format is a line per mesh:
 mesh index, angle, opening speed, closing speed.
 
+To create warheads bay, create a file named "FlightModels\[Model]SFoilsWarheadsBay.txt" or create a section named "[SFoilsWarheadsBay]" in "FlightModels\[Model].ini".
+When the player selects warheads the warheads bay will open.
+When the warheads are not selected the warheads bay will close.
+The format is a line per mesh:
+mesh index, angle, opening speed, closing speed.
+
 To override a setting in the mission ini, set this section where ## is the flightgroup index
 [SFoils_fg_##]
 [SFoilsLandingGears_fg_##]
 [SFoilsHangarDoors_fg_##]
 [SFoilsHatches_fg_##]
+[SFoilsWarheadsBay_fg_##]
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 
