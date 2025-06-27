@@ -56,6 +56,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4165A3, LoadMissionRanksModifierHook },
 	{ 0x4DD134, FillSpecRciEntryHook },
 	{ 0x4FFBF8, TargetNextCraftHook },
+	{ 0x578BB0, CampaignCraftsListHook },
+	{ 0x578FA5, CampaignCraftsFillListHook },
 };
 
 static const HookPatchItem g_overrideTiePatch[] =
@@ -181,6 +183,12 @@ static const HookPatchItem g_targetCraftPatch[] =
 	{ 0x0FEFF3, "A0E5538000", "E8288F0A00" },
 };
 
+static const HookPatchItem g_campaignCraftsListPatch[] =
+{
+	{ 0x177FAB, "0F854B020000", "E870FF020090" },
+	{ 0x1783A0, "8A41E93BC27576", "E87BFB02009090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that override tie mission", g_overrideTiePatch),
@@ -192,4 +200,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that controls mission loading", g_loadmissionPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets the spec rci entries", g_specRciPatch),
 	MAKE_HOOK_PATCH("To call the hook that targets next objective craft", g_targetCraftPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines the campaign crafts list", g_campaignCraftsListPatch),
 };

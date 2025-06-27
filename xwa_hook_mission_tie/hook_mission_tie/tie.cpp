@@ -29,6 +29,13 @@ float GetFileKeyValueFloat(const std::vector<std::string>& lines, const std::str
 	return std::stof(value);
 }
 
+std::vector<int> GetFileKeyListInt(const std::vector<std::string>& lines, const std::string& key)
+{
+	const std::string value = GetFileKeyValue(lines, key);
+	std::vector<std::string> values = Tokennize(value);
+	return GetFileListIntValues(values);
+}
+
 std::string GetPathFileName(const std::string& str)
 {
 	auto a = str.find_last_of('\\');
@@ -112,6 +119,8 @@ public:
 };
 
 Config g_config;
+
+std::string GetMissionFileName();
 
 class MissionConfig
 {
@@ -213,14 +222,27 @@ public:
 		return this->_isSkipProjectilesProximityCheckEnabled;
 	}
 
+	const std::vector<int>& CampaignCraftsList()
+	{
+		this->UpdateIfChanged();
+		return this->_campaignCraftsList;
+	}
+
 private:
 	void UpdateIfChanged()
 	{
 		static std::string _mission;
 		static int _missionIndex = 0;
 
-		const char* xwaMissionFileName = (const char*)0x06002E8;
+		std::string xwaMissionFileName = (const char*)0x06002E8;
 		const int missionFileNameIndex = *(int*)0x06002E4;
+
+		const bool s_XwaIsInConcourse = *(int*)0x005FFD9C != 0;
+
+		if (s_XwaIsInConcourse)
+		{
+			xwaMissionFileName = GetMissionFileName();
+		}
 
 		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 		{
@@ -264,6 +286,8 @@ private:
 			this->_targetCraftKeySelectOnlyNotInspected = targetCraftKeySelectOnlyNotInspected == -1 ? g_config.TargetCraftKeySelectOnlyNotInspected : targetCraftKeySelectOnlyNotInspected != 0;
 
 			this->_isSkipProjectilesProximityCheckEnabled = GetFileKeyValueInt(lines, "SkipProjectilesProximityCheck", 0) != 0;
+
+			this->_campaignCraftsList = GetFileKeyListInt(lines, "CampaignCraftsList");
 		}
 	}
 
@@ -347,6 +371,7 @@ private:
 	int _targetCraftKeyMethod;
 	bool _targetCraftKeySelectOnlyNotInspected;
 	bool _isSkipProjectilesProximityCheckEnabled;
+	std::vector<int> _campaignCraftsList;
 };
 
 MissionConfig g_missionConfig;
@@ -3110,6 +3135,106 @@ int TargetNextCraftHook(int* params)
 	}
 
 	XwaTargetObject(targetObjectIndex, playerIndex);
+
+	return 0;
+}
+
+int CampaignCraftsListHook(int* params)
+{
+	int fgIndex = params[7];
+
+	int teamFg = params[Params_ECX];
+	int teamPilot = params[Params_EDX];
+
+	const std::vector<int>& camapignCraftsList = g_missionConfig.CampaignCraftsList();
+
+	if (camapignCraftsList.empty())
+	{
+		if (teamFg != teamPilot)
+		{
+			params[Params_ReturnAddress] = 0x00578DFC;
+			return 0;
+		}
+
+		return 0;
+	}
+
+	if (std::find(camapignCraftsList.begin(), camapignCraftsList.end(), fgIndex) == camapignCraftsList.end())
+	{
+		params[Params_ReturnAddress] = 0x00578DFC;
+	}
+	else
+	{
+		int edx0 = *(unsigned char*)(params[Params_EAX] + 0x6B);
+		int ecx0 = ((int*)0x00ABD280)[edx0];
+		int edx = *(int*)0x00ABD22C + ecx0 * 0x128;
+		int shiplistType = *(int*)(edx + 0x104);
+
+		const int ShiplistType_LightTransport = 2;
+		const int ShiplistType_UtilityCraft = 3;
+		const int ShiplistType_Freighter = 5;
+		const int ShiplistType_Starship = 6;
+
+		if (shiplistType == ShiplistType_LightTransport
+			|| shiplistType == ShiplistType_UtilityCraft
+			|| shiplistType == ShiplistType_Freighter
+			|| shiplistType == ShiplistType_Starship)
+		{
+			params[Params_EDX] = edx;
+			params[Params_ReturnAddress] = 0x00578C3B;
+		}
+		else
+		{
+			params[Params_ReturnAddress] = 0x00578DFC;
+		}
+	}
+
+	return 0;
+}
+
+int CampaignCraftsFillListHook(int* params)
+{
+	int fgIndex = params[Params_EBP];
+
+	int teamFg = *(unsigned char*)(params[Params_ECX] - 0x17);
+	int teamPilot = params[Params_EDX];
+
+	const std::vector<int>& camapignCraftsList = g_missionConfig.CampaignCraftsList();
+
+	if (camapignCraftsList.empty())
+	{
+		if (teamFg != teamPilot)
+		{
+			params[Params_ReturnAddress] = 0x0057901D;
+			return 0;
+		}
+
+		return 0;
+	}
+
+	if (std::find(camapignCraftsList.begin(), camapignCraftsList.end(), fgIndex) == camapignCraftsList.end())
+	{
+		params[Params_ReturnAddress] = 0x0057901D;
+	}
+	else
+	{
+		int eax0 = (int)*(unsigned char*)(params[Params_ECX] - 0x1D) * 0x04;
+		int edx0 = *(int*)(0x00ABD280 + eax0);
+		int edx = params[Params_EDI] + edx0 * 0x128;
+		int shiplistType = *(int*)(edx + 0x104);
+
+		const int ShiplistType_Fighter = 1;
+
+		if (shiplistType == ShiplistType_Fighter)
+		{
+			params[Params_EAX] = eax0;
+			params[Params_ReturnAddress] = 0x00579007;
+		}
+		else
+		{
+			params[Params_ReturnAddress] = 0x0057901D;
+		}
+	}
 
 	return 0;
 }

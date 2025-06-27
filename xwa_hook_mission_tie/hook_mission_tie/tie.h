@@ -38,3 +38,6 @@ int LoadMissionRanksModifierHook(int* params);
 int FillSpecRciEntryHook(int* params);
 
 int TargetNextCraftHook(int* params);
+
+int CampaignCraftsListHook(int* params);
+int CampaignCraftsFillListHook(int* params);

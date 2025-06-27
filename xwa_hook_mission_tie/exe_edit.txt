@@ -517,6 +517,26 @@ E8288F0A00              call 005A8B20, 005A8B20 - 004FFBF8 = 000A8F28
 
 ===============================================================================
 
+; campaign crafts list
+
+; L00578A60
+:00578BAB - 0x177FAB
+0F854B020000            jne 00578DFC
+
+E870FF0200              call 005A8B20, 005A8B20 - 00578BB0 = 0002FF70
+90                      nop
+
+; L00578F60
+:00578FA0 - 0x1783A0
+8A41E9                  mov al, byte ptr [ecx-17]
+3BC2                    cmp eax, edx
+7576                    jne 0057901D
+
+E87BFB0200              call 005A8B20, 005A8B20 - 00578FA5 = 0002FB7B
+9090                    nop
+
+===============================================================================
+
 const char* xwaMissionFileName = (const char*)0x06002E8;
 const int missionFileNameIndex = *(int*)0x06002E4;
 

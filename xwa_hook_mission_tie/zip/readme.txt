@@ -101,6 +101,10 @@ At offset 0DC52F, replace B801000000 with E8FCB90C00.
 # To call the hook that targets next objective craft
 At offset 0FEFF3, replace A0E5538000 with E8288F0A00.
 
+# To call the hook that defines the campaign crafts list
+At offset 177FAB, replace 0F854B020000 with E870FF020090.
+At offset 1783A0, replace 8A41E93BC27576 with E87BFB02009090.
+
 
 *** Usage ***
 
@@ -135,6 +139,8 @@ To switch between nearest target and cycle targets, set the TargetCraftKeyMethod
 To define how filter the target crafts, set the TargetCraftKeySelectOnlyNotInspected setting. This setting is in the global settings file and in the per-mission config file. When the per-mission value is -1 the global value is used.
 
 To skip checking projectiles proximity, set "SkipProjectilesProximityCheck = 1". The default value is 0.
+
+To define the list of crafts in the launch campaign mission screen, set the "CampaignCraftsList" setting. It is a comma separated list of flightgroup indices.
 
 See "mission.txt".
 
