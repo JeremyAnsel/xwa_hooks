@@ -444,6 +444,13 @@ Others custom sounds can be replaced in "Wave\Sfx_Sounds.lst":
 The sounds can be compressed in zip files. When a wav file is loaded, if it doesn't exist then the hook will search it in a zip file placed in the parent directory. The name of the zip is the name of the directory.
 
 
+# engine sound
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+
+To set engine sound settings for a given mission, create a file named "[MissionDir]\[Mission]_EngineSound.txt" or create a section named "[EngineSound]" in "[MissionDir]\[Mission].ini".
+To enable the fix for the radio messages set the "IsRadioMessageFixEnabled" setting to 1.
+
+
 *** Credits ***
 
 - Jérémy Ansel (JeremyaFr)

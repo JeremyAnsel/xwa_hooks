@@ -1169,6 +1169,11 @@ public:
 		}
 	}
 
+	bool IsRadioMessageFixEnabled()
+	{
+		return this->_isRadioMessageFixEnabled;
+	}
+
 private:
 	void Update()
 	{
@@ -1191,6 +1196,9 @@ private:
 			this->_weaponRange.clear();
 			this->_hyperBehavior.clear();
 			this->_ambientSounds.clear();
+
+			std::vector<std::string> lines = GetCustomFileLines("EngineSound");
+			this->_isRadioMessageFixEnabled = GetFileKeyValueInt(lines, "IsRadioMessageFixEnabled", 0) != 0;
 		}
 	}
 
@@ -1202,6 +1210,7 @@ private:
 	std::map<int, std::map<int, std::tuple<int, int>>> _weaponRange;
 	std::map<int, int> _hyperBehavior;
 	std::map<int, AmbientSoundSettings> _ambientSounds;
+	bool _isRadioMessageFixEnabled;
 };
 
 ModelIndexSound g_modelIndexSound;
@@ -2919,6 +2928,11 @@ int AppendRadioMessageHook(int* params)
 	const char* ecx = ((const char**)0x009B6400)[edx];
 	params[Params_ECX] = (int)ecx;
 
+	if (!g_modelIndexSound.IsRadioMessageFixEnabled())
+	{
+		return 0;
+	}
+
 	const auto L004982C0 = (void(*)(short, unsigned char))0x004982C0;
 
 	const int A4 = *(int*)((int)params + 0x70);
@@ -3071,7 +3085,7 @@ int AppendRadioMessageHook(int* params)
 	if (ret)
 	{
 		//params[Params_ReturnAddress] = 0x00498076;
-		
+
 		params[Params_ReturnAddress] = 0x00497F87;
 		*(unsigned char*)(0x00498036 + 0x00) = 0xEB;
 		*(unsigned char*)(0x00498036 + 0x01) = 0x00498076 - (0x00498036 + 0x02);

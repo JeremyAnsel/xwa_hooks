@@ -1,0 +1,3 @@
+
+; IsRadioMessageFixEnabled = 0 (no) or 1 (yes)
+IsRadioMessageFixEnabled = 0
