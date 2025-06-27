@@ -163,6 +163,7 @@ WarheadCapacity0 = integer
 WarheadTypeId1 = integer
 WarheadCapacity1 = integer
 CounterMeasuresCount = integer
+AIHitsTakenToEvade = integer
 
 See "XWing.ini".
 

@@ -421,7 +421,8 @@ struct ExeCraftEntry
 	char unk00D[1];
 	bool HasShieldGenerator;
 	unsigned int ShieldStrength;
-	char unk013[2];
+	unsigned char AIHitsTakenToEvade;
+	char unk014[1];
 	unsigned int HullStrength;
 	unsigned int CriticalDamageThreshold;
 	unsigned short SystemStrength;
@@ -1583,6 +1584,7 @@ public:
 			}
 
 			exeEntry->CounterMeasuresCount = defaultEntry->CounterMeasuresCount;
+			exeEntry->AIHitsTakenToEvade = defaultEntry->AIHitsTakenToEvade;
 		}
 
 		for (int i = 0; i < 218; i++)
@@ -1779,6 +1781,7 @@ public:
 			}
 
 			ExeCraftTable[craftIndex].CounterMeasuresCount = (unsigned char)GetFileKeyValueInt(lines, "CounterMeasuresCount", ExeCraftTable[craftIndex].CounterMeasuresCount);
+			ExeCraftTable[craftIndex].AIHitsTakenToEvade = (unsigned char)GetFileKeyValueInt(lines, "AIHitsTakenToEvade", ExeCraftTable[craftIndex].AIHitsTakenToEvade);
 		}
 	}
 
