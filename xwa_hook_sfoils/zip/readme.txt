@@ -138,12 +138,20 @@ When the warheads are not selected the warheads bay will close.
 The format is a line per mesh:
 mesh index, angle, opening speed, closing speed.
 
+To create cargo clamps, create a file named "FlightModels\[Model]SFoilsCargoClamps_####.txt" or create a section named "[SFoilsCargoClamps_####]" in "FlightModels\[Model].ini".
+#### can be Open, Close, or the opt name of the picked up craft. If the opt name doesn't exist then Close is used.
+The format is a line per mesh:
+mesh index, angle, opening speed, closing speed.
+
 To override a setting in the mission ini, set this section where ## is the flightgroup index
 [SFoils_fg_##]
 [SFoilsLandingGears_fg_##]
 [SFoilsHangarDoors_fg_##]
 [SFoilsHatches_fg_##]
 [SFoilsWarheadsBay_fg_##]
+[SFoilsCargoClamps_Open_fg_##]
+[SFoilsCargoClamps_Close_fg_##]
+[SFoilsCargoClamps_###_fg_##] ### is the opt name of the picked up craft
 
 Suppose that the mission is "[MissionDir]\[Mission].tie".
 

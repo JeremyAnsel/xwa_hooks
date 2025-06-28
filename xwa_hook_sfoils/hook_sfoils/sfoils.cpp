@@ -269,7 +269,11 @@ struct XwaCraft
 	int LeaderObjectIndex;
 	char unk00A[29];
 	char SFoilsState;
-	char unk028[568];
+	char unk028[102];
+	short PickedUpObjectIndex;
+	char unk090[2];
+	short m092;
+	char unk094[460];
 	unsigned char MeshRotationAngles[50];
 	char unk292[359];
 };
@@ -306,7 +310,9 @@ static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 
 struct XwaAIData
 {
-	char unk00[63];
+	char unk00[56];
+	short m38;
+	char unk3A[5];
 	int PositionX;
 	int PositionY;
 	int PositionZ;
@@ -693,6 +699,74 @@ std::vector<SFoil> GetWarheadsBayList(int modelIndex, int fg)
 	return values;
 }
 
+std::vector<SFoil> GetCargoClampsList(int modelIndex, int fg, int stateModelIndex)
+{
+	const std::string ship = GetShipPath(modelIndex);
+	std::string key = stateModelIndex == -1 ? "Open" : GetPathFileName(GetShipPath(stateModelIndex));
+
+	auto lines = GetFileLines(ship + "SFoilsCargoClamps_" + key + ".txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(ship + ".ini", "SFoilsCargoClamps_" + key);
+	}
+
+	if (fg != -1)
+	{
+		auto missionLines = GetCustomFileLines("SFoilsCargoClamps_" + key + "_fg_" + std::to_string(fg));
+
+		if (missionLines.size())
+		{
+			lines = MergeFileLines(missionLines, lines);
+		}
+	}
+
+	if (stateModelIndex != -1 && !lines.size())
+	{
+		key = "Close";
+		lines = GetFileLines(ship + "SFoilsCargoClamps_" + key + ".txt");
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(ship + ".ini", "SFoilsCargoClamps_" + key);
+		}
+
+		if (fg != -1)
+		{
+			auto missionLines = GetCustomFileLines("SFoilsCargoClamps_" + key + "_fg_" + std::to_string(fg));
+
+			if (missionLines.size())
+			{
+				lines = MergeFileLines(missionLines, lines);
+			}
+		}
+	}
+
+	const auto sfoils = GetFileListValues(lines);
+
+	std::vector<SFoil> values;
+
+	for (unsigned int i = 0; i < sfoils.size(); i++)
+	{
+		const auto& value = sfoils[i];
+
+		if (value.size() < 4)
+		{
+			continue;
+		}
+
+		SFoil sfoil{};
+		sfoil.meshIndex = std::stoi(value[0], 0, 0);
+		sfoil.angle = std::stoi(value[1], 0, 0);
+		sfoil.closingSpeed = std::stoi(value[2], 0, 0);
+		sfoil.openingSpeed = std::stoi(value[3], 0, 0);
+
+		values.push_back(sfoil);
+	}
+
+	return values;
+}
+
 CraftSettings GetSFoilsSettings(int modelIndex, int fg)
 {
 	const std::string ship = GetShipPath(modelIndex);
@@ -838,6 +912,26 @@ public:
 		}
 	}
 
+	std::vector<SFoil> GetCargoClamps(int modelIndex, int fg, int stateModelIndex)
+	{
+		this->UpdateIfChanged();
+
+		int index = fg == -1 ? modelIndex : (-1 - fg);
+		index = (index + 1000) * 10000 + stateModelIndex + 1;
+		auto it = this->_cargoClamps.find(index);
+
+		if (it != this->_cargoClamps.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto value = GetCargoClampsList(modelIndex, fg, stateModelIndex);
+			this->_cargoClamps.insert(std::make_pair(index, value));
+			return value;
+		}
+	}
+
 	CraftSettings GetSettings(int modelIndex, int fg)
 	{
 		this->UpdateIfChanged();
@@ -934,6 +1028,7 @@ private:
 			this->_hangarDoors.clear();
 			this->_hatches.clear();
 			this->_warheadsBay.clear();
+			this->_cargoClamps.clear();
 			this->_settings.clear();
 		}
 	}
@@ -943,6 +1038,7 @@ private:
 	std::map<int, std::vector<SFoil>> _hangarDoors;
 	std::map<int, std::vector<SFoil>> _hatches;
 	std::map<int, std::vector<SFoil>> _warheadsBay;
+	std::map<int, std::vector<SFoil>> _cargoClamps;
 	std::map<int, CraftSettings> _settings;
 };
 
@@ -1010,6 +1106,7 @@ ObjectIndexTime g_objectIndexTime;
 ObjectIndexTime g_hangarDoorsObjectIndexTime;
 ObjectIndexTime g_hatchesObjectIndexTime;
 ObjectIndexTime g_warheadsBayObjectIndexTime;
+ObjectIndexTime g_cargoClampsObjectIndexTime;
 
 bool g_keySFoils = false;
 bool g_keyLandingGears = false;
@@ -2011,6 +2108,154 @@ void HandleWarheadsBay()
 	}
 }
 
+void SetCraftMeshRotationAngles(SFoil sfoil, int timeSpeed, unsigned char* currentCraftMeshRotationAngles)
+{
+	if (currentCraftMeshRotationAngles[sfoil.meshIndex] == sfoil.angle)
+	{
+		return;
+	}
+
+	sfoil.closingSpeed *= timeSpeed;
+	sfoil.openingSpeed *= timeSpeed;
+
+	if (currentCraftMeshRotationAngles[sfoil.meshIndex] < sfoil.angle)
+	{
+		if (currentCraftMeshRotationAngles[sfoil.meshIndex] < sfoil.angle - sfoil.closingSpeed)
+		{
+			currentCraftMeshRotationAngles[sfoil.meshIndex] += sfoil.closingSpeed;
+		}
+		else
+		{
+			currentCraftMeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+		}
+	}
+	else
+	{
+		if (currentCraftMeshRotationAngles[sfoil.meshIndex] >= sfoil.angle + sfoil.openingSpeed)
+		{
+			currentCraftMeshRotationAngles[sfoil.meshIndex] -= sfoil.openingSpeed;
+		}
+		else
+		{
+			currentCraftMeshRotationAngles[sfoil.meshIndex] = sfoil.angle;
+		}
+	}
+}
+
+void HandleCargoClamps()
+{
+	const unsigned char AIManr_Board = 18;
+	const unsigned char AIManr_Release = 35;
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	short elapsedTime = *(short*)0x08C1640;
+
+	for (int currentObjectIndex = *(int*)0x08BF378; currentObjectIndex < *(int*)0x08D9628; currentObjectIndex++)
+	{
+		XwaObject* currentObject = &xwaObjects[currentObjectIndex];
+		unsigned short currentModelIndex = currentObject->ModelIndex;
+
+		if (currentModelIndex == 0)
+		{
+			continue;
+		}
+
+		XwaMobileObject* currentMobileObject = currentObject->pMobileObject;
+
+		if (currentMobileObject == nullptr)
+		{
+			continue;
+		}
+
+		XwaCraft* currentCraft = currentMobileObject->pCraft;
+
+		if (currentCraft == nullptr)
+		{
+			continue;
+		}
+
+		XwaAIData* aiData = (XwaAIData*)((int)currentCraft + 0x28);
+
+		/*
+		currentCraft->m092 // player only
+		*/
+
+		if (aiData->ManrId == AIManr_Board && aiData->m38 != -1 && currentCraft->PickedUpObjectIndex == -1)
+		{
+			const auto sfoils = g_modelIndexSFoils.GetCargoClamps(currentModelIndex, currentObject->TieFlightGroupIndex, -1);
+
+			if (!sfoils.size())
+			{
+				continue;
+			}
+
+			unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+			int timeSpeed = g_cargoClampsObjectIndexTime.RetrieveTimeSpeed(currentModelIndex, currentObjectIndex, elapsedTime);
+
+			for (unsigned int i = 0; i < sfoils.size(); i++)
+			{
+				SFoil sfoil = sfoils[i];
+				SetCraftMeshRotationAngles(sfoil, timeSpeed, currentCraftMeshRotationAngles);
+			}
+		}
+		else if (aiData->ManrId == AIManr_Board && currentCraft->PickedUpObjectIndex != -1)
+		{
+			unsigned short modelIndex = xwaObjects[currentCraft->PickedUpObjectIndex].ModelIndex;
+			const auto sfoils = g_modelIndexSFoils.GetCargoClamps(currentModelIndex, currentObject->TieFlightGroupIndex, modelIndex);
+
+			if (!sfoils.size())
+			{
+				continue;
+			}
+
+			unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+			int timeSpeed = g_cargoClampsObjectIndexTime.RetrieveTimeSpeed(currentModelIndex, currentObjectIndex, elapsedTime);
+
+			for (unsigned int i = 0; i < sfoils.size(); i++)
+			{
+				SFoil sfoil = sfoils[i];
+				SetCraftMeshRotationAngles(sfoil, timeSpeed, currentCraftMeshRotationAngles);
+			}
+		}
+		else if (aiData->ManrId == AIManr_Release && currentCraft->PickedUpObjectIndex != -1)
+		{
+			const auto sfoils = g_modelIndexSFoils.GetCargoClamps(currentModelIndex, currentObject->TieFlightGroupIndex, -1);
+
+			if (!sfoils.size())
+			{
+				continue;
+			}
+
+			unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+			int timeSpeed = g_cargoClampsObjectIndexTime.RetrieveTimeSpeed(currentModelIndex, currentObjectIndex, elapsedTime);
+
+			for (unsigned int i = 0; i < sfoils.size(); i++)
+			{
+				SFoil sfoil = sfoils[i];
+				SetCraftMeshRotationAngles(sfoil, timeSpeed, currentCraftMeshRotationAngles);
+			}
+		}
+		else if (aiData->ManrId == AIManr_Release)
+		{
+			const auto sfoils = g_modelIndexSFoils.GetCargoClamps(currentModelIndex, currentObject->TieFlightGroupIndex, -1);
+
+			if (!sfoils.size())
+			{
+				continue;
+			}
+
+			unsigned char* currentCraftMeshRotationAngles = g_craftConfig.MeshesCount == 0 ? currentCraft->MeshRotationAngles : (unsigned char*)((int)currentCraft + g_craftConfig.Craft_Offset_260);
+			int timeSpeed = g_cargoClampsObjectIndexTime.RetrieveTimeSpeed(currentModelIndex, currentObjectIndex, elapsedTime);
+
+			for (unsigned int i = 0; i < sfoils.size(); i++)
+			{
+				SFoil sfoil = sfoils[i];
+				sfoil.angle = 0;
+				SetCraftMeshRotationAngles(sfoil, timeSpeed, currentCraftMeshRotationAngles);
+			}
+		}
+	}
+}
+
 int HangarDoorsHook(int* params)
 {
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
@@ -2021,6 +2266,7 @@ int HangarDoorsHook(int* params)
 	L00408DC0();
 
 	HandleWarheadsBay();
+	HandleCargoClamps();
 
 	for (int currentObjectIndex = *(int*)0x08BF378; currentObjectIndex < *(int*)0x08D9628; currentObjectIndex++)
 	{
