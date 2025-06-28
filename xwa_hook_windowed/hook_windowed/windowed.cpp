@@ -361,7 +361,7 @@ int CreateWindowHook(int* params)
 	if (!g_windowConfig.IsFullscreen)
 	{
 		windowStyle |= WS_BORDER;
-		
+
 		if (g_windowConfig.Titlebar)
 		{
 			windowStyle |= WS_CAPTION;
@@ -492,12 +492,22 @@ int SplashScreenHook(int* params)
 		memset(image.data(), 0, image.capacity());
 	}
 
+	int y = g_windowConfig.Y;
+	int h = g_windowConfig.Height;
+
+	if (g_windowConfig.Titlebar)
+	{
+		// Add titlebar height to window height to maintain size.
+		y += 25;
+		h -= 25;
+	}
+
 	SetDIBitsToDevice(
 		hdcScreen,
-		g_windowConfig.X, g_windowConfig.Y,
-		g_windowConfig.Width, g_windowConfig.Height,
+		g_windowConfig.X, y,
+		g_windowConfig.Width, h,
 		0, 0,
-		0, g_windowConfig.Height,
+		0, h,
 		image.data(),
 		&bmi,
 		DIB_RGB_COLORS);
