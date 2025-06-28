@@ -494,7 +494,7 @@ int SplashScreenHook(int* params)
 
 	SetDIBitsToDevice(
 		hdcScreen,
-		0, 0,
+		g_windowConfig.X, g_windowConfig.Y,
 		g_windowConfig.Width, g_windowConfig.Height,
 		0, 0,
 		0, g_windowConfig.Height,
