@@ -805,6 +805,12 @@ public:
 	{
 		this->UpdateIfChanged();
 
+		bool isInHangar = *(bool*)0x009C6E44;
+		if (isInHangar)
+		{
+			fg = -1;
+		}
+
 		int index = fg == -1 ? modelIndex : (-1 - fg);
 		auto it = this->_sfoils.find(index);
 
@@ -814,6 +820,7 @@ public:
 		}
 		else
 		{
+			fg = -1;
 			auto value = GetSFoilsList(modelIndex, fg);
 			this->_sfoils.insert(std::make_pair(index, value));
 			return value;
@@ -823,6 +830,12 @@ public:
 	std::vector<SFoil> GetLandingGears(int modelIndex, int fg)
 	{
 		this->UpdateIfChanged();
+
+		bool isInHangar = *(bool*)0x009C6E44;
+		if (isInHangar)
+		{
+			fg = -1;
+		}
 
 		int index = fg == -1 ? modelIndex : (-1 - fg);
 		auto it = this->_landingGears.find(index);
@@ -852,6 +865,12 @@ public:
 	{
 		this->UpdateIfChanged();
 
+		bool isInHangar = *(bool*)0x009C6E44;
+		if (isInHangar)
+		{
+			fg = -1;
+		}
+
 		int index = fg == -1 ? modelIndex : (-1 - fg);
 		auto it = this->_hangarDoors.find(index);
 
@@ -878,6 +897,12 @@ public:
 
 		this->UpdateIfChanged();
 
+		bool isInHangar = *(bool*)0x009C6E44;
+		if (isInHangar)
+		{
+			fg = -1;
+		}
+
 		int index = fg == -1 ? modelIndex : (-1 - fg);
 		auto it = this->_hatches.find(index);
 
@@ -896,6 +921,12 @@ public:
 	std::vector<SFoil> GetWarheadsBay(int modelIndex, int fg)
 	{
 		this->UpdateIfChanged();
+
+		bool isInHangar = *(bool*)0x009C6E44;
+		if (isInHangar)
+		{
+			fg = -1;
+		}
 
 		int index = fg == -1 ? modelIndex : (-1 - fg);
 		auto it = this->_warheadsBay.find(index);
@@ -916,6 +947,12 @@ public:
 	{
 		this->UpdateIfChanged();
 
+		bool isInHangar = *(bool*)0x009C6E44;
+		if (isInHangar)
+		{
+			fg = -1;
+		}
+
 		int index = fg == -1 ? modelIndex : (-1 - fg);
 		index = (index + 1000) * 10000 + stateModelIndex + 1;
 		auto it = this->_cargoClamps.find(index);
@@ -935,6 +972,12 @@ public:
 	CraftSettings GetSettings(int modelIndex, int fg)
 	{
 		this->UpdateIfChanged();
+
+		bool isInHangar = *(bool*)0x009C6E44;
+		if (isInHangar)
+		{
+			fg = -1;
+		}
 
 		int index = fg == -1 ? modelIndex : (-1 - fg);
 		auto it = this->_settings.find(index);
