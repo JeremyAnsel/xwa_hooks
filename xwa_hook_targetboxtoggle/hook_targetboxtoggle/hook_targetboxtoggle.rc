@@ -50,8 +50,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2024,0823,1517,28701
- PRODUCTVERSION 2024,0823,1517,28701
+ FILEVERSION 2025,0630,1809,23900
+ PRODUCTVERSION 2025,0630,1809,23900
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "XWA hook targetbox toggle"
-            VALUE "FileVersion", "2024.0823.1517.28701"
+            VALUE "FileVersion", "2025.0630.1809.23900"
             VALUE "InternalName", "hook_targetboxtoggle.dll"
             VALUE "LegalCopyright", "Copyright (C) Blake Guthrie 2019, Jérémy Ansel 2021"
             VALUE "OriginalFilename", "hook_targetboxtoggle.dll"
             VALUE "ProductName", "XWA hook targetbox toggle"
-            VALUE "ProductVersion", "2024.0823.1517.28701"
+            VALUE "ProductVersion", "2025.0630.1809.23900"
         END
     END
     BLOCK "VarFileInfo"
