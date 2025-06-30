@@ -50,8 +50,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2024,0823,1518,14867
- PRODUCTVERSION 2024,0823,1518,14867
+ FILEVERSION 2025,0630,1810,32613
+ PRODUCTVERSION 2025,0630,1810,32613
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "XWA hook textures tag"
-            VALUE "FileVersion", "2024.0823.1518.14867"
+            VALUE "FileVersion", "2025.0630.1810.32613"
             VALUE "InternalName", "hook_textures_tag.dll"
             VALUE "LegalCopyright", "Copyright (C) Jérémy Ansel 2019"
             VALUE "OriginalFilename", "hook_textures_tag.dll"
             VALUE "ProductName", "XWA hook textures tag"
-            VALUE "ProductVersion", "2024.0823.1518.14867"
+            VALUE "ProductVersion", "2025.0630.1810.32613"
         END
     END
     BLOCK "VarFileInfo"
