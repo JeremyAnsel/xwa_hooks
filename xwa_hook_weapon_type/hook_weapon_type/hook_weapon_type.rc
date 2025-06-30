@@ -50,8 +50,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2024,0823,1525,19652
- PRODUCTVERSION 2024,0823,1525,19652
+ FILEVERSION 2025,0630,1819,12364
+ PRODUCTVERSION 2025,0630,1819,12364
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "XWA hook weapon type"
-            VALUE "FileVersion", "2024.0823.1525.19652"
+            VALUE "FileVersion", "2025.0630.1819.12364"
             VALUE "InternalName", "hook_weapon_type.dll"
             VALUE "LegalCopyright", "Copyright (C) Jérémy Ansel 2021"
             VALUE "OriginalFilename", "hook_weapon_type.dll"
             VALUE "ProductName", "xwa_hook_weapon_type"
-            VALUE "ProductVersion", "2024.0823.1525.19652"
+            VALUE "ProductVersion", "2025.0630.1819.12364"
         END
     END
     BLOCK "VarFileInfo"
