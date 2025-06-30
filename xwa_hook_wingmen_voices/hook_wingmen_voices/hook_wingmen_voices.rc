@@ -50,8 +50,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2024,0823,1526,52811
- PRODUCTVERSION 2024,0823,1526,52811
+ FILEVERSION 2025,0630,1822,12508
+ PRODUCTVERSION 2025,0630,1822,12508
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "XWA hook wingmen voices"
-            VALUE "FileVersion", "2024.0823.1526.52811"
+            VALUE "FileVersion", "2025.0630.1822.12508"
             VALUE "InternalName", "hook_wingmen_voices.dll"
             VALUE "LegalCopyright", "Copyright (C) Jérémy Ansel 2017"
             VALUE "OriginalFilename", "hook_wingmen_voices.dll"
             VALUE "ProductName", "XWA hook wingmen voices"
-            VALUE "ProductVersion", "2024.0823.1526.52811"
+            VALUE "ProductVersion", "2025.0630.1822.12508"
         END
     END
     BLOCK "VarFileInfo"
