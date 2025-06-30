@@ -13,12 +13,18 @@
     <PlatformTarget>x86</PlatformTarget>
     <DllExportDDNSCecil>false</DllExportDDNSCecil>
     <DllExportOurILAsm>false</DllExportOurILAsm>
+    <DllExportEmitDebugSymbols>true</DllExportEmitDebugSymbols>
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="DllExport" Version="1.5.2" ExcludeAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="JeremyAnsel.Xwa.ExePatcher" Version="1.0.4" />
     <PackageReference Include="JeremyAnsel.Xwa.HooksConfig" Version="1.0.9" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
