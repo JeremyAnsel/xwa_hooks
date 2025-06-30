@@ -50,8 +50,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2025,0627,1538,16329
- PRODUCTVERSION 2025,0627,1538,16329
+ FILEVERSION 2025,0630,1716,30934
+ PRODUCTVERSION 2025,0630,1716,30934
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "XWA hook engine sound"
-            VALUE "FileVersion", "2025.0627.1538.16329"
+            VALUE "FileVersion", "2025.0630.1716.30934"
             VALUE "InternalName", "hook_engine_sound.dll"
             VALUE "LegalCopyright", "Copyright (C) Jérémy Ansel 2017"
             VALUE "OriginalFilename", "hook_engine_sound.dll"
             VALUE "ProductName", "XWA hook engine sound"
-            VALUE "ProductVersion", "2025.0627.1538.16329"
+            VALUE "ProductVersion", "2025.0630.1716.30934"
         END
     END
     BLOCK "VarFileInfo"
