@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2024,0823,1457,14253
- PRODUCTVERSION 2024,0823,1457,14253
+ FILEVERSION 2025,0630,1723,52711
+ PRODUCTVERSION 2025,0630,1723,52711
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -69,12 +69,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "XWA hook hyperspace"
-            VALUE "FileVersion", "2024.0823.1457.14253"
+            VALUE "FileVersion", "2025.0630.1723.52711"
             VALUE "InternalName", "hook_hyperspace.dll"
             VALUE "LegalCopyright", "Copyright (C) Jérémy Ansel 2022"
             VALUE "OriginalFilename", "hook_hyperspace.dll"
             VALUE "ProductName", "XWA hook hyperspace"
-            VALUE "ProductVersion", "2024.0823.1457.14253"
+            VALUE "ProductVersion", "2025.0630.1723.52711"
         END
     END
     BLOCK "VarFileInfo"
