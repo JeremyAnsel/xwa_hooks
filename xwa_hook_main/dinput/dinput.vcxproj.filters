@@ -55,6 +55,7 @@
     <None Include="dinput.def">
       <Filter>Fichiers sources</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dinput.rc">

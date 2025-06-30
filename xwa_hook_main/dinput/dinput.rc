@@ -50,8 +50,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2024,0823,1608,21517
- PRODUCTVERSION 2024,0823,1608,21517
+ FILEVERSION 2025,0630,1732,40153
+ PRODUCTVERSION 2025,0630,1732,40153
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "XWA hook main"
-            VALUE "FileVersion", "2024.0823.1608.21517"
+            VALUE "FileVersion", "2025.0630.1732.40153"
             VALUE "InternalName", "dinput.dll"
             VALUE "LegalCopyright", "Copyright (C) Jérémy Ansel 2015"
             VALUE "OriginalFilename", "dinput.dll"
             VALUE "ProductName", "xwa_hook_main"
-            VALUE "ProductVersion", "2024.0823.1608.21517"
+            VALUE "ProductVersion", "2025.0630.1732.40153"
         END
     END
     BLOCK "VarFileInfo"
