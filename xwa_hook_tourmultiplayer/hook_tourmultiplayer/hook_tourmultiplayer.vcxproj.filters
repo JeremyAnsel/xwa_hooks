@@ -62,4 +62,7 @@
       <Filter>Fichiers de ressources</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>
