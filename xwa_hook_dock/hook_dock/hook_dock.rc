@@ -50,8 +50,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2024,0823,1450,32418
- PRODUCTVERSION 2024,0823,1450,32418
+ FILEVERSION 2025,0630,1715,19572
+ PRODUCTVERSION 2025,0630,1715,19572
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "XWA hook dock"
-            VALUE "FileVersion", "2024.0823.1450.32418"
+            VALUE "FileVersion", "2025.0630.1715.19572"
             VALUE "InternalName", "hook_dock.dll"
             VALUE "LegalCopyright", "Copyright (C) Jérémy Ansel 2020"
             VALUE "OriginalFilename", "hook_dock.dll"
             VALUE "ProductName", "XWA hook dock"
-            VALUE "ProductVersion", "2024.0823.1450.32418"
+            VALUE "ProductVersion", "2025.0630.1715.19572"
         END
     END
     BLOCK "VarFileInfo"
