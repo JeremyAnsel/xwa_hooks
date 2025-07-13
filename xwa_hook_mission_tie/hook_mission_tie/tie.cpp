@@ -3172,13 +3172,17 @@ int CampaignCraftsListHook(int* params)
 
 		const int ShiplistType_LightTransport = 2;
 		const int ShiplistType_UtilityCraft = 3;
+		const int ShiplistType_Container = 4;
 		const int ShiplistType_Freighter = 5;
 		const int ShiplistType_Starship = 6;
+		const int ShiplistType_Station = 7;
 
 		if (shiplistType == ShiplistType_LightTransport
 			|| shiplistType == ShiplistType_UtilityCraft
+			|| shiplistType == ShiplistType_Container
 			|| shiplistType == ShiplistType_Freighter
-			|| shiplistType == ShiplistType_Starship)
+			|| shiplistType == ShiplistType_Starship
+			|| shiplistType == ShiplistType_Station)
 		{
 			params[Params_EDX] = edx;
 			params[Params_ReturnAddress] = 0x00578C3B;
