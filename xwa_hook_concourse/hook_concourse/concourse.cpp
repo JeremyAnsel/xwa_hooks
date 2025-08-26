@@ -4696,7 +4696,7 @@ int DrawFillRectangleHook(int* params)
 
 	bool isBackgroundHD = g_netFunctions._frontResIsBackgroundHD() != 0;
 	bool isBackgroundWide = g_netFunctions._frontResIsBackgroundWide() != 0;
-	int offsetX = MultiplyDivOffsetX(dc);
+	int offsetX = MultiplyDivOffsetXWide(dc);
 
 	D2D1_RECT_F layoutRect
 	{
@@ -4728,8 +4728,15 @@ int DrawFillRectangleHook(int* params)
 		}
 		else if (isShowMedalGameStateUpdate)
 		{
-			layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.8f;
-			layoutRect.left = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.2f;
+			if (isBackgroundWide)
+			{
+				layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.8f;
+				layoutRect.left = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.2f;
+			}
+			else
+			{
+				layoutRect.left = layoutRect.left - (layoutRect.right - layoutRect.left) * 0.2f;
+			}
 		}
 		else if (isL00559E10GameStateUpdate)
 		{
