@@ -4762,6 +4762,29 @@ int DrawFillRectangleHook(int* params)
 	return 0;
 }
 
+void AjustMapIconRotation(D2D1_RECT_F* rc, int rotation)
+{
+	bool isBackgroundHD = g_netFunctions._frontResIsBackgroundHD() != 0;
+	bool isBackgroundWide = g_netFunctions._frontResIsBackgroundWide() != 0;
+
+	if (!isBackgroundHD || isBackgroundWide)
+	{
+		return;
+	}
+
+	int width = rc->right - rc->left;
+	int height = rc->bottom - rc->top;
+
+	if (rotation & 1)
+	{
+		rc->bottom -= (int)(height * 0.2f);
+	}
+	else
+	{
+		rc->right -= (int)(width * 0.2f);
+	}
+}
+
 int DrawRectangleHook(int* params)
 {
 	RECT* A4 = (RECT*)params[9];
@@ -4835,6 +4858,13 @@ int DrawRectangleHook(int* params)
 			if (isBackgroundHD)
 			{
 				layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.8f;
+			}
+
+			int briefingCraftOffset = params[7];
+			if (briefingCraftOffset >= 0 && briefingCraftOffset < 192 * 0x18)
+			{
+				short rotation = *(short*)(0x009EEF60 + briefingCraftOffset);
+				AjustMapIconRotation(&layoutRect, rotation);
 			}
 		}
 	}
@@ -4942,6 +4972,13 @@ int DrawRectangleBorderHook(int* params)
 		if (isBackgroundHD)
 		{
 			layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.8f;
+		}
+
+		int briefingCraftOffset = params[11];
+		if (briefingCraftOffset >= 0 && briefingCraftOffset < 192 * 0x18)
+		{
+			short rotation = *(short*)(0x009EEF60 + briefingCraftOffset);
+			AjustMapIconRotation(&layoutRect, rotation);
 		}
 	}
 
