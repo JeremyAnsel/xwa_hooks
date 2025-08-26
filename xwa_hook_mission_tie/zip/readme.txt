@@ -104,6 +104,9 @@ At offset 0FEFF3, replace A0E5538000 with E8288F0A00.
 # To call the hook that defines the campaign crafts list
 At offset 177FAB, replace 0F854B020000 with E870FF020090.
 At offset 1783A0, replace 8A41E93BC27576 with E87BFB02009090.
+At offset 1772F8, replace E8630B0000 with E8230C0300.
+At offset 177352, replace E8090B0000 with E8C90B0300.
+At offset 177BE4, replace E877070000 with E837030300.
 
 
 *** Usage ***
@@ -141,6 +144,9 @@ To define how filter the target crafts, set the TargetCraftKeySelectOnlyNotInspe
 To skip checking projectiles proximity, set "SkipProjectilesProximityCheck = 1". The default value is 0.
 
 To define the list of crafts in the launch campaign mission screen, set the "CampaignCraftsList" setting. It is a comma separated list of flightgroup indices.
+To set a custom name for a starship, set "CampaignCraftName_## = name" where ## is the fg index of the ship.
+To define the list of string lines in the launch campaign mission screen, set the "CampaignCraftsListLines" setting. It is a comma separated list of strings.
+To define the top position of the custom list, set the "CampaignCraftsListLinesTop" setting. To not overwrite the position set the value to -1. The default value is -1.
 
 See "mission.txt".
 

@@ -58,6 +58,9 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4FFBF8, TargetNextCraftHook },
 	{ 0x578BB0, CampaignCraftsListHook },
 	{ 0x578FA5, CampaignCraftsFillListHook },
+	{ 0x577EFD, CampaignCraftsListLines1Hook },
+	{ 0x577F57, CampaignCraftsListLines1Hook },
+	{ 0x5787E9, CampaignCraftsListLines2Hook },
 };
 
 static const HookPatchItem g_overrideTiePatch[] =
@@ -187,6 +190,9 @@ static const HookPatchItem g_campaignCraftsListPatch[] =
 {
 	{ 0x177FAB, "0F854B020000", "E870FF020090" },
 	{ 0x1783A0, "8A41E93BC27576", "E87BFB02009090" },
+	{ 0x1772F8, "E8630B0000", "E8230C0300" },
+	{ 0x177352, "E8090B0000", "E8C90B0300" },
+	{ 0x177BE4, "E877070000", "E837030300" },
 };
 
 static const HookPatch g_patches[] =

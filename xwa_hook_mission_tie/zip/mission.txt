@@ -25,3 +25,6 @@ TargetCraftKeyMethod = -1
 TargetCraftKeySelectOnlyNotInspected = -1
 SkipProjectilesProximityCheck = 0
 CampaignCraftsList =
+CampaignCraftName_1 = 
+CampaignCraftsListLines = line1, , line2
+CampaignCraftsListLinesTop = 130

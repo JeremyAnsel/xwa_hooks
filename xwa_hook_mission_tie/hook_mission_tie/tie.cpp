@@ -4,6 +4,7 @@
 #include <fstream>
 #include <map>
 #include <set>
+#include <Windows.h>
 
 enum ParamsEnum
 {
@@ -228,6 +229,29 @@ public:
 		return this->_campaignCraftsList;
 	}
 
+	std::string CampaignCraftName(int fg)
+	{
+		if (fg < 0)
+		{
+			return std::string();
+		}
+
+		this->UpdateIfChanged();
+		return GetFileKeyValue(_missionLines, "CampaignCraftName_" + std::to_string(fg));
+	}
+
+	const std::vector<std::string>& CampaignCraftsListLines()
+	{
+		this->UpdateIfChanged();
+		return this->_campaignCraftsListLines;
+	}
+
+	int CampaignCraftsListLinesTop()
+	{
+		this->UpdateIfChanged();
+		return this->_campaignCraftsListLinesTop;
+	}
+
 private:
 	void UpdateIfChanged()
 	{
@@ -244,7 +268,7 @@ private:
 			xwaMissionFileName = GetMissionFileName();
 		}
 
-		if (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
+		if ((missionFileNameIndex == 0 || s_XwaIsInConcourse) ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex))
 		{
 			_mission = xwaMissionFileName;
 			_missionIndex = missionFileNameIndex;
@@ -257,6 +281,8 @@ private:
 			{
 				lines = GetFileLines(path + ".ini", "mission_tie");
 			}
+
+			_missionLines = lines;
 
 			this->_isRedAlertEnabled = GetFileKeyValueInt(lines, "IsRedAlertEnabled", this->GetDefaultReadAlertEnabled()) != 0;
 			this->_skipHyperspacedMessages = GetFileKeyValueInt(lines, "SkipHyperspacedMessages", this->GetDefaultSkipHyperspacedMessages()) != 0;
@@ -288,6 +314,8 @@ private:
 			this->_isSkipProjectilesProximityCheckEnabled = GetFileKeyValueInt(lines, "SkipProjectilesProximityCheck", 0) != 0;
 
 			this->_campaignCraftsList = GetFileKeyListInt(lines, "CampaignCraftsList");
+			this->_campaignCraftsListLines = Tokennize(GetFileKeyValue(lines, "CampaignCraftsListLines"));
+			this->_campaignCraftsListLinesTop = GetFileKeyValueInt(lines, "CampaignCraftsListLinesTop", -1);
 		}
 	}
 
@@ -356,6 +384,7 @@ private:
 		return 0;
 	}
 
+	std::vector<std::string> _missionLines;
 	bool _isRedAlertEnabled;
 	bool _skipHyperspacedMessages;
 	int _skipObjectsMessagesIff;
@@ -372,6 +401,8 @@ private:
 	bool _targetCraftKeySelectOnlyNotInspected;
 	bool _isSkipProjectilesProximityCheckEnabled;
 	std::vector<int> _campaignCraftsList;
+	std::vector<std::string> _campaignCraftsListLines;
+	int _campaignCraftsListLinesTop;
 };
 
 MissionConfig g_missionConfig;
@@ -2044,6 +2075,9 @@ int MissionFreeHook(int* params)
 
 	GetSpecTable().RestoreDefaultValues();
 
+	int& missionFileNameIndex = *(int*)0x06002E4;
+	missionFileNameIndex++;
+
 	return L00558180();
 }
 
@@ -3186,6 +3220,21 @@ int CampaignCraftsListHook(int* params)
 		{
 			params[Params_EDX] = edx;
 			params[Params_ReturnAddress] = 0x00578C3B;
+
+			std::string name = g_missionConfig.CampaignCraftName(fgIndex);
+
+			if (name.empty())
+			{
+				*(unsigned char*)(0x00578C64 + 0x00) = 0xE8;
+				*(unsigned int*)(0x00578C64 + 0x01) = 0x00021A17;
+			}
+			else
+			{
+				char* tempString = (char*)0x00ABD680;
+				*(unsigned char*)(0x00578C64 + 0x00) = 0x90;
+				*(unsigned int*)(0x00578C64 + 0x01) = 0x90909090;
+				strcpy_s(tempString, 256, name.c_str());
+			}
 		}
 		else
 		{
@@ -3238,6 +3287,87 @@ int CampaignCraftsFillListHook(int* params)
 		{
 			params[Params_ReturnAddress] = 0x0057901D;
 		}
+	}
+
+	return 0;
+}
+
+int CampaignCraftsListLines1Hook(int* params)
+{
+	RECT* A4 = (RECT*)params[0];
+	int A8 = params[1];
+
+	const auto L00578A60 = (void(*)(RECT*, int))0x00578A60;
+	const auto XwaRectCopy = (void(*)(RECT*, RECT*))0x00558CB0;
+	const auto XwaRectMove = (void(*)(RECT*, int, int))0x00558CD0;
+	const auto XwaGetFrontTxtString = (const char* (*)(int))0x0055CB50;
+	const auto XwaDrawText = (int(*)(int, const char*, int, int, int, int))0x005571A0;
+
+	int FrontTxt_STR_ORDER_OF_BATTLE = 933;
+	int FrontTxt_STR_MISSION_CRAFT = 934;
+
+	const std::vector<std::string>& camapignCraftsListLines = g_missionConfig.CampaignCraftsListLines();
+
+	if (camapignCraftsListLines.empty())
+	{
+		L00578A60(A4, A8);
+	}
+	else
+	{
+		char text[256]{};
+
+		RECT esp20;
+		XwaRectCopy(&esp20, A4);
+
+		int top = g_missionConfig.CampaignCraftsListLinesTop();
+
+		if (top != -1)
+		{
+			esp20.top = top;
+		}
+
+		int edx = *(int*)0x009EB8E0;
+		unsigned char al = *(unsigned char*)(edx + 0x0B1B82);
+		unsigned char TieMissionType_Family = 0x07;
+		unsigned int s_V0x0ABD224 = *(int*)0x00ABD224;
+
+		if (al == TieMissionType_Family)
+		{
+			strcpy_s(text, XwaGetFrontTxtString(FrontTxt_STR_MISSION_CRAFT));
+		}
+		else
+		{
+			strcpy_s(text, XwaGetFrontTxtString(FrontTxt_STR_ORDER_OF_BATTLE));
+		}
+
+		XwaDrawText(0x0C, text, esp20.left, esp20.top, s_V0x0ABD224, A8);
+		esp20.top += 0x14;
+
+		for (const std::string& line : camapignCraftsListLines)
+		{
+			XwaDrawText(0x0C, line.c_str(), esp20.left, esp20.top, s_V0x0ABD224, A8);
+			XwaRectMove(&esp20, 0, 0x0F);
+		}
+	}
+
+	return 0;
+}
+
+int CampaignCraftsListLines2Hook(int* params)
+{
+	const auto L00578F60 = (void(*)())0x00578F60;
+
+	const std::vector<std::string>& camapignCraftsList = g_missionConfig.CampaignCraftsListLines();
+
+	if (camapignCraftsList.empty())
+	{
+		L00578F60();
+	}
+	else
+	{
+		memset((int*)0x0784080, 0, 0x200 * sizeof(int));
+		*(int*)0x078498C = 0;
+		*(int*)0x0784990 = 0;
 	}
 
 	return 0;
