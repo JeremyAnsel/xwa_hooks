@@ -5188,20 +5188,25 @@ int DrawBriefingBackgroundHook(int* params)
 
 		unsigned char missionType = *(unsigned char*)(*(int*)0x009EB8E0 + 0x0B1B82);
 
-		if (xwaPilot_campaignMode != 0)
+		int& s_V0x0783C18 = *(int*)0x00783C18;
+
+		if (s_V0x0783C18 != 0x01)
 		{
-			if (missionType == TieMissionType_Family)
+			if (xwaPilot_campaignMode != 0)
 			{
-				XwaFrontResDraw("briefbarfam", 0x3C, 0x174);
+				if (missionType == TieMissionType_Family)
+				{
+					XwaFrontResDraw("briefbarfam", 0x3C, 0x174);
+				}
+				else
+				{
+					XwaFrontResDraw("briefbartour", 0x3C, 0x174);
+				}
 			}
 			else
 			{
-				XwaFrontResDraw("briefbartour", 0x3C, 0x174);
+				XwaFrontResDraw("briefbarcom", 0x3C, 0x174);
 			}
-		}
-		else
-		{
-			XwaFrontResDraw("briefbarcom", 0x3C, 0x174);
 		}
 	}
 
