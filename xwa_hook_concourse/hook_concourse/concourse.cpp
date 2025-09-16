@@ -4744,7 +4744,15 @@ int DrawFillRectangleHook(int* params)
 			layoutRect.right = layoutRect.right + (layoutRect.right - layoutRect.left) * 0.1f;
 			layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.8f;
 		}
-		else if (!isFamilyAwardDetail && !isBriefingGameStateUpdate)
+		else if (isFamilyAwardDetail)
+		{
+			if (!isBackgroundWide)
+			{
+				layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.65f;
+				layoutRect.left = layoutRect.left - (layoutRect.right - layoutRect.left) * 0.15f;
+			}
+		}
+		else if (!isBriefingGameStateUpdate)
 		{
 			layoutRect.right = layoutRect.left + (layoutRect.right - layoutRect.left) * 0.8f;
 
