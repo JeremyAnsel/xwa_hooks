@@ -5951,7 +5951,14 @@ int L00557B10Hook(int* params)
 
 			if (isTechLibraryGameStateUpdate)
 			{
-				stringWidth = stringWidth * 6 / 10;
+				if (isBackgroundHD)
+				{
+					stringWidth = stringWidth * 6 / 10;
+				}
+				else
+				{
+					stringWidth = stringWidth * 8 / 10;
+				}
 			}
 			else if (isBriefingGameStateUpdate || isTourOfDutyRoomGameStateUpdate)
 			{
