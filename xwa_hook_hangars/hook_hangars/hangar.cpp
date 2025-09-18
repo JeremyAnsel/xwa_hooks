@@ -510,10 +510,20 @@ int GetCommandShipModelIndex()
 
 	if (mothershipObjectIndex == -1)
 	{
-		return -1;
-	}
+		//const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
+		const int playerFlightGroupIndex = xwaPlayers[currentPlayerId].FgIndex;
 
-	if (mothershipObjectIndex == 0)
+		int commandShipModelIndex = -1;
+
+		if (xwaTieFlightGroups[playerFlightGroupIndex].m0C5)
+		{
+			const int commandShipCraftId = xwaTieFlightGroups[xwaTieFlightGroups[playerFlightGroupIndex].m0C4].CraftId;
+			commandShipModelIndex = exeSpecies[commandShipCraftId];
+		}
+
+		return commandShipModelIndex;
+	}
+	else if (mothershipObjectIndex == 0)
 	{
 		//const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
 		const int playerFlightGroupIndex = xwaPlayers[currentPlayerId].FgIndex;
@@ -534,7 +544,27 @@ int GetCommandShipModelIndex()
 		return commandShipModelIndex;
 	}
 
-	const int mothershipModelIndex = xwaObjects[mothershipObjectIndex].ModelIndex;
+	int mothershipModelIndex = xwaObjects[mothershipObjectIndex].ModelIndex;
+
+	if (mothershipModelIndex == 0)
+	{
+		int fgIndex = xwaObjects[mothershipObjectIndex].TieFlightGroupIndex;
+
+		int commandShipModelIndex = -1;
+
+		if (xwaTieFlightGroups[fgIndex].m0C3)
+		{
+			const int commandShipCraftId = xwaTieFlightGroups[xwaTieFlightGroups[fgIndex].m0C2].CraftId;
+			commandShipModelIndex = exeSpecies[commandShipCraftId];
+		}
+		else if (xwaTieFlightGroups[fgIndex].m0C5)
+		{
+			const int commandShipCraftId = xwaTieFlightGroups[xwaTieFlightGroups[fgIndex].m0C4].CraftId;
+			commandShipModelIndex = exeSpecies[commandShipCraftId];
+		}
+
+		mothershipModelIndex = commandShipModelIndex;
+	}
 
 	return mothershipModelIndex;
 }
@@ -557,14 +587,29 @@ std::string GetCommandShipLstLine()
 
 	const short mothershipObjectIndex = xwaPlayers[currentPlayerId].m053;
 
-	if (mothershipObjectIndex == -1)
-	{
-		return std::string();
-	}
-
 	std::string lstLine;
 
-	if (mothershipObjectIndex == 0)
+	if (mothershipObjectIndex == -1)
+	{
+		//const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
+		const int playerFlightGroupIndex = xwaPlayers[currentPlayerId].FgIndex;
+
+		int commandShipModelIndex = -1;
+
+		if (xwaTieFlightGroups[playerFlightGroupIndex].m0C5)
+		{
+			const int commandShipCraftId = xwaTieFlightGroups[xwaTieFlightGroups[playerFlightGroupIndex].m0C4].CraftId;
+			commandShipModelIndex = exeSpecies[commandShipCraftId];
+		}
+
+		if (commandShipModelIndex == -1)
+		{
+			return std::string();
+		}
+
+		lstLine = g_flightModelsList.GetLstLine(commandShipModelIndex);
+	}
+	else if (mothershipObjectIndex == 0)
 	{
 		//const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
 		const int playerFlightGroupIndex = xwaPlayers[currentPlayerId].FgIndex;
@@ -591,7 +636,32 @@ std::string GetCommandShipLstLine()
 	}
 	else
 	{
-		const int mothershipModelIndex = xwaObjects[mothershipObjectIndex].ModelIndex;
+		int mothershipModelIndex = xwaObjects[mothershipObjectIndex].ModelIndex;
+
+		if (mothershipModelIndex == 0)
+		{
+			int fgIndex = xwaObjects[mothershipObjectIndex].TieFlightGroupIndex;
+
+			int commandShipModelIndex = -1;
+
+			if (xwaTieFlightGroups[fgIndex].m0C3)
+			{
+				const int commandShipCraftId = xwaTieFlightGroups[xwaTieFlightGroups[fgIndex].m0C2].CraftId;
+				commandShipModelIndex = exeSpecies[commandShipCraftId];
+			}
+			else if (xwaTieFlightGroups[fgIndex].m0C5)
+			{
+				const int commandShipCraftId = xwaTieFlightGroups[xwaTieFlightGroups[fgIndex].m0C4].CraftId;
+				commandShipModelIndex = exeSpecies[commandShipCraftId];
+			}
+
+			if (commandShipModelIndex == -1)
+			{
+				return std::string();
+			}
+
+			mothershipModelIndex = commandShipModelIndex;
+		}
 
 		lstLine = g_flightModelsList.GetLstLine(mothershipModelIndex);
 	}
@@ -628,10 +698,17 @@ unsigned char GetCommandShipIff()
 
 	if (mothershipObjectIndex == -1)
 	{
+		//const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
+		const int playerFlightGroupIndex = xwaPlayers[currentPlayerId].FgIndex;
+
+		if (xwaTieFlightGroups[playerFlightGroupIndex].m0C5)
+		{
+			return xwaTieFlightGroups[xwaTieFlightGroups[playerFlightGroupIndex].m0C4].Iff;
+		}
+
 		return 0;
 	}
-
-	if (mothershipObjectIndex == 0)
+	else if (mothershipObjectIndex == 0)
 	{
 		//const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
 		const int playerFlightGroupIndex = xwaPlayers[currentPlayerId].FgIndex;
@@ -649,6 +726,21 @@ unsigned char GetCommandShipIff()
 	}
 
 	const unsigned char mothershipFlightGroupIndex = xwaObjects[mothershipObjectIndex].TieFlightGroupIndex;
+	const int mothershipModelIndex = xwaObjects[mothershipObjectIndex].ModelIndex;
+
+	if (mothershipModelIndex == 0)
+	{
+		int fgIndex = xwaObjects[mothershipObjectIndex].TieFlightGroupIndex;
+
+		if (xwaTieFlightGroups[fgIndex].m0C3)
+		{
+			return xwaTieFlightGroups[xwaTieFlightGroups[fgIndex].m0C2].Iff;
+		}
+		else if (xwaTieFlightGroups[fgIndex].m0C5)
+		{
+			return xwaTieFlightGroups[xwaTieFlightGroups[fgIndex].m0C4].Iff;
+		}
+	}
 
 	if (mothershipFlightGroupIndex == 0xff)
 	{
@@ -1546,12 +1638,16 @@ int HangarOptLoadHook(int* params)
 	const auto OptLoad = (int(*)(const char*))0x004CC940;
 	const auto OptUnload = (void(*)(unsigned short))0x004CCA60;
 
-	if (std::find(g_hangarMapModelIndices.begin(), g_hangarMapModelIndices.end(), argModelIndex) != g_hangarMapModelIndices.end())
+	// Hangar or FamilyBase
+	if (argModelIndex != 0x134 && argModelIndex != 0xB3)
 	{
-		return OptModelFileMemHandles[argModelIndex];
-	}
+		if (std::find(g_hangarMapModelIndices.begin(), g_hangarMapModelIndices.end(), argModelIndex) != g_hangarMapModelIndices.end())
+		{
+			return OptModelFileMemHandles[argModelIndex];
+		}
 
-	g_hangarMapModelIndices.push_back(argModelIndex);
+		g_hangarMapModelIndices.push_back(argModelIndex);
+	}
 
 	std::string opt;
 
@@ -1639,15 +1735,19 @@ int HangarOptReloadHook(int* params)
 
 	if (OptModelFileMemHandles[modelIndex] != 0)
 	{
-		std::string optPath = GetShipPath(modelIndex) + ".opt";
-
-		std::string currentOptSkins = g_hangarOptSkins[modelIndex];
-		std::string optSkins = OptSkins_ReadOptSkinsListFunction(optPath);
-		bool optSkinsChanged = _stricmp(currentOptSkins.c_str(), optSkins.c_str()) != 0;
-
-		if (!optSkinsChanged)
+		// Hangar or FamilyBase
+		if (modelIndex != 0x134 && modelIndex != 0xB3)
 		{
-			return 0;
+			std::string optPath = GetShipPath(modelIndex) + ".opt";
+
+			std::string currentOptSkins = g_hangarOptSkins[modelIndex];
+			std::string optSkins = OptSkins_ReadOptSkinsListFunction(optPath);
+			bool optSkinsChanged = _stricmp(currentOptSkins.c_str(), optSkins.c_str()) != 0;
+
+			if (!optSkinsChanged)
+			{
+				return 0;
+			}
 		}
 
 		OptUnload(OptModelFileMemHandles[modelIndex]);
