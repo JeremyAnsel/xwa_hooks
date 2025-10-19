@@ -358,18 +358,14 @@ int CreateWindowHook(int* params)
 
 	DWORD windowStyle = WS_POPUP | WS_VISIBLE;
 
-	if (!g_windowConfig.IsFullscreen)
+	if (!g_windowConfig.IsFullscreen && g_windowConfig.Titlebar)
 	{
 		windowStyle |= WS_BORDER;
-
-		if (g_windowConfig.Titlebar)
-		{
-			windowStyle |= WS_CAPTION;
-			windowStyle |= WS_SYSMENU;
-			windowStyle |= WS_MINIMIZEBOX;
-			windowStyle |= WS_MAXIMIZEBOX;
-			g_windowConfig.Height += 25;  // Add titlebar height to window height to maintain size.
-		}
+		windowStyle |= WS_CAPTION;
+		windowStyle |= WS_SYSMENU;
+		windowStyle |= WS_MINIMIZEBOX;
+		windowStyle |= WS_MAXIMIZEBOX;
+		g_windowConfig.Height += 25;  // Add titlebar height to window height to maintain size.
 	}
 
 	HWND hwnd = CreateWindowExA(
