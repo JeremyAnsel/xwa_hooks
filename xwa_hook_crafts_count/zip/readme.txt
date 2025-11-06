@@ -50,6 +50,10 @@ You can define a value for CraftsCount, ProjectilesCount, ExplosionsCount, Radar
 
 See "hook_crafts_count.cfg"
 
+Suppose that the mission is "[MissionDir]\[Mission].tie".
+To define the counts for a given mission, create a file named "[MissionDir]\[Mission]_CraftsCount.txt" or create a section named "[CraftsCount]" in "[MissionDir]\[Mission].ini".
+You can override CraftsCount, ProjectilesCount, ExplosionsCount. If a value is 0 then the global setting is used.
+
 
 *** Credits ***
 

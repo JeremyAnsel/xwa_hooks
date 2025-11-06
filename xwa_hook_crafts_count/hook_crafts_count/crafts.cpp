@@ -43,12 +43,36 @@ Config g_config;
 std::vector<unsigned char> g_aiHandlingArray;
 std::vector<int> g_officerSoundsBuffer;
 
+int ReadCountSetting(const std::string& key, int defaultValue)
+{
+	const char* s_XwaMissionFileName = (const char*)0x006002E8;
+
+	const std::string mission = GetStringWithoutExtension(s_XwaMissionFileName);
+	std::vector<std::string> lines = GetFileLines(mission + "_CraftsCount.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(mission + ".ini", "CraftsCount");
+	}
+
+	int value = GetFileKeyValueInt(lines, key);
+
+	if (value <= 0)
+	{
+		value = defaultValue;
+	}
+
+	return value;
+}
+
 int CraftsCountHook(int* params)
 {
+	int craftsCount = ReadCountSetting("CraftsCount", g_config.CraftsCount);
+
 	const int regionsCount = params[0];
 
-	*(int*)0x007D4B94 = g_config.CraftsCount;
-	*(int*)0x008C1CE4 = g_config.CraftsCount * regionsCount;
+	*(int*)0x007D4B94 = craftsCount;
+	*(int*)0x008C1CE4 = craftsCount * regionsCount;
 
 	*(int*)0x008BF35C = 0;
 	*(int*)0x00917E50 = 0;
@@ -60,6 +84,8 @@ int CraftsCountHook(int* params)
 
 int ProjectilesCountHook(int* params)
 {
+	int projectilesCount = ReadCountSetting("ProjectilesCount", g_config.ProjectilesCount);
+
 	const int s_XwaNetworkPlayersCount = *(int*)0x0910DEC;
 
 	int& s_V0x07D4B80 = *(int*)0x07D4B80;
@@ -68,14 +94,16 @@ int ProjectilesCountHook(int* params)
 	s_V0x07D4B80 = s_XwaNetworkPlayersCount * 12;
 	s_V0x07D4C58 = s_XwaNetworkPlayersCount * 16;
 
-	return s_V0x07D4B80 + s_V0x07D4C58 + g_config.ProjectilesCount;
+	return s_V0x07D4B80 + s_V0x07D4C58 + projectilesCount;
 }
 
 int ExplosionsCountHook(int* params)
 {
+	int explosionsCount = ReadCountSetting("ExplosionsCount", g_config.ExplosionsCount);
+
 	const int regionsCount = *(int*)0x08D9624;
 
-	return g_config.ExplosionsCount * regionsCount;
+	return explosionsCount * regionsCount;
 }
 
 int AllocObjectsHook(int* params)
