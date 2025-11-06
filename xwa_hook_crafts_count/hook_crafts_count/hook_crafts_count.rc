@@ -50,8 +50,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2025,0630,1708,18657
- PRODUCTVERSION 2025,0630,1708,18657
+ FILEVERSION 2025,1106,1947,25294
+ PRODUCTVERSION 2025,1106,1947,25294
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "XWA hook crafts count"
-            VALUE "FileVersion", "2025.0630.1708.18657"
+            VALUE "FileVersion", "2025.1106.1947.25294"
             VALUE "InternalName", "hook_crafts_count.dll"
             VALUE "LegalCopyright", "Copyright (C) Jérémy Ansel 2020"
             VALUE "OriginalFilename", "hook_crafts_count.dll"
             VALUE "ProductName", "XWA hook crafts count"
-            VALUE "ProductVersion", "2025.0630.1708.18657"
+            VALUE "ProductVersion", "2025.1106.1947.25294"
         END
     END
     BLOCK "VarFileInfo"
