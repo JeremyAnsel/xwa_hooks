@@ -1,118 +1,48 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace hook_patcher
 {
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    delegate int HookFunctionDelegate(IntPtr @params);
-
     struct HookFunctionPtr
     {
         public int From;
         public IntPtr Function;
     }
 
-    class HookFunction
-    {
-        private int from;
-        private HookFunctionDelegate function;
-        private IntPtr functionPtr;
-
-        public HookFunction(int from, HookFunctionDelegate function)
-        {
-            this.from = from;
-            this.function = function;
-            this.functionPtr = Marshal.GetFunctionPointerForDelegate(this.function);
-        }
-
-        public HookFunctionPtr Struct
-        {
-            get
-            {
-                return new HookFunctionPtr
-                {
-                    From = this.from,
-                    Function = this.functionPtr
-                };
-            }
-        }
-    };
-
-    struct HookPatchItemPtr
-    {
-        public int Offset;
-        public IntPtr From;
-        public IntPtr To;
-    }
-
     class HookPatchItem
     {
-        private int offset;
-        private byte[] fromData;
-        private IntPtr fromPtr;
-        private byte[] toData;
-        private IntPtr toPtr;
+        public int offset;
+        public byte[] fromData;
+        public byte[] toData;
+
+        private static void AjustOffset(ref int offset)
+        {
+            /*
+            Number of Objects = 0004 (dec), Imagebase = 00400000h
+            Object01: .text    RVA: 00001000 Offset: 00000400 Size: 001A7C00 Flags: 60000020
+            Object02: .rdata   RVA: 001A9000 Offset: 001A8000 Size: 00004C00 Flags: 40000040
+            Object03: .data    RVA: 001AE000 Offset: 001ACC00 Size: 00060600 Flags: C0000040
+            Object04: .rsrc    RVA: 00710000 Offset: 0020D200 Size: 00000400 Flags: 40000040
+            */
+
+            if (offset >= 0x001A8000 && offset < 0x001A8000 + 0x00004C00)
+            {
+                // rdata segment
+                offset = offset - 0x001A8000 + 0x5A9000 - 0x400C00;
+            }
+            else if (offset >= 0x001ACC00 && offset < 0x001ACC00 + 0x00060600)
+            {
+                // data segment
+                offset = offset - 0x001ACC00 + 0x5AE000 - 0x400C00;
+            }
+        }
 
         public HookPatchItem(int offset, string from, string to)
         {
+            AjustOffset(ref offset);
             this.offset = offset;
-            from = string.Concat(from, "\0");
-            to = string.Concat(to, "\0");
-            this.fromData = Encoding.ASCII.GetBytes(from);
-            this.fromPtr = Marshal.UnsafeAddrOfPinnedArrayElement(this.fromData, 0);
-            this.toData = Encoding.ASCII.GetBytes(to);
-            this.toPtr = Marshal.UnsafeAddrOfPinnedArrayElement(this.toData, 0);
-        }
-
-        public HookPatchItemPtr Struct
-        {
-            get
-            {
-                return new HookPatchItemPtr
-                {
-                    Offset = this.offset,
-                    From = this.fromPtr,
-                    To = this.toPtr
-                };
-            }
-        }
-    }
-
-    struct HookPatchPtr
-    {
-        public IntPtr Name;
-        public int Count;
-        public IntPtr Items;
-    }
-
-    class HookPatch
-    {
-        private byte[] nameData;
-        private IntPtr namePtr;
-        private int itemsCount;
-        private IntPtr itemsPtr;
-
-        public HookPatch(string name, HookPatchItemPtr[] items)
-        {
-            name = string.Concat(name, "\0");
-            this.nameData = Encoding.ASCII.GetBytes(name);
-            this.namePtr = Marshal.UnsafeAddrOfPinnedArrayElement(this.nameData, 0);
-            this.itemsCount = items.Length;
-            this.itemsPtr = Marshal.UnsafeAddrOfPinnedArrayElement(items, 0);
-        }
-
-        public HookPatchPtr Struct
-        {
-            get
-            {
-                return new HookPatchPtr
-                {
-                    Name = this.namePtr,
-                    Count = this.itemsCount,
-                    Items = this.itemsPtr
-                };
-            }
+            this.fromData = Encoding.ASCII.GetBytes(from + "\0");
+            this.toData = Encoding.ASCII.GetBytes(to + "\0");
         }
     }
 }
