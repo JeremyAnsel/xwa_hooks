@@ -222,12 +222,46 @@ int Render3DHook(int* params)
 		// render target miniature
 		if (xwaPlayers[currentPlayerId].IsHudVisible != 0 && *(unsigned char*)0x05B5334 != 0 && xwaPlayers[currentPlayerId].XwaPlayer_m025 != -1)
 		{
+			float s_0x008B94CC = *(float*)0x008B94CC;
+			float s_0x005B46B4 = *(float*)0x005B46B4;
+			float s_0x008C1600 = *(float*)0x008C1600;
+			float s_0x00686ACC = *(float*)0x00686ACC;
+			float s_0x0080ACF8 = *(float*)0x0080ACF8;
+			float s_0x007B33C0 = *(float*)0x007B33C0;
+			float s_0x0064D1AC = *(float*)0x0064D1AC;
+			float s_0x007B4BEC = *(float*)0x007B4BEC;
+			float s_0x007B6FF8 = *(float*)0x007B6FF8;
+			float s_0x007B33DC = *(float*)0x007B33DC;
+			float s_0x007B4BE8 = *(float*)0x007B4BE8;
+			float s_0x007B6FF0 = *(float*)0x007B6FF0;
+			float s_0x007B33D8 = *(float*)0x007B33D8;
+			float s_0x007B4BF4 = *(float*)0x007B4BF4;
+			float s_0x007B33D4 = *(float*)0x007B33D4;
+			float s_0x007B4BE4 = *(float*)0x007B4BE4;
+
 			short di = *(short*)0x068C5BC;
 			short ebx = *(short*)0x068C5C0;
 			short esi = *(short*)0x07D4B6C - *(short*)0x068C5C0;
 			short cx = *(short*)0x068C520 - *(short*)0x068C5BC / 2;
 
 			((void(*)(int, int, int, int, int))0x00478490)(cx, esi, di, ebx, 0x01);
+
+			*(float*)0x008B94CC = s_0x008B94CC;
+			*(float*)0x005B46B4 = s_0x005B46B4;
+			*(float*)0x008C1600 = s_0x008C1600;
+			*(float*)0x00686ACC = s_0x00686ACC;
+			*(float*)0x0080ACF8 = s_0x0080ACF8;
+			*(float*)0x007B33C0 = s_0x007B33C0;
+			*(float*)0x0064D1AC = s_0x0064D1AC;
+			*(float*)0x007B4BEC = s_0x007B4BEC;
+			*(float*)0x007B6FF8 = s_0x007B6FF8;
+			*(float*)0x007B33DC = s_0x007B33DC;
+			*(float*)0x007B4BE8 = s_0x007B4BE8;
+			*(float*)0x007B6FF0 = s_0x007B6FF0;
+			*(float*)0x007B33D8 = s_0x007B33D8;
+			*(float*)0x007B4BF4 = s_0x007B4BF4;
+			*(float*)0x007B33D4 = s_0x007B33D4;
+			*(float*)0x007B4BE4 = s_0x007B4BE4;
 		}
 
 		xwaPlayers[currentPlayerId].HyperspacePhase = hyper;
