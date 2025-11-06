@@ -5,9 +5,9 @@
     <LangVersion>10.0</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <Version>2025.0303.1600.00000</Version>
-    <ProductName>XWA hook Hello World</ProductName>
-    <Description>Hook_HelloWorld</Description>
+    <Version>2025.1106.1748.00000</Version>
+    <ProductName>XWA hook patcher</ProductName>
+    <Description>Hook_Patcher</Description>
     <Company>Jérémy Ansel</Company>
     <Copyright>Copyright © 2025 Jérémy Ansel</Copyright>
     <PlatformTarget>x86</PlatformTarget>
