@@ -820,7 +820,6 @@ public:
 		}
 		else
 		{
-			fg = -1;
 			auto value = GetSFoilsList(modelIndex, fg);
 			this->_sfoils.insert(std::make_pair(index, value));
 			return value;
