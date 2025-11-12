@@ -50,8 +50,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2025,0630,1804,34914
- PRODUCTVERSION 2025,0630,1804,34914
+ FILEVERSION 2025,1112,1816,04941
+ PRODUCTVERSION 2025,1112,1816,04941
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "XWA hook sfoils"
-            VALUE "FileVersion", "2025.0630.1804.34914"
+            VALUE "FileVersion", "2025.1112.1816.04941"
             VALUE "InternalName", "hook_sfoils.dll"
             VALUE "LegalCopyright", "Copyright (C) Jérémy Ansel 2017"
             VALUE "OriginalFilename", "hook_sfoils.dll"
             VALUE "ProductName", "XWA hook sfoils"
-            VALUE "ProductVersion", "2025.0630.1804.34914"
+            VALUE "ProductVersion", "2025.1112.1816.04941"
         END
     END
     BLOCK "VarFileInfo"
