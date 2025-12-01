@@ -39,7 +39,7 @@ namespace hook_patcher
 
         public HookPatchItem(int offset, string from, string to)
         {
-            AjustOffset(ref offset);
+            //AjustOffset(ref offset);
             this.offset = offset;
             this.fromData = Encoding.ASCII.GetBytes(from + "\0");
             this.toData = Encoding.ASCII.GetBytes(to + "\0");

@@ -20,6 +20,8 @@ Place hook_patcher.dll next to xwingalliance.exe
 To define a patch add it to "hook_patcher.xml".
 To enable a patch add its name to "hook_patcher.txt" with " = 1" at the end.
 
+The xml patch files can be added in a subdirectory named "patcher-xml".
+
 
 *** Credits ***
 
