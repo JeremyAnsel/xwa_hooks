@@ -749,6 +749,9 @@ int GenerateSpecRciProgressHook(int* params)
 	int current = params[Params_EBX] - 1;
 	int count = *(int*)0x00ABD7DC;
 
+	int id = *(int*)(*(int*)0x00ABD22C + params[Params_ESI] + 0x100);
+	OutputDebugString((__FUNCTION__ " CraftId=" + std::to_string(id)).c_str());
+
 	if (g_overlay)
 	{
 		if (count > 0)
