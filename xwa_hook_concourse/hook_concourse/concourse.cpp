@@ -7611,7 +7611,7 @@ int SquadlogoLoadMovieHook(int* params)
 
 	std::string squadlogoName = GetStringWithoutExtension(GetFileNameWithoutExtension(A4));
 
-	if (std::ifstream("Resdata\\" + squadlogoName + ".webm"))
+	if (hasDC && std::ifstream("Resdata\\" + squadlogoName + ".webm"))
 	{
 		g_squadlogo_webm = true;
 		g_squadlogo_name = squadlogoName;
@@ -7768,7 +7768,10 @@ void TechDoorLoadMovie()
 	TechDoorFreeMovie();
 	g_techdoor_webm = false;
 
-	if (std::ifstream("Resdata\\techdoor.webm"))
+	SurfaceDC dc;
+	bool hasDC = GetSurfaceDC(&dc);
+
+	if (hasDC && std::ifstream("Resdata\\techdoor.webm"))
 	{
 		g_techdoor_webm = true;
 		g_techdoor_imagePtr = nullptr;
