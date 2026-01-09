@@ -8,6 +8,9 @@
 #include <utility>
 #include <algorithm>
 
+#define NOMINMAX
+#include <Windows.h>
+
 enum ParamsEnum
 {
 	Params_ReturnAddress = -1,
@@ -214,7 +217,8 @@ struct XwaPlayer
 	int ObjectIndex;
 	char m004[10];
 	short FgIndex;
-	char m010[67];
+	char m010[66];
+	unsigned char m052;
 	short m053;
 	char m055[2803];
 	int CameraPositionX;
@@ -490,6 +494,22 @@ std::vector<std::string> GetCustomFileLinesBase(const std::string& name, bool ap
 	return _lines;
 }
 
+short GetMothershiObjectIndex()
+{
+	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
+	const int currentPlayerId = *(int*)0x08C1CC8;
+
+	unsigned char type = xwaPlayers[currentPlayerId].m052;
+	short parameter = xwaPlayers[currentPlayerId].m053;
+
+	if (type != 0x02)
+	{
+		return 0;
+	}
+
+	return parameter;
+}
+
 int GetCommandShipModelIndex()
 {
 	const unsigned short* exeSpecies = (unsigned short*)0x05B0F70;
@@ -506,7 +526,7 @@ int GetCommandShipModelIndex()
 		return -1;
 	}
 
-	const short mothershipObjectIndex = xwaPlayers[currentPlayerId].m053;
+	const short mothershipObjectIndex = GetMothershiObjectIndex();
 
 	if (mothershipObjectIndex == -1)
 	{
@@ -585,7 +605,7 @@ std::string GetCommandShipLstLine()
 		return std::string();
 	}
 
-	const short mothershipObjectIndex = xwaPlayers[currentPlayerId].m053;
+	const short mothershipObjectIndex = GetMothershiObjectIndex();
 
 	std::string lstLine;
 
@@ -670,9 +690,12 @@ std::string GetCommandShipLstLine()
 		const auto objectLines = GetCustomFileLinesBase("Objects", false);
 		const std::string objectValue = GetFileKeyValue(objectLines, lstLine + ".opt");
 
-		if (!objectValue.empty() && std::ifstream(objectValue))
+		if (!objectValue.empty())
 		{
-			lstLine = GetStringWithoutExtension(objectValue);
+			if (std::ifstream(objectValue))
+			{
+				lstLine = GetStringWithoutExtension(objectValue);
+			}
 		}
 	}
 
@@ -694,7 +717,7 @@ unsigned char GetCommandShipIff()
 		return 0;
 	}
 
-	const short mothershipObjectIndex = xwaPlayers[currentPlayerId].m053;
+	const short mothershipObjectIndex = GetMothershiObjectIndex();
 
 	if (mothershipObjectIndex == -1)
 	{
@@ -1684,6 +1707,11 @@ int HangarOptLoadHook(int* params)
 			{
 				return OptLoad(value.c_str());
 			}
+			else
+			{
+				MessageBox(nullptr, (value + " was not found").c_str(), "Hangar OPT read", MB_OK | MB_ICONERROR);
+				return 0;
+			}
 		}
 	}
 
@@ -1716,7 +1744,15 @@ int HangarOptLoadHook(int* params)
 		ExeEnableTable[argModelIndex].pData2 = nullptr;
 	}
 
-	return OptLoad(opt.c_str());
+	if (std::ifstream(opt.c_str()))
+	{
+		return OptLoad(opt.c_str());
+	}
+	else
+	{
+		MessageBox(nullptr, (value + " was not found").c_str(), "Hangar OPT read", MB_OK | MB_ICONERROR);
+		return 0;
+	}
 }
 
 int HangarOptReloadHook(int* params)
