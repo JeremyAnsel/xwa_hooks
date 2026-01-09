@@ -50,9 +50,13 @@ CraftConfig g_craftConfig;
 
 struct XwaCraftWeaponRack
 {
-	char Unk0000[5];
+	unsigned short ModelIndex;
+	char Unk0002[3];
 	unsigned char Count;
-	char Unk0006[8];
+	short FireRatio;
+	unsigned char MeshId;
+	unsigned char HardpointId;
+	char Unk000A[4];
 };
 
 static_assert(sizeof(XwaCraftWeaponRack) == 14, "size of XwaCraftWeaponRack must be 14");
@@ -63,7 +67,11 @@ struct XwaCraft
 	unsigned short CraftIndex;
 	char Unk0006[422];
 	unsigned char LasersCount;
-	char Unk01AD[36];
+	char Unk01AD[1];
+	unsigned char WeaponRacksCount;
+	char Unk01AF[1];
+	unsigned short LaserTypeId[3];
+	char Unk01B6[27];
 	unsigned char WarheadsCount;
 	unsigned short WarheadsModelIndex[2];
 	char Unk01D6[265];
@@ -103,13 +111,32 @@ struct XwaObject
 
 static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 
+struct ExeCraftWeaponSlot
+{
+	short PositionX;
+	short PositionZ;
+	short PositionY;
+	unsigned char HardpointId;
+	unsigned char MeshId;
+};
+
+static_assert(sizeof(ExeCraftWeaponSlot) == 8, "size of ExeCraftWeaponSlot must be 8");
+
 struct ExeCraftEntry
 {
-	char Unk0000[342];
+	char Unk0000[306];
+	unsigned short LaserTypeId[3];
+	unsigned char LaserStartRack[3];
+	unsigned char LaserEndRack[3];
+	unsigned char LaserLinkCode[3];
+	char Unk0141[21];
 	unsigned short WarheadTypeId[2];
 	unsigned char WarheadStartRack[2];
 	unsigned char WarheadEndRack[2];
-	char Unk015E[637];
+	unsigned char WarheadLinkCode[2];
+	unsigned char WarheadCapacity[2];
+	ExeCraftWeaponSlot WeaponSlots[16];
+	char Unk01E2[505];
 };
 
 static_assert(sizeof(ExeCraftEntry) == 987, "size of ExeCraftEntry must be 987");
@@ -288,6 +315,40 @@ int SecondaryWeaponsSelectionHook(int* params)
 	{
 		params[Params_ReturnAddress] = 0x00461386;
 	}
+
+	return 0;
+}
+
+int WeaponRacksCountHook(int* params)
+{
+	const ExeCraftEntry* ExeCraftTable = (ExeCraftEntry*)0x005BB480;
+	XwaCraft* currentCraft = *(XwaCraft**)0x00910DFC;
+	unsigned short craftIndex = currentCraft->CraftIndex;
+	const XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)currentCraft + g_craftConfig.Craft_Offset_2DF);
+
+	int weaponRacksCount = 0;
+
+	for (int i = 0; i < 3; i++)
+	{
+		unsigned short modelIndex = ExeCraftTable[craftIndex].LaserTypeId[i];
+		unsigned char startRack = ExeCraftTable[craftIndex].LaserStartRack[i];
+		unsigned char endRack = ExeCraftTable[craftIndex].LaserEndRack[i];
+		unsigned char link = ExeCraftTable[craftIndex].LaserLinkCode[i];
+
+		weaponRacksCount = std::max(weaponRacksCount, (int)endRack + 1);
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		unsigned short modelIndex = ExeCraftTable[craftIndex].WarheadTypeId[i];
+		unsigned char startRack = ExeCraftTable[craftIndex].WarheadStartRack[i];
+		unsigned char endRack = ExeCraftTable[craftIndex].WarheadEndRack[i];
+		unsigned char link = ExeCraftTable[craftIndex].WarheadLinkCode[i];
+
+		weaponRacksCount = std::max(weaponRacksCount, (int)endRack + 1);
+	}
+
+	currentCraft->WeaponRacksCount = weaponRacksCount;
 
 	return 0;
 }

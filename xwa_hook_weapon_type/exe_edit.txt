@@ -86,3 +86,19 @@ E87BC40A00              call 005A8B20, 005A8B20 - 004FC6A5 = 000AC47B
 E8E8771400              call 005A8B20, 005A8B20 - 00461338 = 001477E8
 9090                    nop
 
+===============================================================================
+
+// L004A8520 XwaAIMissileDefenseOrder
+// :004A860B 740A je -> jmp
+:004A860B - 0x0A7A0B
+740A                    je 004A8617
+
+EB0A                    jmp 004A8617
+
+; set WeaponRacksCount
+// L0041A960
+:0041BBB1 - 0x01AFB1
+8882AE010000            mov byte ptr [edx+000001AE], al
+
+E86ACF1800              call 005A8B20, 005A8B20 - 0041BBB6 = 0018CF6A
+90                      nop

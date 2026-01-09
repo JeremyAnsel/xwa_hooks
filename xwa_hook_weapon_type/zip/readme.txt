@@ -35,6 +35,10 @@ At offset 0FBA87, replace 3A83D10100007218 with E894C40A0090EB18.
 At offset 0FBAA0, replace C68613958B0000 with E87BC40A009090.
 At offset 060733, replace 66837A020C754C with E8E87714009090.
 
+# To call the hook that fixes missile count
+At offset 0A7A0B, replace 740A with EB0A.
+At offset 01AFB1, replace 8882AE010000 with E86ACF180090.
+
 
 *** Credits ***
 

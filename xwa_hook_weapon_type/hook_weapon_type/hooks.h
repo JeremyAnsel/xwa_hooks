@@ -11,6 +11,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4FC68C, WeaponSwitchWarheadCountHook },
 	{ 0x4FC6A5, WeaponSwitchSetIndexHook },
 	{ 0x461338, SecondaryWeaponsSelectionHook },
+	{ 0x41BBB6, WeaponRacksCountHook },
 };
 
 static const HookPatchItem g_weaponPatch[] =
@@ -31,7 +32,14 @@ static const HookPatchItem g_weaponPatch[] =
 	{ 0x060733, "66837A020C754C", "E8E87714009090" },
 };
 
+static const HookPatchItem g_missilePatch[] =
+{
+	{ 0x0A7A0B, "740A", "EB0A" },
+	{ 0x01AFB1, "8882AE010000", "E86ACF180090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that sets the warhead menu", g_weaponPatch),
+	MAKE_HOOK_PATCH("To call the hook that fixes missile count", g_missilePatch),
 };
