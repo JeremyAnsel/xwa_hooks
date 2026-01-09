@@ -36,7 +36,7 @@ At offset 0A74E4, replace 2BF0C1E603 with E8370A1000.
 
 Suppose that the craft is "FlightModels\[Model].opt".
 
-To set the warhead losk settings, create a file named "FlightModels\[Model]WarheadLock.txt" or create a section named "[WarheadLock]" in "FlightModels\[Model].ini".
+To set the warhead lock settings, create a file named "FlightModels\[Model]WarheadLock.txt" or create a section named "[WarheadLock]" in "FlightModels\[Model].ini".
 The format is:
 LockDistance0 = value
 LockDistance1 = value
@@ -80,6 +80,21 @@ AILockDistance2 = 244332;
 AILockTimeFactor = 472;
 
 For the MissileBoat the default LockTime is 354.
+
+To set default settings, create a file named "FlightModels\WarheadLock.txt" or create a section named "[WarheadLock]" in "FlightModels\default.ini".
+The format is:
+AILockDistance1_Starship = value
+AILockDistance2_Starship = value
+AILockDistance1_Platform = value
+AILockDistance2_Platform = value
+AILockDistance1_Freighter = value
+AILockDistance2_Freighter = value
+AILockDistance1_Transport = value
+AILockDistance2_Transport = value
+AILockDistance1_Container = value
+AILockDistance2_Container = value
+AILockDistance1_Armament = value
+AILockDistance2_Armament = value
 
 
 *** Credits ***

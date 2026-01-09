@@ -77,11 +77,37 @@ FlightModelsList g_flightModelsList;
 
 #pragma pack(push, 1)
 
+enum ShipCategoryEnum : unsigned char
+{
+	ShipCategory_Starfighter = 0,
+	ShipCategory_Transport = 1,
+	ShipCategory_UtilityVehicle = 2,
+	ShipCategory_Freighter = 3,
+	ShipCategory_Starship = 4,
+	ShipCategory_Platform = 5,
+	ShipCategory_PlayerProjectile = 6,
+	ShipCategory_OtherProjectile = 7,
+	ShipCategory_Mine = 8,
+	ShipCategory_Satellite = 9,
+	ShipCategory_NormalDebris = 10,
+	ShipCategory_SmallDebris = 11,
+	ShipCategory_Backdrop = 12,
+	ShipCategory_Explosion = 13,
+	ShipCategory_Obstacle = 14,
+	ShipCategory_DeathStarII = 15,
+	ShipCategory_People = 16,
+	ShipCategory_Container = 17,
+	ShipCategory_Droid = 18,
+	ShipCategory_Armament = 19,
+	ShipCategory_LargeDebris = 20,
+	ShipCategory_SalvageYard = 21,
+};
+
 struct XwaObject
 {
 	char Unk0000[2];
 	unsigned short ModelIndex;
-	char Unk0004[1];
+	ShipCategoryEnum ShipCategory;
 	unsigned char TieFlightGroupIndex;
 	char Unk0006[33];
 };
@@ -162,6 +188,49 @@ WarheadLockSettings GetWarheadLockSettings(int objectIndex)
 	settings.AILockDistance1 = 0x31B5A;
 	settings.AILockDistance2 = 0x3BA6C;
 	settings.AILockTimeFactor = 0x1D8;
+
+	std::vector<std::string> defaultLines = GetFileLines("FlightModels\\WarheadLock.txt");
+
+	if (!defaultLines.size())
+	{
+		defaultLines = GetFileLines("FlightModels\\default.ini", "WarheadLock");
+	}
+
+	if (defaultLines.size())
+	{
+		switch (object->ShipCategory)
+		{
+		case ShipCategory_Starship:
+			settings.AILockDistance1 = GetFileKeyValueInt(defaultLines, "AILockDistance1_Starship", settings.AILockDistance1);
+			settings.AILockDistance2 = GetFileKeyValueInt(defaultLines, "AILockDistance2_Starship", settings.AILockDistance2);
+			break;
+
+		case ShipCategory_Platform:
+			settings.AILockDistance1 = GetFileKeyValueInt(defaultLines, "AILockDistance1_Platform", settings.AILockDistance1);
+			settings.AILockDistance2 = GetFileKeyValueInt(defaultLines, "AILockDistance2_Platform", settings.AILockDistance2);
+			break;
+
+		case ShipCategory_Freighter:
+			settings.AILockDistance1 = GetFileKeyValueInt(defaultLines, "AILockDistance1_Freighter", settings.AILockDistance1);
+			settings.AILockDistance2 = GetFileKeyValueInt(defaultLines, "AILockDistance2_Freighter", settings.AILockDistance2);
+			break;
+
+		case ShipCategory_Transport:
+			settings.AILockDistance1 = GetFileKeyValueInt(defaultLines, "AILockDistance1_Transport", settings.AILockDistance1);
+			settings.AILockDistance2 = GetFileKeyValueInt(defaultLines, "AILockDistance2_Transport", settings.AILockDistance2);
+			break;
+
+		case ShipCategory_Container:
+			settings.AILockDistance1 = GetFileKeyValueInt(defaultLines, "AILockDistance1_Container", settings.AILockDistance1);
+			settings.AILockDistance2 = GetFileKeyValueInt(defaultLines, "AILockDistance2_Container", settings.AILockDistance2);
+			break;
+
+		case ShipCategory_Armament:
+			settings.AILockDistance1 = GetFileKeyValueInt(defaultLines, "AILockDistance1_Armament", settings.AILockDistance1);
+			settings.AILockDistance2 = GetFileKeyValueInt(defaultLines, "AILockDistance2_Armament", settings.AILockDistance2);
+			break;
+		}
+	}
 
 	if (lines.size())
 	{
