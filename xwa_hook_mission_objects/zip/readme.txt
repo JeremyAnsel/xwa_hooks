@@ -102,6 +102,9 @@ At offset 103434, replace 740583F8037524 with E8E74A0A009090.
 # To call the hook that set the lod distance
 At offset 10A1B5, replace E8961BF9FF with E866DD0900.
 
+# To call the hook that init the player camera
+At offset 0EE480, replace 8B8634A08B00 with E89B9A0B0090.
+
 
 *** Usage ***
 

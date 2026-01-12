@@ -44,3 +44,5 @@ int TargetComponent2Hook(int* params);
 int TargetComponent3Hook(int* params);
 
 int AjustLodDistanceHook(int* params);
+
+int FixPlayerCameraObjectIndexHook(int* params);

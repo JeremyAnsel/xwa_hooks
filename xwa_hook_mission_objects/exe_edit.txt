@@ -57,3 +57,11 @@ C3                      ret
 E8961BF9FF              call 0049C950
 
 E866DD0900              call 005A8B20, 005A8B20 - 0050ADBA = 0009DD66
+
+; from L004EE820
+; XwaInitPlayerCameraSettings
+:004EF080 - 0x0EE480
+8B8634A08B00            mov eax, dword ptr [esi+008BA034]
+
+E89B9A0B00              call 005A8B20, 005A8B20 - 004EF085 = 000B9A9B
+90                      nop

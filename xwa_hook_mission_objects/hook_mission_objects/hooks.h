@@ -61,6 +61,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x504039, TargetComponent3Hook },
 
 	{ 0x50ADBA, AjustLodDistanceHook },
+
+	{ 0x4EF085, FixPlayerCameraObjectIndexHook },
 };
 
 static const HookPatchItem g_loadMissionObjectsPatch[] =
@@ -162,6 +164,11 @@ static const HookPatchItem g_setLodDistancePatch[] =
 	{ 0x10A1B5, "E8961BF9FF", "E866DD0900" },
 };
 
+static const HookPatchItem g_playerCameraPatch[] =
+{
+	{ 0x0EE480, "8B8634A08B00", "E89B9A0B0090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that loads mission objects", g_loadMissionObjectsPatch),
@@ -172,4 +179,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that set turret index", g_setTurretIndexPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines object profile", g_objectProfilePatch),
 	MAKE_HOOK_PATCH("To call the hook that set the lod distance", g_setLodDistancePatch),
+	MAKE_HOOK_PATCH("To call the hook that init the player camera", g_playerCameraPatch),
 };
