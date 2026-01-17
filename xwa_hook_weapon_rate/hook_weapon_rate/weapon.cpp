@@ -31,6 +31,21 @@ float GetFileKeyValueFloat(const std::vector<std::string>& lines, const std::str
 	return std::stof(value);
 }
 
+void CombineFileLines(std::vector<std::string>& a, const std::vector<std::string>& b, bool append)
+{
+	if (append)
+	{
+		a.insert(std::end(a), std::begin(b), std::end(b));
+	}
+	else
+	{
+		if (a.empty())
+		{
+			a.insert(std::end(a), std::begin(b), std::end(b));
+		}
+	}
+}
+
 class FlightModelsList
 {
 public:
@@ -539,15 +554,14 @@ std::vector<std::string> GetModelLines(int modelIndex, const std::string& name)
 		lines = GetFileLines(ship + ".ini", name);
 	}
 
-	if (!lines.size())
+	std::vector<std::string> linesDefault = GetFileLines("FlightModels\\" + name + ".txt");
+
+	if (!linesDefault.size())
 	{
-		lines = GetFileLines("FlightModels\\" + name + ".txt");
+		linesDefault = GetFileLines("FlightModels\\default.ini", name);
 	}
 
-	if (!lines.size())
-	{
-		lines = GetFileLines("FlightModels\\default.ini", name);
-	}
+	CombineFileLines(lines, linesDefault, true);
 
 	return lines;
 }
