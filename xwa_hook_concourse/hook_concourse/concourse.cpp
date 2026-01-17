@@ -7425,10 +7425,7 @@ int DSBriefLoadMovieHook(int* params)
 
 	const auto XwaFrontResLoad = (int(*)(const char*, const char*))0x00531D70;
 
-	SurfaceDC dc;
-	bool hasDC = GetSurfaceDC(&dc);
-
-	if (hasDC && std::ifstream("Resdata\\dsbrief.webm"))
+	if (g_config.HDConcourseEnabled && std::ifstream("Resdata\\dsbrief.webm"))
 	{
 		g_dsbrief_webm = true;
 		g_dsbrief_imagePtr = nullptr;
@@ -7604,14 +7601,11 @@ int SquadlogoLoadMovieHook(int* params)
 
 	XwaFrontResLoad(A4, A8);
 
-	SurfaceDC dc;
-	bool hasDC = GetSurfaceDC(&dc);
-
 	g_squadlogo_webm = false;
 
 	std::string squadlogoName = GetStringWithoutExtension(GetFileNameWithoutExtension(A4));
 
-	if (hasDC && std::ifstream("Resdata\\" + squadlogoName + ".webm"))
+	if (g_config.HDConcourseEnabled && std::ifstream("Resdata\\" + squadlogoName + ".webm"))
 	{
 		g_squadlogo_webm = true;
 		g_squadlogo_name = squadlogoName;
