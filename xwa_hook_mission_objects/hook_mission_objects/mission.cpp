@@ -2255,7 +2255,7 @@ int FixPlayerCameraObjectIndexHook(int* params)
 {
 	int eax = *(int*)(0x008BA034 + params[Params_ESI]);
 
-	if (eax == 0 || eax == 0xFFFF)
+	if (eax == 0xFFFF)
 	{
 		params[Params_EAX] = 0;
 		params[Params_EDX] = 0;
