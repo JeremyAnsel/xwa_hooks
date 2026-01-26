@@ -4680,22 +4680,22 @@ int MaxSystemDamagesHook(int* params)
 		{
 		case 284:
 			// ModelIndex_284_1_22_LaserIon
-			systemStrength += sourceSystemDamages.Weapon284_LaserIon_Damages;
+			systemStrength = min(systemStrength + sourceSystemDamages.Weapon284_LaserIon_Damages, systemDamages.MaxSystemDamages);
 			break;
 
 		case 285:
 			// ModelIndex_285_1_23_LaserIonTurbo
-			systemStrength += sourceSystemDamages.Weapon285_LaserIonTurbo_Damages;
+			systemStrength = min(systemStrength + sourceSystemDamages.Weapon285_LaserIonTurbo_Damages, systemDamages.MaxSystemDamages);
 			break;
 
 		case 290:
 			// ModelIndex_290_1_23_LaserIonTurbo
-			systemStrength += sourceSystemDamages.Weapon290_LaserIonTurbo_Damages;
+			systemStrength = min(systemStrength + sourceSystemDamages.Weapon290_LaserIonTurbo_Damages, systemDamages.MaxSystemDamages);
 			break;
 
 		case 296:
 			// ModelIndex_296_1_28_MagPulse
-			systemStrength += sourceSystemDamages.Weapon296_MagPulse_Damages;
+			systemStrength = min(systemStrength + sourceSystemDamages.Weapon296_MagPulse_Damages, systemDamages.MaxSystemDamages);
 			break;
 		}
 	}
