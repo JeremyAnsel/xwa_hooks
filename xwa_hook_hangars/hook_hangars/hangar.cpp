@@ -304,7 +304,11 @@ struct TieFlightGroupEx
 	unsigned char CraftId;
 	char unk06C[4];
 	unsigned char Iff;
-	char unk071[81];
+	unsigned char Team;
+	unsigned char Rank;
+	unsigned char Markings;
+	unsigned char Radio;
+	char unk075[77];
 	unsigned char m0C2;
 	unsigned char m0C3;
 	unsigned char m0C4;
@@ -771,6 +775,77 @@ unsigned char GetCommandShipIff()
 	}
 
 	return xwaTieFlightGroups[mothershipFlightGroupIndex].Iff;
+}
+
+unsigned char GetCommandShipMarkings()
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const TieFlightGroupEx* xwaTieFlightGroups = (TieFlightGroupEx*)0x080DC80;
+	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
+	//const int hangarPlayerObjectIndex = *(int*)0x068BC08;
+	//const int playerObjectIndex = *(int*)0x068BB98;
+	const int playerObjectIndex = *(int*)0x068BC08;
+	const int currentPlayerId = *(int*)0x08C1CC8;
+
+	if (playerObjectIndex == 0xffff)
+	{
+		return 0;
+	}
+
+	const short mothershipObjectIndex = GetMothershiObjectIndex();
+
+	if (mothershipObjectIndex == -1)
+	{
+		//const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
+		const int playerFlightGroupIndex = xwaPlayers[currentPlayerId].FgIndex;
+
+		if (xwaTieFlightGroups[playerFlightGroupIndex].m0C5)
+		{
+			return xwaTieFlightGroups[xwaTieFlightGroups[playerFlightGroupIndex].m0C4].Markings;
+		}
+
+		return 0;
+	}
+	else if (mothershipObjectIndex == 0)
+	{
+		//const int playerFlightGroupIndex = xwaObjects[playerObjectIndex].TieFlightGroupIndex;
+		const int playerFlightGroupIndex = xwaPlayers[currentPlayerId].FgIndex;
+
+		if (xwaTieFlightGroups[playerFlightGroupIndex].m0C3)
+		{
+			return xwaTieFlightGroups[xwaTieFlightGroups[playerFlightGroupIndex].m0C2].Markings;
+		}
+		else if (xwaTieFlightGroups[playerFlightGroupIndex].m0C5)
+		{
+			return xwaTieFlightGroups[xwaTieFlightGroups[playerFlightGroupIndex].m0C4].Markings;
+		}
+
+		return 0;
+	}
+
+	const unsigned char mothershipFlightGroupIndex = xwaObjects[mothershipObjectIndex].TieFlightGroupIndex;
+	const int mothershipModelIndex = xwaObjects[mothershipObjectIndex].ModelIndex;
+
+	if (mothershipModelIndex == 0)
+	{
+		int fgIndex = xwaObjects[mothershipObjectIndex].TieFlightGroupIndex;
+
+		if (xwaTieFlightGroups[fgIndex].m0C3)
+		{
+			return xwaTieFlightGroups[xwaTieFlightGroups[fgIndex].m0C2].Markings;
+		}
+		else if (xwaTieFlightGroups[fgIndex].m0C5)
+		{
+			return xwaTieFlightGroups[xwaTieFlightGroups[fgIndex].m0C4].Markings;
+		}
+	}
+
+	if (mothershipFlightGroupIndex == 0xff)
+	{
+		return 0;
+	}
+
+	return xwaTieFlightGroups[mothershipFlightGroupIndex].Markings;
 }
 
 std::string GetCustomFilePath(const std::string& name)
@@ -1906,7 +1981,7 @@ int HangarReloadHook(int* params)
 
 	if (iff == 0xff)
 	{
-		iff = GetCommandShipIff();
+		iff = GetCommandShipMarkings();
 	}
 
 	xwaObjects[hangarObjectIndex].pMobileObject->Markings = iff;
