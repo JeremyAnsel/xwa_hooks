@@ -3759,11 +3759,11 @@ int WarheadCapacity_004B1426_Hook(int* params)
 
 	capacity = (capacity * percent + 50) / 100;
 
-	int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity);
-	if (maxCapacity != -1)
-	{
-		capacity = min(capacity, maxCapacity);
-	}
+	//int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity);
+	//if (maxCapacity != -1)
+	//{
+	//	capacity = min(capacity, maxCapacity);
+	//}
 
 	return capacity;
 }
