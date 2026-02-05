@@ -111,12 +111,14 @@ public:
 		this->IsMissionRanksModifierEnabled = GetFileKeyValueInt(lines, "IsMissionRanksModifierEnabled", 1) != 0;
 		this->TargetCraftKeyMethod = GetFileKeyValueInt(lines, "TargetCraftKeyMethod", 0);
 		this->TargetCraftKeySelectOnlyNotInspected = GetFileKeyValueInt(lines, "TargetCraftKeySelectOnlyNotInspected", 0) != 0;
+		this->CanShootThroughtShieldOnHardDifficulty = GetFileKeyValueInt(lines, "CanShootThroughtShieldOnHardDifficulty", 0) != 0;
 	}
 
 	bool IsWarheadCollisionDamagesEnabled;
 	bool IsMissionRanksModifierEnabled;
 	int TargetCraftKeyMethod;
 	bool TargetCraftKeySelectOnlyNotInspected;
+	bool CanShootThroughtShieldOnHardDifficulty;
 };
 
 Config g_config;
@@ -381,7 +383,7 @@ private:
 			return 1;
 		}
 
-		return 0;
+		return g_config.CanShootThroughtShieldOnHardDifficulty ? 1 : 0;
 	}
 
 	std::vector<std::string> _missionLines;
