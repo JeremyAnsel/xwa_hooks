@@ -132,6 +132,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x433309, WeaponWarheadModelIndexToHardpointTypeHook },
 	{ 0x43321C, ReadLasersLinksHook },
 	{ 0x4E19E9, FireRatioRankHook },
+	{ 0x4E01C0, DamagesMultiplicatorDifficultyHook },
 };
 
 static const HookPatchItem g_weaponRatePatch[] =
@@ -322,6 +323,11 @@ static const HookPatchItem g_fireratioRankPatch[] =
 	{ 0x0E0DE4, "837DD8FF752C", "E837710C0090" },
 };
 
+static const HookPatchItem g_damagesMultiplicatorDifficultyPatch[] =
+{
+	{ 0x0DF5BB, "A00A548000", "E860890C00" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that defines weapon decharge and recharge rates", g_weaponRatePatch),
@@ -341,4 +347,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that defines weapon hardpoint types", g_weaponHardpointTypesPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines lasers links", g_lasersLinksPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines fireratio per rank", g_fireratioRankPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines damages multiplicator per difficulty", g_damagesMultiplicatorDifficultyPatch),
 };

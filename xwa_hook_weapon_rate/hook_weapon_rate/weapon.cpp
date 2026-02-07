@@ -160,6 +160,9 @@ public:
 		this->TopAceRankFireratioMultiplicator = GetFileKeyValueFloat(lines, "TopAceRankFireratioMultiplicator", 1.0f);
 		this->SuperAceRankFireratioMultiplicator = GetFileKeyValueFloat(lines, "SuperAceRankFireratioMultiplicator", 1.0f);
 		this->IsLaserLinksFixEnabled = GetFileKeyValueInt(lines, "IsLaserLinksFixEnabled", 0) != 0;
+		this->DamagesMultiplicatorForDifficulty0 = GetFileKeyValueFloat(lines, "DamagesMultiplicatorForDifficulty0", 0.5f);
+		this->DamagesMultiplicatorForDifficulty1 = GetFileKeyValueFloat(lines, "DamagesMultiplicatorForDifficulty1", 0.25f);
+		this->DamagesMultiplicatorForDifficulty2 = GetFileKeyValueFloat(lines, "DamagesMultiplicatorForDifficulty2", 1.0f);
 
 		lines = GetFileLines("hook_weapon_color.cfg");
 
@@ -190,6 +193,9 @@ public:
 	float TopAceRankFireratioMultiplicator;
 	float SuperAceRankFireratioMultiplicator;
 	bool IsLaserLinksFixEnabled;
+	float DamagesMultiplicatorForDifficulty0;
+	float DamagesMultiplicatorForDifficulty1;
+	float DamagesMultiplicatorForDifficulty2;
 
 	bool WeaponSwitchBasedOnIff;
 };
@@ -4864,5 +4870,35 @@ int FireRatioRankHook(int* params)
 	}
 
 	params[Params_ReturnAddress] = 0x004E1A16;
+	return 0;
+}
+
+int DamagesMultiplicatorDifficultyHook(int* params)
+{
+	unsigned char difficulty = *(unsigned char*)0x0080540A;
+	params[Params_EAX] = difficulty;
+	params[Params_ECX] = *(int*)0x00910DFC;
+
+	int ebx = params[10];
+
+	switch (difficulty)
+	{
+	case 0:
+		ebx = (int)(ebx * g_config.DamagesMultiplicatorForDifficulty0);
+		break;
+
+	case 1:
+		ebx = (int)(ebx * g_config.DamagesMultiplicatorForDifficulty1);
+		break;
+
+	case 2:
+	default:
+		ebx = (int)(ebx * g_config.DamagesMultiplicatorForDifficulty2);
+		break;
+	}
+
+	params[Params_EBX] = ebx;
+
+	params[Params_ReturnAddress] = 0x004E01F1;
 	return 0;
 }

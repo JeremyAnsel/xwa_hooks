@@ -112,3 +112,4 @@ int WeaponLaserModelIndexToHardpointTypeHook(int* params);
 int WeaponWarheadModelIndexToHardpointTypeHook(int* params);
 int ReadLasersLinksHook(int* params);
 int FireRatioRankHook(int* params);
+int DamagesMultiplicatorDifficultyHook(int* params);

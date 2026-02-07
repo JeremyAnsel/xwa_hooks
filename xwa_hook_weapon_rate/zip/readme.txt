@@ -163,6 +163,9 @@ At offset 032617, replace 660FB65C2420 with E80459170090.
 # To call the hook that defines fireratio per rank
 At offset 0E0DE4, replace 837DD8FF752C with E837710C0090.
 
+# To call the hook that defines damages multiplicator per difficulty
+At offset DF5BB, replace A00A548000 with E860890C00.
+
 
 *** Usage ***
 
