@@ -243,6 +243,17 @@ struct ExeEnableEntry
 
 static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24");
 
+struct ExeCraftEntry
+{
+	char unk000[626];
+	int InsideHangarX;
+	int InsideHangarZ;
+	int InsideHangarY;
+	char unk27E[349];
+};
+
+static_assert(sizeof(ExeCraftEntry) == 987, "size of ExeCraftEntry must be 987");
+
 struct XwaCraft
 {
 	char unk000[4];
@@ -348,6 +359,7 @@ std::array<std::string, 557> g_hangarOptSkins;
 
 int g_cockpitId = -1;
 bool& g_isInHangar = *(bool*)0x009C6E44;
+int g_hangarIndex = 0;
 
 int GetCockpitId();
 std::string OptSkins_ReadOptSkinsListFunction(const std::string& optFilename);
@@ -476,16 +488,18 @@ std::vector<std::string> GetCustomFileLinesBase(const std::string& name, bool ap
 	static bool _append = false;
 	static std::string _mission;
 	static int _missionIndex = 0;
+	static int _hangarIndex = 0;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
 	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if ((_name != name) || (_append != append) || (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex)))
+	if ((_name != name) || (_append != append) || (missionFileNameIndex == 0 ? (_mission != xwaMissionFileName) : (_missionIndex != missionFileNameIndex)) || (_hangarIndex != g_hangarIndex))
 	{
 		_name = name;
 		_append = append;
 		_mission = xwaMissionFileName;
 		_missionIndex = missionFileNameIndex;
+		_hangarIndex = g_hangarIndex;
 		_lines.clear();
 
 		const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
@@ -506,12 +520,12 @@ short GetMothershiObjectIndex()
 	unsigned char type = xwaPlayers[currentPlayerId].m052;
 	short parameter = xwaPlayers[currentPlayerId].m053;
 
-	if (type != 0x02)
+	if (type == 0 || type == 2)
 	{
-		return 0;
+		return parameter;
 	}
 
-	return parameter;
+	return 0;
 }
 
 int GetCommandShipModelIndex()
@@ -924,11 +938,12 @@ std::vector<std::string> GetCustomFileLines(const std::string& name, bool append
 	static bool _append = false;
 	static std::string _mission;
 	static int _missionIndex = 0;
+	static int _hangarIndex = 0;
 
 	const char* xwaMissionFileName = (const char*)0x06002E8;
 	const int missionFileNameIndex = *(int*)0x06002E4;
 
-	if ((_name == name) && (_append == append) && (missionFileNameIndex == 0 ? (_mission == xwaMissionFileName) : (_missionIndex == missionFileNameIndex)))
+	if ((_name == name) && (_append == append) && (missionFileNameIndex == 0 ? (_mission == xwaMissionFileName) : (_missionIndex == missionFileNameIndex)) && (_hangarIndex == g_hangarIndex))
 	{
 		return _lines;
 	}
@@ -937,6 +952,7 @@ std::vector<std::string> GetCustomFileLines(const std::string& name, bool append
 	_append = append;
 	_mission = xwaMissionFileName;
 	_missionIndex = missionFileNameIndex;
+	_hangarIndex = g_hangarIndex;
 	_lines.clear();
 
 	const bool isProvingGround = *(unsigned char*)(0x08053E0 + 0x05) != 0;
@@ -1510,6 +1526,7 @@ private:
 			{
 				this->lastMissionFileName = (const char*)0x06002E8;
 				this->lastMissionFileNameIndex = *(int*)0x06002E4;
+				this->lastHangarIndex = g_hangarIndex;
 				this->lastCommandShip = GetCommandShipModelIndex();
 				this->lastCommandShipIff = GetCommandShipIff();
 			}
@@ -1532,10 +1549,11 @@ private:
 
 		const char* xwaMissionFileName = (const char*)0x06002E8;
 		const int missionFileNameIndex = *(int*)0x06002E4;
-		if (missionFileNameIndex == 0 ? (this->lastMissionFileName != xwaMissionFileName) : (this->lastMissionFileNameIndex != missionFileNameIndex))
+		if ((missionFileNameIndex == 0 ? (this->lastMissionFileName != xwaMissionFileName) : (this->lastMissionFileNameIndex != missionFileNameIndex)) || (this->lastHangarIndex != g_hangarIndex))
 		{
 			this->lastMissionFileName = xwaMissionFileName;
 			this->lastMissionFileNameIndex = missionFileNameIndex;
+			this->lastHangarIndex = g_hangarIndex;
 			return true;
 		}
 
@@ -1560,6 +1578,7 @@ private:
 	bool lastIsProvingGround = false;
 	std::string lastMissionFileName;
 	int lastMissionFileNameIndex = 0;
+	int lastHangarIndex = 0;
 	int lastCommandShip = -1;
 	unsigned char lastCommandShipIff = 0;
 };
@@ -1833,6 +1852,7 @@ int HangarOptLoadHook(int* params)
 int HangarOptReloadHook(int* params)
 {
 	g_isInHangar = true;
+	g_hangarIndex++;
 
 	SetXwaTempString();
 
@@ -1948,6 +1968,7 @@ void HangarReloadHookReleaseObjects()
 int HangarReloadHook(int* params)
 {
 	g_isInHangar = true;
+	g_hangarIndex++;
 
 	const short objectIndex = (short)params[2];
 
@@ -1996,6 +2017,9 @@ int HangarReloadHook(int* params)
 
 	SetShipCategoryObjectsRanges(xwaObjects[hangarObjectIndex].Region);
 
+	HangarFloorElevationHook(nullptr);
+	HangarPlayerCraftElevationHook(nullptr);
+
 	V0x068BC10 = 0;
 
 	if (hangarModelIndex == 0x134)
@@ -2041,6 +2065,7 @@ int SwitchCraftHook(int* params)
 {
 	params[Params_EAX] = *(int*)0x0068BC08;
 
+	g_hangarIndex++;
 	int& missionFileNameIndex = *(int*)0x06002E4;
 
 	if (missionFileNameIndex != 0)
@@ -2737,6 +2762,18 @@ void ApplyObjectProfile(unsigned short modelIndex, std::string objectProfile, Xw
 	}
 }
 
+int GetHangarFloorPositionZ()
+{
+	const auto XwaGetCraftIndex = (short(*)(short))0x004DCE30;
+	const ExeCraftEntry* xwaExeCraftTable = (ExeCraftEntry*)0x005BB480;
+	const short hangarModelIndex = *(short*)0x009C6754;
+	short hangarCraftIndex = XwaGetCraftIndex(hangarModelIndex);
+	int insideHangarZ = xwaExeCraftTable[hangarCraftIndex].InsideHangarZ;
+	// *(int*)0x068BC38
+	int hangarFloorPositionZ = insideHangarZ;
+	return hangarFloorPositionZ;
+}
+
 int HangarLoadShuttleHook(int* params)
 {
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
@@ -2808,6 +2845,7 @@ int HangarShuttleUpdateHook(int* params)
 
 int HangarShuttleReenterPositionHook(int* params)
 {
+	g_hangarIndex++;
 	CraftEjectReload();
 
 	ReadIsHangarFloorInverted();
@@ -2818,11 +2856,11 @@ int HangarShuttleReenterPositionHook(int* params)
 	int& positionY = xwaObjects[hangarPlayerObjectIndex].PositionY;
 	int& positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	const int hangarObjectIndex = *(int*)0x068BCC4;
-	const int V0x068BC38 = *(int*)0x068BC38;
+	const int hangarFloorPositionZ = GetHangarFloorPositionZ();
 
 	positionX = xwaObjects[hangarObjectIndex].PositionX;
 	positionY = xwaObjects[hangarObjectIndex].PositionY;
-	positionZ = V0x068BC38;
+	positionZ = hangarFloorPositionZ;
 
 	xwaObjects[hangarPlayerObjectIndex].m13 = 0;
 	xwaObjects[hangarPlayerObjectIndex].m15 = 0x4000;
@@ -3608,7 +3646,7 @@ int HangarLaunchAnimation2Hook(int* params)
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
-	const int hangarFloorPositionZ = *(int*)0x068BC38;
+	const int hangarFloorPositionZ = GetHangarFloorPositionZ();
 
 	const int elevation = 0xF7 + g_hangarObjects.GetPlayerAnimationElevation();
 	const int elevationInverted = 0xF7 + g_hangarObjects.GetPlayerAnimationInvertedElevation();
@@ -3659,7 +3697,7 @@ int HangarObjectsElevationHook(int* params)
 
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	int& positionZ = xwaObjects[objectIndex].PositionZ;
-	const int hangarFloorPositionZ = *(int*)0x068BC38;
+	const int hangarFloorPositionZ = GetHangarFloorPositionZ();
 
 	if (!g_isHangarFloorInverted)
 	{
@@ -3707,6 +3745,8 @@ int HangarFloorElevationHook(int* params)
 		hangarFloorPositionZ = positionZ - g_hangarFloorInvertedHeight - player.OffsetZ + elevation;
 	}
 
+	hangarFloorPositionZ = GetHangarFloorPositionZ();
+
 	return 0;
 }
 
@@ -3732,7 +3772,7 @@ int HangarPlayerCraftElevationHook(int* params)
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const XwaPlayer* xwaPlayers = (XwaPlayer*)0x08B94E0;
 	const int currentPlayerId = *(int*)0x08C1CC8;
-	const int hangarFloorPositionZ = *(int*)0x068BC38;
+	const int hangarFloorPositionZ = GetHangarFloorPositionZ();
 
 	const PlayerCraft player = g_hangarObjects.GetPlayerCraft(xwaObjects[xwaPlayers[currentPlayerId].ObjectIndex].ModelIndex);
 
@@ -3754,9 +3794,10 @@ int g_hangarPlayerPositionY;
 
 int HangarReenterInitPositionZHook(int* params)
 {
+	g_hangarIndex++;
 	ReadIsHangarFloorInverted();
 
-	const int hangarFloorPositionZ = *(int*)0x068BC38;
+	const int hangarFloorPositionZ = GetHangarFloorPositionZ();
 
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
@@ -3793,7 +3834,7 @@ int HangarReenterAnimation51Hook(int* params)
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
 	const int positionY = xwaObjects[hangarPlayerObjectIndex].PositionY;
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
-	const int hangarFloorPositionZ = *(int*)0x068BC38;
+	const int hangarFloorPositionZ = GetHangarFloorPositionZ();
 	const unsigned short hangarModelIndex = *(unsigned short*)0x09C6754;
 	float& s_V0x068BCA4 = *(float*)0x068BCA4;
 
@@ -3837,7 +3878,7 @@ int HangarReenterAnimation52Hook(int* params)
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
-	const int hangarFloorPositionZ = *(int*)0x068BC38;
+	const int hangarFloorPositionZ = GetHangarFloorPositionZ();
 
 	const PlayerCraft player = g_hangarObjects.GetPlayerCraft(xwaObjects[hangarPlayerObjectIndex].ModelIndex);
 
@@ -3908,7 +3949,7 @@ int HangarReenterAnimation6Hook(int* params)
 	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
 	int& positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
-	const int hangarFloorPositionZ = *(int*)0x068BC38;
+	const int hangarFloorPositionZ = GetHangarFloorPositionZ();
 
 	const PlayerCraft player = g_hangarObjects.GetPlayerCraft(xwaObjects[hangarPlayerObjectIndex].ModelIndex);
 
@@ -3961,7 +4002,7 @@ int HangarReenterAnimation72Hook(int* params)
 	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
-	const int hangarFloorPositionZ = *(int*)0x068BC38;
+	const int hangarFloorPositionZ = GetHangarFloorPositionZ();
 
 	const PlayerCraft player = g_hangarObjects.GetPlayerCraft(xwaObjects[hangarPlayerObjectIndex].ModelIndex);
 
@@ -4547,6 +4588,7 @@ std::vector<std::string> g_OptSkins_getCustomFileLines_lines;
 std::string g_OptSkins_getCustomFileLines_name;
 std::string g_OptSkins_getCustomFileLines_mission;
 int g_OptSkins_getCustomFileLines_missionIndex;
+int g_OptSkins_getCustomFileLines_hangarIndex;
 std::string g_OptSkins_getCustomFileLines_hangar;
 unsigned char g_OptSkins_getCustomFileLines_hangarIff;
 
@@ -4604,7 +4646,7 @@ std::string OptSkins_GetMissionFileName()
 std::vector<std::string> OptSkins_GetCustomFileLines(const std::string& name)
 {
 	std::string xwaMissionFileName = OptSkins_GetMissionFileName();
-	int xwaMissionFileNameIndex = *(int*)(0x06002E4);
+	int xwaMissionFileNameIndex = *(int*)0x06002E4;
 	int currentGameState = *(int*)(0x09F60E0 + 0x25FA9);
 	int updateCallback = *(int*)(0x09F60E0 + 0x25FB1 + currentGameState * 0x850 + 0x844);
 	bool isTechLibraryGameStateUpdate = updateCallback == 0x00574D70;
@@ -4616,6 +4658,7 @@ std::vector<std::string> OptSkins_GetCustomFileLines(const std::string& name)
 		g_OptSkins_getCustomFileLines_name = name;
 		g_OptSkins_getCustomFileLines_mission = std::string();
 		g_OptSkins_getCustomFileLines_missionIndex = 0;
+		g_OptSkins_getCustomFileLines_hangarIndex = 0;
 		g_OptSkins_getCustomFileLines_lines = GetFileLines("FlightModels\\" + name + ".txt");
 		g_OptSkins_getCustomFileLines_hangar = std::string();
 		g_OptSkins_getCustomFileLines_hangarIff = 0;
@@ -4630,12 +4673,14 @@ std::vector<std::string> OptSkins_GetCustomFileLines(const std::string& name)
 		if (g_OptSkins_getCustomFileLines_name != name
 			|| g_OptSkins_getCustomFileLines_mission != xwaMissionFileName
 			|| g_OptSkins_getCustomFileLines_missionIndex != xwaMissionFileNameIndex
+			|| g_OptSkins_getCustomFileLines_hangarIndex != g_hangarIndex
 			|| g_OptSkins_getCustomFileLines_hangar != hangar
 			|| g_OptSkins_getCustomFileLines_hangarIff != hangarIff)
 		{
 			g_OptSkins_getCustomFileLines_name = name;
 			g_OptSkins_getCustomFileLines_mission = xwaMissionFileName;
 			g_OptSkins_getCustomFileLines_missionIndex = xwaMissionFileNameIndex;
+			g_OptSkins_getCustomFileLines_hangarIndex = g_hangarIndex;
 			g_OptSkins_getCustomFileLines_hangar = hangar;
 			g_OptSkins_getCustomFileLines_hangarIff = hangarIff;
 
@@ -4875,6 +4920,7 @@ int HangarExitHook(int* params)
 	*(int*)0x0068BBB8 = 1;
 
 	g_isInHangar = false;
+	g_hangarIndex++;
 	int& missionFileNameIndex = *(int*)0x06002E4;
 	missionFileNameIndex++;
 	SetXwaTempString();
@@ -4908,8 +4954,10 @@ int HangarExitHook(int* params)
 		}
 
 		g_isInHangar = true;
+		g_hangarIndex++;
 		std::string optPath = GetShipPath(modelIndex) + ".opt";
 		g_isInHangar = false;
+		g_hangarIndex++;
 		std::string optPath_flight = GetShipPath(modelIndex) + ".opt";
 
 		std::string currentOptSkins = g_hangarOptSkins[modelIndex];
@@ -5091,6 +5139,7 @@ void CraftEjectReload()
 	//g_hangarMapModelIndices.clear();
 
 	g_isInHangar = true;
+	g_hangarIndex++;
 	int& missionFileNameIndex = *(int*)0x06002E4;
 	missionFileNameIndex++;
 
@@ -5121,8 +5170,10 @@ void CraftEjectReload()
 		}
 
 		g_isInHangar = false;
+		g_hangarIndex++;
 		//std::string optPath = GetShipPath(modelIndex) + ".opt";
 		g_isInHangar = true;
+		g_hangarIndex++;
 		std::string optPath = GetShipPath(modelIndex) + ".opt";
 
 		std::string currentOptSkins = g_hangarOptSkins[modelIndex];
