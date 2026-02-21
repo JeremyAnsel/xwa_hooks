@@ -1394,6 +1394,53 @@ int GetMissionFileNameById(int missionId)
 	return index;
 }
 
+std::string GetCurrentMissionFileName()
+{
+	const XwaMissionDescription* s_XwaMissionDescriptions = *(XwaMissionDescription**)0x009F4B98;
+	const int missionDirectoryId = *(int*)(0x00AE2A60 + 0x002A);
+	const int currentMission = *(int*)0x00ABC970;
+
+	int currentMissionIndex = GetMissionFileNameById(currentMission);
+
+	if (currentMissionIndex == -1)
+	{
+		return std::string();
+	}
+
+	const char* missionDirectory = ((const char**)0x00603168)[missionDirectoryId];
+	const char* missionFileName = s_XwaMissionDescriptions[currentMissionIndex].MissionFileName;
+
+	if (std::ifstream(std::string("Missions\\") + missionFileName))
+	{
+		return std::string("Missions\\") + missionFileName;
+	}
+
+	if (std::ifstream(std::string("Combat\\") + missionFileName))
+	{
+		return std::string("Combat\\") + missionFileName;
+	}
+
+	if (std::ifstream(std::string("Melee\\") + missionFileName))
+	{
+		return std::string("Melee\\") + missionFileName;
+	}
+
+	if (std::ifstream(std::string("Skirmish\\") + missionFileName))
+	{
+		return std::string("Skirmish\\") + missionFileName;
+	}
+
+	if (missionDirectoryId == 3)
+	{
+		if (std::ifstream(std::string("Skirmish\\") + "temp.tie"))
+		{
+			return std::string("Skirmish\\") + "temp.tie";
+		}
+	}
+
+	return std::string();
+}
+
 std::vector<std::string> g_MedalDetails;
 std::vector<int> g_MedalDetailsOrder;
 std::vector<std::string> g_FamilyMedalsDescriptions;
@@ -2648,8 +2695,9 @@ int DrawConcoursePlanetHook(int* params)
 			const char* missionDirectory = ((const char**)0x00603168)[missionDirectoryId];
 			const char* missionFileName = s_XwaMissionDescriptions[currentMissionIndex].MissionFileName;
 
-			char path[256];
-			sprintf_s(path, "%s\\%s", missionDirectory, missionDirectoryId == 3 ? "temp.tie" : missionFileName);
+			//char path[256];
+			//sprintf_s(path, "%s\\%s", missionDirectory, missionDirectoryId == 3 ? "temp.tie" : missionFileName);
+			std::string path = GetCurrentMissionFileName();
 
 			const auto lines = GetMissionConcourseLines(path);
 
@@ -3648,8 +3696,9 @@ int SwitchFrontPlanetImageHook(int* params)
 		const char* missionDirectory = ((const char**)0x00603168)[missionDirectoryId];
 		const char* missionFileName = s_XwaMissionDescriptions[currentMissionIndex].MissionFileName;
 
-		char path[256];
-		sprintf_s(path, "%s\\%s", missionDirectory, missionDirectoryId == 3 ? "temp.tie" : missionFileName);
+		//char path[256];
+		//sprintf_s(path, "%s\\%s", missionDirectory, missionDirectoryId == 3 ? "temp.tie" : missionFileName);
+		std::string path = GetCurrentMissionFileName();
 
 		int missionPlanetImageIndex = GetMissionFrontPlanetImageIndex(path);
 
