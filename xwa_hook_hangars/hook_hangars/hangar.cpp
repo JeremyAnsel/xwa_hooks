@@ -2762,16 +2762,35 @@ void ApplyObjectProfile(unsigned short modelIndex, std::string objectProfile, Xw
 	}
 }
 
-int GetHangarFloorPositionZ()
+bool g_HangarFloorElevationHook_called = false;
+int g_HangarFloorElevationHook_PositionZ = 0;
+
+int GetHangarInsideZ()
 {
 	const auto XwaGetCraftIndex = (short(*)(short))0x004DCE30;
 	const ExeCraftEntry* xwaExeCraftTable = (ExeCraftEntry*)0x005BB480;
 	const short hangarModelIndex = *(short*)0x009C6754;
 	short hangarCraftIndex = XwaGetCraftIndex(hangarModelIndex);
 	int insideHangarZ = xwaExeCraftTable[hangarCraftIndex].InsideHangarZ;
+	return insideHangarZ;
+}
+
+int GetHangarFloorPositionZ()
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	const int hangarObjectIndex = *(int*)0x068BCC4;
+	int hangarPositionZ = xwaObjects[hangarObjectIndex].PositionZ;
+
+	int insideHangarZ = GetHangarInsideZ();
 	// *(int*)0x068BC38
-	int hangarFloorPositionZ = insideHangarZ;
-	return hangarFloorPositionZ;
+	int positionZ = insideHangarZ + g_HangarFloorElevationHook_PositionZ;
+
+	if (!g_HangarFloorElevationHook_called)
+	{
+		positionZ = hangarPositionZ + insideHangarZ;
+	}
+
+	return positionZ;
 }
 
 int HangarLoadShuttleHook(int* params)
@@ -3715,6 +3734,11 @@ int HangarObjectsElevationHook(int* params)
 
 int HangarFloorElevationHook(int* params)
 {
+	if (params)
+	{
+		g_HangarFloorElevationHook_called = true;
+	}
+
 	ReadIsHangarFloorInverted();
 
 	//const int elevation = params[0];
@@ -3723,6 +3747,8 @@ int HangarFloorElevationHook(int* params)
 	const int hangarPlayerObjectIndex = *(int*)0x068BC08;
 	const int positionZ = xwaObjects[hangarPlayerObjectIndex].PositionZ;
 	int& hangarFloorPositionZ = *(int*)0x068BC38;
+
+	g_HangarFloorElevationHook_PositionZ = positionZ;
 
 	const PlayerCraft player = g_hangarObjects.GetPlayerCraft(xwaObjects[hangarPlayerObjectIndex].ModelIndex);
 
@@ -3739,10 +3765,12 @@ int HangarFloorElevationHook(int* params)
 	if (!g_isPlayerFloorInverted)
 	{
 		hangarFloorPositionZ = positionZ - player.OffsetZ - elevation;
+		g_HangarFloorElevationHook_PositionZ += 0x223 + elevation;
 	}
 	else
 	{
 		hangarFloorPositionZ = positionZ - g_hangarFloorInvertedHeight - player.OffsetZ + elevation;
+		g_HangarFloorElevationHook_PositionZ -= 0x223 + elevation;
 	}
 
 	hangarFloorPositionZ = GetHangarFloorPositionZ();
@@ -4917,6 +4945,8 @@ int GetCockpitId()
 
 int HangarExitHook(int* params)
 {
+	g_HangarFloorElevationHook_called = false;
+
 	*(int*)0x0068BBB8 = 1;
 
 	g_isInHangar = false;
