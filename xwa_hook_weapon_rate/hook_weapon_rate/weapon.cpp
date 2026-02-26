@@ -331,7 +331,17 @@ static_assert(sizeof(ExeCraftWeaponSlot) == 8, "size of ExeCraftWeaponSlot must 
 
 struct ExeCraftEntry
 {
-	char Unk0000[354];
+	char Unk0000[306];
+	unsigned short LaserTypeId[3];
+	unsigned char LaserStartRack[3];
+	unsigned char LaserEndRack[3];
+	unsigned char LaserLinkCode[3];
+	char Unk0141[21];
+	unsigned short WarheadTypeId[2];
+	unsigned char WarheadStartRack[2];
+	unsigned char WarheadEndRack[2];
+	unsigned char WarheadLinkCode[2];
+	unsigned char WarheadCapacity[2];
 	ExeCraftWeaponSlot WeaponSlots[16];
 	char Unk01E2[310];
 	unsigned char NumOfFloatHardPts;
@@ -354,7 +364,8 @@ struct XwaCraftWeaponRack
 	char Sequence;
 	unsigned char LaserIndex;
 	char Charge;
-	char Unk0005[3];
+	unsigned char Count;
+	char Unk0006[2];
 	unsigned char MeshId;
 	unsigned char HardpointId;
 	short ObjectIndex;
@@ -462,7 +473,7 @@ static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 TieFlightGroupEx* s_XwaTieFlightGroups = (TieFlightGroupEx*)0x80DC80;
 
-int GetHangarWarheadMaxCount(int fgIndex, int warheadType, int capacity);
+int GetHangarWarheadMaxCount(int fgIndex, int warheadType, int capacity, int racksCount, int warheadCount);
 
 std::string GetPathFileName(const std::string& str)
 {
@@ -3659,6 +3670,71 @@ private:
 
 ModelIndexWarhead g_modelIndexWarhead;
 
+int GetCraftWarheadRackCount(int objectIndex)
+{
+	const auto XwaGetCraftIndex = (short(*)(short))0x004DCE30;
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+	const ExeCraftEntry* xwaExeCraftTable = (ExeCraftEntry*)0x005BB480;
+	XwaCraft* pCraft = xwaObjects[objectIndex].pMobileObject->pCraft;
+	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)pCraft + g_craftConfig.Craft_Offset_2DF);
+
+	int warheadCount = 0;
+
+	short craftIndex = XwaGetCraftIndex(xwaObjects[objectIndex].ModelIndex);
+
+	for (int warheadIndex = 0; warheadIndex < 2; warheadIndex++)
+	{
+		unsigned short warheadModelIndex = pCraft->WarheadsModelIndex[warheadIndex];
+
+		if (warheadModelIndex == 0)
+		{
+			continue;
+		}
+
+		unsigned char startRack = xwaExeCraftTable[craftIndex].WarheadStartRack[warheadIndex];
+		unsigned char endRack = xwaExeCraftTable[craftIndex].WarheadEndRack[warheadIndex];
+		warheadCount += endRack - startRack + 1;
+	}
+
+	return warheadCount;
+}
+
+int GetCraftWarheadRackTotalCount(int objectIndex)
+{
+	const auto XwaGetCraftIndex = (short(*)(short))0x004DCE30;
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+	const ExeCraftEntry* xwaExeCraftTable = (ExeCraftEntry*)0x005BB480;
+	XwaCraft* pCraft = xwaObjects[objectIndex].pMobileObject->pCraft;
+	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)pCraft + g_craftConfig.Craft_Offset_2DF);
+
+	int warheadCount = 0;
+
+	short craftIndex = XwaGetCraftIndex(xwaObjects[objectIndex].ModelIndex);
+
+	for (int warheadIndex = 0; warheadIndex < 2; warheadIndex++)
+	{
+		unsigned short warheadModelIndex = pCraft->WarheadsModelIndex[warheadIndex];
+
+		if (warheadModelIndex == 0)
+		{
+			continue;
+		}
+
+		unsigned char startRack = xwaExeCraftTable[craftIndex].WarheadStartRack[warheadIndex];
+		unsigned char endRack = xwaExeCraftTable[craftIndex].WarheadEndRack[warheadIndex];
+
+		for (int i = startRack; i <= endRack; i++)
+		{
+			XwaCraftWeaponRack* rack = weaponRacks + i;
+			warheadCount += rack->Count;
+		}
+	}
+
+	return warheadCount;
+}
+
 int WarheadCapacity_0041BE55_Hook(int* params)
 {
 	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
@@ -3676,9 +3752,22 @@ int WarheadCapacity_0041BE55_Hook(int* params)
 		percent = value;
 	}
 
+	int racksCount = GetCraftWarheadRackCount(objectIndex);
+
 	capacity = (capacity * percent + 50) / 100;
 
-	int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity);
+	//int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity, racksCount);
+	int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, 0, racksCount, 0);
+
+	if (racksCount)
+	{
+		capacity = capacity / racksCount;
+		if (maxCapacity != -1)
+		{
+			maxCapacity = maxCapacity / racksCount;
+		}
+	}
+
 	if (maxCapacity != -1)
 	{
 		capacity = min(capacity, maxCapacity);
@@ -3706,9 +3795,22 @@ int WarheadCapacity_0045CBFD_Hook(int* params)
 		percent = value;
 	}
 
+	int racksCount = GetCraftWarheadRackCount(objectIndex);
+
 	capacity = (capacity * percent + 50) / 100;
 
-	int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity);
+	int warheadCount = GetCraftWarheadRackTotalCount(objectIndex);
+	int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity, racksCount, warheadCount);
+
+	if (racksCount)
+	{
+		capacity = capacity / racksCount;
+		if (maxCapacity != -1)
+		{
+			maxCapacity = maxCapacity / racksCount;
+		}
+	}
+
 	if (maxCapacity != -1)
 	{
 		capacity = min(capacity, maxCapacity);
@@ -3735,9 +3837,12 @@ int WarheadCapacity_00460904_Hook(int* params)
 		percent = value;
 	}
 
+	int racksCount = GetCraftWarheadRackCount(objectIndex);
+
 	capacity = (capacity * percent + 50) / 100;
 
-	int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity);
+	int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity, racksCount, 0);
+
 	if (maxCapacity != -1)
 	{
 		capacity = min(capacity, maxCapacity);
@@ -3763,9 +3868,11 @@ int WarheadCapacity_004B1426_Hook(int* params)
 		percent = value;
 	}
 
+	int racksCount = GetCraftWarheadRackCount(objectIndex);
+
 	capacity = (capacity * percent + 50) / 100;
 
-	//int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity);
+	//int maxCapacity = GetHangarWarheadMaxCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType, capacity, racksCount, 0);
 	//if (maxCapacity != -1)
 	//{
 	//	capacity = min(capacity, maxCapacity);
@@ -4560,8 +4667,16 @@ int& GetHangarWarheadTypeCount(WarheadTypeCount& missionCount, int warheadType)
 	return _default;
 }
 
-int GetHangarWarheadMaxCount(int fgIndex, int warheadType, int capacity)
+int GetHangarWarheadMaxCount(int fgIndex, int warheadType, int capacity, int racksCount, int warheadCount)
 {
+	static int current_rack = -1;
+	current_rack++;
+
+	if (current_rack == racksCount)
+	{
+		current_rack = 0;
+	}
+
 	WarheadTypeCount& missionCount = g_missionWarheadType.GetWarheadTypeCount(fgIndex);
 	int count = -1;
 
