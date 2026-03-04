@@ -3726,6 +3726,28 @@ int CraftWarheadCapacityStatus(unsigned char flightGroupIndex, int capacity)
 	return capacity;
 }
 
+int CraftWarheadMaxCapacityStatus(unsigned char flightGroupIndex, int capacity)
+{
+	FlightGroupStatusEnum status1 = s_XwaTieFlightGroups[flightGroupIndex].Status1;
+	FlightGroupStatusEnum status2 = s_XwaTieFlightGroups[flightGroupIndex].Status2;
+
+	if (capacity <= 0)
+	{
+		return capacity;
+	}
+
+	if (status1 == FlightGroupStatus_DoubleMissiles || status2 == FlightGroupStatus_DoubleMissiles)
+	{
+		capacity *= 2;
+	}
+	else if (status1 == FlightGroupStatus_HalfMissiles || status2 == FlightGroupStatus_HalfMissiles)
+	{
+		capacity /= 2;
+	}
+
+	return capacity;
+}
+
 int WarheadCapacity_0041BE55_Hook(int* params)
 {
 	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
@@ -4665,6 +4687,17 @@ WarheadTypeCount GetMissionWarheadTypeCount(int fgIndex)
 	missionCount.IonPulse = GetFileKeyValueInt(lines, key + "_IonPulse", -1);
 	missionCount.AdvancedMagPulse = GetFileKeyValueInt(lines, key + "_AdvancedMagPulse", -1);
 	missionCount.ClusterBombs = GetFileKeyValueInt(lines, key + "_ClusterBombs", -1);
+
+	missionCount.SpaceBombs = CraftWarheadMaxCapacityStatus(fgIndex, missionCount.SpaceBombs);
+	missionCount.HeavyRockets = CraftWarheadMaxCapacityStatus(fgIndex, missionCount.HeavyRockets);
+	missionCount.Missiles = CraftWarheadMaxCapacityStatus(fgIndex, missionCount.Missiles);
+	missionCount.ProtonTorpedos = CraftWarheadMaxCapacityStatus(fgIndex, missionCount.ProtonTorpedos);
+	missionCount.AdvancedMissiles = CraftWarheadMaxCapacityStatus(fgIndex, missionCount.AdvancedMissiles);
+	missionCount.AdvancedTorpedos = CraftWarheadMaxCapacityStatus(fgIndex, missionCount.AdvancedTorpedos);
+	missionCount.MagPulse = CraftWarheadMaxCapacityStatus(fgIndex, missionCount.MagPulse);
+	missionCount.IonPulse = CraftWarheadMaxCapacityStatus(fgIndex, missionCount.IonPulse);
+	missionCount.AdvancedMagPulse = CraftWarheadMaxCapacityStatus(fgIndex, missionCount.AdvancedMagPulse);
+	missionCount.ClusterBombs = CraftWarheadMaxCapacityStatus(fgIndex, missionCount.ClusterBombs);
 
 	return missionCount;
 }
