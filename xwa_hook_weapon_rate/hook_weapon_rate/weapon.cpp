@@ -3860,7 +3860,7 @@ int WarheadCapacity_0045CBFD_Hook(int* params)
 	int& load = GetHangarWarheadTypeCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType);
 	int currentLoad = load;
 	int delta = max(capacity - currentRackWarheadCount, 0);
-	if (g_WarheadCapacity_0041BE55_Hook_type == 1)
+	if (g_WarheadCapacity_0041BE55_Hook_type == 1 && currentLoad != -1)
 	{
 		load -= delta;
 		if (load < 0)
@@ -3936,7 +3936,7 @@ int WarheadCapacity_00460904_Hook(int* params)
 	int& load = GetHangarWarheadTypeCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType);
 	int currentLoad = load;
 	int delta = max(capacity - currentRackWarheadCount, 0);
-	if (g_WarheadCapacity_0041BE55_Hook_type == 2)
+	if (g_WarheadCapacity_0041BE55_Hook_type == 2 && currentLoad != -1)
 	{
 		load -= delta;
 		if (load < 0)
