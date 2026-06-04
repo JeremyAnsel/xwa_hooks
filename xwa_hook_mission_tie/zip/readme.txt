@@ -108,6 +108,9 @@ At offset 1772F8, replace E8630B0000 with E8230C0300.
 At offset 177352, replace E8090B0000 with E8C90B0300.
 At offset 177BE4, replace E877070000 with E837030300.
 
+# To call the hook that replaces mission opt
+At offset 07FEB6, replace 668B0455E0A67C00 with E865801200909090.
+
 
 *** Usage ***
 
@@ -333,6 +336,17 @@ ShipName_Score = integer
 The default value is -1.
 
 The hook reads the mission values then the craft values. When a value is different than -1 it overwrites the current value.
+
+# Weapon opt replace
+
+Suppose that the craft is "FlightModels\[Model].opt".
+
+To define opt replacement for the weapons create a file named "FlightModels\[Model]OptReplace.txt" or create a section named "OptReplace" in "FlightModels\[Model].ini".
+The format is:
+WeaponXXX = value
+
+XXX is the weapon model index.
+value is the path to the opt file.
 
 
 *** Credits ***

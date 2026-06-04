@@ -43,3 +43,5 @@ int CampaignCraftsListHook(int* params);
 int CampaignCraftsFillListHook(int* params);
 int CampaignCraftsListLines1Hook(int* params);
 int CampaignCraftsListLines2Hook(int* params);
+
+int MissionOptReplaceHook(int* params);

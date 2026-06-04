@@ -61,6 +61,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x577EFD, CampaignCraftsListLines1Hook },
 	{ 0x577F57, CampaignCraftsListLines1Hook },
 	{ 0x5787E9, CampaignCraftsListLines2Hook },
+	{ 0x480ABB, MissionOptReplaceHook },
 };
 
 static const HookPatchItem g_overrideTiePatch[] =
@@ -195,6 +196,11 @@ static const HookPatchItem g_campaignCraftsListPatch[] =
 	{ 0x177BE4, "E877070000", "E837030300" },
 };
 
+static const HookPatchItem g_missionOptReplacePatch[] =
+{
+	{ 0x07FEB6, "668B0455E0A67C00", "E865801200909090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that override tie mission", g_overrideTiePatch),
@@ -207,4 +213,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that sets the spec rci entries", g_specRciPatch),
 	MAKE_HOOK_PATCH("To call the hook that targets next objective craft", g_targetCraftPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines the campaign crafts list", g_campaignCraftsListPatch),
+	MAKE_HOOK_PATCH("To call the hook that replaces mission opt", g_missionOptReplacePatch),
 };

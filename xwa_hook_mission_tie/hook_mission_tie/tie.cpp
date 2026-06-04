@@ -583,7 +583,9 @@ static_assert(sizeof(XwaObject) == 39, "size of XwaObject must be 39");
 
 struct TieFlightGroupEx
 {
-	char unk000[112];
+	char unk000[107];
+	unsigned char CraftId;
+	char unk06C[4];
 	unsigned char Iff;
 	char unk071[1];
 	unsigned char Rank;
@@ -665,6 +667,7 @@ static_assert(sizeof(SpecRciEntry) == 48, "size of SpecRciEntry must be 48");
 #pragma pack(pop)
 
 TieFlightGroupEx* s_XwaTieFlightGroups = (TieFlightGroupEx*)0x80DC80;
+short& s_XwaTieFlightGroupsCount = *(short*)0x007B4C00;
 
 struct CraftStats
 {
@@ -1936,6 +1939,9 @@ std::string GetCraftName(int craftIndex, const std::string& mission)
 	return std::string();
 }
 
+void MissionOptReplaceLoad();
+void MissionOptReplaceFree();
+
 int TieHook(int* params)
 {
 	// init music state
@@ -1956,6 +1962,8 @@ int TieHook(int* params)
 	}
 
 	GetSpecTable().SetCraftsValues();
+
+	MissionOptReplaceLoad();
 
 	const std::string path = GetStringWithoutExtension(fileName);
 	auto file = GetFileLines(path + ".txt");
@@ -2074,6 +2082,8 @@ int TieHook(int* params)
 int MissionFreeHook(int* params)
 {
 	const auto L00558180 = (int(*)())0x00558180;
+
+	MissionOptReplaceFree();
 
 	GetSpecTable().RestoreDefaultValues();
 
@@ -3372,5 +3382,200 @@ int CampaignCraftsListLines2Hook(int* params)
 		*(int*)0x0784990 = 0;
 	}
 
+	return 0;
+}
+
+class MissionOpt
+{
+public:
+	std::string _fileName;
+	short _memHandle;
+
+	MissionOpt(std::string& fileName);
+	void Free();
+	void Load();
+};
+
+MissionOpt::MissionOpt(std::string& fileName)
+{
+	_fileName = fileName;
+	_memHandle = 0;
+}
+
+void MissionOpt::Free()
+{
+	const auto XwaOptUnload = (void(*)(short))0x004CCA60;
+
+	if (_memHandle != 0)
+	{
+		XwaOptUnload(_memHandle);
+		_memHandle = 0;
+	}
+}
+
+void MissionOpt::Load()
+{
+	const auto XwaOptLoad = (short(*)(const char*))0x004CC940;
+
+	_memHandle = XwaOptLoad(_fileName.c_str());
+}
+
+class MissionOpts
+{
+public:
+	std::vector<MissionOpt> _opts;
+	std::map<int, int> _optsMap;
+
+	MissionOpts();
+	~MissionOpts();
+	void Free();
+	void Load();
+	int FindOpt(const std::string& name);
+	int GetKey(int sourceModelIndex, int weaponModelIndex);
+	short GetMemHandle(int sourceModelIndex, int weaponModelIndex);
+};
+
+MissionOpts::MissionOpts()
+{
+}
+
+MissionOpts::~MissionOpts()
+{
+	//Free();
+}
+
+void MissionOpts::Free()
+{
+	for (MissionOpt& opt : _opts)
+	{
+		opt.Free();
+	}
+
+	_opts.clear();
+	_optsMap.clear();
+}
+
+void MissionOpts::Load()
+{
+	unsigned short* s_ExeSpecies = (unsigned short*)0x005B0F70;
+
+	const auto objectLines = GetCustomFileLines("Objects");
+
+	for (int fg = 0; fg < s_XwaTieFlightGroupsCount; fg++)
+	{
+		unsigned short modelIndex = s_ExeSpecies[s_XwaTieFlightGroups[fg].CraftId];
+		std::string shipPath = g_flightModelsList.GetLstLine(modelIndex);
+		const std::string objectValue = GetFileKeyValue(objectLines, shipPath + ".opt");
+		if (!objectValue.empty() && std::ifstream(objectValue))
+		{
+			shipPath = GetStringWithoutExtension(objectValue);
+		}
+
+		std::vector<std::string> lines = GetFileLines(shipPath + "OptReplace.txt");
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(shipPath + ".ini", "OptReplace");
+		}
+
+		for (int weapon = 280; weapon < 280 + 28; weapon++)
+		{
+			std::string name = GetFileKeyValue(lines, "Weapon" + std::to_string(weapon));
+
+			if (name.empty())
+			{
+				continue;
+			}
+
+			int index = FindOpt(name);
+
+			if (index == -1)
+			{
+				_opts.push_back(MissionOpt(name));
+				index = _opts.size() - 1;
+			}
+
+			int key = GetKey(modelIndex, weapon);
+
+			if (_optsMap.find(key) == _optsMap.end())
+			{
+				_optsMap.insert(std::make_pair(key, index));
+			}
+		}
+	}
+
+	for (MissionOpt& opt : _opts)
+	{
+		opt.Load();
+	}
+}
+
+int MissionOpts::FindOpt(const std::string& name)
+{
+	for (int i = 0; i < (int)_opts.size(); i++)
+	{
+		if (_stricmp(_opts[i]._fileName.c_str(), name.c_str()) == 0)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+int MissionOpts::GetKey(int sourceModelIndex, int weaponModelIndex)
+{
+	return sourceModelIndex * 100 + weaponModelIndex;
+}
+
+short MissionOpts::GetMemHandle(int sourceModelIndex, int weaponModelIndex)
+{
+	int key = GetKey(sourceModelIndex, weaponModelIndex);
+
+	auto it = _optsMap.find(key);
+
+	if (it == _optsMap.end())
+	{
+		return 0;
+	}
+
+	int index = it->second;
+	short memHandle = _opts[index]._memHandle;
+	return memHandle;
+}
+
+MissionOpts g_missionOpts;
+
+void MissionOptReplaceLoad()
+{
+	g_missionOpts.Load();
+}
+
+void MissionOptReplaceFree()
+{
+	g_missionOpts.Free();
+}
+
+int MissionOptReplaceHook(int* params)
+{
+	XwaObject* xwaObjects = *(XwaObject**)0x07B33C4;
+	XwaObject* object = (XwaObject*)params[Params_EBP];
+	unsigned short modelIndex = object->ModelIndex;
+
+	short optFileMemHandle = ((short*)0x007CA6E0)[modelIndex];
+
+	if (modelIndex != 0 && object->pMobileObject && modelIndex != object->pMobileObject->ModelIndex)
+	{
+		int sourceModelIndex = object->pMobileObject->ModelIndex;
+
+		short handle = g_missionOpts.GetMemHandle(sourceModelIndex, modelIndex);
+
+		if (handle != 0)
+		{
+			optFileMemHandle = handle;
+		}
+	}
+
+	params[Params_EAX] = optFileMemHandle;
 	return 0;
 }
