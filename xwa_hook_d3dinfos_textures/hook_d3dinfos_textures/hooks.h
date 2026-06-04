@@ -8,6 +8,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x441755, InitD3DInfosHook },
 	{ 0x443921, TestTextureIlluminationHook },
 	{ 0x482970, RenderOptNodeHook },
+	{ 0x49F465, AddVisibleObjectToListHook },
 };
 
 static const HookPatchItem g_removeD3DInfosCountLimitPatch[] =
@@ -21,8 +22,14 @@ static const HookPatchItem g_testTextureIlluminationPatch[] =
 	{ 0x081D6B, "8B8EA8000000", "E8B061120090" },
 };
 
+static const HookPatchItem g_visibleObjectListPatch[] =
+{
+	{ 0x09E860, "A150A37C00", "E8BB961000" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that removes D3DInfos count limit", g_removeD3DInfosCountLimitPatch),
 	MAKE_HOOK_PATCH("To call the hook that tests the texture illumination", g_testTextureIlluminationPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the visible object list", g_visibleObjectListPatch),
 };

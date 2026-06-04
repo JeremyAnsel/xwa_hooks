@@ -22,3 +22,9 @@ E8FF511600              call 005A8B20, 005A8B20 - 00443921 = 001651FF
 
 E8B0611200              call 005A8B20, 005A8B20 - 00482970 = 001261B0
 90                      nop
+
+; L0049F460 - XwaAddVisibleObjectToList
+:0049F460 - 0x09E860
+A150A37C00              mov eax, dword ptr [007CA350]
+
+E8BB961000              call 005A8B20, 005A8B20 - 0049F465 = 001096BB
