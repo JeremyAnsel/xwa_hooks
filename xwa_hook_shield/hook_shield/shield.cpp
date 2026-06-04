@@ -111,14 +111,14 @@ public:
 		this->IsShieldRechargeForStarshipsEnabled = GetFileKeyValueInt(lines, "IsShieldRechargeForStarshipsEnabled", 1) != 0;
 		this->IsShieldRechargeForStarshipsOnEasyDifficultyEnabled = GetFileKeyValueInt(lines, "IsShieldRechargeForStarshipsOnEasyDifficultyEnabled", 0) != 0;
 		this->IsShieldStrengthForStarfighterDoubled = GetFileKeyValueInt(lines, "IsShieldStrengthForStarfighterDoubled", 0) != 0;
-		this->CraftUpdateTime = GetFileKeyValueInt(lines, "CraftUpdateTime", 123);
+		//this->CraftUpdateTime = GetFileKeyValueInt(lines, "CraftUpdateTime", 123);
 		this->RechargeRatePercent = GetFileKeyValueInt(lines, "RechargeRatePercent", 100);
 	}
 
 	bool IsShieldRechargeForStarshipsEnabled;
 	bool IsShieldRechargeForStarshipsOnEasyDifficultyEnabled;
 	bool IsShieldStrengthForStarfighterDoubled;
-	int CraftUpdateTime;
+	//int CraftUpdateTime;
 	int RechargeRatePercent;
 };
 
@@ -208,6 +208,7 @@ static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 #pragma pack(pop)
 
+/*
 class ObjectIndexTime
 {
 public:
@@ -261,6 +262,7 @@ public:
 private:
 	std::map<int, int> _time;
 };
+*/
 
 int GetDefaultShieldGeneratorCount(int modelIndex)
 {
@@ -753,6 +755,7 @@ int ShieldRechargeHook(int* params)
 	return 0;
 }
 
+/*
 int CraftUpdateHook(int* params)
 {
 	params[Params_ECX] = *(int*)0x008BF378;
@@ -814,9 +817,11 @@ int CraftUpdateTimeHook(int* params)
 
 	return 0;
 }
+*/
 
-ObjectIndexTime g_lasersEnergyToShieldsObjectIndexTime;
+//ObjectIndexTime g_lasersEnergyToShieldsObjectIndexTime;
 
+/*
 int LasersEnergyToShieldsHook(int* params)
 {
 	const short esp18 = (short)params[6];
@@ -827,6 +832,21 @@ int LasersEnergyToShieldsHook(int* params)
 	int timeSpeed = g_lasersEnergyToShieldsObjectIndexTime.RetrieveTimeSpeed(236, objectIndex, elapsedTime);
 
 	if (timeSpeed == 0 || esp18 >= bp)
+	{
+		params[Params_ReturnAddress] = 0x0049060E;
+	}
+
+	return 0;
+}
+*/
+
+int LasersEnergyToShieldsHook(int* params)
+{
+	const short esp18 = (short)params[6];
+	const short bp = (short)params[Params_EBP];
+	const unsigned char esp13 = *(unsigned char*)((int)params + 0x13);
+
+	if (esp13 == 0 || esp18 >= bp)
 	{
 		params[Params_ReturnAddress] = 0x0049060E;
 	}

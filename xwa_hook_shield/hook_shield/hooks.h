@@ -7,9 +7,9 @@ static const HookFunction g_hookFunctions[] =
 {
 	{ 0x49032F, ShieldRechargeHook },
 	{ 0x49066F, ShieldRechargeHook },
-	{ 0x48FC39, CraftUpdateHook },
-	{ 0x4906D4, CraftUpdateMulShieldHook },
-	{ 0x490687, CraftUpdateTimeHook },
+	//{ 0x48FC39, CraftUpdateHook },
+	//{ 0x4906D4, CraftUpdateMulShieldHook },
+	//{ 0x490687, CraftUpdateTimeHook },
 	{ 0x4905A0, LasersEnergyToShieldsHook },
 	{ 0x490713, ShieldRechargePercentHook },
 	{ 0x490777, ShieldRechargePercentHook },
