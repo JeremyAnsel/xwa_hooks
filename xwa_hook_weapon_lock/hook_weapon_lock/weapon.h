@@ -10,3 +10,8 @@ int WarheadLockStrengthHook(int* params);
 int WarheadAILockDistance0Hook(int* params);
 int WarheadAILockDistance1Hook(int* params);
 int WarheadAILockTimeFactorHook(int* params);
+int ModelAttackBreakWarheadHook(int* params);
+int ModelAttackBreakSmallObjectRankHook(int* params);
+int ModelAttackBreakLargeObjectMaxDistanceHook(int* params);
+int ModelAttackLargeObjectOffsetHook(int* params);
+int ModelAttackMaxRangeHook(int* params);

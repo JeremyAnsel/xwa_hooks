@@ -56,3 +56,41 @@ C1E603                  shl esi, 03
 
 E8370A1000              call 005A8B20, 005A8B20 - 004A80E9 = 00100A37
 
+===============================================================================
+
+// L004AD170 - XwaAIAttackManrFunction
+
+; warhead
+:004AD342 - 0x0AC742
+BF00140000              mov edi, 00001400
+
+E8D9B70F00              call 005A8B20, 005A8B20 - 004AD347 = 000FB7D9
+
+; small object ranks
+:004AD39E - 0x0AC79E
+7507                    jne 004AD3A7
+BF00060000              mov edi, 00000600
+
+E87DB70F00              call 005A8B20, 005A8B20 - 004AD3A3 = 000FB77D
+9090                    nop
+
+; large object max distance
+:004AD44F - 0x0AC84F
+81FF00200000            cmp edi, 00002000
+
+E8CCB60F00              call 005A8B20, 005A8B20 - 004AD454 = 000FB6CC
+90                      nop
+
+; large object offset
+:004AD467 - 0x0AC867
+6681FE8C00              cmp si, 008C
+
+E8B4B60F00              call 005A8B20, 005A8B20 - 004AD46C = 000FB6B4
+
+// L004A75B0 - XwaAIFighterShootOrder
+
+:004A7612 - 0x0A6A12
+8B2C85E86D5B00          mov ebp, dword ptr [4*eax+005B6DE8]
+
+E809151000              call 005A8B20, 005A8B20 - 004A7617 = 00101509
+9090                    nop
