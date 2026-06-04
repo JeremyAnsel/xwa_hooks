@@ -113,3 +113,18 @@ int WeaponWarheadModelIndexToHardpointTypeHook(int* params);
 int ReadLasersLinksHook(int* params);
 int FireRatioRankHook(int* params);
 int DamagesMultiplicatorDifficultyHook(int* params);
+
+int WeaponSlotTargetSetIndexHook(int* params);
+int WeaponSlotTargetLoop1Hook(int* params);
+int WeaponSlotTargetLoop2Hook(int* params);
+int WeaponSlotTargetLoop3Hook(int* params);
+int XwaAIOrderSwichOrderHook(int* params);
+int XwaAIScanForTargetOrderHook(int* params);
+int WeaponSlotTarget2Loop1Hook(int* params);
+int WeaponSlotTarget2Loop2Hook(int* params);
+int WeaponSlotTarget2Loop3Hook(int* params);
+int XwaAIGunnerSelfDefenseOrderHook(int* params);
+int XwaAIGunnerSelfDefenseOrderLoop1Hook(int* params);
+int XwaAIGunnerSelfDefenseOrderLoop2Hook(int* params);
+int XwaAIGunnerSelfDefenseSetHook(int* params);
+int XwaAIGunnerSelfDefenseSet2Hook(int* params);

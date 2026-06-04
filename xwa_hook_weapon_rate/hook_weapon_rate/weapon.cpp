@@ -214,6 +214,27 @@ enum AIRankEnum : unsigned char
 	AIRank_SuperAce = 5,
 };
 
+enum ExeEnable10Enum : unsigned short
+{
+	ExeEnable10_None = 0,
+	ExeEnable10_Targetable = 1,
+	ExeEnable10_AIControlled = 2,
+	ExeEnable10_IsBuoy = 4,
+	ExeEnable10_In3dModeOnly = 8,
+	ExeEnable10_U5 = 16,
+	ExeEnable10_IsBackdrop = 32,
+	ExeEnable10_U7 = 64,
+	ExeEnable10_InfiniteWaves = 128,
+	ExeEnable10_IsAnimation = 256,
+	ExeEnable10_AnimationLoop = 512,
+	ExeEnable10_HasDatImageBorder = 1024,
+	ExeEnable10_HardpointsMirroring = 2048,
+	ExeEnable10_AxisAligned = 4096,
+	ExeEnable10_U14 = 8192,
+	ExeEnable10_UseImageColorKey = 16384,
+	ExeEnable10_UseImageAlpha = 32768,
+};
+
 enum ShipCategoryEnum : unsigned char
 {
 	ShipCategory_Starfighter = 0,
@@ -339,6 +360,23 @@ struct OptMeshDescriptorNode_19_Data
 };
 
 static_assert(sizeof(OptMeshDescriptorNode_19_Data) == 72, "size of OptMeshDescriptorNode_19_Data must be 72");
+
+struct ExeEnableEntry
+{
+	unsigned char EnableOptions; // flags
+	unsigned char RessourceOptions; // flags
+	unsigned char ObjectCategory;
+	ShipCategoryEnum ShipCategory;
+	unsigned int ObjectSize;
+	void* pData1;
+	void* pData2;
+	ExeEnable10Enum GameOptions; // flags
+	short CraftIndex;
+	short DataIndex1;
+	short DataIndex2;
+};
+
+static_assert(sizeof(ExeEnableEntry) == 24, "size of ExeEnableEntry must be 24");
 
 struct ExeCraftWeaponSlot
 {
@@ -497,6 +535,60 @@ static_assert(sizeof(XwaPlayer) == 3023, "size of XwaPlayer must be 3023");
 
 #pragma pack(pop)
 
+const char* GetShipCategoryName(ShipCategoryEnum category)
+{
+	switch (category)
+	{
+	case ShipCategory_Starfighter:
+		return "Starfighter";
+	case ShipCategory_Transport:
+		return "Transport";
+	case ShipCategory_UtilityVehicle:
+		return "UtilityVehicle";
+	case ShipCategory_Freighter:
+		return "Freighter";
+	case ShipCategory_Starship:
+		return "Starship";
+	case ShipCategory_Platform:
+		return "Platform";
+	case ShipCategory_PlayerProjectile:
+		return "PlayerProjectile";
+	case ShipCategory_OtherProjectile:
+		return "OtherProjectile";
+	case ShipCategory_Mine:
+		return "Mine";
+	case ShipCategory_Satellite:
+		return "Satellite";
+	case ShipCategory_NormalDebris:
+		return "NormalDebris";
+	case ShipCategory_SmallDebris:
+		return "SmallDebris";
+	case ShipCategory_Backdrop:
+		return "Backdrop";
+	case ShipCategory_Explosion:
+		return "Explosion";
+	case ShipCategory_Obstacle:
+		return "Obstacle";
+	case ShipCategory_DeathStarII:
+		return "DeathStarII";
+	case ShipCategory_People:
+		return "People";
+	case ShipCategory_Container:
+		return "Container";
+	case ShipCategory_Droid:
+		return "Droid";
+	case ShipCategory_Armament:
+		return "Armament";
+	case ShipCategory_LargeDebris:
+		return "LargeDebris";
+	case ShipCategory_SalvageYard:
+		return "SalvageYard";
+	}
+
+	return "";
+}
+
+
 TieFlightGroupEx* s_XwaTieFlightGroups = (TieFlightGroupEx*)0x80DC80;
 
 int& GetHangarWarheadTypeCount(int fgIndex, int warheadType);
@@ -508,7 +600,7 @@ std::string GetPathFileName(const std::string& str)
 	return a == -1 ? str : str.substr(a + 1, -1);
 }
 
-std::vector<std::string> GetShipLines(int modelIndex)
+std::vector<std::string> GetShipLines(int modelIndex, bool defaultFirst = true)
 {
 	const char* xwaMissionFileName = (const char*)0x06002E8;
 
@@ -539,21 +631,43 @@ std::vector<std::string> GetShipLines(int modelIndex)
 		ship = GetStringWithoutExtension(objectValue);
 	}
 
-	lines = GetFileLines("FlightModels\\WeaponRate.txt");
-
-	if (!lines.size())
+	if (defaultFirst)
 	{
-		lines = GetFileLines("FlightModels\\default.ini", "WeaponRate");
-	}
+		lines = GetFileLines("FlightModels\\WeaponRate.txt");
 
-	if (!lines.size())
+		if (!lines.size())
+		{
+			lines = GetFileLines("FlightModels\\default.ini", "WeaponRate");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(ship + "WeaponRate.txt");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines(ship + ".ini", "WeaponRate");
+		}
+	}
+	else
 	{
 		lines = GetFileLines(ship + "WeaponRate.txt");
-	}
 
-	if (!lines.size())
-	{
-		lines = GetFileLines(ship + ".ini", "WeaponRate");
+		if (!lines.size())
+		{
+			lines = GetFileLines(ship + ".ini", "WeaponRate");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines("FlightModels\\WeaponRate.txt");
+		}
+
+		if (!lines.size())
+		{
+			lines = GetFileLines("FlightModels\\default.ini", "WeaponRate");
+		}
 	}
 
 	return lines;
@@ -855,7 +969,7 @@ int GetModelEnergyTransferRate(int objectIndex)
 	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
 	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
 
-	auto lines = GetShipLines(modelIndex);
+	auto lines = GetShipLines(modelIndex, false);
 
 	int rate = GetMissionWeaponRate(fgIndex, "EnergyTransferRate");
 
@@ -888,7 +1002,7 @@ int GetModelEnergyTransferRatePenalty(int objectIndex)
 	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
 	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
 
-	auto lines = GetShipLines(modelIndex);
+	auto lines = GetShipLines(modelIndex, false);
 
 	int penalty = GetMissionWeaponRate(fgIndex, "EnergyTransferRatePenalty");
 
@@ -911,7 +1025,7 @@ int GetModelEnergyTransferWeaponLimit(int objectIndex)
 	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
 	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
 
-	auto lines = GetShipLines(modelIndex);
+	auto lines = GetShipLines(modelIndex, false);
 
 	int limit = GetMissionWeaponRate(fgIndex, "EnergyTransferWeaponLimit");
 
@@ -934,7 +1048,7 @@ int GetModelEnergyTransferShieldLimit(int objectIndex)
 	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
 	int fgIndex = XwaObjects[objectIndex].TieFlightGroupIndex;
 
-	auto lines = GetShipLines(modelIndex);
+	auto lines = GetShipLines(modelIndex, false);
 
 	int limit = GetMissionWeaponRate(fgIndex, "EnergyTransferShieldLimit");
 
@@ -1605,6 +1719,35 @@ bool GetWeaponIsLaserLinksFixEnabled(int modelIndex)
 	return enabled;
 }
 
+std::array<bool, 23> GetWeaponSlotTargetBlock(short craftModelIndex, short weaponModelIndex)
+{
+	std::array<bool, 23> filter{};
+
+	auto lines = GetModelLines(craftModelIndex, "WeaponRate");
+	std::string line = GetFileKeyValue(lines, "Weapon" + std::to_string(weaponModelIndex) + "_TargetBlock");
+	std::vector<std::string> categories = Tokennize(line);
+
+	for (const std::string& category : categories)
+	{
+		if (category == "Warhead")
+		{
+			filter[22] = true;
+			continue;
+		}
+
+		for (int i = 0; i < 22; i++)
+		{
+			if (category == GetShipCategoryName((ShipCategoryEnum)i))
+			{
+				filter[i] = true;
+				break;
+			}
+		}
+	}
+
+	return filter;
+}
+
 class ModelIndexWeapon
 {
 public:
@@ -2018,16 +2161,14 @@ public:
 
 		auto it = this->_weaponHardpointTypes.find(modelIndex);
 
-		if (it != this->_weaponHardpointTypes.end())
-		{
-			return it->second;
-		}
-		else
+		if (it == this->_weaponHardpointTypes.end())
 		{
 			auto value = GetWeaponHardpointTypes(modelIndex);
 			this->_weaponHardpointTypes.insert(std::make_pair(modelIndex, value));
-			return value;
+			it = this->_weaponHardpointTypes.find(modelIndex);
 		}
+
+		return it->second;
 	}
 
 	int IsLaserLinksFixEnabled(int modelIndex)
@@ -2046,6 +2187,22 @@ public:
 			this->_modelIsLaserLinksFixEnabled.insert(std::make_pair(modelIndex, value));
 			return value;
 		}
+	}
+
+	const std::array<bool, 23>& GetTargetBlock(short craftModelIndex, short weaponModelIndex)
+	{
+		this->Update();
+
+		auto it = this->_weaponSlotTargetBlock.find(std::make_tuple(craftModelIndex, weaponModelIndex));
+
+		if (it == this->_weaponSlotTargetBlock.end())
+		{
+			auto value = GetWeaponSlotTargetBlock(craftModelIndex, weaponModelIndex);
+			this->_weaponSlotTargetBlock.insert(std::make_pair(std::make_tuple(craftModelIndex, weaponModelIndex), value));
+			it = this->_weaponSlotTargetBlock.find(std::make_tuple(craftModelIndex, weaponModelIndex));
+		}
+
+		return it->second;
 	}
 
 private:
@@ -2080,6 +2237,7 @@ private:
 			this->_weaponStatsLines.clear();
 			this->_weaponHardpointTypes.clear();
 			this->_modelIsLaserLinksFixEnabled.clear();
+			this->_weaponSlotTargetBlock.clear();
 		}
 	}
 
@@ -2101,6 +2259,7 @@ private:
 	std::map<int, std::vector<std::string>> _weaponStatsLines;
 	std::map<int, std::array<int, 40>> _weaponHardpointTypes;
 	std::map<int, bool> _modelIsLaserLinksFixEnabled;
+	std::map<std::tuple<short, short>, std::array<bool, 23>> _weaponSlotTargetBlock;
 };
 
 ModelIndexWeapon g_modelIndexWeapon;
@@ -2447,6 +2606,9 @@ int WeaponFireRatioHook(int* params)
 	{
 		value = ((short*)(0x005BB5D0 + params[Params_ECX]))[params[Params_EDX]];
 	}
+
+	XwaCraft* pCraft = XwaObjects[sourceObjectIndex].pMobileObject->pCraft;
+	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)pCraft + g_craftConfig.Craft_Offset_2DF);
 
 	params[Params_EBX] = value;
 	return 0;
@@ -3853,8 +4015,9 @@ int WarheadCapacity_0045CBFD_Hook(int* params)
 	}
 
 	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_2DF);
 	int currentRackIndex = params[Params_ESI] / 0x0E;
-	int currentRackWarheadCount = XwaCurrentCraft->WeaponRacks[currentRackIndex].Count;
+	int currentRackWarheadCount = weaponRacks[currentRackIndex].Count;
 	currentRackWarheadCount = 0;
 
 	int& load = GetHangarWarheadTypeCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType);
@@ -3892,7 +4055,6 @@ int WarheadCapacity_00460904_Hook(int* params)
 
 	int s_XwaHangarPlayerObjectIndex = *(int*)0x0068BC08;
 	int objectIndex = s_XwaHangarPlayerObjectIndex;
-	OutputDebugString((__FUNCTION__ " " + g_flightModelsList.GetLstLine(xwaObjects[objectIndex].ModelIndex)).c_str());
 	int value = g_modelIndexWarhead.GetStats(objectIndex, warheadType).CapacityPercent;
 
 	if (value != -1)
@@ -3929,8 +4091,9 @@ int WarheadCapacity_00460904_Hook(int* params)
 	}
 
 	XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_2DF);
 	int currentRackIndex = startRack + index;
-	int currentRackWarheadCount = XwaCurrentCraft->WeaponRacks[currentRackIndex].Count;
+	int currentRackWarheadCount = weaponRacks[currentRackIndex].Count;
 	currentRackWarheadCount = 0;
 
 	int& load = GetHangarWarheadTypeCount(xwaObjects[objectIndex].TieFlightGroupIndex, warheadType);
@@ -5111,5 +5274,276 @@ int DamagesMultiplicatorDifficultyHook(int* params)
 	params[Params_EBX] = ebx;
 
 	params[Params_ReturnAddress] = 0x004E01F1;
+	return 0;
+}
+
+int g_currentCraftObjectIndex = -1;
+int g_currentWeaponRackIndex = -1;
+const std::array<bool, 23>* g_currentWeaponTargetBlock = nullptr;
+
+bool IsWarhead(int objectIndex)
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+	const ExeEnableEntry* exeEnableTable = (ExeEnableEntry*)0x005FB240;
+	ShipCategoryEnum category = xwaObjects[objectIndex].ShipCategory;
+
+	if (category != ShipCategory_PlayerProjectile && category != ShipCategory_OtherProjectile)
+	{
+		return false;
+	}
+
+	short modelIndex = xwaObjects[objectIndex].ModelIndex;
+	ExeEnable10Enum gameOptions = exeEnableTable[modelIndex].GameOptions;
+	bool isWarhead = (gameOptions & ExeEnable10_AIControlled) != 0;
+	return isWarhead;
+}
+
+bool IsWeaponSlotTargetBlock(int objectIndex)
+{
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+	ShipCategoryEnum category = xwaObjects[objectIndex].ShipCategory;
+
+	if (xwaObjects[objectIndex].ModelIndex == 0)
+	{
+		return false;
+	}
+
+	if (g_currentWeaponTargetBlock->data()[22] && IsWarhead(objectIndex))
+	{
+		return true;
+	}
+
+	if (g_currentWeaponTargetBlock->data()[(int)category])
+	{
+		return true;
+	}
+
+	return false;
+}
+
+int WeaponSlotTargetSetIndexHook(int* params)
+{
+	short ebx = (short)params[Params_EBX];
+	params[Params_EBX] = ebx;
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+	const XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_2DF);
+
+	g_currentCraftObjectIndex = *(int*)0x007CA1A0;
+	g_currentWeaponRackIndex = ebx;
+
+	short craftModelIndex = xwaObjects[g_currentCraftObjectIndex].ModelIndex;
+	short weaponModelIndex = (short)weaponRacks[g_currentWeaponRackIndex].ModelIndex;
+
+	auto& filter = g_modelIndexWeapon.GetTargetBlock(craftModelIndex, weaponModelIndex);
+	g_currentWeaponTargetBlock = &filter;
+
+	return 0;
+}
+
+int WeaponSlotTargetLoop1Hook(int* params)
+{
+	params[Params_EBP] = *(int*)0x00917E68;
+
+	int objectIndex = params[Params_EDI];
+
+	if (IsWeaponSlotTargetBlock(objectIndex))
+	{
+		params[Params_ReturnAddress] = 0x004AA2F8;
+	}
+
+	return 0;
+}
+
+int WeaponSlotTargetLoop2Hook(int* params)
+{
+	short eax = (short)params[Params_EAX];
+	params[Params_EAX] = eax;
+
+	int objectIndex = params[Params_ESI];
+
+	if (IsWeaponSlotTargetBlock(objectIndex))
+	{
+		params[Params_ReturnAddress] = 0x004AA49E;
+	}
+
+	return 0;
+}
+
+int WeaponSlotTargetLoop3Hook(int* params)
+{
+	params[Params_ECX] = *(int*)0x007CA1A0;
+
+	int objectIndex = params[Params_EAX];
+
+	if (IsWeaponSlotTargetBlock(objectIndex))
+	{
+		params[Params_ReturnAddress] = 0x004AA652;
+	}
+
+	return 0;
+}
+
+int XwaAIOrderSwichOrderHook(int* params)
+{
+	params[Params_EAX] = *(unsigned char*)0x007CA1BE;
+
+	g_currentCraftObjectIndex = -1;
+	g_currentWeaponRackIndex = -1;
+	g_currentWeaponTargetBlock = nullptr;
+
+	return 0;
+}
+
+int XwaAIScanForTargetOrderHook(int* params)
+{
+	params[Params_EAX] = *(int*)0x007CA1B0;
+
+	g_currentCraftObjectIndex = -1;
+	g_currentWeaponRackIndex = -1;
+	g_currentWeaponTargetBlock = nullptr;
+
+	return 0;
+}
+
+int WeaponSlotTarget2Loop1Hook(int* params)
+{
+	int craftObjectIndex = *(int*)0x007CA1A0;
+	int objectIndex = params[Params_EAX];
+	params[Params_EAX] = *(int*)0x007B33C4;
+
+	if (g_currentCraftObjectIndex != craftObjectIndex)
+	{
+		return 0;
+	}
+
+	if (IsWeaponSlotTargetBlock(objectIndex))
+	{
+		params[Params_ReturnAddress] = 0x004A6660;
+	}
+
+	return 0;
+}
+
+int WeaponSlotTarget2Loop2Hook(int* params)
+{
+	int craftObjectIndex = *(int*)0x007CA1A0;
+	int objectIndex = params[Params_ESI];
+	params[Params_ECX] = *(int*)0x007B33C4;
+
+	if (g_currentCraftObjectIndex != craftObjectIndex)
+	{
+		return 0;
+	}
+
+	if (IsWeaponSlotTargetBlock(objectIndex))
+	{
+		params[Params_ReturnAddress] = 0x004A63D6;
+	}
+
+	return 0;
+}
+
+int WeaponSlotTarget2Loop3Hook(int* params)
+{
+	int craftObjectIndex = *(int*)0x007CA1A0;
+	int objectIndex = params[Params_EBP];
+	params[Params_EAX] = *(int*)0x007B33C4;
+
+	if (g_currentCraftObjectIndex != craftObjectIndex)
+	{
+		return 0;
+	}
+
+	if (IsWeaponSlotTargetBlock(objectIndex))
+	{
+		params[Params_ReturnAddress] = 0x004A664A;
+	}
+
+	return 0;
+}
+
+int XwaAIGunnerSelfDefenseOrderHook(int* params)
+{
+	params[Params_ESI] = 0x0000FFFF;
+
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
+	const XwaCraft* XwaCurrentCraft = *(XwaCraft**)0x00910DFC;
+	XwaCraftWeaponRack* weaponRacks = (XwaCraftWeaponRack*)((int)XwaCurrentCraft + g_craftConfig.Craft_Offset_2DF);
+
+	g_currentCraftObjectIndex = *(int*)0x007CA1A0;
+	g_currentWeaponRackIndex = params[7];
+
+	short craftModelIndex = xwaObjects[g_currentCraftObjectIndex].ModelIndex;
+	short weaponModelIndex = (short)weaponRacks[g_currentWeaponRackIndex].ModelIndex;
+
+	auto& filter = g_modelIndexWeapon.GetTargetBlock(craftModelIndex, weaponModelIndex);
+	g_currentWeaponTargetBlock = &filter;
+
+	return 0;
+}
+
+int XwaAIGunnerSelfDefenseOrderLoop1Hook(int* params)
+{
+	int objectIndex = params[Params_ESI];
+	params[Params_EDX] = *(int*)0x007B33C4;
+
+	if (IsWeaponSlotTargetBlock(objectIndex))
+	{
+		params[Params_ReturnAddress] = 0x004A9150;
+	}
+
+	return 0;
+}
+
+int XwaAIGunnerSelfDefenseOrderLoop2Hook(int* params)
+{
+	int objectIndex = params[Params_EBX];
+	params[Params_EDX] = *(int*)0x007B33C4;
+
+	if (IsWeaponSlotTargetBlock(objectIndex))
+	{
+		params[Params_ReturnAddress] = 0x004A9501;
+	}
+
+	return 0;
+}
+
+int XwaAIGunnerSelfDefenseSetHook(int* params)
+{
+	params[Params_EAX] = *(int*)0x007B33C4;
+
+	short objectIndex = (short)params[Params_EDI];
+
+	if (objectIndex == -1)
+	{
+		return 0;
+	}
+
+	if (IsWeaponSlotTargetBlock(objectIndex))
+	{
+		params[Params_ECX] = *(int*)0x00910DFC;
+		params[Params_EBP] = *(int*)0x00910DFC;
+		params[Params_ReturnAddress] = 0x004A8F7F;
+	}
+
+	return 0;
+}
+
+int XwaAIGunnerSelfDefenseSet2Hook(int* params)
+{
+	short objectIndex = (short)params[Params_EDI];
+
+	if (objectIndex == -1)
+	{
+		params[Params_ReturnAddress] = 0x004A9680;
+	}
+
+	//if (IsWeaponSlotTargetBlock(objectIndex))
+	//{
+	//	params[Params_ReturnAddress] = 0x004A9680;
+	//}
+
 	return 0;
 }

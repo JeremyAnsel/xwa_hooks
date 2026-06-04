@@ -861,3 +861,114 @@ E837710C00              call 005A8B20, 005A8B20 - 004E19E9 = 000C7137
 A00A548000              mov al, byte ptr [0080540A]
 
 E860890C00              call 005A8B20, 005A8B20 - 004E01C0 = 000C8960
+
+===============================================================================
+
+; weapon slot target
+// L004A98B0
+L004AA120
+
+:004A9A7D - 0x0A8E7D
+81E3FFFF0000            and ebx, 0000FFFF
+
+E89EF00F00              call 005A8B20, 005A8B20 - 004A9A82 = 000FF09E
+90                      nop
+
+; edi is object index
+:004AA1B9 - 0x0A95B9
+8B2D687E9100            mov ebp, dword ptr [00917E68]
+
+E862E90F00              call 005A8B20, 005A8B20 - 004AA1BE = 000FE962
+90                      nop
+
+; esi is object index
+:004AA349 - 0x0A9749
+25FFFF0000              and eax, 0000FFFF
+
+E8D2E70F00              call 005A8B20, 005A8B20 - 004AA34E = 000FE7D2
+
+; eax is object index
+:004AA513 - 0x0A9913
+EB06                    jmp 004AA51B
+
+9090                    nop
+
+:004AA515 - 0x0A9915
+8B0DA0A17C00            mov ecx, dword ptr [007CA1A0]
+
+E806E60F00              call 005A8B20, 005A8B20 - 004AA51A = 000FE606
+90                      nop
+
+// L004BC400
+; XwaAIOrderSwichOrder
+:004BC401 - 0x0BB801
+A0BEA17C00              mov al, byte ptr [007CA1BE]
+
+E81AC70E00              call 005A8B20, 005A8B20 - 004BC406 = 000EC71A
+
+// L004A5410
+; XwaAIScanForTargetOrder
+:004A5411 - 0x0A4811
+A1B0A17C00              mov eax, dword ptr [007CA1B0]
+
+E80A371000              call 005A8B20, 005A8B20 - 004A5416 = 0010370A
+
+// L004A60C0
+// L004A6190
+
+; eax is object index
+:004A61F0 - 0x0A55F0
+A1C4337B00              mov eax, dword ptr [007B33C4]
+
+E82B291000              call 005A8B20, 005A8B20 - 004A61F5 = 0010292B
+
+; esi is object index
+:004A62B4 - 0x0A56B4
+EB06                    jmp 004A62BC
+
+9090                    nop
+
+:004A62B6 - 0x0A56B6
+8B0DC4337B00            mov ecx, dword ptr [007B33C4]
+
+E865281000              call 005A8B20, 005A8B20 - 004A62BB = 00102865
+90                      nop
+
+; ebp is object index
+:004A6458 - 0x0A5858
+A1C4337B00              mov eax, dword ptr [007B33C4]
+
+E8C3261000              call 005A8B20, 005A8B20 - 004A645D = 001026C3
+
+// L004A8AA0
+; XwaAIGunnerSelfDefenseOrder
+:004A8B47 - 0x0A7F47
+BEFFFF0000              mov esi, 0000FFFF
+
+E8D4FF0F00              call 005A8B20, 005A8B20 - 004A8B4C = 000FFFD4
+
+; esi is object index
+:004A9015 - 0x0A8415
+8B15C4337B00            mov edx, dword ptr [007B33C4]
+
+E806FB0F00              call 005A8B20, 005A8B20 - 004A901A = 000FFB06
+90                      nop
+
+; ebx is object index
+:004A9237 - 0x0A8637
+8B15C4337B00            mov edx, dword ptr [007B33C4]
+
+E8E4F80F00              call 005A8B20, 005A8B20 - 004A923C = 000FF8E4
+90                      nop
+
+:004A8CD9 - 0x0A80D9
+A1C4337B00              mov eax, dword ptr [007B33C4]
+
+E842FE0F00              call 005A8B20, 005A8B20 - 004A8CDE = 000FFE42
+
+:004A9632 - 0x0A8A32
+6681FFFFFF              cmp di, FFFF
+7447                    je 004A9680
+
+E8E9F40F00              call 005A8B20, 005A8B20 - 004A9637 = 000FF4E9
+9090                    nop

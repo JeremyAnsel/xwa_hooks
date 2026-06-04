@@ -166,6 +166,24 @@ At offset 0E0DE4, replace 837DD8FF752C with E837710C0090.
 # To call the hook that defines damages multiplicator per difficulty
 At offset DF5BB, replace A00A548000 with E860890C00.
 
+# To call the hook that sets the weapon slot target block
+At offset 0A8E7D, replace 81E3FFFF0000 with E89EF00F0090.
+At offset 0A95B9, replace 8B2D687E9100 with E862E90F0090.
+At offset x0A9749, replace 25FFFF0000 with E8D2E70F00.
+At offset 0A9913, replace EB06 with 9090.
+At offset 0A9915, replace 8B0DA0A17C00 with E806E60F0090.
+At offset 0BB801, replace A0BEA17C00 with E81AC70E00.
+At offset 0A4811, replace A1B0A17C00 with E80A371000.
+At offset 0A55F0, replace A1C4337B00 with E82B291000.
+At offset 0A56B4, replace EB06 with 9090.
+At offset 0A56B6, replace 8B0DC4337B00 with E86528100090.
+At offset 0A5858, replace A1C4337B00 with E8C3261000.
+At offset 0A7F47, replace BEFFFF0000 with E8D4FF0F00.
+At offset 0A8415, replace 8B15C4337B00 with E806FB0F0090.
+At offset 0A8637, replace 8B15C4337B00 with E8E4F80F0090.
+At offset 0A80D9, replace A1C4337B00 with E842FE0F00.
+At offset 0A8A32, replace 6681FFFFFF7447 with E8E9F40F009090.
+
 
 *** Usage ***
 
@@ -513,6 +531,44 @@ VeteranRankFireratioMultiplicator = 2.0
 AceRankFireratioMultiplicator = 2.0
 TopAceRankFireratioMultiplicator = 1.0
 SuperAceRankFireratioMultiplicator = 1.0
+
+# Weapon slot target block
+
+Suppose that the craft is "FlightModels\[Model].opt".
+
+To define the weapon rate settings, create a file named "FlightModels\[Model]WeaponRate.txt" or create a section named "[WeaponRate]" in "FlightModels\[Model].ini".
+You can override the settings in "FlightModels\WeaponRate.txt" or in the "[WeaponRate]" section in "FlightModels\default.ini".
+
+To filter the weapon targets by categories the format is:
+WeaponXXX_TargetBlock = comma separated categories
+
+XXX is the weapon model index.
+The weapon targets are objects which are not the categories.
+
+The categories are:
+Warhead
+Starfighter
+Transport
+UtilityVehicle
+Freighter
+Starship
+Platform
+PlayerProjectile
+OtherProjectile
+Mine
+Satellite
+NormalDebris
+SmallDebris
+Backdrop
+Explosion
+Obstacle
+DeathStarII
+People
+Container
+Droid
+Armament
+LargeDebris
+SalvageYard
 
 
 *** Credits ***

@@ -133,6 +133,21 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x43321C, ReadLasersLinksHook },
 	{ 0x4E19E9, FireRatioRankHook },
 	{ 0x4E01C0, DamagesMultiplicatorDifficultyHook },
+
+	{ 0x4A9A82, WeaponSlotTargetSetIndexHook },
+	{ 0x4AA1BE, WeaponSlotTargetLoop1Hook},
+	{ 0x4AA34E, WeaponSlotTargetLoop2Hook},
+	{ 0x4AA51A, WeaponSlotTargetLoop3Hook},
+	{ 0x4BC406, XwaAIOrderSwichOrderHook },
+	{ 0x4A5416, XwaAIScanForTargetOrderHook },
+	{ 0x4A61F5, WeaponSlotTarget2Loop1Hook },
+	{ 0x4A62BB, WeaponSlotTarget2Loop2Hook },
+	{ 0x4A645D, WeaponSlotTarget2Loop3Hook },
+	{ 0x4A8B4C, XwaAIGunnerSelfDefenseOrderHook },
+	{ 0x4A901A, XwaAIGunnerSelfDefenseOrderLoop1Hook },
+	{ 0x4A923C, XwaAIGunnerSelfDefenseOrderLoop2Hook },
+	{ 0x4A8CDE, XwaAIGunnerSelfDefenseSetHook },
+	{ 0x4A9637, XwaAIGunnerSelfDefenseSet2Hook },
 };
 
 static const HookPatchItem g_weaponRatePatch[] =
@@ -328,6 +343,26 @@ static const HookPatchItem g_damagesMultiplicatorDifficultyPatch[] =
 	{ 0x0DF5BB, "A00A548000", "E860890C00" },
 };
 
+static const HookPatchItem g_weaponSlotTargetBlockPatch[] =
+{
+	{ 0x0A8E7D, "81E3FFFF0000", "E89EF00F0090" },
+	{ 0x0A95B9, "8B2D687E9100", "E862E90F0090" },
+	{ 0x0A9749, "25FFFF0000", "E8D2E70F00" },
+	{ 0x0A9913, "EB06", "9090" },
+	{ 0x0A9915, "8B0DA0A17C00", "E806E60F0090" },
+	{ 0x0BB801, "A0BEA17C00", "E81AC70E00" },
+	{ 0x0A4811, "A1B0A17C00", "E80A371000" },
+	{ 0x0A55F0, "A1C4337B00", "E82B291000" },
+	{ 0x0A56B4, "EB06", "9090" },
+	{ 0x0A56B6, "8B0DC4337B00", "E86528100090" },
+	{ 0x0A5858, "A1C4337B00", "E8C3261000" },
+	{ 0x0A7F47, "BEFFFF0000", "E8D4FF0F00" },
+	{ 0x0A8415, "8B15C4337B00", "E806FB0F0090" },
+	{ 0x0A8637, "8B15C4337B00", "E8E4F80F0090" },
+	{ 0x0A80D9, "A1C4337B00", "E842FE0F00" },
+	{ 0x0A8A32, "6681FFFFFF7447", "E8E9F40F009090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that defines weapon decharge and recharge rates", g_weaponRatePatch),
@@ -348,4 +383,5 @@ static const HookPatch g_patches[] =
 	MAKE_HOOK_PATCH("To call the hook that defines lasers links", g_lasersLinksPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines fireratio per rank", g_fireratioRankPatch),
 	MAKE_HOOK_PATCH("To call the hook that defines damages multiplicator per difficulty", g_damagesMultiplicatorDifficultyPatch),
+	MAKE_HOOK_PATCH("To call the hook that sets the weapon slot target block", g_weaponSlotTargetBlockPatch),
 };
