@@ -138,8 +138,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2026,0305,2129,21631
- PRODUCTVERSION 2026,0305,2129,21631
+ FILEVERSION 2026,0712,1423,29625
+ PRODUCTVERSION 2026,0712,1423,29625
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -156,12 +156,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Jérémy Ansel"
             VALUE "FileDescription", "Xwa32bppPlayer"
-            VALUE "FileVersion", "2026.0305.2129.21631"
+            VALUE "FileVersion", "2026.0712.1423.29625"
             VALUE "InternalName", "Xwa32bppPlayer.exe"
             VALUE "LegalCopyright", "Copyright (C) Jérémy Ansel 2025"
             VALUE "OriginalFilename", "Xwa32bppPlayer.exe"
             VALUE "ProductName", "Xwa32bppPlayer"
-            VALUE "ProductVersion", "2026.0305.2129.21631"
+            VALUE "ProductVersion", "2026.0712.1423.29625"
         END
     END
     BLOCK "VarFileInfo"
