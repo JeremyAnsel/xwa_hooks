@@ -1,40 +1,60 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
-    <LangVersion>10.0</LangVersion>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>12.0</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Version>1.0.0</Version>
+    <Version>1.0.0.0</Version>
     <ProductName>XWA hook concourse net</ProductName>
     <Description>Hook_concourse_net</Description>
     <Company>Jérémy Ansel</Company>
     <Copyright>Copyright © 2022 Jérémy Ansel</Copyright>
-    <PlatformTarget>x86</PlatformTarget>
-    <DllExportDDNSCecil>false</DllExportDDNSCecil>
-    <DllExportOurILAsm>false</DllExportOurILAsm>
-    <DllExportEmitDebugSymbols>true</DllExportEmitDebugSymbols>
-    <DebugType>full</DebugType>
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsAotCompatible>
+    <VerifyReferenceAotCompatibility>true</VerifyReferenceAotCompatibility>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <PublishAot>true</PublishAot>
+    <PublishTrimmed>true</PublishTrimmed>
+    <SelfContained>true</SelfContained>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <NoWarn>CA1416;CS0649</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DllExport" Version="1.5.2" ExcludeAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="JeremyAnsel.Xwa.Cbm" Version="3.0.20" />
-    <PackageReference Include="JeremyAnsel.Xwa.Dat" Version="3.0.26" />
+    <PackageReference Include="JeremyAnsel.Xwa.Cbm" Version="3.0.22" />
+    <PackageReference Include="JeremyAnsel.Xwa.Dat" Version="3.0.28" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="DllExport, Version=1.5.2.30304, Culture=neutral, PublicKeyToken=8337224c9ad9e356, processorArchitecture=MSIL">
-      <HintPath>$(PkgDllExport)\lib\net20\DllExport.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
+  <Target Name="BeforeBeforeBuild" BeforeTargets="BeforeBuild">
+    <SetBuildNumber>
+      <Output TaskParameter="AssemblyVersion" PropertyName="Version" />
+    </SetBuildNumber>
+  </Target>
+  <UsingTask TaskName="SetBuildNumber" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <AssemblyVersion ParameterType="System.String" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+        DateTime date = DateTime.Now;
+        string dateDot = date.ToString("yyyy.MMdd.HHmm.ssfff");
+        AssemblyVersion = dateDot;
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
 
-  <Import Project="$(PkgDllExport)/tools/net.r_eg.DllExport.targets" Condition="Exists('$(PkgDllExport)/tools/net.r_eg.DllExport.targets')" />
+  <Target Name="PublishAsBuildAfterTarget" AfterTargets="Build" DependsOnTargets="Publish">
+    <!-- placeholder task to force Publish to happen during build -->
+  </Target>
 
 </Project>

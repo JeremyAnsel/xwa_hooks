@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -152,13 +153,15 @@ namespace hook_concourse_net
             }
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(LoadDatImage))]
         public static void LoadDatImage(
-            [MarshalAs(UnmanagedType.LPStr)] string name,
+            nint namePtr,
             int groupId,
             int imageId,
             int count)
         {
+            string name = Marshal.PtrToStringAnsi(namePtr);
+
             LoadDatFiles();
 
             _resItems.Remove(name);
@@ -219,11 +222,14 @@ namespace hook_concourse_net
             _resItems[name] = item;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(LoadCbmImage))]
         public static void LoadCbmImage(
-            [MarshalAs(UnmanagedType.LPStr)] string name,
-            [MarshalAs(UnmanagedType.LPStr)] string filename)
+            nint namePtr,
+            nint filenamePtr)
         {
+            string name = Marshal.PtrToStringAnsi(namePtr);
+            string filename = Marshal.PtrToStringAnsi(filenamePtr);
+
             _resItems.Remove(name);
 
             if (!File.Exists(filename))
@@ -328,17 +334,19 @@ namespace hook_concourse_net
             _resItems[name] = item;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(FreeImage))]
         public static void FreeImage(
-            [MarshalAs(UnmanagedType.LPStr)] string name)
+            nint namePtr)
         {
+            string name = Marshal.PtrToStringAnsi(namePtr);
             _resItems.Remove(name);
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(GetItemImagesCount))]
         public static int GetItemImagesCount(
-            [MarshalAs(UnmanagedType.LPStr)] string name)
+            nint namePtr)
         {
+            string name = Marshal.PtrToStringAnsi(namePtr);
             if (_resItems.TryGetValue(name, out ResItem item))
             {
                 return item.ImagesHD.Count;
@@ -347,14 +355,15 @@ namespace hook_concourse_net
             return 0;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(GetItemImageDimensions))]
         public unsafe static int GetItemImageDimensions(
-            [MarshalAs(UnmanagedType.LPStr)] string name,
+            nint namePtr,
             int* widthSDPtr,
             int* heightSDPtr,
             int* widthHDPtr,
             int* heightHDPtr)
         {
+            string name = Marshal.PtrToStringAnsi(namePtr);
             if (!_resItems.TryGetValue(name, out ResItem item))
             {
                 return -1;
@@ -380,11 +389,12 @@ namespace hook_concourse_net
             return 0;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(GetItemImageRawData))]
         public unsafe static int GetItemImageRawData(
-            [MarshalAs(UnmanagedType.LPStr)] string name,
+            nint namePtr,
             int bufferPtr)
         {
+            string name = Marshal.PtrToStringAnsi(namePtr);
             if (!_resItems.TryGetValue(name, out ResItem item))
             {
                 return -1;
@@ -438,15 +448,16 @@ namespace hook_concourse_net
             return 0;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(FrontResDrawItemImage))]
         public static int FrontResDrawItemImage(
-            [MarshalAs(UnmanagedType.LPStr)] string name,
+            nint namePtr,
             int positionX,
             int positionY,
             int currentImage,
             int dcPtr,
             int originReturnAddress)
         {
+            string name = Marshal.PtrToStringAnsi(namePtr);
             var dc = new SurfaceDC(new IntPtr(dcPtr));
 
             if (_resItems.TryGetValue(name, out ResItem item))
@@ -458,15 +469,16 @@ namespace hook_concourse_net
             return 0;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(FrontResDrawItemCurrentImage))]
         public static int FrontResDrawItemCurrentImage(
-            [MarshalAs(UnmanagedType.LPStr)] string name,
+            nint namePtr,
             int positionX,
             int positionY,
             int currentImage,
             int dcPtr,
             int originReturnAddress)
         {
+            string name = Marshal.PtrToStringAnsi(namePtr);
             var dc = new SurfaceDC(new IntPtr(dcPtr));
 
             if (_resItems.TryGetValue(name, out ResItem item))
@@ -478,9 +490,9 @@ namespace hook_concourse_net
             return 0;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(FrontResDrawMapIcon))]
         public static int FrontResDrawMapIcon(
-            [MarshalAs(UnmanagedType.LPStr)] string name,
+            nint namePtr,
             int srcLeft,
             int srcTop,
             int srcRight,
@@ -491,6 +503,7 @@ namespace hook_concourse_net
             int dcPtr,
             int originReturnAddress)
         {
+            string name = Marshal.PtrToStringAnsi(namePtr);
             var dc = new SurfaceDC(new IntPtr(dcPtr));
 
             if (_resItems.TryGetValue(name, out ResItem item))
@@ -502,9 +515,9 @@ namespace hook_concourse_net
             return 0;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(FrontResDrawBlendColor))]
         public static int FrontResDrawBlendColor(
-            [MarshalAs(UnmanagedType.LPStr)] string name,
+            nint namePtr,
             int srcLeft,
             int srcTop,
             int srcRight,
@@ -516,6 +529,7 @@ namespace hook_concourse_net
             int dcPtr,
             int originReturnAddress)
         {
+            string name = Marshal.PtrToStringAnsi(namePtr);
             var dc = new SurfaceDC(new IntPtr(dcPtr));
 
             if (_resItems.TryGetValue(name, out ResItem item))
@@ -530,11 +544,11 @@ namespace hook_concourse_net
             return 0;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(DrawBackgroundToScreen))]
         public static int DrawBackgroundToScreen()
         {
             NativeMethods.DEVMODE mode = default;
-            mode.dmSize = (short)Marshal.SizeOf(typeof(NativeMethods.DEVMODE));
+            mode.dmSize = (short)Marshal.SizeOf<NativeMethods.DEVMODE>();
             NativeMethods.EnumDisplaySettings(null, NativeMethods.ENUM_CURRENT_SETTINGS, ref mode);
 
             var dc = new SurfaceDC(mode.dmPelsWidth, mode.dmPelsHeight);
@@ -548,11 +562,12 @@ namespace hook_concourse_net
             return 0;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(FrontResGetArea))]
         public static int FrontResGetArea(
-            [MarshalAs(UnmanagedType.LPStr)] string name,
+            nint namePtr,
             int pArea)
         {
+            string name = Marshal.PtrToStringAnsi(namePtr);
             if (_resItems.TryGetValue(name, out ResItem item))
             {
                 if (item.DescriptionSD.GroupId != 15900)
@@ -685,7 +700,7 @@ namespace hook_concourse_net
             return isWide;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(FrontResIsBackgroundWide))]
         public static int FrontResIsBackgroundWide()
         {
             return IsBackgroundWide();
@@ -713,7 +728,7 @@ namespace hook_concourse_net
             return 0;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(FrontResIsBackgroundHD))]
         public static int FrontResIsBackgroundHD()
         {
             return IsBackgroundHD(string.Empty);

@@ -15,11 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BitmapPixelShader.hlsl" />
     <FxCompile Include="MainVertexShader.hlsl" />
     <FxCompile Include="MainPixelShader.hlsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="d2d1effecthelpers.hlsli" />
+    <FxCompile Include="ImageVertexShader.hlsl" />
+    <FxCompile Include="ImagePixelShader.hlsl" />
   </ItemGroup>
 </Project>

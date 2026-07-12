@@ -17,15 +17,12 @@
 #include <d3d11.h>
 #include <d3d11_1.h>
 #include <d2d1.h>
-#include <d2d1effects.h>
-#include <d2d1effectauthor.h>
-#include <d2d1effecthelpers.h>
 #include <dwrite.h>
 #include <gdiplus.h>
 #include <comdef.h>
 #include "ComPtr.h"
 #include "SurfaceDC.h"
-#include "BitmapEffect.h"
+#include "ImageEffect.h"
 
 #pragma comment(lib, "Winmm")
 #pragma comment(lib, "dxguid")
@@ -582,9 +579,6 @@ private:
 
 ModelIndexSettings g_modelIndexSettings;
 
-static std::map<int, ID2D1Bitmap*> g_videoBitmaps;
-static std::map<void*, ID2D1Bitmap*> g_dataBitmaps;
-
 const int g_ratioNumerator = 16;
 const int g_ratioDenominator = 9;
 //const int g_ratioNumerator = 15;
@@ -653,54 +647,23 @@ int MultiplyDivV(int value, SurfaceDC& dc)
 	return value;
 }
 
-static ID2D1Effect* g_d2dBitmapEffect = nullptr;
-
-void InitEffects(ID2D1RenderTarget* d2d1RenderTarget)
-{
-	if (g_d2dBitmapEffect)
-	{
-		return;
-	}
-
-	HRESULT hr;
-
-	ComPtr<ID2D1Factory> factory;
-	d2d1RenderTarget->GetFactory(&factory);
-
-	ComPtr<ID2D1Factory1> factory1;
-	hr = factory->QueryInterface(&factory1);
-	//OutputDebugString((__FUNCTION__ " ID2D1Factory1: " + std::to_string(SUCCEEDED(hr))).c_str());
-
-	ComPtr<ID2D1DeviceContext> context;
-	hr = d2d1RenderTarget->QueryInterface(&context);
-	//OutputDebugString((__FUNCTION__ " ID2D1DeviceContext: " + std::to_string(SUCCEEDED(hr))).c_str());
-
-	hr = BitmapEffect::Register(factory1);
-	//OutputDebugString((__FUNCTION__ " BitmapEffect::Register: " + std::to_string(hr)).c_str());
-
-	hr = context->CreateEffect(CLSID_BitmapEffect, &g_d2dBitmapEffect);
-	//OutputDebugString((__FUNCTION__ " ID2D1Effect: " + std::to_string(SUCCEEDED(hr))).c_str());
-}
+static std::unique_ptr<ImageEffect> g_imageEffect;
+static std::map<int, ID3D11Texture2D*> g_videoBitmaps;
+static std::map<void*, ID3D11Texture2D*> g_dataBitmaps;
 
 void CleanEffects()
 {
 	//OutputDebugString(__FUNCTION__);
-
-	//if (g_d2dBitmapEffect)
-	//{
-	//	g_d2dBitmapEffect->Release();
-	//	g_d2dBitmapEffect = nullptr;
-	//}
 }
 
-ID2D1Bitmap* CreateBitmap(
+ID3D11Texture2D* CreateBitmap(
 	SurfaceDC* dc,
 	void* data,
 	int dataWidth,
 	int dataHeight,
 	int imageFormat)
 {
-	ID2D1Bitmap* dataBitmap;
+	ID3D11Texture2D* dataBitmap;
 
 	if (imageFormat == 28)
 	{
@@ -709,30 +672,55 @@ ID2D1Bitmap* CreateBitmap(
 		int width = (dataWidth + 3) / 4 * 4;
 		int height = (dataHeight + 3) / 4 * 4;
 
-		dc->d2d1RenderTarget->CreateBitmap(
-			D2D1::SizeU(width, height),
-			data,
-			width * 4,
-			D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_BC3_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)),
-			&dataBitmap);
+		D3D11_TEXTURE2D_DESC textureDesc{};
+		textureDesc.Width = width;
+		textureDesc.Height = height;
+		textureDesc.Format = DXGI_FORMAT_BC3_UNORM;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		textureDesc.CPUAccessFlags = 0;
+		textureDesc.MiscFlags = 0;
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 1;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
+		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		D3D11_SUBRESOURCE_DATA textureData{};
+		textureData.pSysMem = data;
+		textureData.SysMemPitch = width * 4;
+		textureData.SysMemSlicePitch = 0;
+
+		HRESULT hr = dc->d3d11Device->CreateTexture2D(&textureDesc, &textureData, &dataBitmap);
 	}
 	else
 	{
 		// 32 bpp
 
-		dc->d2d1RenderTarget->CreateBitmap(
-			D2D1::SizeU(dataWidth, dataHeight),
-			data,
-			dataWidth * 4,
-			D2D1::BitmapProperties(D2D1::PixelFormat(DXGI_FORMAT_B8G8R8A8_UNORM, D2D1_ALPHA_MODE_PREMULTIPLIED)),
-			&dataBitmap);
+		D3D11_TEXTURE2D_DESC textureDesc{};
+		textureDesc.Width = dataWidth;
+		textureDesc.Height = dataHeight;
+		textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		textureDesc.CPUAccessFlags = 0;
+		textureDesc.MiscFlags = 0;
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 1;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
+		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		D3D11_SUBRESOURCE_DATA textureData{};
+		textureData.pSysMem = data;
+		textureData.SysMemPitch = dataWidth * 4;
+		textureData.SysMemSlicePitch = 0;
+
+		HRESULT hr = dc->d3d11Device->CreateTexture2D(&textureDesc, &textureData, &dataBitmap);
 	}
 
 	return dataBitmap;
 }
 
 void UpdateBitmap(
-	ID2D1Bitmap* bitmap,
+	SurfaceDC* dc,
+	ID3D11Texture2D* bitmap,
 	void* data,
 	int dataWidth,
 	int dataHeight,
@@ -745,13 +733,13 @@ void UpdateBitmap(
 		int width = (dataWidth + 3) / 4 * 4;
 		int height = (dataHeight + 3) / 4 * 4;
 
-		bitmap->CopyFromMemory(nullptr, data, width * 4);
+		dc->d3d11DeviceContext->UpdateSubresource(bitmap, 0, nullptr, data, width * 4, 0);
 	}
 	else
 	{
 		// 32 bpp
 
-		bitmap->CopyFromMemory(nullptr, data, dataWidth * 4);
+		dc->d3d11DeviceContext->UpdateSubresource(bitmap, 0, nullptr, data, dataWidth * 4, 0);
 	}
 }
 
@@ -772,17 +760,18 @@ void DrawSurfaceDelegate(
 	unsigned int blendColorParameter,
 	int imageFormat)
 {
-	InitEffects(dc->d2d1RenderTarget);
-
-	if (!g_d2dBitmapEffect)
+	if (!g_imageEffect.get())
 	{
-		return;
+		g_imageEffect = std::make_unique<ImageEffect>();
+		HRESULT hr = g_imageEffect->Initialize(dc);
+		if (FAILED(hr))
+		{
+			g_imageEffect.reset();
+			return;
+		}
 	}
 
-	ComPtr<ID2D1DeviceContext> context;
-	dc->d2d1RenderTarget->QueryInterface(&context);
-
-	ID2D1Bitmap* dataBitmap;
+	ID3D11Texture2D* dataBitmap;
 
 	if (rotation == -10)
 	{
@@ -794,7 +783,7 @@ void DrawSurfaceDelegate(
 		if (it != g_videoBitmaps.end())
 		{
 			dataBitmap = it->second;
-			UpdateBitmap(dataBitmap, data, dataWidth, dataHeight, imageFormat);
+			UpdateBitmap(dc, dataBitmap, data, dataWidth, dataHeight, imageFormat);
 		}
 		else
 		{
@@ -820,8 +809,6 @@ void DrawSurfaceDelegate(
 	}
 
 	int offsetX = (g_screenWidth - dc->width) / 2;
-
-	dc->d2d1RenderTarget->BeginDraw();
 
 	D2D1_POINT_2F destinationPoint = D2D1::Point2F(offsetX + destinationX, destinationY);
 
@@ -869,16 +856,18 @@ void DrawSurfaceDelegate(
 	bool isBackgroundHD = g_netFunctions._frontResIsBackgroundHD() != 0;
 	bool isBackgroundWide = g_netFunctions._frontResIsBackgroundWide() != 0;
 
-	if ((rotation != -1 || !isBackgroundHD) && !isBackgroundWide)
+	D2D1_RECT_F clipRect;
+
+	if ((rotation == -1 && isBackgroundHD) || isBackgroundWide)
+	{
+		clipRect = D2D1::RectF(offsetX, 0, offsetX + dc->width, dc->height);
+	}
+	else
 	{
 		int offsetLeft = offsetX + (dc->width - (dc->displayWidth * dc->height + dc->displayHeight / 2) / dc->displayHeight) / 2;
 		int offsetRight = offsetX + (dc->width + (dc->displayWidth * dc->height + dc->displayHeight / 2) / dc->displayHeight) / 2;
 
-		dc->d2d1RenderTarget->PushAxisAlignedClip(D2D1::RectF(offsetLeft, 0, offsetRight, dc->height), D2D1_ANTIALIAS_MODE_ALIASED);
-	}
-	else
-	{
-		dc->d2d1RenderTarget->PushAxisAlignedClip(D2D1::RectF(offsetX, 0, offsetX + dc->width, dc->height), D2D1_ANTIALIAS_MODE_ALIASED);
+		clipRect = D2D1::RectF(offsetLeft, 0, offsetRight, dc->height);
 	}
 
 	float scaleX = (float)destinationWidth / (float)srcWidth;
@@ -888,19 +877,17 @@ void DrawSurfaceDelegate(
 	scaleMatrix.dx += deltaX;
 	scaleMatrix.dy += deltaY;
 
-	g_d2dBitmapEffect->SetInput(0, dataBitmap, 1);
-	g_d2dBitmapEffect->SetValue(0, blendColorParameter);
+	D2D1_MATRIX_3X2_F transformMatrix = rotationMatrix * scaleMatrix;
 
-	context->SetTransform(rotationMatrix * scaleMatrix);
+	g_imageEffect->SetBlendColor(blendColorParameter);
+	g_imageEffect->SetClipRect(clipRect);
+	g_imageEffect->SetTransform(transformMatrix);
 
-	context->DrawImage(
-		g_d2dBitmapEffect,
+	g_imageEffect->DrawImage(
+		dc,
+		dataBitmap,
 		D2D1::Point2F(offsetX + destinationX, destinationY),
 		D2D1::RectF(srcLeft, srcTop, srcLeft + srcWidth, srcTop + srcHeight));
-
-	dc->d2d1RenderTarget->PopAxisAlignedClip();
-	dc->d2d1RenderTarget->SetTransform(D2D1::IdentityMatrix());
-	dc->d2d1RenderTarget->EndDraw();
 
 	if (rotation == -10)
 	{
@@ -2477,7 +2464,7 @@ int FreeGameStateHook(int* params)
 
 	TechDoorFreeMovie();
 
-	//CleanEffects();
+	CleanEffects();
 
 	return 0;
 }
@@ -7819,10 +7806,7 @@ void TechDoorLoadMovie()
 	TechDoorFreeMovie();
 	g_techdoor_webm = false;
 
-	SurfaceDC dc;
-	bool hasDC = GetSurfaceDC(&dc);
-
-	if (hasDC && std::ifstream("Resdata\\techdoor.webm"))
+	if (g_config.HDConcourseEnabled && std::ifstream("Resdata\\techdoor.webm"))
 	{
 		g_techdoor_webm = true;
 		g_techdoor_imagePtr = nullptr;
