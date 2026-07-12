@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -8,13 +9,13 @@ namespace hook_patcher
 {
     static class HookMain
     {
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(GetHookFunctionsCount))]
         public static int GetHookFunctionsCount()
         {
             return 0;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(GetHookFunction))]
         public static HookFunctionPtr GetHookFunction(int index)
         {
             return new HookFunctionPtr();
@@ -22,7 +23,7 @@ namespace hook_patcher
 
         private static readonly Dictionary<string, HookPatchItem[]> _patcherPatches = ExePatcher.GetHookPatches();
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(GetHookPatchesCount))]
         public static int GetHookPatchesCount()
         {
             return _patcherPatches.Count;
@@ -95,7 +96,7 @@ namespace hook_patcher
             return patchPtr;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(GetHookPatch))]
         public static IntPtr GetHookPatch(int index)
         {
             if (index < 0 || index >= _patcherPatches.Count)
