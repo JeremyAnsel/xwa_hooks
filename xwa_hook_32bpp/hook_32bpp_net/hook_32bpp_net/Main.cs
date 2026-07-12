@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -63,7 +64,7 @@ namespace hook_32bpp_net
             return missionFilename;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(RetrieveMissionFileName))]
         public static int RetrieveMissionFileName()
         {
             string filename = GetMissionFileName();
@@ -341,9 +342,10 @@ namespace hook_32bpp_net
         private static OptFile _tempOptFile;
         private static int _tempOptFileSize;
 
-        [DllExport(CallingConvention.Cdecl)]
-        public static int ReadOptFunction([MarshalAs(UnmanagedType.LPStr)] string optFilename)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(ReadOptFunction))]
+        public static int ReadOptFunction(nint optFilenamePtr)
         {
+            string optFilename = Marshal.PtrToStringAnsi(optFilenamePtr);
             _tempOptFile = null;
             _tempOptFileSize = 0;
 
@@ -394,7 +396,7 @@ namespace hook_32bpp_net
             return _tempOptFileSize;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(GetOptVersionFunction))]
         public static int GetOptVersionFunction()
         {
             if (_tempOptFile == null)
@@ -405,7 +407,7 @@ namespace hook_32bpp_net
             return _tempOptFile.Version;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(WriteOptFunction))]
         public static unsafe void WriteOptFunction(IntPtr ptr)
         {
             if (ptr == IntPtr.Zero || _tempOptFile == null || _tempOptFileSize == 0)
@@ -791,7 +793,7 @@ namespace hook_32bpp_net
             return null;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(ReadCompressedDatImageFunction))]
         unsafe public static void ReadCompressedDatImageFunction(byte* destination, int destinationLength, byte* source, int sourceLength)
         {
             if (_decoder == null)

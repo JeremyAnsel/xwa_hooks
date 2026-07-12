@@ -10,7 +10,7 @@ namespace Xwa32bppPlayerNet
     {
         private static readonly Encoding _encoding = Encoding.GetEncoding("iso-8859-1");
 
-        private static readonly TypeConverter Int32Converter = TypeDescriptor.GetConverter(typeof(int));
+        private static readonly Int32Converter Int32Converter = new();
 
         public static int ToInt32(string text)
         {

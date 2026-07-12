@@ -1,13 +1,14 @@
 ﻿using JeremyAnsel.Xwa.Opt;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO.Compression;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System;
-using System.Linq;
 
 namespace Xwa32bppPlayerNet
 {
@@ -26,15 +27,18 @@ namespace Xwa32bppPlayerNet
         private static string _getCustomFileLines_hangar;
         private static byte _getCustomFileLines_hangarIff;
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(SetSettingsFunction))]
         public static void SetSettingsFunction(
-            [MarshalAs(UnmanagedType.LPStr)] string missionFileName,
+            nint missionFileNamePtr,
             int missionFileNameIndex,
             int isTechLibraryGameStateUpdate,
-            [MarshalAs(UnmanagedType.LPStr)] string hangar,
+            nint hangarPtr,
             int hangarIff
             )
         {
+            string missionFileName = Marshal.PtrToStringAnsi(missionFileNamePtr);
+            string hangar = Marshal.PtrToStringUni(hangarPtr);
+
             _settingsMissionFileName = missionFileName;
             _settingsMmissionFileNameIndex = missionFileNameIndex;
             _settingsIsTechLibraryGameStateUpdate = isTechLibraryGameStateUpdate != 0;
@@ -311,9 +315,11 @@ namespace Xwa32bppPlayerNet
         private static OptFile _tempOptFile;
         private static int _tempOptFileSize;
 
-        [DllExport(CallingConvention.Cdecl)]
-        public static int ReadOptFunction([MarshalAs(UnmanagedType.LPStr)] string optFilename, int loadSkins, int groupFaceGroups)
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(ReadOptFunction))]
+        public static int ReadOptFunction(nint optFilenamePtr, int loadSkins, int groupFaceGroups)
         {
+            string optFilename = Marshal.PtrToStringAnsi(optFilenamePtr);
+
             _tempOptFile = null;
             _tempOptFileSize = 0;
 
@@ -361,7 +367,7 @@ namespace Xwa32bppPlayerNet
             return _tempOptFileSize;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(GetOptVersionFunction))]
         public static int GetOptVersionFunction()
         {
             if (_tempOptFile == null)
@@ -372,7 +378,7 @@ namespace Xwa32bppPlayerNet
             return _tempOptFile.Version;
         }
 
-        [DllExport(CallingConvention.Cdecl)]
+        [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)], EntryPoint = nameof(WriteOptFunction))]
         public static unsafe void WriteOptFunction(IntPtr ptr)
         {
             if (ptr == IntPtr.Zero || _tempOptFile == null || _tempOptFileSize == 0)
