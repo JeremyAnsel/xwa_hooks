@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37411.7 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XwaJoystickConfig", "XwaJoystickConfig\XwaJoystickConfig.csproj", "{78A143F3-F795-4421-B669-070B74F0D5E0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78A143F3-F795-4421-B669-070B74F0D5E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78A143F3-F795-4421-B669-070B74F0D5E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78A143F3-F795-4421-B669-070B74F0D5E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78A143F3-F795-4421-B669-070B74F0D5E0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F493A693-239C-41FB-A485-514F73F6D743}
+	EndGlobalSection
+EndGlobal

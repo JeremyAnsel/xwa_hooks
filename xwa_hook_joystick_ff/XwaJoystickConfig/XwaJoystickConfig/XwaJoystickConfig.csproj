@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>12.0</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>2.0.0</Version>
+    <Company>Jérémy Ansel</Company>
+    <Copyright>Copyright © 2020-2026 Jérémy Ansel</Copyright>
+    <ApplicationIcon>XwaJoystickConfig.ico</ApplicationIcon>
+    <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsAotCompatible>
+    <VerifyReferenceAotCompatibility>true</VerifyReferenceAotCompatibility>
+    <PublishAot>true</PublishAot>
+    <TrimMode>full</TrimMode>
+    <IlcOptimizationPreference>Size</IlcOptimizationPreference>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <DebugType>none</DebugType>
+    <StripSymbols>true</StripSymbols>
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishTrimmed>true</PublishTrimmed>
+    <SelfContained>true</SelfContained>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>CS0649;CA1416;IDE1006</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="XwaJoystickConfig.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aprillz.MewUI.Backend.Direct2D" Version="0.18.1" />
+    <PackageReference Include="Aprillz.MewUI.Core" Version="0.18.1" />
+    <PackageReference Include="Aprillz.MewUI.Platform.Win32" Version="0.18.1" />
+    <PackageReference Include="JeremyAnsel.DirectX.DirectInput" Version="4.0.61" />
+  </ItemGroup>
+
+  <Target Name="PublishAsBuildAfterTarget" AfterTargets="Build" DependsOnTargets="Publish">
+    <!-- placeholder task to force Publish to happen during build -->
+  </Target>
+
+</Project>
