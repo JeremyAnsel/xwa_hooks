@@ -3,16 +3,431 @@
 #include "config.h"
 #include <array>
 #include <map>
+#include <vector>
 #include <utility>
 
 #define INITGUID
 #include <dinput.h>
 
 #pragma comment(lib, "Winmm.lib")
+#pragma comment(lib, "dinput8")
 
 const auto& g_joyGetNumDevs = *(decltype(joyGetNumDevs)**)0x005A92B4;
 const auto& g_joyGetDevCapsA = *(decltype(joyGetDevCapsA)**)0x005A92A8;
 const auto& g_joyGetPosEx = *(decltype(joyGetPosEx)**)0x005A92A4;
+
+class JoystickDevices
+{
+public:
+	JoystickDevices();
+	~JoystickDevices();
+	void Load();
+	void Free();
+	int GetNumDevices();
+	bool GetDeviceCaps(int deviceIndex, JOYCAPSA* caps);
+	bool GetDeviceState(int deviceIndex, DIJOYSTATE2* state);
+	bool GetDevicePosition(int deviceIndex, JOYINFOEX* pos);
+
+private:
+	struct EnumObjectsParams
+	{
+		IDirectInputDevice8A* device;
+		JOYCAPSA* caps;
+	};
+
+	static BOOL CALLBACK EnumDevicesCallback(LPCDIDEVICEINSTANCE instance, LPVOID userData);
+	static BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE instance, LPVOID userData);
+	IDirectInput8A* _pDirectInput;
+	std::vector<IDirectInputDevice8A*> _devices;
+};
+
+JoystickDevices::JoystickDevices()
+{
+	_pDirectInput = nullptr;
+	Load();
+}
+
+JoystickDevices::~JoystickDevices()
+{
+	Free();
+}
+
+void JoystickDevices::Load()
+{
+	Free();
+
+	HINSTANCE hInstance = GetModuleHandle(0);
+
+	if (FAILED(DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (LPVOID*)&_pDirectInput, nullptr)))
+	{
+		return;
+	}
+
+	_pDirectInput->EnumDevices(DI8DEVCLASS_GAMECTRL, EnumDevicesCallback, this, DIEDFL_ATTACHEDONLY);
+}
+
+void JoystickDevices::Free()
+{
+	for (IDirectInputDevice8A* device : _devices)
+	{
+		if (!device)
+		{
+			continue;
+		}
+
+		device->Unacquire();
+		device->Release();
+	}
+
+	_devices.clear();
+
+	if (_pDirectInput)
+	{
+		_pDirectInput->Release();
+		_pDirectInput = nullptr;
+	}
+}
+
+BOOL CALLBACK JoystickDevices::EnumDevicesCallback(LPCDIDEVICEINSTANCE instance, LPVOID userData)
+{
+	JoystickDevices* _this = (JoystickDevices*)userData;
+
+	//std::cout << instance->tszInstanceName << std::endl;
+
+	IDirectInputDevice8A* device = nullptr;
+	HRESULT hr = _this->_pDirectInput->CreateDevice(instance->guidInstance, &device, nullptr);
+
+	if (SUCCEEDED(hr))
+	{
+		hr = device->SetDataFormat(&c_dfDIJoystick2);
+	}
+
+	//HWND s_XwaFlightMainHwnd = *(HWND*)0x0091AD38;
+	HWND hWnd = GetActiveWindow();
+
+	if (SUCCEEDED(hr))
+	{
+		hr = device->SetCooperativeLevel(hWnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND);
+	}
+
+	if (SUCCEEDED(hr))
+	{
+		hr = device->Acquire();
+	}
+
+	if (FAILED(hr))
+	{
+		if (device)
+		{
+			device->Release();
+			device = nullptr;
+		}
+	}
+
+	_this->_devices.push_back(device);
+
+	if (_this->_devices.size() >= 16)
+	{
+		return DIENUM_STOP;
+	}
+
+	return DIENUM_CONTINUE;
+}
+
+BOOL CALLBACK JoystickDevices::EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE instance, LPVOID userData)
+{
+	EnumObjectsParams* params = (EnumObjectsParams*)userData;
+
+	if (instance->guidType == GUID_Button)
+	{
+		GUID guid = instance->guidType;
+	}
+	else if (instance->guidType == GUID_XAxis)
+	{
+		DIPROPRANGE didpr{};
+		didpr.diph.dwSize = sizeof(DIPROPRANGE);
+		didpr.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+		didpr.diph.dwHow = DIPH_BYID;
+		didpr.diph.dwObj = instance->dwType;
+		params->device->GetProperty(DIPROP_RANGE, &didpr.diph);
+		params->caps->wXmin = didpr.lMin;
+		params->caps->wXmax = didpr.lMax;
+	}
+	else if (instance->guidType == GUID_YAxis)
+	{
+		DIPROPRANGE didpr{};
+		didpr.diph.dwSize = sizeof(DIPROPRANGE);
+		didpr.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+		didpr.diph.dwHow = DIPH_BYID;
+		didpr.diph.dwObj = instance->dwType;
+		params->device->GetProperty(DIPROP_RANGE, &didpr.diph);
+		params->caps->wYmin = didpr.lMin;
+		params->caps->wYmax = didpr.lMax;
+	}
+	else if (instance->guidType == GUID_ZAxis)
+	{
+		DIPROPRANGE didpr{};
+		didpr.diph.dwSize = sizeof(DIPROPRANGE);
+		didpr.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+		didpr.diph.dwHow = DIPH_BYID;
+		didpr.diph.dwObj = instance->dwType;
+		params->device->GetProperty(DIPROP_RANGE, &didpr.diph);
+		params->caps->wZmin = didpr.lMin;
+		params->caps->wZmax = didpr.lMax;
+	}
+	else if (instance->guidType == GUID_RyAxis)
+	{
+		DIPROPRANGE didpr{};
+		didpr.diph.dwSize = sizeof(DIPROPRANGE);
+		didpr.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+		didpr.diph.dwHow = DIPH_BYID;
+		didpr.diph.dwObj = instance->dwType;
+		params->device->GetProperty(DIPROP_RANGE, &didpr.diph);
+		params->caps->wRmin = didpr.lMin;
+		params->caps->wRmax = didpr.lMax;
+	}
+	else if (instance->guidType == GUID_RxAxis)
+	{
+		DIPROPRANGE didpr{};
+		didpr.diph.dwSize = sizeof(DIPROPRANGE);
+		didpr.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+		didpr.diph.dwHow = DIPH_BYID;
+		didpr.diph.dwObj = instance->dwType;
+		params->device->GetProperty(DIPROP_RANGE, &didpr.diph);
+		params->caps->wUmin = didpr.lMin;
+		params->caps->wUmax = didpr.lMax;
+	}
+	else if (instance->guidType == GUID_RzAxis)
+	{
+		DIPROPRANGE didpr{};
+		didpr.diph.dwSize = sizeof(DIPROPRANGE);
+		didpr.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+		didpr.diph.dwHow = DIPH_BYID;
+		didpr.diph.dwObj = instance->dwType;
+		params->device->GetProperty(DIPROP_RANGE, &didpr.diph);
+		params->caps->wVmin = didpr.lMin;
+		params->caps->wVmax = didpr.lMax;
+	}
+	else if (instance->guidType == GUID_POV)
+	{
+		params->caps->wCaps |= JOYCAPS_HASPOV;
+	}
+	else if (instance->guidType == GUID_Unknown)
+	{
+	}
+	else
+	{
+		GUID guid = instance->guidType;
+	}
+
+	return DIENUM_CONTINUE;
+}
+
+int JoystickDevices::GetNumDevices()
+{
+	return _devices.size();
+}
+
+bool JoystickDevices::GetDeviceCaps(int deviceIndex, JOYCAPSA* caps)
+{
+	if (!caps)
+	{
+		return false;
+	}
+
+	*caps = {};
+
+	if (deviceIndex < 0 || deviceIndex >= (int)_devices.size())
+	{
+		return false;
+	}
+
+	IDirectInputDevice8A* device = _devices[deviceIndex];
+
+	if (!device)
+	{
+		return false;
+	}
+
+	DIDEVCAPS deviceCaps = { sizeof(DIDEVCAPS) };
+	if (FAILED(device->GetCapabilities(&deviceCaps)))
+	{
+		return false;
+	}
+
+	EnumObjectsParams params{ device, caps };
+	device->EnumObjects(EnumObjectsCallback, &params, DIDFT_ALL);
+
+	DIPROPDWORD didpr{};
+	didpr.diph.dwSize = sizeof(DIPROPDWORD);
+	didpr.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+	didpr.diph.dwHow = DIPH_DEVICE;
+	didpr.diph.dwObj = 0;
+	device->GetProperty(DIPROP_VIDPID, &didpr.diph);
+
+	caps->wMid = LOWORD(didpr.dwData);
+	caps->wPid = HIWORD(didpr.dwData);
+
+	caps->wNumButtons = deviceCaps.dwButtons;
+	caps->wNumAxes = deviceCaps.dwAxes;
+
+	if (caps->wZmin || caps->wZmax)
+	{
+		caps->wCaps |= JOYCAPS_HASZ;
+	}
+
+	if (caps->wRmin || caps->wRmax)
+	{
+		caps->wCaps |= JOYCAPS_HASR;
+	}
+
+	if (caps->wUmin || caps->wUmax)
+	{
+		caps->wCaps |= JOYCAPS_HASU;
+	}
+
+	if (caps->wVmin || caps->wVmax)
+	{
+		caps->wCaps |= JOYCAPS_HASV;
+	}
+
+	return true;
+}
+
+bool JoystickDevices::GetDeviceState(int deviceIndex, DIJOYSTATE2* state)
+{
+	if (!state)
+	{
+		return false;
+	}
+
+	*state = {};
+
+	if (deviceIndex < 0 || deviceIndex >= (int)_devices.size())
+	{
+		return false;
+	}
+
+	IDirectInputDevice8A* device = _devices[deviceIndex];
+
+	if (!device)
+	{
+		return false;
+	}
+
+	HRESULT hr;
+
+	if (FAILED(hr = device->GetDeviceState(sizeof(DIJOYSTATE2), state)))
+	{
+		if (hr == DIERR_INPUTLOST)
+		{
+			if (FAILED(device->Acquire()))
+			{
+				return false;
+			}
+
+			if (FAILED(hr = device->GetDeviceState(sizeof(DIJOYSTATE2), state)))
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	//DWORD size = INFINITE;
+	//if (FAILED(hr = device->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), nullptr, &size, DIGDD_PEEK)))
+	//{
+	//	return false;
+	//}
+
+	//std::vector<DIDEVICEOBJECTDATA> data;
+	//data.reserve(size);
+
+	//if (FAILED(hr = device->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), data.data(), &size, 0)))
+	//{
+	//	return false;
+	//}
+
+	//for (DWORD i = 0; i < size; i++)
+	//{
+	//	DIDEVICEOBJECTDATA& d = data.data()[i];
+
+	//	for (int j = 0; j < 128; j++)
+	//	{
+	//		if (d.dwOfs == DIJOFS_BUTTON(j))
+	//		{
+	//			state->rgbButtons[j] = d.dwData ? (BYTE)0x80 : (BYTE)0;
+	//		}
+	//	}
+	//}
+
+	return true;
+}
+
+bool JoystickDevices::GetDevicePosition(int deviceIndex, JOYINFOEX* pos)
+{
+	if (!pos)
+	{
+		return false;
+	}
+
+	*pos = {};
+
+	if (deviceIndex < 0 || deviceIndex >= (int)_devices.size())
+	{
+		return false;
+	}
+
+	IDirectInputDevice8A* device = _devices[deviceIndex];
+
+	if (!device)
+	{
+		return false;
+	}
+
+	DIJOYSTATE2 state{};
+
+	HRESULT hr;
+
+	if (FAILED(hr = device->GetDeviceState(sizeof(DIJOYSTATE2), &state)))
+	{
+		if (hr == DIERR_INPUTLOST)
+		{
+			if (FAILED(device->Acquire()))
+			{
+				return false;
+			}
+
+			if (FAILED(hr = device->GetDeviceState(sizeof(DIJOYSTATE2), &state)))
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	pos->dwXpos = state.lX;
+	pos->dwYpos = state.lY;
+	pos->dwZpos = state.lZ;
+	pos->dwRpos = state.lRy;
+	pos->dwUpos = state.lRx;
+	pos->dwVpos = state.lRz;
+	pos->dwPOV = state.rgdwPOV[0];
+
+	return true;
+}
+
+JoystickDevices& GetGlobalJoystickDevices()
+{
+	static JoystickDevices devices;
+	return devices;
+}
 
 #include "SharedMem.h"
 
@@ -79,6 +494,17 @@ public:
 		this->RudderMultiplicator = GetFileKeyValueFloat(lines, "RudderMultiplicator", 1);
 		this->UsePovControllerAsButtons = GetFileKeyValueInt(lines, "UsePovControllerAsButtons", 0) != 0;
 		this->VirtualCockpitLookSensitivity = GetFileKeyValueInt(lines, "VirtualCockpitLookSensitivity", 0x4b0);
+
+		// todo
+
+		lines = GetFileLines("hook_joystick_ff.cfg");
+
+		if (lines.empty())
+		{
+			lines = GetFileLines("hooks.ini", "hook_joystick_ff");
+		}
+
+		this->JoystickUseDirectInput = GetFileKeyValueInt(lines, "JoystickUseDirectInput", 0) != 0;
 	}
 
 	int JoystickFFDeviceIndex;
@@ -105,6 +531,8 @@ public:
 	float RudderMultiplicator;
 	bool UsePovControllerAsButtons;
 	int VirtualCockpitLookSensitivity;
+
+	bool JoystickUseDirectInput;
 };
 
 Config g_config;
@@ -122,8 +550,20 @@ public:
 		this->_deviceCount = 0;
 
 		auto lines = GetFileLines("JoystickConfig.txt");
+		bool useDirectInput = g_config.JoystickUseDirectInput;
+		JoystickDevices& joystickDevices = GetGlobalJoystickDevices();
 
-		int deviceCount = g_joyGetNumDevs();
+		int deviceCount;
+
+		if (useDirectInput)
+		{
+			deviceCount = joystickDevices.GetNumDevices();
+		}
+		else
+		{
+			deviceCount = g_joyGetNumDevs();
+		}
+
 		int controllerIndex = -1;
 		int buttonIndex = 0;
 		int povIndex = 0;
@@ -132,19 +572,30 @@ public:
 		{
 			JOYCAPS caps{};
 
-			if (g_joyGetDevCapsA(deviceIndex, &caps, sizeof(JOYCAPS)) != JOYERR_NOERROR)
+			if (useDirectInput)
 			{
-				this->_isConnected[deviceIndex] = false;
-				continue;
+				if (!joystickDevices.GetDeviceCaps(deviceIndex, &caps))
+				{
+					this->_isConnected[deviceIndex] = false;
+					continue;
+				}
+			}
+			else
+			{
+				if (g_joyGetDevCapsA(deviceIndex, &caps, sizeof(JOYCAPS)) != JOYERR_NOERROR)
+				{
+					this->_isConnected[deviceIndex] = false;
+					continue;
+				}
 			}
 
 			this->_isConnected[deviceIndex] = true;
 			controllerIndex++;
 			int controllerId = (int)((unsigned int)caps.wMid << 16 | (unsigned int)caps.wPid);
 
-			std::array<short, 32 + 4> buttons{};
+			std::array<short, 128 + 4> buttons{};
 
-			int numButtons = min(caps.wNumButtons, 32);
+			int numButtons = min(caps.wNumButtons, 128);
 
 			for (int index = 0; index < numButtons; index++)
 			{
@@ -168,9 +619,13 @@ public:
 
 					int value = GetDefaultConfigPov(povIndex + 1);
 					value = GetFileKeyValueInt(lines, key1, value);
-					value = GetFileKeyValueInt(lines, key2, value);
 
-					buttons[32 + index] = (short)value;
+					if (!useDirectInput)
+					{
+						value = GetFileKeyValueInt(lines, key2, value);
+					}
+
+					buttons[128 + index] = (short)value;
 					povIndex++;
 				}
 			}
@@ -335,8 +790,8 @@ public:
 private:
 	int _deviceCount;
 	std::array<bool, 16> _isConnected;
-	std::array<std::array<short, 32 + 4>, 16> _buttons;
-	std::array<std::array<bool, 32 + 4>, 16> _buttonsIsPressed;
+	std::array<std::array<short, 128 + 4>, 16> _buttons;
+	std::array<std::array<bool, 128 + 4>, 16> _buttonsIsPressed;
 	std::array<JOYCAPS, 16> _caps;
 };
 
@@ -683,6 +1138,9 @@ int UpdateControllerHook(int* params)
 	int rudderControllerIndex = g_config.RudderControllerIndex;
 	int rudderControllerAxisIndex = g_config.RudderControllerAxisIndex;
 
+	bool useDirectInput = g_config.JoystickUseDirectInput;
+	JoystickDevices& joystickDevices = GetGlobalJoystickDevices();
+
 	int controllerIndex = -1;
 
 	for (int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
@@ -696,9 +1154,19 @@ int UpdateControllerHook(int* params)
 		info.dwSize = sizeof(JOYINFOEX);
 		info.dwFlags = JOY_RETURNX | JOY_RETURNY | JOY_RETURNZ | JOY_RETURNR | JOY_RETURNU | JOY_RETURNV | JOY_RETURNPOV | JOY_RETURNBUTTONS | JOY_RETURNCENTERED;
 
-		if (g_joyGetPosEx(deviceIndex, &info) != JOYERR_NOERROR)
+		if (useDirectInput)
 		{
-			continue;
+			if (!joystickDevices.GetDevicePosition(deviceIndex, &info))
+			{
+				continue;
+			}
+		}
+		else
+		{
+			if (g_joyGetPosEx(deviceIndex, &info) != JOYERR_NOERROR)
+			{
+				continue;
+			}
 		}
 
 		controllerIndex++;
@@ -1035,12 +1503,12 @@ int UpdateControllerHook(int* params)
 		g_pSharedData->JoystickHookPresent = true;
 		if (!(g_pSharedData->JoystickEmulationEnabled))
 		{
-			float normYaw   = 2.0f * (esp10.dwXpos / 65535.0f - 0.5f); // -1: Left, 1: Right
+			float normYaw = 2.0f * (esp10.dwXpos / 65535.0f - 0.5f); // -1: Left, 1: Right
 			float normPitch = 2.0f * (esp10.dwYpos / 65535.0f - 0.5f); // -1: Up,   1: Down
-			float normRoll  = 2.0f * (esp10.dwRpos / 65535.0f - 0.5f); // -1: Left, 1: Right
-			g_pSharedData->JoystickYaw   = normYaw;
+			float normRoll = 2.0f * (esp10.dwRpos / 65535.0f - 0.5f); // -1: Left, 1: Right
+			g_pSharedData->JoystickYaw = normYaw;
 			g_pSharedData->JoystickPitch = normPitch;
-			g_pSharedData->JoystickRoll  = normRoll;
+			g_pSharedData->JoystickRoll = normRoll;
 
 			if (g_pSharedData->GimbalLockFixActive)
 			{
@@ -1086,6 +1554,9 @@ int SetControllerPressedButtonHook(int* params)
 	int controllerIndex = -1;
 	bool buttonSet = false;
 
+	bool useDirectInput = g_config.JoystickUseDirectInput;
+	JoystickDevices& joystickDevices = GetGlobalJoystickDevices();
+
 	for (int deviceIndex = 0; deviceIndex < deviceCount; deviceIndex++)
 	{
 		if (!GetGlobalButtonsConfig().IsConnected(deviceIndex))
@@ -1097,14 +1568,26 @@ int SetControllerPressedButtonHook(int* params)
 		info.dwSize = sizeof(JOYINFOEX);
 		info.dwFlags = JOY_RETURNPOV | JOY_RETURNBUTTONS | JOY_RETURNCENTERED;
 
-		if (g_joyGetPosEx(deviceIndex, &info) != JOYERR_NOERROR)
+		DIJOYSTATE2 joyState{};
+
+		if (useDirectInput)
 		{
-			continue;
+			if (!joystickDevices.GetDeviceState(deviceIndex, &joyState))
+			{
+				continue;
+			}
+		}
+		else
+		{
+			if (g_joyGetPosEx(deviceIndex, &info) != JOYERR_NOERROR)
+			{
+				continue;
+			}
 		}
 
 		controllerIndex++;
 
-		for (int i = 0; i < 32; i++)
+		for (int i = 0; i < 128; i++)
 		{
 			short button = GetGlobalButtonsConfig().GetKey(deviceIndex, i);
 
@@ -1113,7 +1596,18 @@ int SetControllerPressedButtonHook(int* params)
 				continue;
 			}
 
-			if ((info.dwButtons & (1U << i)) != 0)
+			bool isPressed;
+
+			if (useDirectInput)
+			{
+				isPressed = joyState.rgbButtons[i] != 0;
+			}
+			else
+			{
+				isPressed = (info.dwButtons & (1U << i)) != 0;
+			}
+
+			if (isPressed)
 			{
 				if (!GetGlobalButtonsConfig().IsPressed(deviceIndex, i))
 				{
@@ -1138,29 +1632,43 @@ int SetControllerPressedButtonHook(int* params)
 				}
 			}
 
-			GetGlobalButtonsConfig().SetIsPressed(deviceIndex, i, (info.dwButtons & (1U << i)) != 0);
+			GetGlobalButtonsConfig().SetIsPressed(deviceIndex, i, isPressed);
 		}
 
 		if (g_config.UsePovControllerAsButtons)
 		{
 			int povIndex;
 
-			if (info.dwPOV != JOY_POVCENTERED)
+			if (useDirectInput)
 			{
-				povIndex = info.dwPOV / 9000;
+				if (LOWORD(joyState.rgdwPOV[0]) != 0xFFFF)
+				{
+					povIndex = joyState.rgdwPOV[0] / 9000;
+				}
+				else
+				{
+					povIndex = -1;
+				}
 			}
 			else
 			{
-				povIndex = -1;
+				if (info.dwPOV != JOY_POVCENTERED)
+				{
+					povIndex = info.dwPOV / 9000;
+				}
+				else
+				{
+					povIndex = -1;
+				}
 			}
 
 			if (povIndex != -1)
 			{
-				short button = GetGlobalButtonsConfig().GetKey(deviceIndex, 32 + povIndex);
+				short button = GetGlobalButtonsConfig().GetKey(deviceIndex, 128 + povIndex);
 
 				if (button != 0)
 				{
-					if (!GetGlobalButtonsConfig().IsPressed(deviceIndex, 32 + povIndex))
+					if (!GetGlobalButtonsConfig().IsPressed(deviceIndex, 128 + povIndex))
 					{
 						if (!buttonSet)
 						{
@@ -1173,20 +1681,44 @@ int SetControllerPressedButtonHook(int* params)
 
 			for (int i = 0; i < 4; i++)
 			{
-				GetGlobalButtonsConfig().SetIsPressed(deviceIndex, 32 + i, false);
+				GetGlobalButtonsConfig().SetIsPressed(deviceIndex, 128 + i, false);
 			}
 
 			if (povIndex != -1)
 			{
-				GetGlobalButtonsConfig().SetIsPressed(deviceIndex, 32 + povIndex, true);
+				GetGlobalButtonsConfig().SetIsPressed(deviceIndex, 128 + povIndex, true);
 			}
 		}
 		else
 		{
-			if (info.dwPOV != JOY_POVCENTERED)
+			int povIndex;
+
+			if (useDirectInput)
 			{
-				int povIndex = info.dwPOV / 9000;
-				short button = GetGlobalButtonsConfig().GetKey(deviceIndex, 32 + povIndex);
+				if (LOWORD(joyState.rgdwPOV[0]) != 0xFFFF)
+				{
+					povIndex = joyState.rgdwPOV[0] / 9000;
+				}
+				else
+				{
+					povIndex = -1;
+				}
+			}
+			else
+			{
+				if (info.dwPOV != JOY_POVCENTERED)
+				{
+					povIndex = info.dwPOV / 9000;
+				}
+				else
+				{
+					povIndex = -1;
+				}
+			}
+
+			if (povIndex != -1)
+			{
+				short button = GetGlobalButtonsConfig().GetKey(deviceIndex, 128 + povIndex);
 
 				if (button != 0 && !buttonSet)
 				{
@@ -1250,6 +1782,7 @@ int ControllerRemapReloadHook(int* params)
 	//s_XwaConfigMenuIndex = ConfigMenuIndex_Main;
 	*(int*)0x007829B8 = 0;
 
+	GetGlobalJoystickDevices().Load();
 	g_config.Load();
 	GetGlobalButtonsConfig().Load();
 
