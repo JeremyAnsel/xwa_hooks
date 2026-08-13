@@ -387,6 +387,10 @@ PositionY = integer value
 Width = integer value
 Height = integer value
 
+In the text screens use ".." to insert a line break.
+With "..." you obtain "..".
+With "...." you obtain "...".
+
 # View configuration
 
 Suppose that the craft is "FlightModels\[Model].opt".

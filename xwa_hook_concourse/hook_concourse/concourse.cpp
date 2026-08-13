@@ -5891,8 +5891,47 @@ int FontGetStringWidthHook(int* params)
 	return 0;
 }
 
+static void FixParagraph(char* str)
+{
+	while (*str++)
+	{
+		if (str[0] == '.' && str[2] == '.' && str[1] >= 1 && str[1] <= 7)
+		{
+			str[2] = str[1];
+			str[1] = '.';
+		}
+	}
+}
+
+static bool IsParagraph1(const char* str, int esp20)
+{
+	return str[esp20] == '.' && str[esp20 + 1] == '.' && str[esp20 - 1] != '.';
+}
+
+static bool IsParagraph2(const char* str, int esp20)
+{
+	return str[esp20] == '.' && str[esp20 - 1] == '.' && str[esp20 + 1] != '.';
+}
+
+static bool IsNotParagraph(const char* str, int esp20)
+{
+	if (IsParagraph1(str, esp20))
+	{
+		return false;
+	}
+
+	if (IsParagraph2(str, esp20))
+	{
+		return false;
+	}
+
+	return true;
+}
+
 int L00557B10Hook(int* params)
 {
+	// todo: paragraph line space
+
 	const int fontSize = params[Params_EAX];
 
 	const char* str = (const char*)params[609];
@@ -5911,6 +5950,8 @@ int L00557B10Hook(int* params)
 		params[Params_EDI] = ((int*)0x009FBC69)[fontSize];
 		return 0;
 	}
+
+	FixParagraph((char*)str);
 
 	params[Params_EAX] = 0;
 	params[Params_ReturnAddress] = 0x00557EC6;
@@ -5989,14 +6030,14 @@ int L00557B10Hook(int* params)
 		{
 			esp24 = ((unsigned int*)0x009F7EF7)[esp30 - 1];
 		}
-		else if (esp30 == ' ' || esp30 == 0x0A || str[esp20 + 1] == 0 || esp30 == '$')
+		else if (esp30 == ' ' || esp30 == 0x0A || str[esp20 + 1] == 0 || esp30 == '$' || IsParagraph1(str, esp20) || IsParagraph2(str, esp20))
 		{
 			if (esp1C == 1 && esp30 == ' ')
 			{
 				continue;
 			}
 
-			if (esp30 != 0x0A && esp30 != '$')
+			if (esp30 != 0x0A && esp30 != '$' && IsNotParagraph(str, esp20))
 			{
 				esp58[esp18] = esp30;
 				esp18++;
@@ -6099,7 +6140,7 @@ int L00557B10Hook(int* params)
 				}
 			}
 
-			if (esp30 == 0x0A || esp30 == '$')
+			if (esp30 == 0x0A || esp30 == '$' || IsParagraph2(str, esp20))
 			{
 				if (esp10 >= A18)
 				{
