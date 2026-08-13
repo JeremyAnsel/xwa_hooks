@@ -232,3 +232,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+!**/libvpx/*/**
+**/libvpx/Debug
+**/libvpx/Release
