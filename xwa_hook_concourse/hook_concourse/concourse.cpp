@@ -583,7 +583,7 @@ const int g_ratioNumerator = 16;
 const int g_ratioDenominator = 9;
 //const int g_ratioNumerator = 15;
 //const int g_ratioDenominator = 10;
-static int g_screenWidth = 0;
+int g_screenWidth = 0;
 
 int MultiplyDivOffsetX(SurfaceDC& dc)
 {

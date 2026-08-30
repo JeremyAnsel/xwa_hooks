@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include <d2d1.h>
 #include <comdef.h>
+#include <string>
 #include "ComPtr.h"
 
 #include "SurfaceDC.h"
@@ -16,6 +17,8 @@
 #include "../Release/ImageVertexShader.h"
 #include "../Release/ImagePixelShader.h"
 #endif
+
+extern int g_screenWidth;
 
 struct ImageEffectConstantBuffer
 {
@@ -140,6 +143,8 @@ void ImageEffect::SetTransform(const D2D1_MATRIX_3X2_F& transform)
 
 HRESULT ImageEffect::DrawImage(SurfaceDC* dc, ID3D11Texture2D* bitmap, const D2D1_POINT_2F& targetOffset, const D2D1_RECT_F& imageRectangle)
 {
+	int offsetX = (g_screenWidth - dc->width) / 2;
+
 	HRESULT hr = S_OK;
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC textureViewDesc{};
@@ -153,6 +158,33 @@ HRESULT ImageEffect::DrawImage(SurfaceDC* dc, ID3D11Texture2D* bitmap, const D2D
 	dc->d3d11Device->CreateShaderResourceView(bitmap, nullptr, &textureView);
 
 	D2D1_SIZE_U targetPx = { dc->width, dc->height };
+
+	// XWAU-on-Linux ultrawide fix: the concourse hook clamps dc->width to the 16:9
+	// width, but this effect renders into the FULL backbuffer render target. Using the
+	// clamped width for the NDC size + viewport + scissor left-anchors everything to a
+	// 16:9 slab on a wider (e.g. 21:9) backbuffer, cutting off the right side of the
+	// (correctly offset) content. Use the real render-target size instead (no-op when
+	// they already match, e.g. a 16:9 backbuffer).
+	//if (dc->d3d11RenderTargetView)
+	//{
+	//	ComPtr<ID3D11Resource> rtRes;
+	//	dc->d3d11RenderTargetView->GetResource(&rtRes);
+
+	//	if (rtRes)
+	//	{
+	//		ComPtr<ID3D11Texture2D> rtTex;
+
+	//		if (SUCCEEDED(rtRes.As(&rtTex)) && rtTex)
+	//		{
+	//			D3D11_TEXTURE2D_DESC rtDesc{};
+	//			rtTex->GetDesc(&rtDesc);
+
+	//			if (rtDesc.Width > targetPx.width) targetPx.width = rtDesc.Width;
+	//			if (rtDesc.Height > targetPx.height) targetPx.height = rtDesc.Height;
+	//		}
+	//	}
+	//}
+
 	if (targetPx.width == 0 || targetPx.height == 0) return hr;
 
 	D3D11_TEXTURE2D_DESC bitmapDesc{};
@@ -257,7 +289,8 @@ HRESULT ImageEffect::DrawImage(SurfaceDC* dc, ID3D11Texture2D* bitmap, const D2D
 	dc->d3d11DeviceContext->PSSetSamplers(0, 1, _sampler.GetAddressOf());
 	dc->d3d11DeviceContext->RSSetState(_rasterizerState);
 
-	D3D11_VIEWPORT vp = { 0.0f, 0.0f, (FLOAT)targetPx.width, (FLOAT)targetPx.height, 0.0f, 1.0f };
+	//D3D11_VIEWPORT vp = { 0.0f, 0.0f, (FLOAT)targetPx.width, (FLOAT)targetPx.height, 0.0f, 1.0f };
+	D3D11_VIEWPORT vp = { (FLOAT)offsetX, 0.0f, (FLOAT)targetPx.width, (FLOAT)targetPx.height, 0.0f, 1.0f };
 	dc->d3d11DeviceContext->RSSetViewports(1, &vp);
 	D3D11_RECT sc = { sx0, sy0, sx1, sy1 };
 	dc->d3d11DeviceContext->RSSetScissorRects(1, &sc);
