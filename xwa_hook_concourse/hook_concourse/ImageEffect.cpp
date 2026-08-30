@@ -165,25 +165,25 @@ HRESULT ImageEffect::DrawImage(SurfaceDC* dc, ID3D11Texture2D* bitmap, const D2D
 	// 16:9 slab on a wider (e.g. 21:9) backbuffer, cutting off the right side of the
 	// (correctly offset) content. Use the real render-target size instead (no-op when
 	// they already match, e.g. a 16:9 backbuffer).
-	//if (dc->d3d11RenderTargetView)
-	//{
-	//	ComPtr<ID3D11Resource> rtRes;
-	//	dc->d3d11RenderTargetView->GetResource(&rtRes);
+	if (dc->d3d11RenderTargetView)
+	{
+		ComPtr<ID3D11Resource> rtRes;
+		dc->d3d11RenderTargetView->GetResource(&rtRes);
 
-	//	if (rtRes)
-	//	{
-	//		ComPtr<ID3D11Texture2D> rtTex;
+		if (rtRes)
+		{
+			ComPtr<ID3D11Texture2D> rtTex;
 
-	//		if (SUCCEEDED(rtRes.As(&rtTex)) && rtTex)
-	//		{
-	//			D3D11_TEXTURE2D_DESC rtDesc{};
-	//			rtTex->GetDesc(&rtDesc);
+			if (SUCCEEDED(rtRes.As(&rtTex)) && rtTex)
+			{
+				D3D11_TEXTURE2D_DESC rtDesc{};
+				rtTex->GetDesc(&rtDesc);
 
-	//			if (rtDesc.Width > targetPx.width) targetPx.width = rtDesc.Width;
-	//			if (rtDesc.Height > targetPx.height) targetPx.height = rtDesc.Height;
-	//		}
-	//	}
-	//}
+				if (rtDesc.Width > targetPx.width) targetPx.width = rtDesc.Width;
+				if (rtDesc.Height > targetPx.height) targetPx.height = rtDesc.Height;
+			}
+		}
+	}
 
 	if (targetPx.width == 0 || targetPx.height == 0) return hr;
 
@@ -289,8 +289,8 @@ HRESULT ImageEffect::DrawImage(SurfaceDC* dc, ID3D11Texture2D* bitmap, const D2D
 	dc->d3d11DeviceContext->PSSetSamplers(0, 1, _sampler.GetAddressOf());
 	dc->d3d11DeviceContext->RSSetState(_rasterizerState);
 
-	//D3D11_VIEWPORT vp = { 0.0f, 0.0f, (FLOAT)targetPx.width, (FLOAT)targetPx.height, 0.0f, 1.0f };
-	D3D11_VIEWPORT vp = { (FLOAT)offsetX, 0.0f, (FLOAT)targetPx.width, (FLOAT)targetPx.height, 0.0f, 1.0f };
+	D3D11_VIEWPORT vp = { 0.0f, 0.0f, (FLOAT)targetPx.width, (FLOAT)targetPx.height, 0.0f, 1.0f };
+	//D3D11_VIEWPORT vp = { (FLOAT)offsetX, 0.0f, (FLOAT)targetPx.width, (FLOAT)targetPx.height, 0.0f, 1.0f };
 	dc->d3d11DeviceContext->RSSetViewports(1, &vp);
 	D3D11_RECT sc = { sx0, sy0, sx1, sy1 };
 	dc->d3d11DeviceContext->RSSetScissorRects(1, &sc);
