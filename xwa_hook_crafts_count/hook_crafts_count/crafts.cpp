@@ -85,6 +85,7 @@ int CraftsCountHook(int* params)
 int ProjectilesCountHook(int* params)
 {
 	int projectilesCount = ReadCountSetting("ProjectilesCount", g_config.ProjectilesCount);
+	projectilesCount = std::max(projectilesCount, 64);
 
 	const int s_XwaNetworkPlayersCount = *(int*)0x0910DEC;
 
@@ -94,7 +95,7 @@ int ProjectilesCountHook(int* params)
 	s_V0x07D4B80 = s_XwaNetworkPlayersCount * 12;
 	s_V0x07D4C58 = s_XwaNetworkPlayersCount * 16;
 
-	return s_V0x07D4B80 + s_V0x07D4C58 + projectilesCount;
+	return s_V0x07D4B80 + s_V0x07D4C58 + projectilesCount * s_XwaNetworkPlayersCount;
 }
 
 int ExplosionsCountHook(int* params)
