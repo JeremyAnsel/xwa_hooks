@@ -26,6 +26,12 @@ E83C42F0FF              call 00415760
 
 E80C760900              call 005A8B30, 005A8B30 - 00511524 = 0009760C
 
+:004CD878 - 0x0CCC78
+8A8C0C8C0B0000          mov cl, byte ptr [esp+ecx+00000B8C]
+
+E8A3B20D00              call 005A8B20, 005A8B20 - 004CD87D = 000DB2A3
+9090                    nop
+
 
 :00409951 - 0x008D51
 E8EAE30800              call 00497D40

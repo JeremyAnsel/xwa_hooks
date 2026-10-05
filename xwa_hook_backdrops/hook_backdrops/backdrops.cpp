@@ -471,6 +471,60 @@ int LoadMissionHook(int* params)
 	return LoadMission(fileName);
 }
 
+int SpriteResourceLoadGroupHook(int* params)
+{
+	char* espB8C = (char*)params + 0xB8C;
+	char* esp18C = (char*)params + 0x18C;
+
+	espB8C[0x2710 - 3] = 0x0D;
+	espB8C[0x2710 - 2] = 0x0A;
+	espB8C[0x2710 - 1] = 0;
+
+	int edx = params[Params_ECX];
+	int eax = 0;
+	esp18C[0] = 0;
+	memset(esp18C, 0, 256);
+
+	while (true)
+	{
+		if (edx >= 0x2710 - 3 || eax >= 256)
+		{
+			eax = 1;
+			break;
+		}
+
+		char cl = espB8C[edx];
+
+		if (cl == 0x0A)
+		{
+			break;
+		}
+
+		edx++;
+		esp18C[eax] = cl;
+		eax++;
+	}
+
+	if (eax == 0)
+	{
+		eax++;
+	}
+
+	esp18C[eax - 1] = 0;
+
+	if (!std::ifstream(esp18C))
+	{
+		eax = 1;
+		esp18C[0] = 0;
+	}
+
+	params[Params_EDX] = edx;
+	params[Params_EAX] = eax;
+	params[Params_ReturnAddress] = 0x004CD8AF;
+
+	return 0;
+}
+
 int SwitchHyperBuoyHook(int* params)
 {
 	const auto XwaShowMessage = (void(*)(int, int))0x00497D40;

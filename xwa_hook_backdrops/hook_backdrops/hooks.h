@@ -8,6 +8,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x57AFE4, BackdropsHook },
 	{ 0x51034F, LoadMissionHook },
 	{ 0x511524, LoadMissionHook },
+	{ 0x4CD87D, SpriteResourceLoadGroupHook },
 	{ 0x409956, SwitchHyperBuoyHook },
 	{ 0x406045, BackdropRenderFilterHook },
 	{ 0x409945, ShowBuoyRegionNameHook },
@@ -24,6 +25,7 @@ static const HookPatchItem g_loadMissionPatch[] =
 {
 	{ 0x10F74A, "E81154F0FF", "E8E1870900" },
 	{ 0x11091F, "E83C42F0FF", "E80C760900" },
+	{ 0x0CCC78, "8A8C0C8C0B0000", "E8A3B20D009090" },
 };
 
 static const HookPatchItem g_switchHyperBuoyPatch[] =

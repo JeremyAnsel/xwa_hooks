@@ -25,6 +25,7 @@ At offset 17A3D9, replace 33DB85C08944241C0F8E4D0300008B74241469F63E0E0000 with 
 # To call the hook that loads mission
 At offset 10F74A, replace E81154F0FF with E8E1870900.
 At offset 11091F, replace E83C42F0FF with E80C760900.
+At offset 0CCC78, replace 8A8C0C8C0B0000 with E8A3B20D009090.
 
 # To call the hook that switches hyper buoy
 At offset 008D51, replace E8EAE30800 with E8CAF11900.
