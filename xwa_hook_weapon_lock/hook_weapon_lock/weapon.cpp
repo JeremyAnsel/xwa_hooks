@@ -305,6 +305,7 @@ struct ModelAttackBreakSettings
 	int MaxRange_Ace;
 	int MaxRange_TopAce;
 	int MaxRange_SuperAce;
+	bool AIAvoidHitOrder;
 };
 
 ModelAttackBreakSettings GetModelAttackBreakSettings(unsigned short objectModelIndex)
@@ -357,6 +358,7 @@ ModelAttackBreakSettings GetModelAttackBreakSettings(unsigned short objectModelI
 	settings.MaxRange_Ace = 40960;
 	settings.MaxRange_TopAce = 40960;
 	settings.MaxRange_SuperAce = 40960;
+	settings.AIAvoidHitOrder = true;
 
 	std::vector<std::string> defaultLines = GetFileLines("FlightModels\\AttackBreakDistance.txt");
 
@@ -394,6 +396,7 @@ ModelAttackBreakSettings GetModelAttackBreakSettings(unsigned short objectModelI
 		settings.MaxRange_Ace = GetFileKeyValueInt(defaultLines, "MaxRange_Ace", settings.MaxRange_Ace);
 		settings.MaxRange_TopAce = GetFileKeyValueInt(defaultLines, "MaxRange_TopAce", settings.MaxRange_TopAce);
 		settings.MaxRange_SuperAce = GetFileKeyValueInt(defaultLines, "MaxRange_SuperAce", settings.MaxRange_SuperAce);
+		settings.AIAvoidHitOrder = GetFileKeyValueInt(defaultLines, "AIAvoidHitOrder", settings.AIAvoidHitOrder ? 1 : 0) != 0;
 	}
 
 	if (lines.size())
@@ -425,6 +428,7 @@ ModelAttackBreakSettings GetModelAttackBreakSettings(unsigned short objectModelI
 		settings.MaxRange_Ace = GetFileKeyValueInt(lines, "MaxRange_Ace", settings.MaxRange_Ace);
 		settings.MaxRange_TopAce = GetFileKeyValueInt(lines, "MaxRange_TopAce", settings.MaxRange_TopAce);
 		settings.MaxRange_SuperAce = GetFileKeyValueInt(lines, "MaxRange_SuperAce", settings.MaxRange_SuperAce);
+		settings.AIAvoidHitOrder = GetFileKeyValueInt(lines, "AIAvoidHitOrder", settings.AIAvoidHitOrder ? 1 : 0) != 0;
 	}
 
 	return settings;
@@ -730,5 +734,27 @@ int ModelAttackMaxRangeHook(int* params)
 	}
 
 	params[Params_EBP] = range;
+	return 0;
+}
+
+int ModelAIAvoidHitOrderHook(int* params)
+{
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	int objectIndex = params[Params_EBX];
+	unsigned short modelIndex = XwaObjects[objectIndex].ModelIndex;
+	ShipCategoryEnum modelShipCategory = XwaObjects[objectIndex].ShipCategory;
+	const ModelAttackBreakSettings& settings = g_modelIndexConfig.GetModelAttackBreak(modelIndex);
+	bool avoid = true;
+
+	if (modelShipCategory == ShipCategory_Freighter || modelShipCategory == ShipCategory_Container || modelShipCategory == ShipCategory_Starship)
+	{
+		avoid = false;
+	}
+	else
+	{
+		avoid = settings.AIAvoidHitOrder;
+	}
+
+	params[Params_ReturnAddress] = avoid ? 0x004BB034 : 0x004BB3F1;
 	return 0;
 }

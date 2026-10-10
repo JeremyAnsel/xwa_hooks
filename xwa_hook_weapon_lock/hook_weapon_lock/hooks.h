@@ -20,6 +20,7 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4AD454, ModelAttackBreakLargeObjectMaxDistanceHook },
 	{ 0x4AD46C, ModelAttackLargeObjectOffsetHook },
 	{ 0x4A7617, ModelAttackMaxRangeHook },
+	{ 0x4BB01D, ModelAIAvoidHitOrderHook },
 };
 
 static const HookPatchItem g_warheadLockPatch[] =
@@ -43,6 +44,8 @@ static const HookPatchItem g_attackBreakPatch[] =
 	{ 0x0AC84F, "81FF00200000", "E8CCB60F0090" },
 	{ 0x0AC867, "6681FE8C00", "E8B4B60F00" },
 	{ 0x0A6A12, "8B2C85E86D5B00", "E8091510009090" },
+	// AIAvoidHitOrder
+	{ 0x0BA418, "8A4408043C03", "E803DB0E0090" },
 };
 
 static const HookPatch g_patches[] =

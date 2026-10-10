@@ -37,6 +37,7 @@ At offset 0AC79E, replace 7507BF00060000 with E87DB70F009090.
 At offset 0AC84F, replace 81FF00200000 with E8CCB60F0090.
 At offset 0AC867, replace 6681FE8C00 with E8B4B60F00.
 At offset 0A6A12, replace 8B2C85E86D5B00 with E8091510009090.
+At offset 0BA418, replace 8A4408043C03 with E803DB0E0090.
 
 
 *** Usage ***
@@ -113,6 +114,8 @@ To define the distance for small targets use the "SmallObject_NoviceRank", "Smal
 To define the max distance for large targets use the "LargeObject_MaxDistance" setting. To define a distance offset use "Model_[Target]" settings where [Target] is the name of the target craft.
 To define the max range before shooting use the "MaxRange_Novice", "MaxRange_Officer", "MaxRange_Veteran", "MaxRange_Ace", "MaxRange_TopAce", "MaxRange_SuperAce" settings.
 
+To define whether an ai ship avoid hits use the "AIAvoidHitOrder" setting.
+
 The default values are:
 Warhead = 5120
 SmallObject_NoviceRank = 5120
@@ -131,6 +134,7 @@ MaxRange_Veteran = 40960
 MaxRange_Ace = 40960
 MaxRange_TopAce = 40960
 MaxRange_SuperAce = 40960
+AIAvoidHitOrder = 1
 
 
 *** Credits ***

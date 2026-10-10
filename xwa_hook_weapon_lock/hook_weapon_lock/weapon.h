@@ -15,3 +15,4 @@ int ModelAttackBreakSmallObjectRankHook(int* params);
 int ModelAttackBreakLargeObjectMaxDistanceHook(int* params);
 int ModelAttackLargeObjectOffsetHook(int* params);
 int ModelAttackMaxRangeHook(int* params);
+int ModelAIAvoidHitOrderHook(int* params);
