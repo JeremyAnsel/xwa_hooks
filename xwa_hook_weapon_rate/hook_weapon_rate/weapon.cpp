@@ -2580,7 +2580,7 @@ int WeaponDurationOffsetHook(int* params)
 	const int weaponObjectIndex = params[Params_EBX] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).DurationOffset;
+	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).DurationOffset;
 
 	xwaObjects[weaponObjectIndex].pMobileObject->Duration += value;
 
@@ -2758,8 +2758,8 @@ int GetWeaponDurationHook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	int valueInteger = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).DurationIntegerPart;
-	int valueDecimal = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).DurationDecimalPart;
+	int valueInteger = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).DurationIntegerPart;
+	int valueDecimal = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).DurationDecimalPart;
 
 	int duration = valueInteger * 0xEC + XwaMulWordPercent(valueDecimal, 0xEC);
 
@@ -2802,7 +2802,7 @@ int WeaponDuration_004922DB_Hook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	unsigned short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).DurationIntegerPart;
+	unsigned short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).DurationIntegerPart;
 
 	params[Params_EBX] = value;
 	return 0;
@@ -2815,7 +2815,7 @@ int WeaponDuration_004922E3_Hook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	unsigned short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).DurationDecimalPart;
+	unsigned short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).DurationDecimalPart;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -2828,7 +2828,7 @@ int WeaponDuration_0049312E_Hook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	unsigned short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).DurationIntegerPart;
+	unsigned short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).DurationIntegerPart;
 
 	params[Params_EDI] = value;
 	return 0;
@@ -2841,7 +2841,7 @@ int WeaponDuration_00493136_Hook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const unsigned short sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	unsigned short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).DurationDecimalPart;
+	unsigned short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).DurationDecimalPart;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -2854,7 +2854,7 @@ int WeaponDuration_00493616_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EBX] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	unsigned short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).DurationIntegerPart;
+	unsigned short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).DurationIntegerPart;
 
 	params[Params_ESI] = value;
 	return 0;
@@ -2867,7 +2867,7 @@ int WeaponDuration_00493628_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EBX] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	unsigned short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).DurationDecimalPart;
+	unsigned short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).DurationDecimalPart;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -2876,10 +2876,12 @@ int WeaponDuration_00493628_Hook(int* params)
 int WeaponScore_00497454_Hook(int* params)
 {
 	const int weaponIndex = params[Params_ECX] - 0x118;
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
 	const XwaObject* weaponObject = (XwaObject*)params[Params_ESI];
+	const int weaponObjectIndex = weaponObject - xwaObjects;
 	const int sourceObjectIndex = weaponObject->pMobileObject->ObjectIndex;
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).Score;
+	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).Score;
 
 	params[Params_EDX] = value;
 	return 0;
@@ -2892,7 +2894,7 @@ int WeaponScore_004D9B16_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EBP] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).Score;
+	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).Score;
 
 	params[Params_EBX] = value;
 	return 0;
@@ -2905,7 +2907,7 @@ int WeaponScore_004D9B4E_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EBP] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).Score;
+	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).Score;
 
 	params[Params_ECX] = value;
 	return 0;
@@ -2931,7 +2933,7 @@ int WeaponSpeed_0049221A_Hook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Speed").Speed;
+	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Speed").Speed;
 
 	params[Params_EBX] = value;
 	return 0;
@@ -2944,7 +2946,7 @@ int WeaponSpeed_00492235_Hook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Speed").Speed;
+	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Speed").Speed;
 
 	params[Params_EBX] = value;
 	return 0;
@@ -2969,7 +2971,7 @@ int WeaponSpeed_004930F3_Hook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Speed").Speed;
+	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Speed").Speed;
 
 	params[Params_EDX] = value;
 	return 0;
@@ -2982,7 +2984,7 @@ int WeaponSpeed_0049359A_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EBX] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Speed").Speed;
+	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Speed").Speed;
 
 	params[Params_EDX] = value;
 	return 0;
@@ -2995,7 +2997,7 @@ int WeaponSpeed_004935C3_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EBX] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Speed").Speed;
+	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Speed").Speed;
 
 	params[Params_EDX] += value;
 	return 0;
@@ -3038,10 +3040,12 @@ int WeaponSpeed_004942CF_Hook(int* params)
 int WeaponSpeed_00496903_Hook(int* params)
 {
 	const int weaponIndex = 13;
+	const XwaObject* xwaObjects = *(XwaObject**)0x007B33C4;
 	const XwaObject* weaponObject = (XwaObject*)params[Params_ESI];
+	const int weaponObjectIndex = weaponObject - xwaObjects;
 	const int sourceObjectIndex = weaponObject->pMobileObject->ObjectIndex;
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Speed").Speed;
+	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Speed").Speed;
 
 	params[Params_ECX] = value;
 	return 0;
@@ -3078,7 +3082,7 @@ int WeaponSpeed_004E2678_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EBX] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Speed").Speed;
+	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Speed").Speed;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -3091,7 +3095,7 @@ int WeaponSpeed_004E26A2_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EBX] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Speed").Speed;
+	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Speed").Speed;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -3104,7 +3108,7 @@ int WeaponSpeed_004E4D75_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EBX] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Speed").Speed;
+	short value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Speed").Speed;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -3129,7 +3133,7 @@ int WeaponPower_00492279_Hook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Power").Power;
+	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Power").Power;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -3145,11 +3149,11 @@ int WeaponPower_004922A2_Hook(int* params)
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
 	int speed = params[Params_EDX];
-	int speedPercent = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex).PowerSpeedPercent;
+	int speedPercent = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex).PowerSpeedPercent;
 	speed = speed * speedPercent / 100;
 	params[Params_EDX] = speed;
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Power").Power;
+	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Power").Power;
 
 	params[Params_EBX] = value;
 	return 0;
@@ -3162,7 +3166,7 @@ int WeaponPower_004922BA_Hook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Power").Power;
+	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Power").Power;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -3175,7 +3179,7 @@ int WeaponPower_00493121_Hook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Power").Power;
+	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Power").Power;
 
 	params[Params_EDX] = value;
 	return 0;
@@ -3193,7 +3197,7 @@ int WeaponPower_004935E1_Hook(int* params)
 	speed = speed * speedPercent / 100;
 	params[Params_ECX] = speed;
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Power").Power;
+	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Power").Power;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -3206,7 +3210,7 @@ int WeaponPower_004935FE_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EBX] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Power").Power;
+	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Power").Power;
 
 	params[Params_ECX] = value;
 	return 0;
@@ -3236,7 +3240,7 @@ int WeaponPower_004A7983_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EDI];
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Power").Power;
+	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Power").Power;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -3261,7 +3265,7 @@ int WeaponPower_004A7E46_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EDI];
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Power").Power;
+	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Power").Power;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -3274,7 +3278,7 @@ int WeaponPower_004E2691_Hook(int* params)
 	const int weaponObjectIndex = params[Params_EBX] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Power").Power;
+	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Power").Power;
 
 	params[Params_EAX] = value;
 	return 0;
@@ -3287,7 +3291,7 @@ int WeaponPower_004E4DAF_Hook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Power").Power;
+	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Power").Power;
 
 	params[Params_EDX] = value;
 	return 0;
@@ -3300,7 +3304,7 @@ int WeaponPower_00519C36_Hook(int* params)
 	const int weaponObjectIndex = params[Params_ESI] / 0x27;
 	const int sourceObjectIndex = xwaObjects[weaponObjectIndex].pMobileObject->ObjectIndex;
 
-	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex, weaponIndex, "Power").Power;
+	int value = g_modelIndexWeapon.GetStats(sourceObjectIndex != -1 ? sourceObjectIndex : weaponObjectIndex, weaponIndex, "Power").Power;
 
 	params[Params_EDX] = value;
 	return 0;
