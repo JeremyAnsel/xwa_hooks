@@ -105,3 +105,20 @@ E809151000              call 005A8B20, 005A8B20 - 004A7617 = 00101509
 
 E803DB0E00              call 005A8B20, 005A8B20 - 004BB01D = 000EDB03
 90                      nop
+
+===============================================================================
+
+// weaponFireInhibitTimer
+
+:0040EA18 - 0x00DE18
+668B8385010000          mov ax, word ptr [ebx+00000185]
+
+E803A11900              call 005A8B20, 005A8B20 - 0040EA1D = 0019A103
+9090                    nop
+
+:0040EAA1 - 0x00DEA1
+8A441104                mov al, byte ptr [ecx+edx+04]
+84C0                    test al, al
+
+E87AA01900              call 005A8B20, 005A8B20 - 0040EAA6 = 0019A07A
+90                      nop

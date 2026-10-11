@@ -39,6 +39,10 @@ At offset 0AC867, replace 6681FE8C00 with E8B4B60F00.
 At offset 0A6A12, replace 8B2C85E86D5B00 with E8091510009090.
 At offset 0BA418, replace 8A4408043C03 with E803DB0E0090.
 
+# To call the hook that defines weapon lock behaviors
+At offset 00DE18, replace 668B8385010000 with E803A119009090.
+At offset 00DEA1, replace 8A44110484C0 with E87AA0190090.
+
 
 *** Usage ***
 
@@ -135,6 +139,24 @@ MaxRange_Ace = 40960
 MaxRange_TopAce = 40960
 MaxRange_SuperAce = 40960
 AIAvoidHitOrder = 1
+
+# WeaponLockBehaviors
+
+To set the weapons settings, create a file named "FlightModels\[Model]WeaponLockBehaviors.txt" or create a section named "[WeaponLockBehaviors]" in "FlightModels\[Model].ini".
+Set default values in "FlightModels\WeaponLockBehaviors.txt" or in a section named "[WeaponLockBehaviors]" in "FlightModels\default.ini".
+
+## MagPulse
+
+The default values are:
+MagPulse_DrainWeaponEnergy = 0 ; 0=vanilla, 1=patched (only drain energy), only for player crafts
+MagPulse_SmallCraftDisableTimer = 15 ; default value for small crafts (Starfighter, Transport, UtilityVehicle, Droid, Armament)
+MagPulse_LargeCraftDisableTimer = 30 ; default value for large crafts (other ship categories)
+
+The per-model values are:
+MagPulse_DrainWeaponEnergy = -1 ; -1=use default value, 0 or 1 is the same as default values
+MagPulse_CraftDisableTimer = -1 ; -1=use default value (MagPulse_SmallCraftDisableTimer or MagPulse_LargeCraftDisableTimer based on the ship category)
+
+The values for MagPulse_SmallCraftDisableTimer, MagPulse_LargeCraftDisableTimer, and MagPulse_CraftDisableTimer are in seconds.
 
 
 *** Credits ***

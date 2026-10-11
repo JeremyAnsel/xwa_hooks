@@ -16,3 +16,5 @@ int ModelAttackBreakLargeObjectMaxDistanceHook(int* params);
 int ModelAttackLargeObjectOffsetHook(int* params);
 int ModelAttackMaxRangeHook(int* params);
 int ModelAIAvoidHitOrderHook(int* params);
+int ModelMagPulseLaserBehaviourHook(int* params);
+int ModelCraftDisableTimerHook(int* params);

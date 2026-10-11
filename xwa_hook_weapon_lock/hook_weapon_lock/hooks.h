@@ -21,6 +21,8 @@ static const HookFunction g_hookFunctions[] =
 	{ 0x4AD46C, ModelAttackLargeObjectOffsetHook },
 	{ 0x4A7617, ModelAttackMaxRangeHook },
 	{ 0x4BB01D, ModelAIAvoidHitOrderHook },
+	{ 0x40EA1D, ModelMagPulseLaserBehaviourHook },
+	{ 0x40EAA6, ModelCraftDisableTimerHook },
 };
 
 static const HookPatchItem g_warheadLockPatch[] =
@@ -48,8 +50,15 @@ static const HookPatchItem g_attackBreakPatch[] =
 	{ 0x0BA418, "8A4408043C03", "E803DB0E0090" },
 };
 
+static const HookPatchItem g_weaponLockBehaviorsPatch[] =
+{
+	{ 0x00DE18, "668B8385010000", "E803A119009090" },
+	{ 0x00DEA1, "8A44110484C0", "E87AA0190090" },
+};
+
 static const HookPatch g_patches[] =
 {
 	MAKE_HOOK_PATCH("To call the hook that sets warhead lock settings", g_warheadLockPatch),
 	MAKE_HOOK_PATCH("To call the hook that sets attack break distances settings", g_attackBreakPatch),
+	MAKE_HOOK_PATCH("To call the hook that defines weapon lock behaviors", g_weaponLockBehaviorsPatch),
 };

@@ -434,6 +434,103 @@ ModelAttackBreakSettings GetModelAttackBreakSettings(unsigned short objectModelI
 	return settings;
 }
 
+struct ModelWeaponLockBehaviorsSettings
+{
+	int MagPulse_DrainWeaponEnergy; // 0=vanilla, 1=patch, -1=default
+	int MagPulse_CraftDisableTimer; // -1=default
+};
+
+ModelWeaponLockBehaviorsSettings GetModelWeaponLockBehaviorsSettings(unsigned short objectModelIndex, ShipCategoryEnum objectShipCategory)
+{
+	const char* xwaMissionFileName = (const char*)0x06002E8;
+
+	const std::string mission = GetStringWithoutExtension(xwaMissionFileName);
+	std::vector<std::string> linesObjects = GetFileLines(mission + "_Objects.txt");
+
+	if (!linesObjects.size())
+	{
+		linesObjects = GetFileLines(mission + ".ini", "Objects");
+	}
+
+	if (!linesObjects.size())
+	{
+		linesObjects = GetFileLines("FlightModels\\Objects.txt");
+	}
+
+	if (!linesObjects.size())
+	{
+		linesObjects = GetFileLines("FlightModels\\default.ini", "Objects");
+	}
+
+	std::string shipPath = GetShipPath(linesObjects, objectModelIndex);
+
+	std::vector<std::string> lines = GetFileLines(shipPath + "WeaponLockBehaviors.txt");
+
+	if (!lines.size())
+	{
+		lines = GetFileLines(shipPath + ".ini", "WeaponLockBehaviors");
+	}
+
+	int MagPulse_DrainWeaponEnergy = 0;
+	int MagPulse_SmallCraftDisableTimer = 15;
+	int MagPulse_LargeCraftDisableTimer = 30;
+
+	std::vector<std::string> defaultLines = GetFileLines("FlightModels\\WeaponLockBehaviors.txt");
+
+	if (!defaultLines.size())
+	{
+		defaultLines = GetFileLines("FlightModels\\default.ini", "WeaponLockBehaviors");
+	}
+
+	if (defaultLines.size())
+	{
+		MagPulse_DrainWeaponEnergy = GetFileKeyValueInt(defaultLines, "MagPulse_DrainWeaponEnergy", MagPulse_DrainWeaponEnergy);
+		MagPulse_SmallCraftDisableTimer = GetFileKeyValueInt(defaultLines, "MagPulse_SmallCraftDisableTimer", MagPulse_SmallCraftDisableTimer);
+		MagPulse_LargeCraftDisableTimer = GetFileKeyValueInt(defaultLines, "MagPulse_LargeCraftDisableTimer", MagPulse_LargeCraftDisableTimer);
+	}
+
+	ModelWeaponLockBehaviorsSettings settings{};
+	settings.MagPulse_DrainWeaponEnergy = -1;
+	settings.MagPulse_CraftDisableTimer = -1;
+
+	if (lines.size())
+	{
+		settings.MagPulse_DrainWeaponEnergy = GetFileKeyValueInt(lines, "MagPulse_DrainWeaponEnergy", settings.MagPulse_DrainWeaponEnergy);
+		settings.MagPulse_CraftDisableTimer = GetFileKeyValueInt(lines, "MagPulse_CraftDisableTimer", settings.MagPulse_CraftDisableTimer);
+	}
+
+	if (settings.MagPulse_DrainWeaponEnergy == -1)
+	{
+		settings.MagPulse_DrainWeaponEnergy = MagPulse_DrainWeaponEnergy;
+	}
+
+	if (settings.MagPulse_CraftDisableTimer == -1)
+	{
+		switch (objectShipCategory)
+		{
+		case ShipCategory_Starfighter:
+		case ShipCategory_Transport:
+		case ShipCategory_UtilityVehicle:
+		case ShipCategory_Droid:
+		case ShipCategory_Armament:
+			settings.MagPulse_CraftDisableTimer = MagPulse_SmallCraftDisableTimer;
+			break;
+
+		default:
+			settings.MagPulse_CraftDisableTimer = MagPulse_LargeCraftDisableTimer;
+			break;
+		}
+	}
+
+	if (settings.MagPulse_CraftDisableTimer != -1)
+	{
+		// timer in seconds: time * 236
+		settings.MagPulse_CraftDisableTimer *= 236;
+	}
+
+	return settings;
+}
+
 class ModelIndexConfig
 {
 public:
@@ -480,6 +577,25 @@ public:
 		}
 	}
 
+	const ModelWeaponLockBehaviorsSettings& GetModelWeaponLockBehaviors(unsigned short objectModelIndex, ShipCategoryEnum objectShipCategory)
+	{
+		this->Update();
+
+		auto it = this->_modelWeaponLockBehaviorsSettings.find(objectModelIndex);
+
+		if (it != this->_modelWeaponLockBehaviorsSettings.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			ModelWeaponLockBehaviorsSettings value = GetModelWeaponLockBehaviorsSettings(objectModelIndex, objectShipCategory);
+			this->_modelWeaponLockBehaviorsSettings.insert(std::make_pair(objectModelIndex, value));
+
+			it = this->_modelWeaponLockBehaviorsSettings.find(objectModelIndex);
+			return it->second;
+		}
+	}
 
 private:
 	void Update()
@@ -497,11 +613,13 @@ private:
 
 			this->_warheadLockSettings.clear();
 			this->_modelAttackBreakSettings.clear();
+			this->_modelWeaponLockBehaviorsSettings.clear();
 		}
 	}
 
 	std::map<int, WarheadLockSettings> _warheadLockSettings;
 	std::map<unsigned short, ModelAttackBreakSettings> _modelAttackBreakSettings;
+	std::map<unsigned short, ModelWeaponLockBehaviorsSettings> _modelWeaponLockBehaviorsSettings;
 };
 
 ModelIndexConfig g_modelIndexConfig;
@@ -756,5 +874,33 @@ int ModelAIAvoidHitOrderHook(int* params)
 	}
 
 	params[Params_ReturnAddress] = avoid ? 0x004BB034 : 0x004BB3F1;
+	return 0;
+}
+
+int ModelMagPulseLaserBehaviourHook(int* params)
+{
+	const int objectIndex = params[Params_EDX] / 0x27;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const XwaObject* object = &XwaObjects[objectIndex];
+	const int pCraft = params[Params_EBX];
+	const ModelWeaponLockBehaviorsSettings& settings = g_modelIndexConfig.GetModelWeaponLockBehaviors(object->ModelIndex, object->ShipCategory);
+
+	params[Params_EAX] = *(short*)(pCraft + 0x185);
+	*(unsigned char*)0x0040EA21 = settings.MagPulse_DrainWeaponEnergy == 1 ? 0xEB : 0x74;
+
+	return 0;
+}
+
+int ModelCraftDisableTimerHook(int* params)
+{
+	const int objectIndex = params[Params_EDX] / 0x27;
+	const XwaObject* XwaObjects = *(XwaObject**)0x007B33C4;
+	const XwaObject* object = &XwaObjects[objectIndex];
+	const int pCraft = params[Params_EBX];
+	const ModelWeaponLockBehaviorsSettings& settings = g_modelIndexConfig.GetModelWeaponLockBehaviors(object->ModelIndex, object->ShipCategory);
+
+	*(short*)(pCraft + 0x187) = params[Params_ESI] + settings.MagPulse_CraftDisableTimer;
+	params[Params_ReturnAddress] = 0x0040EAD5;
+
 	return 0;
 }
