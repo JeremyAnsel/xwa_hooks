@@ -36,6 +36,8 @@ int WritePilotHook(int* params);
 int ReadPilotHook(int* params);
 int CreatePilotHook(int* params);
 int ReadEmailTxtHook(int* params);
+int ReadEmailLineHook(int* params);
+int RenderEmailHook(int* params);
 int SetupConcourseStarfieldHook(int* params);
 int DrawConcourseStarfieldHook(int* params);
 void DrawConcourseStarfieldHD(int frameIndex);

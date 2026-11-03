@@ -127,6 +127,21 @@ At offset 1285F6, replace B801000000 with E835F90700.
 At offset 128D30, replace B801000000 with E8FBF10700.
 At offset 12811B, replace E8F0200700 with E810FE0700.
 At offset 162670, replace 893D104B9F00 with E8AB58040090.
+At offset 162658, replace E8D37B0300 with E8D3580400.
+At offset 16290C, replace E81F790300 with E81F560400.
+At offset 1626B9, replace C1E004 with C1E00A.
+At offset 1626F7, replace C1E004 with C1E00A.
+At offset 1629F7, replace 81C5C8040000 with 81C548200100.
+At offset 162C49, replace 68C8040000 with 6848200100.
+At offset 162C70, replace 68C8040000 with 6848200100.
+At offset 162C90, replace 68C8040000 with 6848200100.
+At offset 160206, replace C1E004 with C1E00A.
+At offset 160230, replace C1E004 with C1E00A.
+At offset 160192, replace 81C6C8040000 with 81C648200100.
+At offset 15FF62, replace C1E604 with C1E60A.
+At offset 15F464, replace 05C8040000 with 0548200100.
+At offset 139360, replace 05C8040000 with 0548200100.
+At offset 160223, replace E8886CFFFF with E8F87C0400.
 
 # To call the hook that generates concourse starfield
 At offset 1394CB, replace E8800B0000 with E860EA0600.

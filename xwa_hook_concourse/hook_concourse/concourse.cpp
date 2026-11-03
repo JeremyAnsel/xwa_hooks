@@ -71,6 +71,10 @@ enum ParamsEnum
 	Params_EDI = -10,
 };
 
+const auto XwaRectSet = (void(*)(LPRECT, LONG, LONG, LONG, LONG))0x00558C90;
+const auto L00557AB0 = (int(*)(int, const char*, LPRECT, short, int, int))0x00557AB0;
+const auto XwaUIScrollBar = (int(*)(LPRECT, int, int, int, int, unsigned int, int))0x005555D0;
+
 float GetFileKeyValueFloat(const std::vector<std::string>& lines, const std::string& key, float defaultValue)
 {
 	std::string value = GetFileKeyValue(lines, key);
@@ -3394,6 +3398,121 @@ int ReadEmailTxtHook(int* params)
 	return 0;
 }
 
+int ReadEmailLineHook(int* params)
+{
+	static char _buffer[0x10000];
+	const auto Xwa_fgets = (int(*)(char*, int, int))0x0059AE30;
+	return Xwa_fgets(_buffer, 0x10000, params[Params_EBX]);
+}
+
+static int g_RenderFormattedText_ItemsIndex = 0;
+
+void RenderFormattedText(LPRECT textrc, const std::string& str)
+{
+	std::string text = str;
+	for (char* s = text.data(); *s != 0; s++)
+	{
+		if (*s == '$')
+		{
+			*s = '\n';
+		}
+	}
+
+	SurfaceDC dc;
+	bool hasDC = GetSurfaceDC(&dc);
+	bool isWide = g_netFunctions._frontResIsBackgroundWide() != 0;
+	HRESULT hr = S_OK;
+	int fontSize = 0x0C;
+	IDWriteTextFormat* textFormat = g_fontResources.GetTextFormat(MultiplyDivV(fontSize, dc));
+	std::wstring wtext = string_towstring(text.c_str());
+
+	ComPtr<IDWriteTextLayout> textLayout;
+	hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str(), wtext.length(), textFormat, MultiplyDivH(textrc->right - textrc->left - 20, isWide, dc), INFINITY, &textLayout);
+	CheckHResult("CreateTextLayout", hr);
+
+	DWRITE_TEXT_METRICS m{};
+	textLayout->GetMetrics(&m);
+	std::vector<DWRITE_LINE_METRICS> textLines;
+	textLines.reserve(m.lineCount);
+	textLayout->GetLineMetrics(textLines.data(), m.lineCount, &m.lineCount);
+	int linesCount = m.lineCount;
+	int lineHeight = g_fontResources.GetTextFormatLineHeight(MultiplyDivV(fontSize, dc));
+	int maxLines = MultiplyDivV(textrc->bottom - textrc->top, dc) / lineHeight;
+
+	RECT scrollBarRect;
+	XwaRectSet(&scrollBarRect, 0x226, textrc->top, 0x239, textrc->bottom);
+	if (linesCount > maxLines)
+	{
+		g_RenderFormattedText_ItemsIndex = XwaUIScrollBar(&scrollBarRect, g_RenderFormattedText_ItemsIndex, linesCount, 0, 0x05, *(unsigned int*)0x0B07C6C, maxLines);
+	}
+
+	int currentCount = min(linesCount - g_RenderFormattedText_ItemsIndex, maxLines);
+
+	ComPtr<ID2D1SolidColorBrush> brush;
+	dc.d2d1RenderTarget->CreateSolidColorBrush(D2D1::ColorF(0x6080ff), &brush);
+
+	dc.d2d1RenderTarget->BeginDraw();
+
+	int strIndex = 0;
+	for (int lineIndex = 0; lineIndex < g_RenderFormattedText_ItemsIndex; lineIndex++)
+	{
+		strIndex += textLines[lineIndex].length;
+	}
+
+	float drawPosition = (float)MultiplyDivV(textrc->top, dc);
+	float drawOffsetX = (float)MultiplyDivH(textrc->left, isWide, dc) + MultiplyDivOffsetXWide(dc);
+	for (int lineIndex = g_RenderFormattedText_ItemsIndex; lineIndex < g_RenderFormattedText_ItemsIndex + currentCount; lineIndex++)
+	{
+		int lineLength = textLines[lineIndex].length;
+		hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str() + strIndex, lineLength, textFormat, INFINITY, INFINITY, &textLayout);
+
+		dc.d2d1RenderTarget->DrawTextLayout({ drawOffsetX, drawPosition }, textLayout, brush);
+
+		strIndex += lineLength;
+		drawPosition += lineHeight;
+	}
+
+	dc.d2d1RenderTarget->EndDraw();
+
+	//RECT rc;
+	//XwaRectSet(&rc, 100, 0, 610, 100);
+	//std::string msg = "currentLine=" + std::to_string(g_RenderFormattedText_ItemsIndex) + " currentCount=" + std::to_string(currentCount) + " linesCount=" + std::to_string(linesCount) + " maxLines=" + std::to_string(maxLines) + " " + std::to_string(textrc->left) + ";" + std::to_string(textrc->top) + ";" + std::to_string(textrc->right) + ";" + std::to_string(textrc->bottom);
+	//L00557AB0(12, msg.c_str(), &rc, 0xffffffff, 0x03, 0);
+}
+
+int RenderEmailHook(int* params)
+{
+	int A4 = params[0];
+	const char* A8 = (const char*)params[1];
+	LPRECT AC = (LPRECT)params[2];
+	short A10 = (short)params[3];
+	int A14 = params[4];
+	int A18 = params[5];
+
+	SurfaceDC dc;
+	bool hasDC = GetSurfaceDC(&dc);
+
+	if (!hasDC)
+	{
+		return L00557AB0(A4, A8, AC, A10, A14, A18);
+	}
+
+	static int _emailRow = 0;
+	static unsigned char _emailsSortCriterion = 0;
+	int& EmailSelectedRow = *(int*)0x00783B10;
+	unsigned char& EmailsSortCriterion = *(unsigned char*)0x00B07B52;
+
+	if (_emailRow != EmailSelectedRow || _emailsSortCriterion != EmailsSortCriterion)
+	{
+		_emailRow = EmailSelectedRow;
+		_emailsSortCriterion = EmailsSortCriterion;
+		g_RenderFormattedText_ItemsIndex = 0;
+	}
+
+	RenderFormattedText(AC, A8);
+	return 0;
+}
+
 int RandInteger(int min, int max)
 {
 	const auto Xwa_rand = (int(*)())0x0059BEB0;
@@ -5775,7 +5894,8 @@ int FontGetStringWidthHook(int* params)
 		std::wstring wtext = string_towstring(str);
 
 		ComPtr<IDWriteTextLayout> textLayout;
-		hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str(), wtext.length(), textFormat, 640 * 4 / 3, 480, &textLayout);
+		//hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str(), wtext.length(), textFormat, 640 * 4 / 3, 480, &textLayout);
+		hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str(), wtext.length(), textFormat, dc.width, dc.height, &textLayout);
 		CheckHResult("CreateTextLayout", hr);
 
 		DWRITE_TEXT_METRICS m{};
