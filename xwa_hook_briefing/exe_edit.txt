@@ -1,0 +1,94 @@
+
+; run game state
+:00564DC1 - 0x1641C1
+E86A170000              call 00566530
+
+E85A3D0400              call 005A8B20, 005A8B20 - 00564DC6 = 00043D5A
+
+; button text
+:00565DAA - 0x1651AA
+E8A16DFFFF              call 0055CB50
+
+E8812D0400              call 005A8B30, 005A8B30 - 00565DAF = 00042D81
+
+:00565E8B - 0x16528B
+E8C06CFFFF              call 0055CB50
+
+E85A3D0400              call 005A8B30, 005A8B30 - 00565E90 = 00042CA0
+
+; switch game state brefing
+:00565670 - 0x164A70
+E89BC1FDFF              call 00541810
+
+E8AB340400              call 005A8B20, 005A8B20 - 00565675 = 000434AB
+
+; switch game state debrefing
+:005718CD - 0x170CCD
+6850EC5700              push 0057EC50
+
+E84E720300              call 005A8B20, 005A8B20 - 005718D2 = 0003724E
+
+; check fg goal state
+:004D4931 - 0x0D3D31
+E8AA110000              call 004D5AE0
+
+E8FA410D00              call 005A8B30, 005A8B30 - 004D4936 = 000D41FA
+
+===============================================================================
+
+// briefing text
+
+; s_briefingText alloc, V0x009F4BD0
+:00543C13 - 0x143013
+6800100000              push 00001000
+
+6800000100              push 00010000
+
+:005653FF - 0x1647FF
+6800100000              push 00001000
+
+6800000100              push 00010000
+
+:0056E65D - 0x16DA5D
+6800100000              push 00001000
+
+6800000100              push 00010000
+
+:0056FD6A - 0x16F16A
+6800100000              push 00001000
+
+6800000100              push 00010000
+
+:00577864 - 0x176C64
+6800100000              push 00001000
+
+6800000100              push 00010000
+
+:0057F38B - 0x17E78B
+6800100000              push 00001000
+
+6800000100              push 00010000
+
+; s_hintsText alloc, V0x009EAA0C
+:0057F3B5 - 0x17E7B5
+6800100000              push 00001000
+
+6800000100              push 00010000
+
+; L00548140 MissionSetup_LoadMissionDescText
+:005483B5 - 0x1477B5
+E8162AFEFF              call 0052ADD0
+
+E866070600              call 005A8B20, 005A8B20 - 005483BA = 00060766
+
+; L005483D0 MissionSetup_BuildBriefingText
+:005487A8 - 0x147BA8
+E82326FEFF              call 0052ADD0
+
+E873030600              call 005A8B20, 005A8B20 - 005487AD = 00060373
+
+; L00583840 MissionDebrief_BuildText
+:00583EB7 - 0x1832B7
+E8146FFAFF              call 0052ADD0
+
+E8644C0200              call 005A8B20, 005A8B20 - 00583EBC = 00024C64
