@@ -5884,50 +5884,61 @@ int FontGetStringWidthHook(int* params)
 	bool isConfigMenuGameStateUpdate = IsUpdateCallback(0x0051D100);
 
 	HRESULT hr;
-
-	IDWriteTextFormat* textFormat = g_fontResources.GetTextFormat((float)fontSize);
-
 	float width = 0;
 
-	if (g_fontResources.IsPlainText(str))
+	static std::map<std::string, float> _widths;
+	std::string key = std::to_string(fontSize) + "_" + str;
+
+	if (_widths.contains(key))
 	{
-		std::wstring wtext = string_towstring(str);
-
-		ComPtr<IDWriteTextLayout> textLayout;
-		//hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str(), wtext.length(), textFormat, 640 * 4 / 3, 480, &textLayout);
-		hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str(), wtext.length(), textFormat, dc.width, dc.height, &textLayout);
-		CheckHResult("CreateTextLayout", hr);
-
-		DWRITE_TEXT_METRICS m{};
-		textLayout->GetMetrics(&m);
-
-		width = m.widthIncludingTrailingWhitespace;
+		width = _widths.at(key);
 	}
 	else
 	{
-		width = 0;
+		IDWriteTextFormat* textFormat = g_fontResources.GetTextFormat((float)fontSize);
 
-		for (const char* s = str; *s != 0; s++)
+		if (g_fontResources.IsPlainText(str))
 		{
-			if ((unsigned char)*s < 32)
-			{
-				continue;
-			}
-
-			char text[2];
-			text[0] = *s;
-			text[1] = 0;
-			std::wstring wtext = string_towstring(text);
+			std::wstring wtext = string_towstring(str);
 
 			ComPtr<IDWriteTextLayout> textLayout;
-			hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str(), wtext.length(), textFormat, 100, 100, &textLayout);
+			//hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str(), wtext.length(), textFormat, 640 * 4 / 3, 480, &textLayout);
+			hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str(), wtext.length(), textFormat, dc.width, dc.height, &textLayout);
 			CheckHResult("CreateTextLayout", hr);
 
 			DWRITE_TEXT_METRICS m{};
 			textLayout->GetMetrics(&m);
 
-			width += *s == ' ' ? m.widthIncludingTrailingWhitespace : m.width;
+			width = m.widthIncludingTrailingWhitespace;
 		}
+		else
+		{
+			width = 0;
+
+			for (const char* s = str; *s != 0; s++)
+			{
+				if ((unsigned char)*s < 32)
+				{
+					continue;
+				}
+
+				char text[2];
+				text[0] = *s;
+				text[1] = 0;
+				std::wstring wtext = string_towstring(text);
+
+				ComPtr<IDWriteTextLayout> textLayout;
+				hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str(), wtext.length(), textFormat, 100, 100, &textLayout);
+				CheckHResult("CreateTextLayout", hr);
+
+				DWRITE_TEXT_METRICS m{};
+				textLayout->GetMetrics(&m);
+
+				width += *s == ' ' ? m.widthIncludingTrailingWhitespace : m.width;
+			}
+		}
+
+		_widths.emplace(key, width);
 	}
 
 	if (isEnterFilmFilenameGameStateUpdate)
@@ -6093,8 +6104,24 @@ int L00557B10Hook(int* params)
 	bool isBriefingGameStateUpdate = IsUpdateCallback(0x00564E90);
 	bool isTourOfDutyRoomGameStateUpdate = IsUpdateCallback(0x005775E0);
 
+	bool draw = A18 != 0x1000;
+
 	int& linesCount = params[Params_EAX];
 	linesCount = 0;
+
+	static std::string _line;
+	static int _linesCount = 0;
+
+	if (!draw)
+	{
+		if (_line == str)
+		{
+			linesCount = _linesCount;
+			return 0;
+		}
+
+		_line = str;
+	}
 
 	RECT rect = *pRect;
 	rect.left = MultiplyDivH(rect.left, isBackgroundHD, dc) + offsetX;
@@ -6133,9 +6160,13 @@ int L00557B10Hook(int* params)
 	}
 
 	ComPtr<ID2D1SolidColorBrush> brush;
-	dc.d2d1RenderTarget->CreateSolidColorBrush(D2D1::ColorF(0), &brush);
+	if (draw)
+	{
+		dc.d2d1RenderTarget->CreateSolidColorBrush(D2D1::ColorF(0), &brush);
+		dc.d2d1RenderTarget->BeginDraw();
+	}
 
-	dc.d2d1RenderTarget->BeginDraw();
+	IDWriteTextLayout* layouts[256]{};
 
 	for (int esp20 = 0; str[esp20] != 0; esp20++)
 	{
@@ -6198,14 +6229,24 @@ int L00557B10Hook(int* params)
 
 			for (int ebx = 0; ebx < esp18; ebx++)
 			{
-				char text[2];
-				text[0] = esp58[ebx];
-				text[1] = 0;
-				std::wstring wtext = string_towstring(text);
+				char c = esp58[ebx];
+				IDWriteTextLayout* textLayout = nullptr;
 
-				ComPtr<IDWriteTextLayout> textLayout;
-				hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str(), wtext.length(), textFormat, 100, 100, &textLayout);
-				CheckHResult("CreateTextLayout", hr);
+				if (layouts[c])
+				{
+					textLayout = layouts[c];
+				}
+				else
+				{
+					char text[2];
+					text[0] = c;
+					text[1] = 0;
+					std::wstring wtext = string_towstring(text);
+
+					hr = g_fontResources.GetDWriteFactory()->CreateTextLayout(wtext.c_str(), wtext.length(), textFormat, 100, 100, &textLayout);
+					CheckHResult("CreateTextLayout", hr);
+					layouts[c] = textLayout;
+				}
 
 				DWRITE_TEXT_METRICS m{};
 				textLayout->GetMetrics(&m);
@@ -6234,19 +6275,24 @@ int L00557B10Hook(int* params)
 					esp14 + m.height
 				};
 
-				unsigned int colorRgb = Color16BppTo32Bpp(esp28);
-
-				brush->SetColor(D2D1::ColorF(colorRgb));
-
-				if (esp14 >= rect.top && esp14 < rect.bottom)
+				if (draw)
 				{
-					dc.d2d1RenderTarget->DrawTextA(
-						wtext.c_str(),
-						wtext.size(),
-						textFormat,
-						layoutRect,
-						brush,
-						D2D1_DRAW_TEXT_OPTIONS_NONE);
+					unsigned int colorRgb = Color16BppTo32Bpp(esp28);
+
+					brush->SetColor(D2D1::ColorF(colorRgb));
+
+					if (esp14 >= rect.top && esp14 < rect.bottom)
+					{
+						dc.d2d1RenderTarget->DrawTextLayout(D2D1_POINT_2F{ layoutRect.left, layoutRect.top }, textLayout, brush, D2D1_DRAW_TEXT_OPTIONS_NONE);
+
+						//dc.d2d1RenderTarget->DrawTextA(
+						//	wtext.c_str(),
+						//	wtext.size(),
+						//	textFormat,
+						//	layoutRect,
+						//	brush,
+						//	D2D1_DRAW_TEXT_OPTIONS_NONE);
+					}
 				}
 
 				esi += mWidth;
@@ -6286,7 +6332,10 @@ int L00557B10Hook(int* params)
 		esp28 = esp24;
 	}
 
-	dc.d2d1RenderTarget->EndDraw();
+	if (draw)
+	{
+		dc.d2d1RenderTarget->EndDraw();
+	}
 
 	if (A1C != 0)
 	{
@@ -6294,6 +6343,19 @@ int L00557B10Hook(int* params)
 	}
 
 	linesCount = esp10;
+
+	if (!draw)
+	{
+		_linesCount = linesCount;
+	}
+
+	for (int i = 0; i < 256; i++)
+	{
+		if (layouts[i])
+		{
+			layouts[i]->Release();
+		}
+	}
 
 	return 0;
 }
